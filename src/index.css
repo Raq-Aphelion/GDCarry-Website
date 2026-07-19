@@ -1,0 +1,192 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 226 69% 6%;
+    --foreground: 210 40% 96%;
+    --card: 224 60% 9%;
+    --card-foreground: 210 40% 96%;
+    --popover: 224 60% 8%;
+    --popover-foreground: 210 40% 96%;
+    --primary: 43 85% 56%;
+    --primary-foreground: 226 69% 8%;
+    --secondary: 224 45% 16%;
+    --secondary-foreground: 210 40% 96%;
+    --muted: 224 45% 14%;
+    --muted-foreground: 217 20% 65%;
+    --accent: 189 94% 43%;
+    --accent-foreground: 226 69% 8%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 224 40% 20%;
+    --input: 224 40% 22%;
+    --ring: 43 85% 56%;
+    --radius: 0.75rem;
+    --sidebar-background: 224 60% 8%;
+    --sidebar-foreground: 210 40% 96%;
+    --sidebar-primary: 43 85% 56%;
+    --sidebar-primary-foreground: 226 69% 8%;
+    --sidebar-accent: 224 45% 16%;
+    --sidebar-accent-foreground: 210 40% 96%;
+    --sidebar-border: 224 40% 20%;
+    --sidebar-ring: 43 85% 56%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  html {
+    scroll-behavior: smooth;
+    /* Scrolled-to content stops at the bottom of the 64px navbar, never under it */
+    scroll-padding-top: 64px;
+    /* JS handles floating-element positioning; native scroll anchoring makes
+       instant compensating jumps that can fling the price block off-screen
+       for a frame when accordions resize above it. */
+    overflow-anchor: none;
+    /* Full-viewport backgrounds (w-screen) must never cause a horizontal
+       overflow stripe; `clip` keeps position:sticky working. */
+    overflow-x: clip;
+  }
+  body {
+    overflow-x: clip;
+  }
+  body {
+    @apply bg-navy-900 text-foreground font-sans antialiased;
+    background-image:
+      radial-gradient(1200px 600px at 85% -10%, rgba(34, 211, 238, 0.08), transparent 60%),
+      radial-gradient(900px 500px at -10% 10%, rgba(238, 178, 50, 0.05), transparent 55%);
+    background-attachment: fixed;
+  }
+  ::selection {
+    background: rgba(34, 211, 238, 0.35);
+    color: #e0faff;
+  }
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #070d21;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #1c2f66;
+    border-radius: 999px;
+    border: 2px solid #070d21;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #2a4188;
+  }
+}
+
+@layer utilities {
+  .text-gradient-gold {
+    background: linear-gradient(100deg, #a5f3fc 0%, #22d3ee 45%, #67e8f9 70%, #0e7490 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .text-gradient-cyan {
+    background: linear-gradient(100deg, #ffe08a 0%, #eeb232 60%, #b97e10 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .card-surface {
+    @apply bg-navy-850 backdrop-blur-sm;
+  }
+  .gold-glow {
+    box-shadow: 0 0 24px -6px rgba(34, 211, 238, 0.45);
+  }
+  .cyan-glow {
+    box-shadow: 0 0 24px -6px rgba(238, 178, 50, 0.4);
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+/* Reveal-on-scroll base states (toggled by the Reveal component) */
+.reveal-hidden {
+  opacity: 0;
+  transform: translateY(28px);
+}
+.reveal-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Remove native number input spinners */
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type='number'] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+/* Navbar dropdown entrance */
+@keyframes dropdown-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.dropdown-in {
+  animation: dropdown-in 0.18s ease-out both;
+}
+
+/* Toast entrance */
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+.toast-in {
+  animation: toast-in 0.28s cubic-bezier(0.21, 1.02, 0.73, 1) both;
+}
+
+/* Infinite review marquee */
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+.marquee {
+  animation: marquee 46s linear infinite;
+}
+
+/* Slow float for hero dice accents */
+@keyframes float-slow {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-8deg);
+  }
+  50% {
+    transform: translateY(-14px) rotate(-2deg);
+  }
+}
+.float-slow {
+  animation: float-slow 7s ease-in-out infinite;
+}

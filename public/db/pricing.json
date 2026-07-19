@@ -1,0 +1,124 @@
+{
+  "currency": {
+    "eurPerUsd": 0.92
+  },
+  "purchaseBox": {
+    "afkDiscount": 40,
+    "runsMin": 1,
+    "runsMax": 10,
+    "priorityMultiplier": 2,
+    "gearOptions": [
+      {
+        "label": "I don't need extra gear",
+        "price": 0
+      },
+      {
+        "label": "Full BiS-ready set",
+        "price": 79.99
+      }
+    ],
+    "logOptions": [
+      {
+        "label": "I don't want a parse",
+        "price": 0
+      },
+      {
+        "label": "FFXIV Logs parse included",
+        "price": 14.99
+      }
+    ],
+    "addons": [
+      {
+        "id": "totem",
+        "label": "Extra Totem",
+        "price": 39.99
+      },
+      {
+        "id": "stream",
+        "label": "Private Stream",
+        "price": 10.0
+      },
+      {
+        "id": "priority",
+        "label": "Priority",
+        "price": 0
+      }
+    ]
+  },
+  "servicePrices": {
+    "accounts": 99.99,
+    "alliance-raids": 14.99,
+    "bosses": 29.99,
+    "capes": 149.99,
+    "coaching": 29.99,
+    "collectibles": 39.99,
+    "current-patch": 129.99,
+    "deep-dungeon": 89.99,
+    "dungeons": 14.99,
+    "endgame": 12.99,
+    "farming": 24.99,
+    "ffxiv-alliance-glamour": 34.99,
+    "ffxiv-alt-job": 49.99,
+    "ffxiv-blue-mage": 59.99,
+    "ffxiv-dsr": 299.99,
+    "ffxiv-frontline": 54.99,
+    "ffxiv-fru": 399.99,
+    "ffxiv-gil-weekly": 39.99,
+    "ffxiv-hoh": 69.99,
+    "ffxiv-island-sanctuary": 44.99,
+    "ffxiv-mount-bundle": 89.99,
+    "ffxiv-msq-skip": 139.99,
+    "ffxiv-new-ex": 29.99,
+    "ffxiv-patch-catchup": 79.99,
+    "ffxiv-potd-solo": 299.99,
+    "ffxiv-pvp-coaching": 24.99,
+    "ffxiv-raid-glamour": 39.99,
+    "ffxiv-relic": 79.99,
+    "ffxiv-series-rewards": 39.99,
+    "ffxiv-tea": 279.99,
+    "ffxiv-tomes": 19.99,
+    "ffxiv-top": 349.99,
+    "ffxiv-ucob": 249.99,
+    "ffxiv-ultimate-bundle": 1299.99,
+    "ffxiv-unreal": 14.99,
+    "ffxiv-uwu": 249.99,
+    "gear": 99.99,
+    "gil": 9.99,
+    "la-brelshaza": 34.99,
+    "la-echidna": 49.99,
+    "la-elixirs": 69.99,
+    "la-honing": 99.99,
+    "la-kayangel": 24.99,
+    "la-mokoko": 29.99,
+    "leveling": 189.99,
+    "lost-ark": 59.99,
+    "mounts": 34.99,
+    "mythic-plus": 19.99,
+    "progression": 49.99,
+    "pvp": 129.99,
+    "raids": 119.99,
+    "reputation": 44.99,
+    "rs-fire-cape": 14.99,
+    "rs-ironman": 69.99,
+    "rs-nex": 34.99,
+    "rs-quests": 119.99,
+    "rs-toa": 49.99,
+    "runescape": 24.99,
+    "skilling": 89.99,
+    "trials": 24.99,
+    "ultimate-raids": 449.99,
+    "warframe": 39.99,
+    "wf-arbitrations": 14.99,
+    "wf-archon": 9.99,
+    "wf-lich": 19.99,
+    "wf-profit-taker": 17.99,
+    "wf-steel-path": 54.99,
+    "wow": 199.99,
+    "wow-aotc": 29.99,
+    "wow-glory": 44.99,
+    "wow-ksm": 89.99,
+    "wow-renown": 39.99,
+    "wow-solo-shuffle": 99.99,
+    "wow-vault": 49.99
+  }
+}
