@@ -16,7 +16,7 @@ export default function ServiceCard({ service }: { service: Service }) {
   return (
     <Link
       to={serviceLink(service.id)}
-      className="group relative flex h-full min-h-[380px] w-full flex-col overflow-hidden rounded-[5px] bg-navy-850 text-left transition-all duration-300"
+      className="group relative flex h-full min-h-[380px] w-full max-w-[280px] flex-col overflow-hidden rounded-[5px] bg-navy-850 text-left transition-all duration-300 max-sm:mx-auto"
       aria-label={service.name}
     >
       {/* Background image, faded behind the text */}

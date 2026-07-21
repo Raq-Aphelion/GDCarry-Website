@@ -312,7 +312,7 @@ export default function Home() {
         <div className="mx-auto max-w-[1440px] px-[25px] sm:px-6 lg:px-8">
           <Reveal>
             <div className="flex flex-wrap items-end justify-between gap-6">
-              <div>
+              <div className="max-sm:w-full max-sm:text-center">
                 <p className="text-xs font-bold uppercase tracking-[0.2em] text-cyan-500">Frequently ordered</p>
                 <h2 className="mt-2 font-display text-3xl font-extrabold text-white sm:text-4xl">
                   FFXIV <span className="text-gradient-cyan">popular picks</span>
@@ -320,16 +320,16 @@ export default function Home() {
               </div>
               <Link
                 to="/boosting/ffxiv"
-                className="group flex items-center gap-2 text-sm font-bold text-cyan-400 transition-colors hover:text-cyan-500"
+                className="flex shrink-0 items-center gap-1.5 rounded-[5px] border border-navy-700/70 px-3.5 py-2 text-xs font-bold text-slate-300 transition-colors hover:border-cyan-600/30 hover:text-cyan-400 max-sm:hidden"
               >
                 All FFXIV services
-                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                <ArrowRight className="h-3.5 w-3.5" />
               </Link>
             </div>
           </Reveal>
           {/* One row only: mobile shows 3, sm 2, lg 3, 5 in a row from 720p (xl)
               up; cards that would wrap to a second row are removed. */}
-          <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:mt-10 lg:grid-cols-3 xl:grid-cols-5">
+          <div className="mt-10 grid gap-5 sm:mt-6 sm:grid-cols-2 lg:mt-10 lg:grid-cols-3 xl:grid-cols-5">
             {featured.slice(0, 5).map((s, i) => (
               <Reveal
                 key={s.id}
@@ -339,6 +339,16 @@ export default function Home() {
                 <ServiceCard service={s} />
               </Reveal>
             ))}
+          </div>
+          {/* Mobile: same button, centered below the cards */}
+          <div className="mt-6 flex justify-center sm:hidden">
+            <Link
+              to="/boosting/ffxiv"
+              className="flex shrink-0 items-center gap-1.5 rounded-[5px] border border-navy-700/70 px-3.5 py-2 text-xs font-bold text-slate-300 transition-colors hover:border-cyan-600/30 hover:text-cyan-400"
+            >
+              All FFXIV services
+              <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
           </div>
         </div>
       </section>

@@ -261,7 +261,10 @@ export default function ServicePage() {
       {/* ============ MORE FROM THIS CATEGORY ============ */}
       <Reveal>
         <div className="mt-12 flex items-center gap-3">
-          <h2 className="font-display text-xl font-bold text-white sm:text-2xl">More {sub.name}</h2>
+          <h2 className="font-display text-xl font-bold text-white sm:text-2xl">
+            More from <br className="sm:hidden" />
+            {sub.name}
+          </h2>
           <div className="h-px flex-1 bg-gradient-to-r from-navy-700/70 to-transparent" />
           <Link
             to={`/boosting/${game.id}?cat=${sub.id}`}

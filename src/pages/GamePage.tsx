@@ -123,12 +123,12 @@ export default function GamePage() {
         {/* Right: only the selected category's services */}
         <div key={activeSub.id}>
           <Reveal>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 max-sm:justify-center">
               <h2 className="font-display text-xl font-bold text-white sm:text-2xl">{activeSub.name}</h2>
               <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-navy-800 text-xs font-bold text-slate-400">
                 {activeSub.services.length}
               </span>
-              <div className="h-px flex-1 bg-gradient-to-r from-navy-700/70 to-transparent" />
+              <div className="h-px flex-1 bg-gradient-to-r from-navy-700/70 to-transparent max-sm:hidden" />
             </div>
           </Reveal>
           <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
