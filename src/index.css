@@ -54,6 +54,40 @@
   body {
     overflow-x: clip;
   }
+
+  /* Main scrollbar: site-styled, and its track starts below the 64px navbar.
+     Bare selectors — the viewport scrollbar ignores html::-prefixed rules. */
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+    margin-top: 64px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #1c2f66;
+    border: 2px solid #0a1228;
+    border-radius: 5px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #27408c;
+  }
+  /* Inner scroll containers keep their track full-height */
+  .overflow-y-auto::-webkit-scrollbar-track,
+  .overflow-x-auto::-webkit-scrollbar-track,
+  .overflow-auto::-webkit-scrollbar-track {
+    margin-top: 0;
+  }
+
+  /* Cart open: scrollbar hidden visually. Scroll keeps working (overflow is
+     untouched, so position:sticky stays correct) and JS pads the body by the
+     freed width, so the layout never shifts. */
+  html.cart-scroll-hidden {
+    scrollbar-width: none;
+  }
+  html.cart-scroll-hidden::-webkit-scrollbar {
+    display: none;
+  }
   body {
     @apply bg-navy-900 text-foreground font-sans antialiased;
     background-image:
@@ -100,6 +134,17 @@
   }
   .gold-glow {
     box-shadow: 0 0 24px -6px rgba(34, 211, 238, 0.45);
+  }
+  /* Soft, slow easing for the Additional Options collapse/extend */
+  .ease-soft {
+    transition-timing-function: cubic-bezier(0.32, 0.72, 0, 1);
+  }
+  /* Subtle cyan glow along the top edge of the floating price block while it
+     overlaps page content; removed as soon as it rests in its natural spot. */
+  .price-block-glow {
+    box-shadow:
+      0 -14px 28px -14px rgba(103, 232, 249, 0.35),
+      0 25px 50px -12px rgba(0, 0, 0, 0.55);
   }
   .cyan-glow {
     box-shadow: 0 0 24px -6px rgba(238, 178, 50, 0.4);

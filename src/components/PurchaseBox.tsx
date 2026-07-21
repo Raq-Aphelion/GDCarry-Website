@@ -204,7 +204,7 @@ export default function PurchaseBox({ service, gameShort }: { service: Service; 
     const start = performance.now();
     const tick = (now: number) => {
       update();
-      if (now - start < 450) raf = requestAnimationFrame(tick);
+      if (now - start < 550) raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
@@ -379,7 +379,7 @@ export default function PurchaseBox({ service, gameShort }: { service: Service; 
               )}
             </button>
             <div
-              className={`grid transition-all duration-300 ${
+              className={`grid transition-all duration-500 ease-soft ${
                 optionsOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
               }`}
             >
@@ -452,7 +452,9 @@ export default function PurchaseBox({ service, gameShort }: { service: Service; 
       <div ref={wrapRef} className="mt-4" style={fixedStyle ? { height: blockH.current } : undefined}>
         <div
           style={fixedStyle ?? undefined}
-          className="rounded-[5px] border border-navy-700/70 bg-navy-800 p-4 text-center shadow-2xl"
+          className={`rounded-[5px] border border-navy-700/70 bg-navy-800 p-4 text-center shadow-2xl ${
+            fixedStyle ? 'price-block-glow' : ''
+          }`}
         >
           <p className="font-display text-2xl font-extrabold text-white">{format(total)}</p>
           <p className="mt-1 flex items-center justify-center gap-1.5 text-xs text-slate-400">

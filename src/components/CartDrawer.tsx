@@ -10,18 +10,20 @@ export default function CartDrawer() {
   const { format } = useCurrency();
   const { toast } = useToast();
 
-  // Escape to close + lock body scroll while open
+  // Escape to close + visually hide the main scrollbar while open. Scrolling
+  // stays fully functional (overflow is never locked — locking it broke
+  // position:sticky) and the layout never shifts: the body is padded by
+  // exactly the freed scrollbar width.
   useEffect(() => {
     if (!isOpen) return;
     const onKey = (e: KeyboardEvent) => e.key === 'Escape' && closeCart();
     document.addEventListener('keydown', onKey);
-    // Compensate for the removed scrollbar so the page doesn't shift
     const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
-    document.body.style.overflow = 'hidden';
+    document.documentElement.classList.add('cart-scroll-hidden');
     if (scrollbarWidth > 0) document.body.style.paddingRight = `${scrollbarWidth}px`;
     return () => {
       document.removeEventListener('keydown', onKey);
-      document.body.style.overflow = '';
+      document.documentElement.classList.remove('cart-scroll-hidden');
       document.body.style.paddingRight = '';
     };
   }, [isOpen, closeCart]);

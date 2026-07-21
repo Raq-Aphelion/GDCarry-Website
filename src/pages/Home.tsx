@@ -145,7 +145,7 @@ export default function Home() {
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,rgba(7,13,33,0.5)_78%)]" />
         </div>
 
-        <div className="relative mx-auto flex w-full max-w-[1440px] flex-col items-center justify-center px-4 py-14 sm:px-6 lg:h-[936px] lg:py-0 lg:px-8">
+        <div className="relative mx-auto flex min-h-[100svh] w-full max-w-[1440px] flex-col items-center justify-center px-4 py-14 sm:px-6 lg:h-[936px] lg:min-h-0 lg:py-0 lg:px-8">
           <div className="w-full max-w-3xl text-center">
             <Reveal>
               <span className="inline-flex items-center rounded-full border border-gold-500/40 bg-gold-500/10 px-4 py-1.5 text-xs font-bold uppercase leading-none tracking-[0.18em] text-gold-300 backdrop-blur-sm">
@@ -153,7 +153,7 @@ export default function Home() {
               </span>
             </Reveal>
             <Reveal delay={120}>
-              <h1 className="mt-6 font-display text-4xl font-extrabold leading-[1.08] tracking-tight text-white sm:text-6xl">
+              <h1 className="mt-6 font-display text-[clamp(1.4rem,7.4vw,2.25rem)] font-extrabold leading-[1.08] tracking-tight text-white max-sm:whitespace-nowrap sm:text-6xl">
                 Don’t want to grind?
                 <br />
                 <span className="text-gradient-gold">We’ll do it for you.</span>

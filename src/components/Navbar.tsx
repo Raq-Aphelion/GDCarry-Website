@@ -122,7 +122,7 @@ export default function Navbar() {
           if (e.key === 'Enter' && results.length > 0) goToResult(results[0].game.id, results[0].subId);
         }}
         placeholder="Search boosts, games, categories…"
-        className="w-full rounded-[3px] border border-navy-700/70 bg-navy-850/90 py-2.5 pl-10 pr-9 text-sm text-white placeholder:text-slate-500 outline-none transition-colors hover:border-navy-600 focus:border-navy-600"
+        className="h-[42px] w-full rounded-[3px] border border-navy-700/70 bg-navy-850/90 pl-10 pr-9 text-sm text-white placeholder:text-slate-500 outline-none transition-colors hover:border-navy-600 focus:border-navy-600"
         aria-label="Search services"
       />
       {query && (
@@ -173,7 +173,7 @@ export default function Navbar() {
 
   return (
     <header
-      className={`sticky top-0 z-50 w-full transition-all duration-500 ease-in-out ${
+      className={`sticky top-0 z-50 w-screen pr-[calc(100vw-100%)] transition-all duration-500 ease-in-out ${
         scrolled || mobileOpen
           ? 'border-b border-navy-700/60 bg-navy-900/85 shadow-lg shadow-black/30 backdrop-blur-xl'
           : 'border-b border-transparent bg-transparent'
@@ -196,7 +196,7 @@ export default function Navbar() {
               setGamesOpen((v) => !v);
               setCurrencyOpen(false);
             }}
-            className={`flex shrink-0 items-center gap-2 rounded-[3px] px-3.5 py-2.5 text-sm font-semibold transition-all duration-300 ease-out hover:shadow-lg hover:shadow-black/25 ${
+            className={`flex h-[42px] shrink-0 items-center gap-2 rounded-[3px] px-3.5 text-sm font-semibold transition-all duration-300 ease-out hover:shadow-lg hover:shadow-black/25 ${
               gamesOpen
                 ? 'bg-gradient-to-r from-navy-700 to-navy-800 text-gold-300'
                 : 'bg-gradient-to-r from-navy-800 to-navy-850 text-white hover:from-navy-700 hover:to-navy-800 hover:text-gold-300'
@@ -269,23 +269,23 @@ export default function Navbar() {
         </div>
 
         {/* Actions */}
-        <div className="ml-auto flex shrink-0 items-center gap-3 lg:ml-0">
+        <div className="relative ml-auto flex shrink-0 items-center gap-3 lg:static lg:ml-0">
           {/* Currency dropdown */}
-          <div className="relative">
+          <div className="lg:relative">
             <button
               onClick={() => {
                 setCurrencyOpen((v) => !v);
                 setGamesOpen(false);
               }}
-              className={`flex items-center justify-center gap-2 rounded-[3px] px-2.5 py-2.5 text-sm font-semibold transition-all duration-300 ease-out hover:shadow-lg hover:shadow-black/25 lg:w-[94px] ${
+              className={`flex h-[42px] w-[42px] items-center justify-center gap-2 rounded-[3px] border text-sm font-semibold transition-all duration-300 ease-out hover:shadow-lg hover:shadow-black/25 lg:w-[94px] lg:border-0 lg:px-2.5 ${
                 currencyOpen
-                  ? 'bg-gradient-to-r from-navy-700 to-navy-800 text-gold-300'
-                  : 'bg-gradient-to-r from-navy-800 to-navy-850 text-white hover:from-navy-700 hover:to-navy-800 hover:text-gold-300'
+                  ? 'border-navy-600 bg-gradient-to-r from-navy-700 to-navy-800 text-gold-300'
+                  : 'border-navy-700/70 bg-navy-850/90 text-slate-300 hover:border-navy-600 hover:text-gold-300 lg:bg-gradient-to-r lg:from-navy-800 lg:to-navy-850 lg:text-white lg:hover:from-navy-700 lg:hover:to-navy-800 lg:hover:text-gold-300'
               }`}
               aria-expanded={currencyOpen}
               aria-label="Change currency"
             >
-              <activeCurrency.icon className="h-4 w-4" />
+              <activeCurrency.icon className="h-5 w-5 lg:h-4 lg:w-4" />
               <span className="hidden lg:inline">{activeCurrency.c}</span>
               <ChevronDown className={`hidden h-3.5 w-3.5 text-gold-300/60 transition-transform lg:block ${currencyOpen ? 'rotate-180' : ''}`} />
             </button>
@@ -296,7 +296,7 @@ export default function Navbar() {
                   aria-label="Close currency menu"
                   onClick={() => setCurrencyOpen(false)}
                 />
-                <div className="dropdown-in absolute right-0 z-20 mt-2 w-36 overflow-hidden rounded-[3px] border border-navy-700/70 bg-navy-850 shadow-2xl lg:left-0 lg:right-0 lg:w-auto">
+                <div className="dropdown-in absolute right-0 z-20 mt-2 w-[150px] overflow-hidden rounded-[3px] border border-navy-700/70 bg-navy-850 shadow-2xl lg:left-0 lg:right-0 lg:w-auto">
                   {CURRENCIES.map((o) => (
                     <button
                       key={o.c}
@@ -318,7 +318,7 @@ export default function Navbar() {
           {/* Cart */}
           <button
             onClick={openCart}
-            className="relative rounded-[3px] border border-navy-700/70 bg-navy-850/90 p-2.5 text-slate-300 transition-all hover:border-navy-600 hover:text-gold-300"
+            className="relative flex h-[42px] w-[42px] items-center justify-center rounded-[3px] border border-navy-700/70 bg-navy-850/90 text-slate-300 transition-all hover:border-navy-600 hover:text-gold-300"
             aria-label="Open cart"
           >
             <ShoppingCart className="h-5 w-5" />
@@ -386,9 +386,6 @@ export default function Navbar() {
                   />
                 </span>
                 {g.name}
-              </span>
-              <span className="relative z-10 ml-auto shrink-0 pr-3 text-xs text-slate-400">
-                {serviceCount(g)} services
               </span>
             </NavLink>
           ))}

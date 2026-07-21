@@ -12,18 +12,18 @@ export default function Footer() {
   return (
     <footer className="mt-8 border-t border-navy-700/60 bg-navy-950/70 lg:mt-12">
       <div className="mx-auto grid max-w-[1440px] gap-10 px-4 py-10 sm:px-6 md:grid-cols-2 lg:flex lg:items-start lg:justify-start lg:gap-[clamp(2.5rem,7vw,11rem)] lg:px-8">
-        <div>
-          <Link to="/" className="group flex items-center gap-2.5">
+        <div className="text-center md:text-left">
+          <Link to="/" className="group flex items-center justify-center gap-2.5 md:justify-start">
             <DiceLogo size={36} className="transition-transform duration-300 group-hover:rotate-6" />
             <span className="font-display text-lg font-bold tracking-tight text-white">
               GD <span className="text-gradient-cyan">Carry</span>
             </span>
           </Link>
-          <p className="mt-4 max-w-xs text-sm leading-relaxed text-slate-400">
+          <p className="mx-auto mt-4 max-w-xs text-sm leading-relaxed text-slate-400 md:mx-0">
             Grand Dice. Professional boosting and carry services by verified top-tier players — safe, fast and
             always hand-played.
           </p>
-          <div className="mt-7 flex items-center gap-5">
+          <div className="mt-7 flex items-center justify-center gap-5 md:justify-start">
             {[
               { id: 'paypal', label: 'PayPal' },
               { id: 'visa', label: 'Visa' },
@@ -43,7 +43,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="grid gap-10 sm:grid-cols-2 md:col-span-2 lg:flex-1 lg:gap-[clamp(1.5rem,3vw,3rem)] xl:grid-cols-4">
+        <div className="grid grid-cols-2 gap-6 sm:gap-10 md:col-span-2 lg:flex-1 lg:gap-[clamp(1.5rem,3vw,3rem)] xl:grid-cols-4">
         <div className="hidden xl:block">
           <h3 className="font-display text-sm font-bold uppercase tracking-wider text-gold-400">Games</h3>
           <ul className="mt-4 space-y-2.5">
