@@ -33,7 +33,7 @@ export default function MobileCategoryBar({
     }`;
 
   return (
-    <div className="sticky top-16 z-30 border-b border-navy-700/60 bg-navy-900/85 backdrop-blur-xl lg:hidden">
+    <div className="sticky top-0 z-30 border-b border-navy-700/60 bg-navy-900/85 backdrop-blur-xl lg:hidden">
       <div ref={dragRef} className="no-scrollbar flex touch-pan-y gap-2 overflow-x-auto px-4 py-3">
         {items.map((s) =>
           gameId ? (

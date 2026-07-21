@@ -39,53 +39,64 @@
   * {
     @apply border-border;
   }
-  html {
+  /* The viewport never scrolls — the #page-scroll container (which starts
+     below the navbar) is the page's scroller, so the scrollbar physically
+     begins under the navbar and is fully stylable in every browser. */
+  html,
+  body {
+    overflow: hidden;
+  }
+
+  #page-scroll {
     scroll-behavior: smooth;
-    /* Scrolled-to content stops at the bottom of the 64px navbar, never under it */
-    scroll-padding-top: 64px;
+    scroll-padding-top: 16px;
     /* JS handles floating-element positioning; native scroll anchoring makes
        instant compensating jumps that can fling the price block off-screen
        for a frame when accordions resize above it. */
     overflow-anchor: none;
-    /* Full-viewport backgrounds (w-screen) must never cause a horizontal
-       overflow stripe; `clip` keeps position:sticky working. */
-    overflow-x: clip;
-  }
-  body {
-    overflow-x: clip;
   }
 
-  /* Main scrollbar: site-styled, and its track starts below the 64px navbar.
-     Bare selectors — the viewport scrollbar ignores html::-prefixed rules. */
-  ::-webkit-scrollbar {
-    width: 10px;
+  /* Inner scrollers (dropdowns, cart item list): thin, transparent track,
+     no arrow buttons, no corner block. */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #1c2f66 transparent;
   }
-  ::-webkit-scrollbar-track {
+  ::-webkit-scrollbar-button {
+    display: none;
+    width: 0;
+    height: 0;
+  }
+  ::-webkit-scrollbar-corner {
     background: transparent;
-    margin-top: 64px;
-  }
-  ::-webkit-scrollbar-thumb {
-    background: #1c2f66;
-    border: 2px solid #0a1228;
-    border-radius: 5px;
-  }
-  ::-webkit-scrollbar-thumb:hover {
-    background: #27408c;
-  }
-  /* Inner scroll containers keep their track full-height */
-  .overflow-y-auto::-webkit-scrollbar-track,
-  .overflow-x-auto::-webkit-scrollbar-track,
-  .overflow-auto::-webkit-scrollbar-track {
-    margin-top: 0;
   }
 
-  /* Cart open: scrollbar hidden visually. Scroll keeps working (overflow is
-     untouched, so position:sticky stays correct) and JS pads the body by the
-     freed width, so the layout never shifts. */
-  html.cart-scroll-hidden {
+  /* Desktop: the page's native scrollbar is replaced by a custom overlay
+     scrollbar (components/Scrollbar.tsx) that floats over the content — the
+     page visually continues to the screen edge, with no gutter and no arrow
+     buttons. Mobile keeps its native overlay scrollbar. */
+  @media (min-width: 1024px) {
+    #page-scroll {
+      scrollbar-width: none;
+    }
+    #page-scroll::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  /* Cart open: scrollbar hidden visually. Scroll keeps working and the
+     layout never shifts (the overlay scrollbar takes no layout space). */
+  html.cart-scroll-hidden .page-scrollbar {
+    opacity: 0 !important; /* beats the component's opacity utilities */
+    pointer-events: none;
+  }
+
+  /* The cart item list uses the same overlay scrollbar as the page, so its
+     native scrollbar is always hidden (all viewports). */
+  .cart-items-scroll {
     scrollbar-width: none;
   }
-  html.cart-scroll-hidden::-webkit-scrollbar {
+  .cart-items-scroll::-webkit-scrollbar {
     display: none;
   }
   body {
@@ -99,20 +110,26 @@
     background: rgba(34, 211, 238, 0.35);
     color: #e0faff;
   }
+  /* Transparent track: page backgrounds continue under the scrollbar. The
+     thumb's transparent border keeps it the same 10px footprint while leaving
+     a slim visual pill floating over the content. */
   ::-webkit-scrollbar {
     width: 10px;
     height: 10px;
   }
   ::-webkit-scrollbar-track {
-    background: #070d21;
+    background: transparent;
   }
   ::-webkit-scrollbar-thumb {
     background: #1c2f66;
     border-radius: 999px;
-    border: 2px solid #070d21;
+    border: 2px solid transparent;
+    background-clip: padding-box;
   }
   ::-webkit-scrollbar-thumb:hover {
     background: #2a4188;
+    border: 2px solid transparent;
+    background-clip: padding-box;
   }
 }
 

@@ -58,10 +58,12 @@ export default function Navbar() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 12);
+    const scroller = document.getElementById('page-scroll');
+    if (!scroller) return;
+    const onScroll = () => setScrolled(scroller.scrollTop > 12);
     onScroll();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
+    scroller.addEventListener('scroll', onScroll, { passive: true });
+    return () => scroller.removeEventListener('scroll', onScroll);
   }, []);
 
   // Close menus on navigation

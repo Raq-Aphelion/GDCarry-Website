@@ -1,30 +1,29 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router';
 import { Minus, Plus, ShoppingCart, Trash2, X } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { useCurrency } from '@/context/CurrencyContext';
 import { useToast } from '@/context/ToastContext';
+import { OverlayScrollbar } from '@/components/Scrollbar';
 
 export default function CartDrawer() {
   const { isOpen, closeCart, items, setQty, removeItem, subtotal, clear } = useCart();
   const { format } = useCurrency();
   const { toast } = useToast();
+  const [listEl, setListEl] = useState<HTMLDivElement | null>(null);
 
-  // Escape to close + visually hide the main scrollbar while open. Scrolling
-  // stays fully functional (overflow is never locked — locking it broke
-  // position:sticky) and the layout never shifts: the body is padded by
-  // exactly the freed scrollbar width.
+  // Escape to close + visually hide the overlay scrollbar while open.
+  // Scrolling stays fully functional (overflow is never locked — locking it
+  // broke position:sticky) and the layout never shifts: the overlay scrollbar
+  // takes no layout space, so nothing needs compensating.
   useEffect(() => {
     if (!isOpen) return;
     const onKey = (e: KeyboardEvent) => e.key === 'Escape' && closeCart();
     document.addEventListener('keydown', onKey);
-    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
     document.documentElement.classList.add('cart-scroll-hidden');
-    if (scrollbarWidth > 0) document.body.style.paddingRight = `${scrollbarWidth}px`;
     return () => {
       document.removeEventListener('keydown', onKey);
       document.documentElement.classList.remove('cart-scroll-hidden');
-      document.body.style.paddingRight = '';
     };
   }, [isOpen, closeCart]);
 
@@ -87,7 +86,8 @@ export default function CartDrawer() {
           </div>
         ) : (
           <>
-            <div className="flex-1 space-y-3 overflow-y-auto px-5 py-4">
+            <div className="relative min-h-0 flex-1">
+              <div ref={setListEl} className="cart-items-scroll h-full space-y-3 overflow-y-auto pl-5 pr-8 py-4">
               {items.map((item) => (
                 <div
                   key={item.id}
@@ -154,6 +154,13 @@ export default function CartDrawer() {
               >
                 Clear cart
               </button>
+              </div>
+              {/* Same overlay scrollbar as the main page — floats over the
+                  items, no gutter, no arrows. */}
+              <OverlayScrollbar
+                scroller={listEl}
+                className="absolute bottom-3 right-1.5 top-3 w-2.5"
+              />
             </div>
 
             <div className="border-t border-navy-700/60 px-5 py-4">

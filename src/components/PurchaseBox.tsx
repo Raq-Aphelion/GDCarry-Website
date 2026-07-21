@@ -179,10 +179,11 @@ export default function PurchaseBox({ service, gameShort }: { service: Service; 
 
   useEffect(() => {
     update();
-    window.addEventListener('scroll', update, { passive: true });
+    const scroller = document.getElementById('page-scroll');
+    scroller?.addEventListener('scroll', update, { passive: true });
     window.addEventListener('resize', update);
     return () => {
-      window.removeEventListener('scroll', update);
+      scroller?.removeEventListener('scroll', update);
       window.removeEventListener('resize', update);
     };
   }, [update]);
@@ -236,7 +237,9 @@ export default function PurchaseBox({ service, gameShort }: { service: Service; 
       } else {
         stickRef.current = 'overflow';
         setStick('overflow');
-        setOverflowTop(Math.round(vh - 80 - contentH));
+        // CSS sticky top is measured from the scroller's top edge, which sits
+        // 64px below the viewport top (navbar height) — hence the extra -64.
+        setOverflowTop(Math.round(vh - 80 - contentH - 64));
       }
     };
     measure();
@@ -290,7 +293,7 @@ export default function PurchaseBox({ service, gameShort }: { service: Service; 
     <div
       ref={rootRef}
       className={
-        stick === 'fit' ? 'lg:sticky lg:top-24' : stick === 'overflow' ? 'lg:sticky' : 'lg:flex-1'
+        stick === 'fit' ? 'lg:sticky lg:top-8' : stick === 'overflow' ? 'lg:sticky' : 'lg:flex-1'
       }
       style={stick === 'overflow' ? { top: overflowTop } : undefined}
     >

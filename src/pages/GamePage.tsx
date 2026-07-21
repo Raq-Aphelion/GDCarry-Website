@@ -87,7 +87,7 @@ export default function GamePage() {
       <div className="mx-auto grid max-w-[1440px] gap-10 px-4 py-12 sm:px-6 lg:grid-cols-[240px_minmax(0,1fr)] lg:px-8">
         {/* Left: subcategory filter list */}
         <aside className="hidden lg:block">
-          <div className="sticky top-24">
+          <div className="sticky top-8">
             <p className="px-3 text-xs font-bold uppercase tracking-[0.2em] text-slate-500">Categories</p>
             <ul className="mt-3 divide-y divide-navy-700/50">
               {game.subcategories.map((sub) => {

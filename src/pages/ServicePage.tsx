@@ -264,7 +264,7 @@ export default function ServicePage() {
 
         {/* Left: categories, pushed to the top */}
         <aside className="hidden lg:col-start-1 lg:row-span-2 lg:row-start-1 lg:block">
-          <div className="sticky top-24">
+          <div className="sticky top-8">
             <p className="px-3 text-xs font-bold uppercase tracking-[0.2em] text-slate-500">Categories</p>
             <ul className="mt-3 divide-y divide-navy-700/50">
               {game.subcategories.map((s) => {
