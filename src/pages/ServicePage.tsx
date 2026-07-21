@@ -8,6 +8,7 @@ import PurchaseBox from '@/components/PurchaseBox';
 import Reveal from '@/components/Reveal';
 import ServiceCard from '@/components/ServiceCard';
 import { getGame } from '@/data/games';
+import ffxivBg from '@/assets/images/backgrounds/ffxiv-bg.png';
 import useDragScroll from '@/hooks/useDragScroll';
 
 const REWARDS = [
@@ -295,9 +296,12 @@ export default function ServicePage() {
         {/* Faded game art behind the top of the page — same background as the game subpage */}
         <div className="pointer-events-none absolute left-1/2 top-0 -z-10 h-[460px] w-screen -translate-x-1/2" aria-hidden>
           <div className="absolute inset-0">
-            <FadeImage src={game.cardImage} alt="" className="h-full w-full" imgClassName="grayscale" />
-            {/* Slight navy veil over the greyscale art */}
-            <div className="absolute inset-0 bg-navy-500/50" />
+            <FadeImage
+              src={game.id === 'ffxiv' ? ffxivBg : game.cardImage}
+              alt=""
+              className="h-full w-full"
+              imgClassName="opacity-50 lg:object-[50%_35%]"
+            />
           </div>
           <div className="absolute inset-0 bg-gradient-to-r from-navy-900/95 via-navy-900/75 to-navy-900/40" />
           <div className="absolute inset-0 bg-gradient-to-t from-navy-900 via-transparent to-navy-900/60" />

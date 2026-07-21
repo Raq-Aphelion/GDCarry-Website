@@ -96,7 +96,7 @@ export default function CartDrawer() {
                   <img
                     src={item.image}
                     alt={item.name}
-                    className="h-16 w-16 shrink-0 rounded-[5px] object-cover"
+                    className="h-16 w-16 shrink-0 rounded-[5px] object-cover object-top"
                     loading="lazy"
                   />
                   <div className="min-w-0 flex-1">

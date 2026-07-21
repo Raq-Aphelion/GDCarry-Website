@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { Link, Navigate, useParams, useSearchParams } from 'react-router';
 import { ChevronRight, Layers, Package } from 'lucide-react';
 import CustomOrderCta from '@/components/CustomOrderCta';
@@ -7,6 +7,20 @@ import MobileCategoryBar from '@/components/MobileCategoryBar';
 import Reveal from '@/components/Reveal';
 import ServiceCard from '@/components/ServiceCard';
 import { getGame, serviceCount } from '@/data/games';
+import ffxivBg from '@/assets/images/backgrounds/ffxiv-bg-1.png';
+import wowBg from '@/assets/images/backgrounds/wow-bg.jpg';
+import lostArkBg from '@/assets/images/backgrounds/lostark-bg.png';
+import warframeBg from '@/assets/images/backgrounds/warframe-bg.png';
+import runescapeBg from '@/assets/images/backgrounds/osrs-bg.webp';
+
+/** Hero background per game; falls back to the card art if none is defined. */
+const GAME_BG: Record<string, string> = {
+  ffxiv: ffxivBg,
+  wow: wowBg,
+  'lost-ark': lostArkBg,
+  warframe: warframeBg,
+  runescape: runescapeBg,
+};
 
 export default function GamePage() {
   const { gameId } = useParams<{ gameId: string }>();
@@ -36,7 +50,12 @@ export default function GamePage() {
       {/* ============ HEADER — image behind the title, under a gradient ============ */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0">
-          <FadeImage src={game.cardImage} alt="" className="h-full w-full" />
+          <FadeImage
+            src={GAME_BG[game.id] ?? game.cardImage}
+            alt=""
+            className="h-full w-full"
+            imgClassName="lg:object-[50%_35%]"
+          />
         </div>
         <div className="absolute inset-0 bg-gradient-to-r from-navy-900/95 via-navy-900/75 to-navy-900/40" />
         <div className="absolute inset-0 bg-gradient-to-t from-navy-900 via-transparent to-navy-900/60" />
@@ -133,9 +152,23 @@ export default function GamePage() {
           </Reveal>
           <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {activeSub.services.map((service, i) => (
-              <Reveal key={service.id} delay={Math.min(i, 3) * 80}>
-                <ServiceCard service={service} />
-              </Reveal>
+              <Fragment key={service.id}>
+                <Reveal delay={Math.min(i, 3) * 80}>
+                  <ServiceCard service={service} />
+                </Reveal>
+                {/* 'All services' only: one inline custom-order CTA per viewport —
+                    mobile after the 5th card (compact text, card width), desktop after 2 rows (8 cards) */}
+                {activeSub.id === 'all' && i === 4 && (
+                  <div className="mx-auto w-full max-w-[280px] sm:hidden">
+                    <CustomOrderCta compact />
+                  </div>
+                )}
+                {activeSub.id === 'all' && i === 7 && (
+                  <div className="hidden sm:col-span-2 sm:block lg:col-span-4">
+                    <CustomOrderCta />
+                  </div>
+                )}
+              </Fragment>
             ))}
           </div>
         </div>

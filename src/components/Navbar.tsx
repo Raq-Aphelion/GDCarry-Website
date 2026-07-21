@@ -19,23 +19,18 @@ import { useCart } from '@/context/CartContext';
 import { useCurrency, type Currency } from '@/context/CurrencyContext';
 import { useToast } from '@/context/ToastContext';
 
-const GAME_LOGOS: Record<string, { url: string; invert?: boolean }> = {
-  ffxiv: {
-    url: 'https://kimi-web-img.moonshot.cn/img/upload.wikimedia.org/e6d6a587b75e08fc443f4cf92dc8969621e7b60d.png',
-    invert: true,
-  },
-  wow: {
-    url: 'https://kimi-web-img.moonshot.cn/img/assets.stickpng.com/07d3ac86105f2666349c6325e0557af6bef19fe2.png',
-  },
-  'lost-ark': {
-    url: 'https://kimi-web-img.moonshot.cn/img/cdn2.steamgriddb.com/be9b58413e9ae540b660000f8915e118d5bf5c84.png',
-  },
-  warframe: {
-    url: 'https://kimi-web-img.moonshot.cn/img/cdn2.steamgriddb.com/22b4b149215ac40fb39c06c1d6a91190e38e0530.png',
-  },
-  runescape: {
-    url: 'https://kimi-web-img.moonshot.cn/img/oldschool.runescape.wiki/3c1ced74ad8eeda4433c0e29d6151a2d156e5d40.png',
-  },
+import logoFfxiv from '@/assets/images/game-logos/ffxiv.png';
+import logoWow from '@/assets/images/game-logos/wow.png';
+import logoLostArk from '@/assets/images/game-logos/lost-ark.png';
+import logoWarframe from '@/assets/images/game-logos/warframe.png';
+import logoRunescape from '@/assets/images/game-logos/runescape.webp';
+
+const GAME_LOGOS: Record<string, { url: string; invert?: boolean; scale?: string }> = {
+  ffxiv: { url: logoFfxiv, invert: true },
+  wow: { url: logoWow, scale: 'scale-125' },
+  'lost-ark': { url: logoLostArk, scale: 'scale-[0.85]' },
+  warframe: { url: logoWarframe },
+  runescape: { url: logoRunescape, scale: 'scale-[1.4]' },
 };
 
 const CURRENCIES: { c: Currency; symbol: string; label: string; icon: LucideIcon }[] = [
@@ -106,7 +101,7 @@ function SearchBox({
                       <img
                         src={r.service.image}
                         alt=""
-                        className="h-9 w-9 shrink-0 rounded-[3px] object-cover"
+                        className="h-9 w-9 shrink-0 rounded-[3px] object-cover object-top"
                         loading="lazy"
                       />
                       <span className="min-w-0 flex-1">
@@ -276,26 +271,34 @@ export default function Navbar() {
                             className="h-full w-full object-cover opacity-80 transition-opacity group-hover/item:opacity-100"
                             loading="lazy"
                           />
+                          {/* Navy veil over the art: stronger at the edges, dimmer in the
+                              middle but enough to keep the logo readable */}
                           <div
                             className="absolute inset-0"
                             style={{
                               background:
-                                'linear-gradient(to right, rgb(var(--navy-850) / 0.45) 0%, rgb(var(--navy-850) / 0.45) calc(100% - 50px), rgb(var(--navy-850)) 100%)',
+                                'linear-gradient(to right, rgb(var(--navy-850) / 0.7) 0%, rgb(var(--navy-850) / 0.45) 50%, rgb(var(--navy-850) / 0.7) 100%)',
                             }}
                           />
-                        </div>
-                        <span className="relative z-10 flex shrink-0 items-center gap-2.5 pl-3 text-sm font-semibold text-white transition-colors group-hover/item:text-cyan-400">
-                          <span className="flex h-7 w-[92px] items-center justify-center px-3">
+                          {/* Game logo centered on the art */}
+                          <span className="absolute inset-0 flex items-center justify-center">
                             <img
                               src={GAME_LOGOS[g.id].url}
                               alt=""
-                              className={`max-h-7 w-auto object-contain ${GAME_LOGOS[g.id].invert ? 'invert' : ''}`}
+                              className={`max-h-7 w-auto max-w-[92px] object-contain ${GAME_LOGOS[g.id].invert ? 'invert' : ''} ${GAME_LOGOS[g.id].scale ?? ''}`}
                               loading="lazy"
                             />
                           </span>
+                        </div>
+                        <span
+                          className="relative z-10 flex shrink-0 items-center gap-[22px] pl-5 text-sm font-semibold text-white transition-colors group-hover/item:text-cyan-400"
+                          style={{ marginLeft: titlePad + 56 }}
+                        >
+                          {/* Diamond marker guiding from the art to the title — same motif as the service card bullets */}
+                          <span className="h-1.5 w-1.5 shrink-0 rotate-45 bg-cyan-500" aria-hidden />
                           {g.name}
                         </span>
-                        <span className="relative z-10 min-w-0 flex-1 truncate px-6 text-xs text-slate-400">
+                        <span className="relative z-10 min-w-0 flex-1 truncate px-6 text-xs text-slate-600">
                           {g.subcategories.map((s) => s.name).join(' • ')}
                         </span>
                         <span className="relative z-10 shrink-0 pr-3 text-xs text-slate-400">
@@ -424,7 +427,7 @@ export default function Navbar() {
                   <img
                     src={GAME_LOGOS[g.id].url}
                     alt=""
-                    className={`max-h-7 w-auto object-contain ${GAME_LOGOS[g.id].invert ? 'invert' : ''}`}
+                    className={`max-h-7 w-auto object-contain ${GAME_LOGOS[g.id].invert ? 'invert' : ''} ${GAME_LOGOS[g.id].scale ?? ''}`}
                     loading="lazy"
                   />
                 </span>

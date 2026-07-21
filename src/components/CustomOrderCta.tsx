@@ -1,8 +1,9 @@
 import Reveal from './Reveal';
 import { useToast } from '@/context/ToastContext';
 
-/** "Can't find your boost?" custom-order call-to-action panel. */
-export default function CustomOrderCta() {
+/** "Can't find your boost?" custom-order call-to-action panel.
+    `compact` shortens the secondary text (used inline inside card grids). */
+export default function CustomOrderCta({ compact = false }: { compact?: boolean }) {
   const { toast } = useToast();
 
   return (
@@ -12,12 +13,13 @@ export default function CustomOrderCta() {
         <div className="pointer-events-none absolute -bottom-16 -right-16 h-56 w-56 rounded-full bg-cyan-400/15 blur-3xl" />
         <div className="relative flex flex-col items-center gap-6 text-center sm:flex-row sm:items-center sm:justify-between sm:text-left">
           <div className="max-w-xl">
-            <h2 className="font-display text-2xl font-extrabold text-white sm:text-3xl">
+            <h2 className="whitespace-nowrap font-display text-xl font-extrabold text-white sm:text-3xl">
               Can’t find <span className="text-gradient-blue">your boost?</span>
             </h2>
             <p className="mt-2 text-sm leading-relaxed text-slate-400">
-              Custom orders are our specialty. Tell us what you need — any game, any goal — and we’ll roll a quote
-              within the hour.
+              {compact
+                ? 'Tell us what you need.'
+                : 'Custom orders are our specialty. Tell us what you need — any game, any goal — and we’ll roll a quote within the hour.'}
             </p>
           </div>
           <button
