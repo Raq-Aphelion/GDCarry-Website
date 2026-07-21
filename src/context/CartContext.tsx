@@ -73,7 +73,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       toast({
         title: 'Added to cart',
         description: `${service.name} · ${gameShort}`,
-        variant: 'gold',
+        variant: 'blue',
       });
     },
     [toast],

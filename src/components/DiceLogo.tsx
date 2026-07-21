@@ -1,6 +1,6 @@
 import { useId } from 'react';
 
-/** The GD Carry mark: two golden dice (Grand Dice). */
+/** The GD Carry mark: two blue dice (Grand Dice). */
 export default function DiceLogo({ size = 40, className = '' }: { size?: number; className?: string }) {
   const gid = useId();
   return (
@@ -10,10 +10,10 @@ export default function DiceLogo({ size = 40, className = '' }: { size?: number;
       height={size}
       className={className}
       role="img"
-      aria-label="GD Carry — two golden dice"
+      aria-label="GD Carry — two blue dice"
     >
       <defs>
-        <linearGradient id={`${gid}-gold`} x1="0" y1="0" x2="1" y2="1">
+        <linearGradient id={`${gid}-blue`} x1="0" y1="0" x2="1" y2="1">
           <stop offset="0%" style={{ stopColor: 'rgb(var(--cyan-300))' }} />
           <stop offset="55%" style={{ stopColor: 'rgb(var(--cyan-500))' }} />
           <stop offset="100%" style={{ stopColor: 'rgb(var(--cyan-700))' }} />
@@ -27,7 +27,7 @@ export default function DiceLogo({ size = 40, className = '' }: { size?: number;
           width="28"
           height="28"
           rx="7"
-          fill={`url(#${gid}-gold)`}
+          fill={`url(#${gid}-blue)`}
           stroke="rgb(var(--cyan-700))"
           strokeWidth="1.5"
         />
@@ -43,7 +43,7 @@ export default function DiceLogo({ size = 40, className = '' }: { size?: number;
           width="28"
           height="28"
           rx="7"
-          fill={`url(#${gid}-gold)`}
+          fill={`url(#${gid}-blue)`}
           stroke="rgb(var(--cyan-700))"
           strokeWidth="1.5"
         />

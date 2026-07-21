@@ -1,6 +1,6 @@
 {
   "currency": {
-    "eurPerUsd": 0.92
+    "usdPerEur": 1.15
   },
   "purchaseBox": {
     "afkDiscount": 40,

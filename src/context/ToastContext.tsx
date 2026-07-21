@@ -3,7 +3,7 @@ import { createContext, useCallback, useContext, type ReactNode } from 'react';
 export interface ToastInput {
   title: string;
   description?: string;
-  variant?: 'gold' | 'cyan';
+  variant?: 'blue' | 'cyan';
 }
 
 interface ToastContextValue {

@@ -50,16 +50,13 @@
     --navy-800: 27 27 32;
     --navy-700: 38 38 46;
     --navy-600: 52 52 62;
-    --gold-300: 147 197 253;
-    --gold-400: 96 165 250;
-    --gold-500: 59 130 246;
-    --gold-600: 37 99 235;
-    --gold-700: 29 78 216;
+    --navy-500: 66 66 78;
     --cyan-300: 191 219 254;
     --cyan-400: 147 197 253;
     --cyan-500: 96 165 250;
     --cyan-600: 59 130 246;
     --cyan-700: 37 99 235;
+    --cyan-800: 29 78 216;
     --scroll-thumb: 58 58 70;
     --scroll-thumb-hover: 82 82 96;
     --glow-1: 96 165 250;
@@ -161,8 +158,8 @@
 }
 
 @layer utilities {
-  .text-gradient-gold {
-    background: linear-gradient(100deg, rgb(var(--gold-300)) 0%, rgb(var(--gold-400)) 45%, rgb(var(--gold-300)) 70%, rgb(var(--gold-700)) 100%);
+  .text-gradient-blue {
+    background: linear-gradient(100deg, rgb(var(--cyan-400)) 0%, rgb(var(--cyan-500)) 45%, rgb(var(--cyan-400)) 70%, rgb(var(--cyan-800)) 100%);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
@@ -176,8 +173,8 @@
   .card-surface {
     @apply bg-navy-850 backdrop-blur-sm;
   }
-  .gold-glow {
-    box-shadow: 0 0 24px -6px rgb(var(--gold-400) / 0.45);
+  .glow {
+    box-shadow: 0 0 14px -4px rgb(var(--cyan-500) / 0.45);
   }
   /* Soft, slow easing for the Additional Options collapse/extend */
   .ease-soft {
@@ -187,11 +184,11 @@
      it overlaps page content; removed as soon as it rests in its natural spot. */
   .price-block-glow {
     box-shadow:
-      0 -14px 28px -14px rgb(var(--gold-300) / 0.35),
+      0 -14px 28px -14px rgb(var(--cyan-400) / 0.35),
       0 25px 50px -12px rgba(0, 0, 0, 0.55);
   }
   .cyan-glow {
-    box-shadow: 0 0 24px -6px rgb(var(--cyan-500) / 0.4);
+    box-shadow: 0 0 14px -4px rgb(var(--cyan-600) / 0.5);
   }
   .no-scrollbar::-webkit-scrollbar {
     display: none;
@@ -286,15 +283,15 @@ input[type='number'] {
 .purchase-box {
   background-image: linear-gradient(180deg, rgb(var(--navy-700) / 0.35), rgb(var(--navy-850)) 55%);
   box-shadow:
-    0 0 0 1px rgb(var(--gold-500) / 0.22),
-    0 24px 60px -24px rgb(var(--gold-500) / 0.3);
+    0 0 0 1px rgb(var(--cyan-600) / 0.22),
+    0 24px 60px -24px rgb(var(--cyan-600) / 0.3);
 }
 .purchase-price-block {
-  border-color: rgb(var(--gold-500) / 0.35);
+  border-color: rgb(var(--cyan-600) / 0.35);
   background-image: linear-gradient(180deg, rgb(var(--navy-700) / 0.45), rgb(var(--navy-800)) 60%);
 }
 .purchase-cta {
   box-shadow:
-    0 10px 30px -10px rgb(var(--gold-500) / 0.45),
+    0 10px 30px -10px rgb(var(--cyan-600) / 0.45),
     inset 0 1px 0 rgb(255 255 255 / 0.18);
 }

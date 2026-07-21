@@ -185,14 +185,17 @@ export default function Home() {
               onLoad={() => setImageLoaded(true)}
             />
           )}
-          <div className="absolute inset-0 bg-gradient-to-b from-navy-900/80 via-navy-900/55 to-navy-900" />
+          {/* Bottom stop is the featured section's effective background
+              (navy-950/50 blended over the navy-900 body) so the hero fades
+              seamlessly into the section below */}
+          <div className="absolute inset-0 bg-gradient-to-b from-navy-900/80 via-navy-900/55 to-[rgb(12,12,14)]" />
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,rgb(var(--navy-900)_/_0.5)_78%)]" />
         </div>
 
-        <div className="relative mx-auto flex min-h-[calc(100svh-64px)] w-full max-w-[1440px] flex-col items-center justify-center px-[21px] pb-24 pt-14 sm:px-6 lg:px-8">
+        <div className="relative mx-auto flex min-h-[calc(100svh-64px)] w-full max-w-[1440px] flex-col items-center justify-center px-[25px] pb-24 pt-14 sm:px-6 lg:px-8">
           <div className="w-full max-w-3xl text-center">
             <Reveal>
-              <span className="inline-flex items-center rounded-full border border-gold-500/40 bg-gold-500/10 px-4 py-1.5 text-xs font-bold uppercase leading-none tracking-[0.18em] text-gold-300 backdrop-blur-sm">
+              <span className="inline-flex items-center rounded-full border border-cyan-600/40 bg-cyan-600/10 px-4 py-1.5 text-xs font-bold uppercase leading-none tracking-[0.18em] text-cyan-400 backdrop-blur-sm">
                 #1 EU's boosting services
               </span>
             </Reveal>
@@ -200,7 +203,7 @@ export default function Home() {
               <h1 className="mt-6 font-display text-[clamp(1.4rem,7.4vw,2.25rem)] font-extrabold leading-[1.08] tracking-tight text-white max-sm:whitespace-nowrap sm:text-6xl">
                 Don’t want to grind?
                 <br />
-                <span className="text-gradient-gold">We’ll do it for you.</span>
+                <span className="text-gradient-blue">We’ll do it for you.</span>
               </h1>
             </Reveal>
             <Reveal delay={240}>
@@ -231,7 +234,7 @@ export default function Home() {
                   disabled={!canLeft}
                   aria-label="Previous games"
                   className={`p-1 transition-colors duration-300 ${
-                    canLeft ? 'text-slate-400 hover:text-gold-300' : 'cursor-default text-navy-600'
+                    canLeft ? 'text-slate-400 hover:text-cyan-400' : 'cursor-default text-navy-600'
                   }`}
                 >
                   <ChevronLeft className="h-5 w-5" />
@@ -241,7 +244,7 @@ export default function Home() {
                   disabled={!canRight}
                   aria-label="Next games"
                   className={`p-1 transition-colors duration-300 ${
-                    canRight ? 'text-slate-400 hover:text-gold-300' : 'cursor-default text-navy-600'
+                    canRight ? 'text-slate-400 hover:text-cyan-400' : 'cursor-default text-navy-600'
                   }`}
                 >
                   <ChevronRight className="h-5 w-5" />
@@ -259,9 +262,7 @@ export default function Home() {
                 <Link
                   key={game.id}
                   to={`/boosting/${game.id}`}
-                  className={`card-surface group relative block shrink-0 basis-[78%] overflow-hidden rounded-[5px] transition-all duration-300 sm:basis-[calc((100%-1rem)/2)] lg:basis-[calc((100%-3rem)/4)] ${
-                    game.main ? '' : 'grayscale'
-                  }`}
+                  className="card-surface group relative block shrink-0 basis-[78%] overflow-hidden rounded-[5px] transition-all duration-300 sm:basis-[calc((100%-1rem)/2)] lg:basis-[calc((100%-3rem)/4)]"
                 >
                   <FadeImage
                     src={game.cardImage}
@@ -271,7 +272,7 @@ export default function Home() {
                   />
                   <div className="absolute -inset-px bg-gradient-to-t from-navy-800 from-0% via-navy-800/60 via-35% to-transparent to-60%" />
                   <div className="absolute inset-x-0 bottom-0 p-4">
-                    <h3 className="font-display text-base font-bold text-white transition-colors group-hover:text-gold-300 sm:text-lg">
+                    <h3 className="font-display text-base font-bold text-white transition-colors group-hover:text-cyan-400 sm:text-lg">
                       {game.name}
                     </h3>
                     <p className="mt-0.5 text-[11px] font-semibold uppercase tracking-wider text-slate-400">
@@ -300,7 +301,7 @@ export default function Home() {
         <button
           onClick={scrollToFeatured}
           aria-label="Scroll to next section"
-          className="absolute bottom-5 left-1/2 z-10 -translate-x-1/2 p-2 text-slate-400/70 transition-colors duration-300 hover:text-gold-300"
+          className="absolute bottom-5 left-1/2 z-10 -translate-x-1/2 p-2 text-slate-400/70 transition-colors duration-300 hover:text-cyan-400"
         >
           <ChevronDown className="h-7 w-7 animate-bounce" />
         </button>
@@ -308,18 +309,18 @@ export default function Home() {
 
       {/* ============ FEATURED FFXIV ============ */}
       <section id="featured" className="border-b border-navy-700/50 bg-navy-950/50 pb-12 pt-8 lg:pb-20 lg:pt-10">
-        <div className="mx-auto max-w-[1440px] px-[21px] sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-[1440px] px-[25px] sm:px-6 lg:px-8">
           <Reveal>
             <div className="flex flex-wrap items-end justify-between gap-6">
               <div>
-                <p className="text-xs font-bold uppercase tracking-[0.2em] text-gold-400">Frequently ordered</p>
+                <p className="text-xs font-bold uppercase tracking-[0.2em] text-cyan-500">Frequently ordered</p>
                 <h2 className="mt-2 font-display text-3xl font-extrabold text-white sm:text-4xl">
                   FFXIV <span className="text-gradient-cyan">popular picks</span>
                 </h2>
               </div>
               <Link
                 to="/boosting/ffxiv"
-                className="group flex items-center gap-2 text-sm font-bold text-gold-300 transition-colors hover:text-gold-400"
+                className="group flex items-center gap-2 text-sm font-bold text-cyan-400 transition-colors hover:text-cyan-500"
               >
                 All FFXIV services
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
@@ -343,12 +344,12 @@ export default function Home() {
       </section>
 
       {/* ============ WHY US ============ */}
-      <section className="mx-auto max-w-[1440px] px-[21px] py-12 sm:px-6 lg:py-20 lg:px-8">
+      <section className="mx-auto max-w-[1440px] px-[25px] py-12 sm:px-6 lg:py-20 lg:px-8">
         <Reveal>
           <div className="text-center">
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-gold-400">Why Grand Dice</p>
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-cyan-500">Why Grand Dice</p>
             <h2 className="mt-2 font-display text-3xl font-extrabold text-white sm:text-4xl">
-              Experience <span className="text-gradient-gold">the difference</span>
+              Experience <span className="text-gradient-blue">the difference</span>
             </h2>
           </div>
         </Reveal>
@@ -358,7 +359,7 @@ export default function Home() {
               <div className="card-surface h-full rounded-[5px] p-6 text-center">
                 <div className="relative mx-auto h-14 w-14">
                   <Badge className="h-14 w-14 fill-navy-700 text-navy-700" strokeWidth={1.5} />
-                  <p.icon className="absolute inset-0 m-auto h-6 w-6 text-gold-300" strokeWidth={1.75} />
+                  <p.icon className="absolute inset-0 m-auto h-6 w-6 text-cyan-400" strokeWidth={1.75} />
                 </div>
                 <h3 className="mt-5 font-display text-lg font-bold text-white">{p.title}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-slate-400">{p.text}</p>
@@ -370,10 +371,10 @@ export default function Home() {
 
       {/* ============ REVIEWS ============ */}
       <section className="border-y border-navy-700/50 bg-navy-950/50 py-12 lg:py-20">
-        <div className="mx-auto max-w-[1440px] px-[21px] sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-[1440px] px-[25px] sm:px-6 lg:px-8">
           <Reveal>
             <div className="text-center">
-              <p className="text-xs font-bold uppercase tracking-[0.2em] text-gold-400">Player reviews</p>
+              <p className="text-xs font-bold uppercase tracking-[0.2em] text-cyan-500">Player reviews</p>
               <h2 className="mt-2 font-display text-3xl font-extrabold text-white sm:text-4xl">
                 Trusted by <span className="text-gradient-cyan">many</span>
               </h2>
@@ -408,7 +409,7 @@ export default function Home() {
                     “{r.text}”
                   </blockquote>
                   <figcaption className="mt-5 flex items-center gap-3 border-t border-navy-700/60 pt-4">
-                    <span className="flex h-9 w-9 items-center justify-center rounded-[5px] bg-gradient-to-br from-gold-400 to-gold-600 font-display text-xs font-bold text-navy-900">
+                    <span className="flex h-9 w-9 items-center justify-center rounded-[5px] bg-gradient-to-br from-cyan-500 to-cyan-700 font-display text-xs font-bold text-navy-900">
                       {r.name.charAt(0)}
                     </span>
                     <span>
@@ -424,10 +425,10 @@ export default function Home() {
       </section>
 
       {/* ============ HOW IT WORKS ============ */}
-      <section className="mx-auto max-w-[1440px] px-[21px] py-12 sm:px-6 lg:py-20 lg:px-8">
+      <section className="mx-auto max-w-[1440px] px-[25px] py-12 sm:px-6 lg:py-20 lg:px-8">
         <Reveal>
           <div className="text-center">
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-gold-400">Three simple steps</p>
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-cyan-500">Three simple steps</p>
             <h2 className="mt-2 font-display text-3xl font-extrabold text-white sm:text-4xl">How it works</h2>
           </div>
         </Reveal>
@@ -438,7 +439,7 @@ export default function Home() {
                 <span className="pointer-events-none absolute right-2 top-1 font-display text-7xl font-extrabold text-navy-700/50">
                   {s.n}
                 </span>
-                <span className="font-display text-sm font-extrabold text-gradient-gold">{s.n}</span>
+                <span className="font-display text-sm font-extrabold text-gradient-blue">{s.n}</span>
                 <h3 className="mt-2 font-display text-lg font-bold text-white">{s.title}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-slate-400">{s.text}</p>
               </div>
@@ -448,7 +449,7 @@ export default function Home() {
       </section>
 
       {/* ============ CTA ============ */}
-      <section className="mx-auto max-w-[1440px] px-[21px] pb-4 sm:px-6 lg:px-8">
+      <section className="mx-auto max-w-[1440px] px-[25px] pb-4 sm:px-6 lg:px-8">
         <CustomOrderCta />
       </section>
     </div>

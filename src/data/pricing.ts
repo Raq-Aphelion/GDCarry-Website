@@ -21,11 +21,11 @@ export interface PricingAddon {
 
 export interface PricingDb {
   currency: {
-    /** Conversion multiplier: 1 USD = eurPerUsd EUR */
-    eurPerUsd: number;
+    /** Conversion multiplier: 1 EUR = usdPerEur USD */
+    usdPerEur: number;
   };
   purchaseBox: {
-    /** Flat USD discount applied to the AFK Carry method */
+    /** Flat EUR discount applied to the AFK Carry method */
     afkDiscount: number;
     runsMin: number;
     runsMax: number;
@@ -35,13 +35,13 @@ export interface PricingDb {
     logOptions: PricingOption[];
     addons: PricingAddon[];
   };
-  /** Service id -> base price in USD (overrides the bundled fallback) */
+  /** Service id -> base price in EUR (overrides the bundled fallback) */
   servicePrices: Record<string, number>;
 }
 
 /** Bundled fallback, used only if the JSON database cannot be loaded. */
 export const DEFAULT_PRICING: PricingDb = {
-  currency: { eurPerUsd: 0.92 },
+  currency: { usdPerEur: 1.15 },
   purchaseBox: {
     afkDiscount: 40,
     runsMin: 1,

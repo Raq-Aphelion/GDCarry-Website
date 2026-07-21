@@ -81,15 +81,15 @@ function CustomSelect({
                   }}
                   className={`flex w-full items-center justify-between gap-2 px-3.5 py-2 text-left text-sm transition-colors ${
                     selected
-                      ? 'bg-navy-800 font-semibold text-gold-300'
+                      ? 'bg-navy-800 font-semibold text-cyan-400'
                       : 'text-slate-300 hover:bg-navy-800 hover:text-white'
                   }`}
                 >
                   <span className="truncate">{o.label}</span>
                   {o.hint ? (
-                    <span className="shrink-0 text-xs font-bold text-gold-300">{o.hint}</span>
+                    <span className="shrink-0 text-xs font-bold text-cyan-400">{o.hint}</span>
                   ) : selected ? (
-                    <Check className="h-3.5 w-3.5 shrink-0 text-gold-400" />
+                    <Check className="h-3.5 w-3.5 shrink-0 text-cyan-500" />
                   ) : null}
                 </button>
               );
@@ -313,17 +313,21 @@ export default function PurchaseBox({ service, gameShort }: { service: Service; 
       }
       style={stick === 'overflow' ? { top: overflowTop } : undefined}
     >
-      <div className="purchase-box overflow-visible rounded-[5px] bg-navy-850">
-        {/* Service image */}
-        <div className="relative h-28 overflow-hidden rounded-t-[5px]">
-          <FadeImage src={service.image} alt="" className="h-full w-full" />
-          <div className="absolute -inset-px bg-gradient-to-t from-navy-850 via-navy-850/25 to-transparent" />
+      <div className="purchase-box relative overflow-visible rounded-[5px] bg-navy-850">
+        {/* Service image behind the top of the box: fully clear at the center of
+            the Boost Method title (~77% of the strip), fading to solid navy at the
+            center of the method buttons (bottom edge) */}
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-[180px] overflow-hidden rounded-t-[5px]" aria-hidden>
+          <FadeImage src={service.image} alt="" className="h-full w-full" imgClassName="object-[50%_10%]" />
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent via-[65%] to-navy-850" />
         </div>
+        {/* Spacer preserving the original image height in the layout flow */}
+        <div className="h-28" />
 
-        <div className="space-y-4 p-4">
+        <div className="relative space-y-4 p-4">
           {/* Boost method */}
           <div>
-            <p className="pl-px text-sm font-semibold text-white">Boost Method</p>
+            <p className="pl-px text-sm font-semibold text-white [text-shadow:0_1px_4px_rgb(0_0_0/0.7)]">Boost Method</p>
             <div className="mt-2.5 grid grid-cols-2 gap-3">
               {methods.map((m) => (
                 <button
@@ -332,11 +336,15 @@ export default function PurchaseBox({ service, gameShort }: { service: Service; 
                   aria-pressed={method === m.id}
                   className={`rounded-[5px] border px-3 py-2 text-center transition-all duration-300 ${
                     method === m.id
-                      ? 'border-navy-600 bg-navy-800 text-white'
-                      : 'border-navy-700/70 text-slate-500 hover:border-navy-600 hover:text-slate-300'
+                      ? 'border-navy-600 bg-navy-800 text-white cyan-glow'
+                      : 'border-navy-700/70 bg-navy-850 text-slate-500 hover:border-navy-600 hover:text-slate-300'
                   }`}
                 >
-                  <span className="block text-[11px] font-semibold uppercase tracking-wider opacity-70">
+                  <span
+                    className={`block text-[11px] font-semibold uppercase tracking-wider ${
+                      method === m.id ? 'text-cyan-400' : 'opacity-70'
+                    }`}
+                  >
                     {m.label}
                   </span>
                   <span className="mt-0.5 block font-display text-sm font-bold">{format(m.price)}</span>
@@ -443,14 +451,14 @@ export default function PurchaseBox({ service, gameShort }: { service: Service; 
                             <span
                               className={`flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-[3px] border transition-colors ${
                                 checked
-                                  ? 'border-gold-400 bg-gold-500 text-navy-900'
+                                  ? 'border-cyan-500 bg-cyan-600 text-navy-900'
                                   : 'border-navy-600 text-transparent'
                               }`}
                             >
                               <Check className="h-3 w-3" strokeWidth={3.5} />
                             </span>
                             <span className="flex-1 text-sm text-slate-300">{a.label}</span>
-                            <span className="text-xs font-bold text-gold-300">
+                            <span className="text-xs font-bold text-cyan-400">
                               {a.id === 'priority'
                                 ? `+${Math.round((cfg.priorityMultiplier - 1) * 100)}%`
                                 : `+${format(a.price)}`}
@@ -477,13 +485,13 @@ export default function PurchaseBox({ service, gameShort }: { service: Service; 
         >
           <p className="font-display text-2xl font-extrabold text-white">{format(total)}</p>
           <p className="mt-1 flex items-center justify-center gap-1.5 text-xs text-slate-400">
-            <Clock className="h-3.5 w-3.5 text-gold-400" />
+            <Clock className="h-3.5 w-3.5 text-cyan-500" />
             Average Completion Time: 24 Hours
           </p>
           <button
             onClick={addToCart}
             disabled={!dc}
-            className="purchase-cta mt-3.5 w-full rounded-[5px] bg-gradient-to-r from-gold-400 to-gold-600 py-2.5 font-display text-sm font-bold text-navy-900 transition-all hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:brightness-100"
+            className="purchase-cta mt-3.5 w-full rounded-[5px] bg-gradient-to-r from-cyan-500 to-cyan-700 py-2.5 font-display text-sm font-bold text-navy-900 transition-all hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:brightness-100"
           >
             Add to cart
           </button>

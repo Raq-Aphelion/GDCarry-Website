@@ -25,21 +25,21 @@ export default function ServiceCard({ service }: { service: Service }) {
           src={service.image}
           alt=""
           className="h-full w-full"
-          imgClassName="transition-transform duration-500 group-hover:scale-105"
+          imgClassName="object-top transition-transform duration-500 group-hover:scale-105"
         />
       </div>
-      <div className="absolute -inset-px bg-gradient-to-t from-navy-800 from-[30%] via-navy-800/75 via-[65%] to-navy-800/15" />
+      <div className="absolute -inset-px bg-gradient-to-t from-navy-800 from-[33%] via-navy-800/70 via-[45%] to-transparent to-[60%]" />
 
       {/* Content */}
       <div className="relative flex flex-1 flex-col justify-end p-4">
-        <h3 className="font-display text-sm font-bold text-white transition-colors group-hover:text-gold-300">
+        <h3 className="font-display text-sm font-bold text-white transition-colors group-hover:text-cyan-400">
           {service.name}
         </h3>
 
         <ul className="mt-2.5 space-y-1.5 text-xs">
           <li className="flex items-center gap-2">
-            <span className="h-1.5 w-1.5 shrink-0 rotate-45 bg-gold-400" />
-            <span className="font-medium text-gold-300">{service.delivery}</span>
+            <span className="h-1.5 w-1.5 shrink-0 rotate-45 bg-cyan-500" />
+            <span className="font-medium text-cyan-400">{service.delivery}</span>
           </li>
           <li className="flex items-center gap-2">
             <span className="h-1.5 w-1.5 shrink-0 rotate-45 bg-slate-500" />

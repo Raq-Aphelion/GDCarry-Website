@@ -83,7 +83,7 @@ function Bullets({ items }: { items: string[] }) {
     <ul className="space-y-2">
       {items.map((item) => (
         <li key={item} className="flex items-start gap-2.5 text-sm leading-relaxed text-slate-400">
-          <span className="mt-[7px] h-1.5 w-1.5 shrink-0 rotate-45 bg-gold-400/70" />
+          <span className="mt-[7px] h-1.5 w-1.5 shrink-0 rotate-45 bg-cyan-500/70" />
           {item}
         </li>
       ))}
@@ -142,22 +142,22 @@ export default function ServicePage() {
     <div>
       <Reveal>
         <nav className="flex flex-wrap items-center gap-1.5 text-xs font-medium text-slate-400" aria-label="Breadcrumb">
-          <Link to="/" className="transition-colors hover:text-gold-300">
+          <Link to="/" className="transition-colors hover:text-cyan-400">
             Home
           </Link>
           <ChevronRight className="h-3.5 w-3.5" />
-          <Link to={`/boosting/${game.id}`} className="transition-colors hover:text-gold-300">
+          <Link to={`/boosting/${game.id}`} className="transition-colors hover:text-cyan-400">
             {game.name}
           </Link>
           <ChevronRight className="h-3.5 w-3.5" />
           <Link
             to={`/boosting/${game.id}?cat=${sub.id}`}
-            className="transition-colors hover:text-gold-300"
+            className="transition-colors hover:text-cyan-400"
           >
             {sub.name}
           </Link>
           <ChevronRight className="h-3.5 w-3.5" />
-          <span className="text-gold-300">DSR</span>
+          <span className="text-cyan-400">DSR</span>
         </nav>
       </Reveal>
       <Reveal delay={100}>
@@ -183,7 +183,7 @@ export default function ServicePage() {
                 key={p.text}
                 className="flex shrink-0 items-center gap-1.5 rounded-full border border-navy-700/70 bg-navy-850/80 px-3.5 py-1.5 text-xs font-semibold text-slate-300 backdrop-blur-sm"
               >
-                <p.icon className={`h-3.5 w-3.5 ${i === 1 ? 'text-cyan-400' : 'text-gold-400'}`} />
+                <p.icon className={`h-3.5 w-3.5 ${i === 1 ? 'text-cyan-400' : 'text-cyan-500'}`} />
                 {p.text}
               </span>
             ))}
@@ -207,7 +207,7 @@ export default function ServicePage() {
           {REWARDS.map((r) => (
             <div key={r.title} className="flex items-start gap-4 p-4 sm:p-5">
               <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[5px] bg-navy-800">
-                <r.icon className="h-5 w-5 text-gold-300" strokeWidth={1.75} />
+                <r.icon className="h-5 w-5 text-cyan-400" strokeWidth={1.75} />
               </span>
               <div className="min-w-0 text-left">
                 <p className="text-sm font-bold text-white">{r.title}</p>
@@ -265,7 +265,7 @@ export default function ServicePage() {
           <div className="h-px flex-1 bg-gradient-to-r from-navy-700/70 to-transparent" />
           <Link
             to={`/boosting/${game.id}?cat=${sub.id}`}
-            className="flex shrink-0 items-center gap-1.5 rounded-[5px] border border-navy-700/70 px-3.5 py-2 text-xs font-bold text-slate-300 transition-colors hover:border-gold-500/30 hover:text-gold-300"
+            className="flex shrink-0 items-center gap-1.5 rounded-[5px] border border-navy-700/70 px-3.5 py-2 text-xs font-bold text-slate-300 transition-colors hover:border-cyan-600/30 hover:text-cyan-400"
           >
             Check all
             <ArrowRight className="h-3.5 w-3.5" />
@@ -288,11 +288,13 @@ export default function ServicePage() {
       <MobileCategoryBar items={game.subcategories} activeId={sub.id} gameId={game.id} />
 
       {/* ============ SIDEBAR + CONTENT + PURCHASE ============ */}
-      <div className="relative mx-auto flex max-w-[1440px] flex-col gap-10 px-[21px] py-10 sm:px-6 lg:grid lg:grid-cols-[240px_minmax(0,1fr)_340px] lg:gap-8 lg:py-12 lg:px-8">
-        {/* Faded service image behind the top of the page */}
+      <div className="relative mx-auto flex max-w-[1440px] flex-col gap-10 px-[25px] py-10 sm:px-6 lg:grid lg:grid-cols-[240px_minmax(0,1fr)_340px] lg:gap-8 lg:py-12 lg:px-8">
+        {/* Faded game art behind the top of the page — same background as the game subpage */}
         <div className="pointer-events-none absolute left-1/2 top-0 -z-10 h-[460px] w-screen -translate-x-1/2" aria-hidden>
           <div className="absolute inset-0">
-            <FadeImage src={service.image} alt="" className="h-full w-full" />
+            <FadeImage src={game.cardImage} alt="" className="h-full w-full" imgClassName="grayscale" />
+            {/* Slight navy veil over the greyscale art */}
+            <div className="absolute inset-0 bg-navy-500/50" />
           </div>
           <div className="absolute inset-0 bg-gradient-to-r from-navy-900/95 via-navy-900/75 to-navy-900/40" />
           <div className="absolute inset-0 bg-gradient-to-t from-navy-900 via-transparent to-navy-900/60" />
@@ -311,12 +313,12 @@ export default function ServicePage() {
                       to={`/boosting/${game.id}?cat=${s.id}`}
                       className={`flex w-full items-center justify-between rounded-[5px] px-3 py-3 text-left text-sm transition-colors ${
                         isActive
-                          ? 'bg-navy-800 font-semibold text-gold-300'
+                          ? 'bg-navy-800 font-semibold text-cyan-400'
                           : 'text-slate-400 hover:bg-navy-850 hover:text-white'
                       }`}
                     >
                       {s.name}
-                      <span className={`text-xs ${isActive ? 'text-gold-300/70' : 'text-slate-500'}`}>
+                      <span className={`text-xs ${isActive ? 'text-cyan-400/70' : 'text-slate-500'}`}>
                         {s.services.length}
                       </span>
                     </Link>
@@ -326,7 +328,7 @@ export default function ServicePage() {
             </ul>
 
             <div id="sidebar-bottom-cta" className="mt-8 rounded-[5px] bg-navy-850 p-4">
-              <p className="font-display text-sm font-bold text-gold-300">Need something else?</p>
+              <p className="font-display text-sm font-bold text-cyan-400">Need something else?</p>
               <p className="mt-1 text-xs leading-relaxed text-slate-400">
                 Custom {game.short} orders are quoted within the hour.
               </p>
@@ -347,7 +349,7 @@ export default function ServicePage() {
       </div>
 
       {/* ============ CUSTOM ORDER CTA ============ */}
-      <section id="custom-order-section" className="mx-auto max-w-[1440px] px-[21px] pb-4 sm:px-6 lg:px-8">
+      <section id="custom-order-section" className="mx-auto max-w-[1440px] px-[25px] pb-4 sm:px-6 lg:px-8">
         <CustomOrderCta />
       </section>
     </div>

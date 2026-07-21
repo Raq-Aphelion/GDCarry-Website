@@ -47,14 +47,14 @@ export default function MobileCategoryBar({
   const chip = (id: string) =>
     `shrink-0 rounded-full px-4 py-2 text-xs font-bold transition-all ${
       activeId === id
-        ? 'bg-gold-500 text-navy-900 gold-glow'
+        ? 'border border-cyan-500 bg-gradient-to-r from-cyan-500 to-cyan-700 text-navy-900 glow'
         : 'border border-navy-700/70 bg-navy-850/80 text-slate-300 hover:text-white'
     }`;
 
   return (
     <div className="sticky top-0 z-30 border-b border-navy-700/60 bg-navy-900/85 backdrop-blur-xl lg:hidden">
       <div className="relative">
-        <div ref={dragRef} onScroll={updateFades} className="no-scrollbar flex touch-pan-y gap-2 overflow-x-auto px-[21px] py-3">
+        <div ref={dragRef} onScroll={updateFades} className="no-scrollbar flex touch-pan-y gap-2 overflow-x-auto px-[25px] py-3">
           {items.map((s) =>
             gameId ? (
               <Link key={s.id} to={`/boosting/${gameId}?cat=${s.id}`} className={chip(s.id)}>

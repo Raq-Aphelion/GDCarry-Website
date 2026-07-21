@@ -19,13 +19,7 @@ module.exports = {
           800: "rgb(var(--navy-800) / <alpha-value>)",
           700: "rgb(var(--navy-700) / <alpha-value>)",
           600: "rgb(var(--navy-600) / <alpha-value>)",
-        },
-        gold: {
-          300: "rgb(var(--gold-300) / <alpha-value>)",
-          400: "rgb(var(--gold-400) / <alpha-value>)",
-          500: "rgb(var(--gold-500) / <alpha-value>)",
-          600: "rgb(var(--gold-600) / <alpha-value>)",
-          700: "rgb(var(--gold-700) / <alpha-value>)",
+          500: "rgb(var(--navy-500) / <alpha-value>)",
         },
         cyan: {
           300: "rgb(var(--cyan-300) / <alpha-value>)",
@@ -33,10 +27,11 @@ module.exports = {
           500: "rgb(var(--cyan-500) / <alpha-value>)",
           600: "rgb(var(--cyan-600) / <alpha-value>)",
           700: "rgb(var(--cyan-700) / <alpha-value>)",
+          800: "rgb(var(--cyan-800) / <alpha-value>)",
         },
         brand: {
           cyan: "rgb(var(--cyan-500) / <alpha-value>)",
-          gold: "rgb(var(--gold-400) / <alpha-value>)",
+          blue: "rgb(var(--cyan-500) / <alpha-value>)",
         },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

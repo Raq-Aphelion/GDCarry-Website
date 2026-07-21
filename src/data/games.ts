@@ -2,7 +2,7 @@ export interface Service {
   id: string;
   name: string;
   description: string;
-  /** Base price in USD */
+  /** Base price in EUR */
   price: number;
   delivery: string;
   image: string;
@@ -36,6 +36,7 @@ import cardWow from '@/assets/images/game-cards/GameCard_WoW.webp';
 import cardLostArk from '@/assets/images/game-cards/GameCard_LostArk.webp';
 import cardWarframe from '@/assets/images/game-cards/GameCard_Warframe.webp';
 import cardOsrs from '@/assets/images/game-cards/GameCard_OSRS.webp';
+import dsrMain from '@/assets/images/service-cards/ffxiv/ultimate-raids/dsr-main.png';
 
 const img = (id: number, w = 640, h = 400) => `https://picsum.photos/id/${id}/${w}/${h}`;
 
@@ -145,7 +146,7 @@ export const games: Game[] = [
             note: 'Piloted or AFK Carry',
             longDescription:
               '“There are no ifs in history, yet man is wont to cast his mind towards the path not walked.” Thus spoke the wandering minstrel, and at his urging, you reflect upon bygone trials with newfound perspective. Your imagination stirred by the man\'s masterfully woven verse, you dream of an alternate conclusion to the Dragonsong War─one in which a dear comrade is spared his tragic fate...',
-            image: img(571),
+            image: dsrMain,
           },
           {
             id: 'ffxiv-tea',
@@ -466,110 +467,22 @@ export const games: Game[] = [
       {
         id: 'raids',
         name: 'Raid Boosts',
-        services: [
-          {
-            id: 'wow-mythic-clear',
-            name: 'Mythic Raid Full Clear',
-            description: 'Current-tier Mythic clear with Cutting Edge, loot funnels and a shot at the raid mount.',
-            price: 199.99,
-            delivery: '1 week',
-            image: img(485),
-            tag: 'Hot',
-          },
-          {
-            id: 'wow-aotc',
-            name: 'Ahead of the Curve',
-            description: 'Final boss Heroic kill for the AotC feat — scheduled same-week, self-play available.',
-            price: 29.99,
-            delivery: 'Same day',
-            image: img(502),
-            tag: 'Popular',
-          },
-          {
-            id: 'wow-glory',
-            name: 'Glory of the Raider',
-            description: 'Full raid meta-achievement run with every tricky mechanic handled for you.',
-            price: 44.99,
-            delivery: '1–2 days',
-            image: img(529),
-          },
-        ],
+        services: [],
       },
       {
         id: 'mythic-plus',
         name: 'Mythic+',
-        services: [
-          {
-            id: 'wow-m10',
-            name: '+10 Keystone Carry',
-            description: 'Timed +10 (or any key level up to +15) with a full premade — armor stack and trader included.',
-            price: 19.99,
-            delivery: 'Same day',
-            image: img(553),
-            tag: 'Best Value',
-          },
-          {
-            id: 'wow-ksm',
-            name: 'Keystone Master',
-            description: 'Seasonal KSM achievement and mount — all dungeons pushed to the required rating.',
-            price: 89.99,
-            delivery: '3–5 days',
-            image: img(580),
-          },
-          {
-            id: 'wow-vault',
-            name: 'Great Vault Weekly Fill',
-            description: 'Eight timed dungeons on schedule every week so your Vault always offers three choices.',
-            price: 49.99,
-            delivery: 'Weekly',
-            image: img(596),
-          },
-        ],
+        services: [],
       },
       {
         id: 'leveling',
         name: 'Leveling',
-        services: [
-          {
-            id: 'wow-1-80',
-            name: '1–80 Powerleveling',
-            description: 'Fresh character to the level cap with campaign progress and riding unlocks included.',
-            price: 79.99,
-            delivery: '2–3 days',
-            image: img(627),
-          },
-          {
-            id: 'wow-renown',
-            name: 'Renown & Reputation Catch-Up',
-            description: 'All faction renown maxed with the cosmetics, mounts and recipes that come with it.',
-            price: 39.99,
-            delivery: '2–4 days',
-            image: img(660),
-          },
-        ],
+        services: [],
       },
       {
         id: 'pvp',
         name: 'PvP',
-        services: [
-          {
-            id: 'wow-arena-1800',
-            name: 'Arena Rating 1800',
-            description: 'Rival title and the elite PvP set appearance, earned in 2v2 or 3v3 by gladiator players.',
-            price: 69.99,
-            delivery: '2–4 days',
-            image: img(687),
-            tag: 'Popular',
-          },
-          {
-            id: 'wow-solo-shuffle',
-            name: 'Solo Shuffle Elite Set',
-            description: 'Shuffle rating pushed to the elite set breakpoint — piloted by multi-R1 specialists.',
-            price: 99.99,
-            delivery: '3–6 days',
-            image: img(715),
-          },
-        ],
+        services: [],
       },
     ],
   },
@@ -585,109 +498,22 @@ export const games: Game[] = [
       {
         id: 'legion-raids',
         name: 'Legion Raids',
-        services: [
-          {
-            id: 'la-thaemine',
-            name: 'Thaemine Legion Raid Clear',
-            description: 'Full Thaemine clear on Normal or Hard — the endgame wall, torn down for you.',
-            price: 59.99,
-            delivery: '1–2 days',
-            image: img(766),
-            tag: 'Hot',
-          },
-          {
-            id: 'la-echidna',
-            name: 'Echidna / Aegir Clear',
-            description: 'Kazeros raid bosses cleared with your loot and auction priority guaranteed.',
-            price: 49.99,
-            delivery: '1–2 days',
-            image: img(788),
-          },
-          {
-            id: 'la-brelshaza',
-            name: 'Brelshaza HM Farm',
-            description: 'Hard mode Brel gates farmed weekly for ancient gear and honing materials.',
-            price: 34.99,
-            delivery: 'Weekly',
-            image: img(823),
-          },
-        ],
+        services: [],
       },
       {
         id: 'dungeons',
         name: 'Dungeons',
-        services: [
-          {
-            id: 'la-abyssal',
-            name: 'Abyssal Dungeon Clear',
-            description: 'Any Abyssal dungeon cleared on your roster — Moko shortcuts, full rewards.',
-            price: 14.99,
-            delivery: 'Same day',
-            image: img(870),
-          },
-          {
-            id: 'la-kayangel',
-            name: 'Kayangel Hard Mode',
-            description: 'All Kayangel HM gates with elixir materials and light farmed clean.',
-            price: 24.99,
-            delivery: 'Same day',
-            image: img(892),
-          },
-        ],
+        services: [],
       },
       {
         id: 'progression',
         name: 'Progression',
-        services: [
-          {
-            id: 'la-1-60',
-            name: '1–60 Powerleveling',
-            description: 'Story to endgame-ready with knowledge transfer optimization — alts done in days, not weeks.',
-            price: 49.99,
-            delivery: '2–3 days',
-            image: img(903),
-            tag: 'Popular',
-          },
-          {
-            id: 'la-honing',
-            name: 'Item Level Honing Boost',
-            description: 'Target item level reached with our materials routing — pity protection managed smartly.',
-            price: 99.99,
-            delivery: '1–2 weeks',
-            image: img(931),
-          },
-          {
-            id: 'la-elixirs',
-            name: 'Elixir & Transcendence Farm',
-            description: 'Full elixir set and weapon transcendence completed by min-max specialists.',
-            price: 69.99,
-            delivery: '1 week',
-            image: img(960),
-          },
-        ],
+        services: [],
       },
       {
         id: 'collectibles',
         name: 'Collectibles',
-        services: [
-          {
-            id: 'la-island-souls',
-            name: 'Island Soul Farm',
-            description: 'Any Island Souls you’re missing, RNG-heavy ones included, with rapport handled.',
-            price: 39.99,
-            delivery: '1–2 weeks',
-            image: img(985),
-          },
-          {
-            id: 'la-mokoko',
-            name: 'Mokoko Seed Clear',
-            description: 'Every Mokoko seed on the map collected — yes, all of them.',
-            price: 29.99,
-            delivery: '3–5 days',
-            image: img(1002),
-            tag: 'Best Value',
-          },
-        ],
+        services: [],
       },
     ],
   },
@@ -703,101 +529,22 @@ export const games: Game[] = [
       {
         id: 'mastery',
         name: 'Mastery',
-        services: [
-          {
-            id: 'wf-mr30',
-            name: 'Mastery Rank Boost',
-            description: 'MR tests passed and gear leveled in bulk — push toward Legendary ranks without the slog.',
-            price: 39.99,
-            delivery: '3–5 days',
-            image: img(1016),
-            tag: 'Popular',
-          },
-          {
-            id: 'wf-steel-path',
-            name: 'Steel Path Unlock',
-            description: 'Every star chart node cleared on Steel Path — incursions and rewards unlocked.',
-            price: 54.99,
-            delivery: '2–3 days',
-            image: img(1024),
-          },
-        ],
+        services: [],
       },
       {
         id: 'farming',
         name: 'Farming',
-        services: [
-          {
-            id: 'wf-prime-farm',
-            name: 'Prime Set Farm',
-            description: 'Any Prime Warframe or weapon set — relics cracked, parts traded, delivered complete.',
-            price: 24.99,
-            delivery: '1–3 days',
-            image: img(1029),
-            tag: 'Best Value',
-          },
-          {
-            id: 'wf-lich',
-            name: 'Kuva Lich / Sister Hunt',
-            description: 'Your Lich or Sister vanquished with the weapon and ephemera secured.',
-            price: 19.99,
-            delivery: 'Same day',
-            image: img(1035),
-          },
-          {
-            id: 'wf-arbitrations',
-            name: 'Arbitrations Farm',
-            description: 'Vitus essence, galvanized mods and endo farmed in hour-long rotation runs.',
-            price: 14.99,
-            delivery: 'Same day',
-            image: img(1041),
-          },
-        ],
+        services: [],
       },
       {
         id: 'bosses',
         name: 'Bosses',
-        services: [
-          {
-            id: 'wf-eidolon',
-            name: 'Eidolon Hunt 5x3',
-            description: 'Full tridolon captures across the night cycle — arcanes and standing in bulk.',
-            price: 29.99,
-            delivery: 'Same day',
-            image: img(1043),
-            tag: 'Hot',
-          },
-          {
-            id: 'wf-profit-taker',
-            name: 'Profit-Taker Orb Runs',
-            description: 'Speed-kill Profit-Taker runs for credits, toroids and Vox Solaris standing.',
-            price: 17.99,
-            delivery: 'Same day',
-            image: img(1050),
-          },
-        ],
+        services: [],
       },
       {
         id: 'endgame',
         name: 'Endgame',
-        services: [
-          {
-            id: 'wf-netracells',
-            name: 'Netracells Clear',
-            description: 'Weekly Netracell missions cleared for archon shards and cavia standing.',
-            price: 12.99,
-            delivery: 'Weekly',
-            image: img(1052),
-          },
-          {
-            id: 'wf-archon',
-            name: 'Archon Hunt Weekly',
-            description: 'All three Archon Hunt missions done each week — guaranteed tauforged progress.',
-            price: 9.99,
-            delivery: 'Weekly',
-            image: img(1054),
-          },
-        ],
+        services: [],
       },
     ],
   },
@@ -813,102 +560,22 @@ export const games: Game[] = [
       {
         id: 'bossing',
         name: 'Bossing',
-        services: [
-          {
-            id: 'rs-zulrah',
-            name: 'Zulrah Kill Count',
-            description: 'Any KC target farmed — pet chance, uniques and profit stack up while you sleep.',
-            price: 24.99,
-            delivery: '1–2 days',
-            image: img(1062),
-            tag: 'Popular',
-          },
-          {
-            id: 'rs-toa',
-            name: 'Tombs of Amascut Raid',
-            description: 'Expert-mode ToA completions with invocation scaling — shadow hunting included.',
-            price: 49.99,
-            delivery: '1–3 days',
-            image: img(1067),
-            tag: 'Hot',
-          },
-          {
-            id: 'rs-nex',
-            name: 'Nex / God Wars Carries',
-            description: 'High-value boss kills in efficient teams with all drops logged to your account.',
-            price: 34.99,
-            delivery: '1–2 days',
-            image: img(1071),
-          },
-        ],
+        services: [],
       },
       {
         id: 'skilling',
         name: 'Skilling',
-        services: [
-          {
-            id: 'rs-99',
-            name: '99 Skill Powerleveling',
-            description: 'Any skill from current level to 99 — hand-trained with efficient tick-perfect methods.',
-            price: 89.99,
-            delivery: '1–3 weeks',
-            image: img(1074),
-            tag: 'Best Value',
-          },
-          {
-            id: 'rs-quests',
-            name: 'Quest Point Cape',
-            description: 'Every quest completed from wherever you stand — including all grandmasters.',
-            price: 119.99,
-            delivery: '1–2 weeks',
-            image: img(1076),
-          },
-        ],
+        services: [],
       },
       {
         id: 'capes',
         name: 'Capes & Titles',
-        services: [
-          {
-            id: 'rs-infernal',
-            name: 'Infernal Cape Service',
-            description: 'The Inferno, completed by a cape specialist with thousands of waves logged. The real flex.',
-            price: 149.99,
-            delivery: '2–4 days',
-            image: img(1080),
-            tag: 'Hot',
-          },
-          {
-            id: 'rs-fire-cape',
-            name: 'Fire Cape Fast Run',
-            description: 'Jad down in under an hour of account time. Classic cape, zero stress.',
-            price: 14.99,
-            delivery: 'Same day',
-            image: img(1081),
-          },
-        ],
+        services: [],
       },
       {
         id: 'accounts',
         name: 'Account Builds',
-        services: [
-          {
-            id: 'rs-pure',
-            name: 'Pure / Zerker Build',
-            description: 'PK-ready account built to exact combat brackets — quests, stats and gear all planned.',
-            price: 99.99,
-            delivery: '1–2 weeks',
-            image: img(1082),
-          },
-          {
-            id: 'rs-ironman',
-            name: 'Ironman Starter Package',
-            description: 'Early-game ironman bootstrap — quests, diaries and gear milestones locked in.',
-            price: 69.99,
-            delivery: '1 week',
-            image: img(1083),
-          },
-        ],
+        services: [],
       },
     ],
   },

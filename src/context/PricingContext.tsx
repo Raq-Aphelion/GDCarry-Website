@@ -3,7 +3,7 @@ import { loadPricing, type PricingDb } from '@/data/pricing';
 
 interface PricingContextValue {
   db: PricingDb;
-  /** Base USD price for a service: database value, else bundled fallback. */
+  /** Base EUR price for a service: database value, else bundled fallback. */
   priceOf: (serviceId: string, fallback: number) => number;
 }
 

@@ -222,7 +222,7 @@ export default function Navbar() {
           : 'border-b border-transparent bg-transparent'
       }`}
     >
-      <nav className="mx-auto flex h-16 max-w-[1440px] items-center gap-3 px-[21px] sm:px-6 lg:px-8">
+      <nav className="mx-auto flex h-16 max-w-[1440px] items-center gap-3 px-[25px] sm:px-6 lg:px-8">
         {/* Brand */}
         <Link to="/" className="group mr-1 flex shrink-0 items-center gap-2.5 lg:mr-4">
           <DiceLogo size={36} className="transition-transform duration-300 group-hover:-rotate-6" />
@@ -241,14 +241,14 @@ export default function Navbar() {
             }}
             className={`flex h-[42px] shrink-0 items-center gap-2 rounded-[3px] px-3.5 text-sm font-semibold transition-all duration-300 ease-out hover:shadow-lg hover:shadow-black/25 ${
               gamesOpen
-                ? 'bg-gradient-to-r from-navy-700 to-navy-800 text-gold-300'
-                : 'bg-gradient-to-r from-navy-800 to-navy-850 text-white hover:from-navy-700 hover:to-navy-800 hover:text-gold-300'
+                ? 'bg-gradient-to-r from-navy-700 to-navy-800 text-cyan-400'
+                : 'bg-gradient-to-r from-navy-800 to-navy-850 text-white hover:from-navy-700 hover:to-navy-800 hover:text-cyan-400'
             }`}
             aria-expanded={gamesOpen}
           >
             <Gamepad2 className="h-4 w-4" />
             Games
-            <ChevronDown className={`h-3.5 w-3.5 text-gold-300/60 transition-transform ${gamesOpen ? 'rotate-180' : ''}`} />
+            <ChevronDown className={`h-3.5 w-3.5 text-cyan-400/60 transition-transform ${gamesOpen ? 'rotate-180' : ''}`} />
           </button>
 
           {searchBox}
@@ -284,7 +284,7 @@ export default function Navbar() {
                             }}
                           />
                         </div>
-                        <span className="relative z-10 flex shrink-0 items-center gap-2.5 pl-3 text-sm font-semibold text-white transition-colors group-hover/item:text-gold-300">
+                        <span className="relative z-10 flex shrink-0 items-center gap-2.5 pl-3 text-sm font-semibold text-white transition-colors group-hover/item:text-cyan-400">
                           <span className="flex h-7 w-[92px] items-center justify-center px-3">
                             <img
                               src={GAME_LOGOS[g.id].url}
@@ -322,15 +322,15 @@ export default function Navbar() {
               }}
               className={`flex h-[42px] w-[42px] items-center justify-center gap-2 rounded-[3px] border text-sm font-semibold transition-all duration-300 ease-out hover:shadow-lg hover:shadow-black/25 lg:w-[94px] lg:border-0 lg:px-2.5 ${
                 currencyOpen
-                  ? 'border-navy-600 bg-gradient-to-r from-navy-700 to-navy-800 text-gold-300'
-                  : 'border-navy-700/70 bg-navy-850/90 text-slate-300 hover:border-navy-600 hover:text-gold-300 lg:bg-gradient-to-r lg:from-navy-800 lg:to-navy-850 lg:text-white lg:hover:from-navy-700 lg:hover:to-navy-800 lg:hover:text-gold-300'
+                  ? 'border-navy-600 bg-gradient-to-r from-navy-700 to-navy-800 text-cyan-400'
+                  : 'border-navy-700/70 bg-navy-850/90 text-slate-300 hover:border-navy-600 hover:text-cyan-400 lg:bg-gradient-to-r lg:from-navy-800 lg:to-navy-850 lg:text-white lg:hover:from-navy-700 lg:hover:to-navy-800 lg:hover:text-cyan-400'
               }`}
               aria-expanded={currencyOpen}
               aria-label="Change currency"
             >
               <activeCurrency.icon className="h-5 w-5 lg:h-4 lg:w-4" />
               <span className="hidden lg:inline">{activeCurrency.c}</span>
-              <ChevronDown className={`hidden h-3.5 w-3.5 text-gold-300/60 transition-transform lg:block ${currencyOpen ? 'rotate-180' : ''}`} />
+              <ChevronDown className={`hidden h-3.5 w-3.5 text-cyan-400/60 transition-transform lg:block ${currencyOpen ? 'rotate-180' : ''}`} />
             </button>
             {currencyOpen && (
               <>
@@ -350,7 +350,7 @@ export default function Navbar() {
                         <o.icon className="h-4 w-4" />
                         <span className="font-semibold">{o.c}</span>
                       </span>
-                      {currency === o.c && <Check className="h-3.5 w-3.5 text-gold-400" />}
+                      {currency === o.c && <Check className="h-3.5 w-3.5 text-cyan-500" />}
                     </button>
                   ))}
                 </div>
@@ -361,12 +361,12 @@ export default function Navbar() {
           {/* Cart */}
           <button
             onClick={openCart}
-            className="relative flex h-[42px] w-[42px] items-center justify-center rounded-[3px] border border-navy-700/70 bg-navy-850/90 text-slate-300 transition-all hover:border-navy-600 hover:text-gold-300"
+            className="relative flex h-[42px] w-[42px] items-center justify-center rounded-[3px] border border-navy-700/70 bg-navy-850/90 text-slate-300 transition-all hover:border-navy-600 hover:text-cyan-400"
             aria-label="Open cart"
           >
             <ShoppingCart className="h-5 w-5" />
             {count > 0 && (
-              <span className="absolute -right-1.5 -top-1.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-gold-500 px-1 text-[11px] font-bold text-navy-900 gold-glow">
+              <span className="absolute -right-1.5 -top-1.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-cyan-600 px-1 text-[11px] font-bold text-navy-900 glow">
                 {count}
               </span>
             )}
@@ -390,7 +390,7 @@ export default function Navbar() {
           mobileOpen ? 'max-h-[560px]' : 'max-h-0'
         }`}
       >
-        <div className="space-y-1.5 border-t border-navy-700/60 bg-navy-900/95 px-[21px] py-4 backdrop-blur-xl">
+        <div className="space-y-1.5 border-t border-navy-700/60 bg-navy-900/95 px-[25px] py-4 backdrop-blur-xl">
           <div className="pb-2">{searchBox}</div>
           <p className="px-3 pb-1 pt-1 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500">Games</p>
           {games.map((g) => (
@@ -399,7 +399,7 @@ export default function Navbar() {
               to={`/boosting/${g.id}`}
               className={({ isActive }) =>
                 `group/item relative flex h-16 items-center overflow-hidden rounded-[3px] ${
-                  isActive ? 'ring-1 ring-gold-500/40' : ''
+                  isActive ? 'ring-1 ring-cyan-600/40' : ''
                 }`
               }
             >
@@ -419,7 +419,7 @@ export default function Navbar() {
                   }}
                 />
               </div>
-              <span className="relative z-10 flex shrink-0 items-center gap-2.5 pl-3 text-sm font-semibold text-white transition-colors group-hover/item:text-gold-300">
+              <span className="relative z-10 flex shrink-0 items-center gap-2.5 pl-3 text-sm font-semibold text-white transition-colors group-hover/item:text-cyan-400">
                 <span className="flex h-7 w-[92px] items-center justify-center px-3">
                   <img
                     src={GAME_LOGOS[g.id].url}

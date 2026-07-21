@@ -11,7 +11,7 @@ export default function Footer() {
 
   return (
     <footer className="mt-8 border-t border-navy-700/60 bg-navy-950/70 lg:mt-12">
-      <div className="mx-auto grid max-w-[1440px] gap-10 px-[21px] py-10 sm:px-6 md:grid-cols-2 lg:flex lg:items-start lg:justify-start lg:gap-[clamp(2.5rem,7vw,11rem)] lg:px-8">
+      <div className="mx-auto grid max-w-[1440px] gap-10 px-[25px] py-10 sm:px-6 md:grid-cols-2 lg:flex lg:items-start lg:justify-start lg:gap-[clamp(2.5rem,7vw,11rem)] lg:px-8">
         <div className="text-center md:text-left">
           <Link to="/" className="group flex items-center justify-center gap-2.5 md:justify-start">
             <DiceLogo size={36} className="transition-transform duration-300 group-hover:rotate-6" />
@@ -45,13 +45,13 @@ export default function Footer() {
 
         <div className="grid grid-cols-2 gap-6 sm:gap-10 md:col-span-2 lg:flex-1 lg:gap-[clamp(1.5rem,3vw,3rem)] xl:grid-cols-4">
         <div className="hidden xl:block">
-          <h3 className="font-display text-sm font-bold uppercase tracking-wider text-gold-400">Games</h3>
+          <h3 className="font-display text-sm font-bold uppercase tracking-wider text-cyan-500">Games</h3>
           <ul className="mt-4 space-y-2.5">
             {games.map((g) => (
               <li key={g.id}>
                 <Link
                   to={`/boosting/${g.id}`}
-                  className="text-sm text-slate-400 transition-colors hover:text-gold-300"
+                  className="text-sm text-slate-400 transition-colors hover:text-cyan-400"
                 >
                   {g.name}
                 </Link>
@@ -61,7 +61,7 @@ export default function Footer() {
         </div>
 
         <div className="max-md:pl-6">
-          <h3 className="font-display text-sm font-bold uppercase tracking-wider text-gold-400">Support</h3>
+          <h3 className="font-display text-sm font-bold uppercase tracking-wider text-cyan-500">Support</h3>
           <ul className="mt-4 space-y-2.5">
             {[
               { icon: MessageCircle, label: 'Live chat' },
@@ -84,7 +84,7 @@ export default function Footer() {
         </div>
 
         <div>
-          <h3 className="font-display text-sm font-bold uppercase tracking-wider text-gold-400">
+          <h3 className="font-display text-sm font-bold uppercase tracking-wider text-cyan-500">
             Legal &amp; Policies
           </h3>
           <ul className="mt-4 space-y-2.5">
@@ -108,7 +108,7 @@ export default function Footer() {
         </div>
 
         <div className="hidden xl:block">
-          <h3 className="font-display text-sm font-bold uppercase tracking-wider text-gold-400">Why Grand Dice</h3>
+          <h3 className="font-display text-sm font-bold uppercase tracking-wider text-cyan-500">Why Grand Dice</h3>
           <ul className="mt-4 space-y-2.5 text-sm text-slate-500">
             <li>Account safety first</li>
             <li>Fast fullfilment</li>
@@ -120,7 +120,7 @@ export default function Footer() {
       </div>
 
       <div className="border-t border-navy-700/60">
-        <div className="mx-auto flex max-w-[1440px] flex-col items-center justify-between gap-3 px-[21px] py-4 text-xs text-slate-500 sm:px-6 md:flex-row lg:px-8">
+        <div className="mx-auto flex max-w-[1440px] flex-col items-center justify-between gap-3 px-[25px] py-4 text-xs text-slate-500 sm:px-6 md:flex-row lg:px-8">
           <p className="shrink-0">© 2026 GD Carry • Grand Dice</p>
           <p className="text-center sm:whitespace-nowrap md:text-right">
             Not affiliated with or endorsed by Square Enix, Blizzard Entertainment, Amazon Games, Digital Extremes
