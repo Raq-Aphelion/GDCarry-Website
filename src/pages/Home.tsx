@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router';
-import { ArrowRight, Badge, ChevronLeft, ChevronRight, ShieldCheck, Star, Timer, Users, Zap } from 'lucide-react';
+import { ArrowRight, Badge, ChevronDown, ChevronLeft, ChevronRight, ShieldCheck, Star, Timer, Users, Zap } from 'lucide-react';
 import CustomOrderCta from '@/components/CustomOrderCta';
 import FadeImage from '@/components/FadeImage';
 import Reveal from '@/components/Reveal';
@@ -169,7 +169,7 @@ export default function Home() {
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,rgb(var(--navy-900)_/_0.5)_78%)]" />
         </div>
 
-        <div className="relative mx-auto flex min-h-[calc(100svh-64px)] w-full max-w-[1440px] flex-col items-center justify-center px-4 py-14 sm:px-6 lg:h-[936px] lg:min-h-0 lg:py-0 lg:px-8">
+        <div className="relative mx-auto flex min-h-[calc(100svh-64px)] w-full max-w-[1440px] flex-col items-center justify-center px-4 pb-24 pt-14 sm:px-6 lg:px-8">
           <div className="w-full max-w-3xl text-center">
             <Reveal>
               <span className="inline-flex items-center rounded-full border border-gold-500/40 bg-gold-500/10 px-4 py-1.5 text-xs font-bold uppercase leading-none tracking-[0.18em] text-gold-300 backdrop-blur-sm">
@@ -262,10 +262,19 @@ export default function Home() {
             </div>
           </Reveal>
         </div>
+
+        {/* Scroll-down cue */}
+        <button
+          onClick={() => document.getElementById('featured')?.scrollIntoView({ behavior: 'smooth' })}
+          aria-label="Scroll to next section"
+          className="absolute bottom-5 left-1/2 z-10 -translate-x-1/2 p-2 text-slate-400/70 transition-colors duration-300 hover:text-gold-300"
+        >
+          <ChevronDown className="h-7 w-7 animate-bounce" />
+        </button>
       </section>
 
       {/* ============ FEATURED FFXIV ============ */}
-      <section className="border-b border-navy-700/50 bg-navy-950/50 pb-12 pt-8 lg:pb-20 lg:pt-10">
+      <section id="featured" className="border-b border-navy-700/50 bg-navy-950/50 pb-12 pt-8 lg:pb-20 lg:pt-10">
         <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-8">
           <Reveal>
             <div className="flex flex-wrap items-end justify-between gap-6">
