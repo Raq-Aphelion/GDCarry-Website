@@ -10,8 +10,8 @@ export default function CustomOrderCta() {
       <div id="custom-order-cta" className="relative overflow-hidden rounded-[5px] bg-gradient-to-r from-navy-800 via-navy-850 to-navy-800 px-8 py-8 sm:px-12">
         <div className="pointer-events-none absolute -left-16 -top-16 h-56 w-56 rounded-full bg-gold-500/15 blur-3xl" />
         <div className="pointer-events-none absolute -bottom-16 -right-16 h-56 w-56 rounded-full bg-cyan-400/15 blur-3xl" />
-        <div className="relative flex flex-col items-start gap-6 sm:flex-row sm:items-center sm:justify-between">
-          <div className="max-w-xl text-left">
+        <div className="relative flex flex-col items-center gap-6 text-center sm:flex-row sm:items-center sm:justify-between sm:text-left">
+          <div className="max-w-xl">
             <h2 className="font-display text-2xl font-extrabold text-white sm:text-3xl">
               Can’t find <span className="text-gradient-gold">your boost?</span>
             </h2>

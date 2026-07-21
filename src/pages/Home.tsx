@@ -131,6 +131,26 @@ export default function Home() {
     track.scrollBy({ left: dir * cardWidth, behavior: 'smooth' });
   };
 
+  // Eased scroll to the next section — smoother than the browser's built-in smooth scroll.
+  // The page scrolls inside #page-scroll (not window), so animate that element's scrollTop.
+  const scrollToFeatured = () => {
+    const target = document.getElementById('featured');
+    const scroller = document.getElementById('page-scroll');
+    if (!target || !scroller) return;
+    const start = scroller.scrollTop;
+    const distance = target.getBoundingClientRect().top - scroller.getBoundingClientRect().top;
+    const duration = 600;
+    const startTime = performance.now();
+    const easeOutCubic = (t: number) => 1 - (1 - t) ** 3;
+    const step = (now: number) => {
+      const progress = Math.min((now - startTime) / duration, 1);
+      // 'instant' overrides the global CSS scroll-behavior: smooth, which would fight the rAF loop
+      scroller.scrollTo({ top: start + distance * easeOutCubic(progress), behavior: 'instant' as ScrollBehavior });
+      if (progress < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  };
+
   return (
     <div>
       {/* ============ HERO + GAME CAROUSEL ============ */}
@@ -196,7 +216,7 @@ export default function Home() {
                   ))}
                 </span>
                 <span className="font-semibold text-white">Excellent</span>
-                <span className="text-slate-400">— 3,400+ verified player reviews</span>
+                <span className="text-slate-400"><span className="max-sm:hidden">— </span>800+ verified player reviews</span>
               </div>
             </Reveal>
           </div>
@@ -265,7 +285,7 @@ export default function Home() {
 
         {/* Scroll-down cue */}
         <button
-          onClick={() => document.getElementById('featured')?.scrollIntoView({ behavior: 'smooth' })}
+          onClick={scrollToFeatured}
           aria-label="Scroll to next section"
           className="absolute bottom-5 left-1/2 z-10 -translate-x-1/2 p-2 text-slate-400/70 transition-colors duration-300 hover:text-gold-300"
         >
@@ -351,7 +371,7 @@ export default function Home() {
                   ))}
                 </div>
                 <span className="text-sm text-slate-400">
-                  <span className="font-semibold text-white">4.9 / 5</span> from 3,400+ verified orders
+                  <span className="font-semibold text-white">4.9 / 5</span> from 800+ verified orders
                 </span>
               </div>
             </div>

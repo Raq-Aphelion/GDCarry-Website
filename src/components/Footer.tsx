@@ -60,7 +60,7 @@ export default function Footer() {
           </ul>
         </div>
 
-        <div>
+        <div className="max-md:pl-6">
           <h3 className="font-display text-sm font-bold uppercase tracking-wider text-gold-400">Support</h3>
           <ul className="mt-4 space-y-2.5">
             {[

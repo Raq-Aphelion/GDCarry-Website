@@ -13,6 +13,7 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 import DiceLogo from './DiceLogo';
+import { OverlayScrollbar } from './Scrollbar';
 import { allServices, games, serviceCount } from '@/data/games';
 import { useCart } from '@/context/CartContext';
 import { useCurrency, type Currency } from '@/context/CurrencyContext';
@@ -50,6 +51,7 @@ export default function Navbar() {
   const [searchFocused, setSearchFocused] = useState(false);
   const [query, setQuery] = useState('');
   const gamesBtnRef = useRef<HTMLButtonElement>(null);
+  const [searchListEl, setSearchListEl] = useState<HTMLElement | null>(null);
   const [titlePad, setTitlePad] = useState(140);
   const { count, openCart } = useCart();
   const { currency, setCurrency } = useCurrency();
@@ -130,7 +132,7 @@ export default function Navbar() {
       {query && (
         <button
           onClick={() => setQuery('')}
-          className="absolute right-2.5 top-1/2 -translate-y-1/2 rounded-md p-1 text-slate-500 hover:text-white"
+          className="absolute right-2.5 top-1/2 -translate-y-1/2 rounded-[3px] p-1 text-slate-500 hover:text-white"
           aria-label="Clear search"
         >
           <X className="h-3.5 w-3.5" />
@@ -138,35 +140,43 @@ export default function Navbar() {
       )}
 
       {showResults && (
-        <div className="absolute left-0 right-0 top-full z-30 mt-2 overflow-hidden rounded-2xl border border-navy-700/70 bg-navy-850 shadow-2xl">
+        // 1px wider than the searchbox on mobile so it covers the active game item's ring below
+        <div className="absolute -left-px -right-px top-full z-30 mt-2 overflow-hidden rounded-[3px] border border-navy-700/70 bg-navy-850 shadow-2xl lg:left-0 lg:right-0">
           {results.length === 0 ? (
             <p className="px-4 py-3.5 text-sm text-slate-400">
               No boosts found for “<span className="text-white">{query.trim()}</span>”.
             </p>
           ) : (
-            <ul className="max-h-80 overflow-y-auto py-1.5">
-              {results.map((r) => (
-                <li key={r.service.id}>
-                  <button
-                    onClick={() => goToResult(r.game.id, r.subId)}
-                    className="flex w-full items-center gap-3 px-3.5 py-2.5 text-left transition-colors hover:bg-white/5"
-                  >
-                    <img
-                      src={r.service.image}
-                      alt=""
-                      className="h-9 w-9 shrink-0 rounded-lg object-cover"
-                      loading="lazy"
-                    />
-                    <span className="min-w-0 flex-1">
-                      <span className="block truncate text-sm font-semibold text-white">{r.service.name}</span>
-                      <span className="block truncate text-xs text-slate-400">
-                        {r.game.short} · {r.subName}
+            <>
+              <ul ref={setSearchListEl} className="no-scrollbar max-h-80 overflow-y-auto py-1.5">
+                {results.map((r) => (
+                  <li key={r.service.id}>
+                    <button
+                      onClick={() => goToResult(r.game.id, r.subId)}
+                      className="flex w-full items-center gap-3 px-3.5 py-2.5 text-left transition-colors hover:bg-white/5"
+                    >
+                      <img
+                        src={r.service.image}
+                        alt=""
+                        className="h-9 w-9 shrink-0 rounded-[3px] object-cover"
+                        loading="lazy"
+                      />
+                      <span className="min-w-0 flex-1">
+                        <span className="block truncate text-sm font-semibold text-white">{r.service.name}</span>
+                        <span className="block truncate text-xs text-slate-400">
+                          {r.game.short} · {r.subName}
+                        </span>
                       </span>
-                    </span>
-                  </button>
-                </li>
-              ))}
-            </ul>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+              {/* Same overlay scrollbar as the page/cart — appears only when results overflow */}
+              <OverlayScrollbar
+                scroller={searchListEl}
+                className="absolute bottom-1.5 right-1 top-1.5 w-2"
+              />
+            </>
           )}
         </div>
       )}
