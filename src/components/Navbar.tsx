@@ -14,7 +14,7 @@ import {
 } from 'lucide-react';
 import DiceLogo from './DiceLogo';
 import { OverlayScrollbar } from './Scrollbar';
-import { allServices, games, serviceCount } from '@/data/games';
+import { allServices, games, serviceCount, type ServiceSearchResult } from '@/data/games';
 import { useCart } from '@/context/CartContext';
 import { useCurrency, type Currency } from '@/context/CurrencyContext';
 import { useToast } from '@/context/ToastContext';
@@ -43,6 +43,95 @@ const CURRENCIES: { c: Currency; symbol: string; label: string; icon: LucideIcon
   { c: 'USD', symbol: '$', label: 'US Dollar', icon: DollarSign },
 ];
 
+/** Search input + results dropdown. Rendered twice (desktop nav and mobile
+    menu), so it's a real component: each instance needs its own dropdown
+    scrollbar state — a shared ref would point at the hidden instance. */
+function SearchBox({
+  query,
+  results,
+  showResults,
+  onQueryChange,
+  onFocus,
+  onGoResult,
+}: {
+  query: string;
+  results: ServiceSearchResult[];
+  showResults: boolean;
+  onQueryChange: (value: string) => void;
+  onFocus: () => void;
+  onGoResult: (gameId: string, subId: string) => void;
+}) {
+  const [listEl, setListEl] = useState<HTMLElement | null>(null);
+
+  return (
+    <div className="relative w-full">
+      <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
+      <input
+        value={query}
+        onChange={(e) => onQueryChange(e.target.value)}
+        onFocus={onFocus}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' && results.length > 0) onGoResult(results[0].game.id, results[0].subId);
+        }}
+        placeholder="Search boosts, games, categories…"
+        className="h-[42px] w-full rounded-[3px] border border-navy-700/70 bg-navy-850/90 pl-10 pr-9 text-sm text-white placeholder:text-slate-500 outline-none transition-colors hover:border-navy-600 focus:border-navy-600"
+        aria-label="Search services"
+      />
+      {query && (
+        <button
+          onClick={() => onQueryChange('')}
+          className="absolute right-2.5 top-1/2 -translate-y-1/2 rounded-[3px] p-1 text-slate-500 hover:text-white"
+          aria-label="Clear search"
+        >
+          <X className="h-3.5 w-3.5" />
+        </button>
+      )}
+
+      {showResults && (
+        // 1px wider than the searchbox on mobile so it covers the active game item's ring below
+        <div className="absolute -left-px -right-px top-full z-30 mt-2 overflow-hidden rounded-[3px] border border-navy-700/70 bg-navy-850 shadow-2xl lg:left-0 lg:right-0">
+          {results.length === 0 ? (
+            <p className="px-4 py-3.5 text-sm text-slate-400">
+              No boosts found for “<span className="text-white">{query.trim()}</span>”.
+            </p>
+          ) : (
+            <>
+              <ul ref={setListEl} className="no-scrollbar max-h-80 overflow-y-auto py-1.5">
+                {results.map((r) => (
+                  <li key={r.service.id}>
+                    <button
+                      onClick={() => onGoResult(r.game.id, r.subId)}
+                      className="flex w-full items-center gap-3 px-3.5 py-2.5 text-left transition-colors hover:bg-white/5"
+                    >
+                      <img
+                        src={r.service.image}
+                        alt=""
+                        className="h-9 w-9 shrink-0 rounded-[3px] object-cover"
+                        loading="lazy"
+                      />
+                      <span className="min-w-0 flex-1">
+                        <span className="block truncate text-sm font-semibold text-white">{r.service.name}</span>
+                        <span className="block truncate text-xs text-slate-400">
+                          {r.game.short} · {r.subName}
+                        </span>
+                      </span>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+              {/* Same overlay scrollbar as the page/cart — appears only when results overflow */}
+              <OverlayScrollbar
+                scroller={listEl}
+                className="absolute bottom-1.5 right-1 top-1.5 w-2"
+              />
+            </>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -51,7 +140,6 @@ export default function Navbar() {
   const [searchFocused, setSearchFocused] = useState(false);
   const [query, setQuery] = useState('');
   const gamesBtnRef = useRef<HTMLButtonElement>(null);
-  const [searchListEl, setSearchListEl] = useState<HTMLElement | null>(null);
   const [titlePad, setTitlePad] = useState(140);
   const { count, openCart } = useCart();
   const { currency, setCurrency } = useCurrency();
@@ -116,71 +204,14 @@ export default function Navbar() {
   const activeCurrency = CURRENCIES.find((o) => o.c === currency)!;
 
   const searchBox = (
-    <div className="relative w-full">
-      <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
-      <input
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        onFocus={() => setSearchFocused(true)}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter' && results.length > 0) goToResult(results[0].game.id, results[0].subId);
-        }}
-        placeholder="Search boosts, games, categories…"
-        className="h-[42px] w-full rounded-[3px] border border-navy-700/70 bg-navy-850/90 pl-10 pr-9 text-sm text-white placeholder:text-slate-500 outline-none transition-colors hover:border-navy-600 focus:border-navy-600"
-        aria-label="Search services"
-      />
-      {query && (
-        <button
-          onClick={() => setQuery('')}
-          className="absolute right-2.5 top-1/2 -translate-y-1/2 rounded-[3px] p-1 text-slate-500 hover:text-white"
-          aria-label="Clear search"
-        >
-          <X className="h-3.5 w-3.5" />
-        </button>
-      )}
-
-      {showResults && (
-        // 1px wider than the searchbox on mobile so it covers the active game item's ring below
-        <div className="absolute -left-px -right-px top-full z-30 mt-2 overflow-hidden rounded-[3px] border border-navy-700/70 bg-navy-850 shadow-2xl lg:left-0 lg:right-0">
-          {results.length === 0 ? (
-            <p className="px-4 py-3.5 text-sm text-slate-400">
-              No boosts found for “<span className="text-white">{query.trim()}</span>”.
-            </p>
-          ) : (
-            <>
-              <ul ref={setSearchListEl} className="no-scrollbar max-h-80 overflow-y-auto py-1.5">
-                {results.map((r) => (
-                  <li key={r.service.id}>
-                    <button
-                      onClick={() => goToResult(r.game.id, r.subId)}
-                      className="flex w-full items-center gap-3 px-3.5 py-2.5 text-left transition-colors hover:bg-white/5"
-                    >
-                      <img
-                        src={r.service.image}
-                        alt=""
-                        className="h-9 w-9 shrink-0 rounded-[3px] object-cover"
-                        loading="lazy"
-                      />
-                      <span className="min-w-0 flex-1">
-                        <span className="block truncate text-sm font-semibold text-white">{r.service.name}</span>
-                        <span className="block truncate text-xs text-slate-400">
-                          {r.game.short} · {r.subName}
-                        </span>
-                      </span>
-                    </button>
-                  </li>
-                ))}
-              </ul>
-              {/* Same overlay scrollbar as the page/cart — appears only when results overflow */}
-              <OverlayScrollbar
-                scroller={searchListEl}
-                className="absolute bottom-1.5 right-1 top-1.5 w-2"
-              />
-            </>
-          )}
-        </div>
-      )}
-    </div>
+    <SearchBox
+      query={query}
+      results={results}
+      showResults={showResults}
+      onQueryChange={setQuery}
+      onFocus={() => setSearchFocused(true)}
+      onGoResult={goToResult}
+    />
   );
 
   return (
@@ -191,7 +222,7 @@ export default function Navbar() {
           : 'border-b border-transparent bg-transparent'
       }`}
     >
-      <nav className="mx-auto flex h-16 max-w-[1440px] items-center gap-3 px-4 sm:px-6 lg:px-8">
+      <nav className="mx-auto flex h-16 max-w-[1440px] items-center gap-3 px-[21px] sm:px-6 lg:px-8">
         {/* Brand */}
         <Link to="/" className="group mr-1 flex shrink-0 items-center gap-2.5 lg:mr-4">
           <DiceLogo size={36} className="transition-transform duration-300 group-hover:-rotate-6" />
@@ -359,7 +390,7 @@ export default function Navbar() {
           mobileOpen ? 'max-h-[560px]' : 'max-h-0'
         }`}
       >
-        <div className="space-y-1.5 border-t border-navy-700/60 bg-navy-900/95 px-4 py-4 backdrop-blur-xl">
+        <div className="space-y-1.5 border-t border-navy-700/60 bg-navy-900/95 px-[21px] py-4 backdrop-blur-xl">
           <div className="pb-2">{searchBox}</div>
           <p className="px-3 pb-1 pt-1 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500">Games</p>
           {games.map((g) => (
@@ -398,6 +429,9 @@ export default function Navbar() {
                   />
                 </span>
                 {g.name}
+              </span>
+              <span className="relative z-10 ml-auto mr-4 flex h-6 min-w-6 shrink-0 items-center justify-center rounded-full bg-navy-800/80 px-1.5 text-[10px] font-bold text-slate-300">
+                {serviceCount(g)}
               </span>
             </NavLink>
           ))}

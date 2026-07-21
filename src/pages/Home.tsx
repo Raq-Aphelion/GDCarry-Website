@@ -189,7 +189,7 @@ export default function Home() {
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,rgb(var(--navy-900)_/_0.5)_78%)]" />
         </div>
 
-        <div className="relative mx-auto flex min-h-[calc(100svh-64px)] w-full max-w-[1440px] flex-col items-center justify-center px-4 pb-24 pt-14 sm:px-6 lg:px-8">
+        <div className="relative mx-auto flex min-h-[calc(100svh-64px)] w-full max-w-[1440px] flex-col items-center justify-center px-[21px] pb-24 pt-14 sm:px-6 lg:px-8">
           <div className="w-full max-w-3xl text-center">
             <Reveal>
               <span className="inline-flex items-center rounded-full border border-gold-500/40 bg-gold-500/10 px-4 py-1.5 text-xs font-bold uppercase leading-none tracking-[0.18em] text-gold-300 backdrop-blur-sm">
@@ -249,11 +249,12 @@ export default function Home() {
               </div>
             </div>
 
-            <div
-              ref={carouselRef}
-              onScroll={updateArrows}
-              className="no-scrollbar flex touch-pan-y gap-4 overflow-x-auto p-1"
-            >
+            <div className="relative">
+              <div
+                ref={carouselRef}
+                onScroll={updateArrows}
+                className="no-scrollbar flex touch-pan-y gap-4 overflow-x-auto p-1"
+              >
               {games.map((game) => (
                 <Link
                   key={game.id}
@@ -279,6 +280,18 @@ export default function Home() {
                   </div>
                 </Link>
               ))}
+              </div>
+              {/* Mobile edge fades — shown on the side(s) with overflowing cards */}
+              <div
+                className={`pointer-events-none absolute inset-y-0 left-0 w-8 bg-gradient-to-r from-navy-900/90 to-transparent transition-opacity duration-300 lg:hidden ${
+                  canLeft ? 'opacity-100' : 'opacity-0'
+                }`}
+              />
+              <div
+                className={`pointer-events-none absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-navy-900/90 to-transparent transition-opacity duration-300 lg:hidden ${
+                  canRight ? 'opacity-100' : 'opacity-0'
+                }`}
+              />
             </div>
           </Reveal>
         </div>
@@ -295,7 +308,7 @@ export default function Home() {
 
       {/* ============ FEATURED FFXIV ============ */}
       <section id="featured" className="border-b border-navy-700/50 bg-navy-950/50 pb-12 pt-8 lg:pb-20 lg:pt-10">
-        <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-[1440px] px-[21px] sm:px-6 lg:px-8">
           <Reveal>
             <div className="flex flex-wrap items-end justify-between gap-6">
               <div>
@@ -330,7 +343,7 @@ export default function Home() {
       </section>
 
       {/* ============ WHY US ============ */}
-      <section className="mx-auto max-w-[1440px] px-4 py-12 sm:px-6 lg:py-20 lg:px-8">
+      <section className="mx-auto max-w-[1440px] px-[21px] py-12 sm:px-6 lg:py-20 lg:px-8">
         <Reveal>
           <div className="text-center">
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-gold-400">Why Grand Dice</p>
@@ -357,7 +370,7 @@ export default function Home() {
 
       {/* ============ REVIEWS ============ */}
       <section className="border-y border-navy-700/50 bg-navy-950/50 py-12 lg:py-20">
-        <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-[1440px] px-[21px] sm:px-6 lg:px-8">
           <Reveal>
             <div className="text-center">
               <p className="text-xs font-bold uppercase tracking-[0.2em] text-gold-400">Player reviews</p>
@@ -411,7 +424,7 @@ export default function Home() {
       </section>
 
       {/* ============ HOW IT WORKS ============ */}
-      <section className="mx-auto max-w-[1440px] px-4 py-12 sm:px-6 lg:py-20 lg:px-8">
+      <section className="mx-auto max-w-[1440px] px-[21px] py-12 sm:px-6 lg:py-20 lg:px-8">
         <Reveal>
           <div className="text-center">
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-gold-400">Three simple steps</p>
@@ -435,7 +448,7 @@ export default function Home() {
       </section>
 
       {/* ============ CTA ============ */}
-      <section className="mx-auto max-w-[1440px] px-4 pb-4 sm:px-6 lg:px-8">
+      <section className="mx-auto max-w-[1440px] px-[21px] pb-4 sm:px-6 lg:px-8">
         <CustomOrderCta />
       </section>
     </div>

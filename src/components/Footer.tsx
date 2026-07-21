@@ -11,7 +11,7 @@ export default function Footer() {
 
   return (
     <footer className="mt-8 border-t border-navy-700/60 bg-navy-950/70 lg:mt-12">
-      <div className="mx-auto grid max-w-[1440px] gap-10 px-4 py-10 sm:px-6 md:grid-cols-2 lg:flex lg:items-start lg:justify-start lg:gap-[clamp(2.5rem,7vw,11rem)] lg:px-8">
+      <div className="mx-auto grid max-w-[1440px] gap-10 px-[21px] py-10 sm:px-6 md:grid-cols-2 lg:flex lg:items-start lg:justify-start lg:gap-[clamp(2.5rem,7vw,11rem)] lg:px-8">
         <div className="text-center md:text-left">
           <Link to="/" className="group flex items-center justify-center gap-2.5 md:justify-start">
             <DiceLogo size={36} className="transition-transform duration-300 group-hover:rotate-6" />
@@ -120,7 +120,7 @@ export default function Footer() {
       </div>
 
       <div className="border-t border-navy-700/60">
-        <div className="mx-auto flex max-w-[1440px] flex-col items-center justify-between gap-3 px-4 py-4 text-xs text-slate-500 sm:px-6 md:flex-row lg:px-8">
+        <div className="mx-auto flex max-w-[1440px] flex-col items-center justify-between gap-3 px-[21px] py-4 text-xs text-slate-500 sm:px-6 md:flex-row lg:px-8">
           <p className="shrink-0">© 2026 GD Carry • Grand Dice</p>
           <p className="text-center sm:whitespace-nowrap md:text-right">
             Not affiliated with or endorsed by Square Enix, Blizzard Entertainment, Amazon Games, Digital Extremes

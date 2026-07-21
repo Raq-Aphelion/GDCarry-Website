@@ -38,7 +38,7 @@ export default function LegalPage() {
       <section className="relative overflow-hidden border-b border-navy-700/50">
         <div className="absolute inset-0 bg-gradient-to-r from-navy-850 via-navy-900 to-navy-850" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgb(var(--glow-1)_/_0.07),transparent_55%)]" />
-        <div className="relative mx-auto max-w-[1440px] px-4 pb-12 pt-16 sm:px-6 lg:px-8">
+        <div className="relative mx-auto max-w-[1440px] px-[21px] pb-12 pt-16 sm:px-6 lg:px-8">
           <Reveal>
             <nav className="flex items-center gap-1.5 text-xs font-medium text-slate-400" aria-label="Breadcrumb">
               <Link to="/" className="transition-colors hover:text-gold-300">
@@ -70,7 +70,7 @@ export default function LegalPage() {
 
       {/* ============ MOBILE CATEGORY CHIPS ============ */}
       <div className="sticky top-16 z-30 border-b border-navy-700/50 bg-navy-900/85 backdrop-blur-xl lg:hidden">
-        <div className="no-scrollbar flex gap-2 overflow-x-auto px-4 py-3">
+        <div className="no-scrollbar flex gap-2 overflow-x-auto px-[21px] py-3">
           {legalDocs.map((d) => (
             <NavLink
               key={d.id}
@@ -88,7 +88,7 @@ export default function LegalPage() {
       </div>
 
       {/* ============ SIDEBAR + DOCUMENT ============ */}
-      <div className="mx-auto grid max-w-[1440px] gap-10 px-4 py-12 sm:px-6 lg:grid-cols-[240px_minmax(0,1fr)] lg:px-8">
+      <div className="mx-auto grid max-w-[1440px] gap-10 px-[21px] py-12 sm:px-6 lg:grid-cols-[240px_minmax(0,1fr)] lg:px-8">
         {/* Left: legal categories */}
         <aside className="hidden lg:block">
           <div className="sticky top-24">

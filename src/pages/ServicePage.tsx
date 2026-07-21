@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, Navigate, useParams } from 'react-router';
 import { ArrowRight, BadgeCheck, ChevronDown, ChevronRight, Gamepad2, Gem, Medal, Swords, Trophy } from 'lucide-react';
 import CustomOrderCta from '@/components/CustomOrderCta';
@@ -8,6 +8,7 @@ import PurchaseBox from '@/components/PurchaseBox';
 import Reveal from '@/components/Reveal';
 import ServiceCard from '@/components/ServiceCard';
 import { getGame } from '@/data/games';
+import useDragScroll from '@/hooks/useDragScroll';
 
 const REWARDS = [
   {
@@ -97,6 +98,36 @@ export default function ServicePage() {
   const service = sub?.services.find((sv) => sv.id === serviceId);
   const [openSection, setOpenSection] = useState(0);
 
+  // Tags row: draggable carousel on mobile, with edge fades like the other carousels
+  const tagsRef = useDragScroll();
+  const [tagsLeft, setTagsLeft] = useState(false);
+  const [tagsRight, setTagsRight] = useState(false);
+
+  const updateTagFades = () => {
+    const el = tagsRef.current;
+    if (!el) return;
+    setTagsLeft(el.scrollLeft > 4);
+    setTagsRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 4);
+  };
+
+  useEffect(() => {
+    updateTagFades();
+    window.addEventListener('resize', updateTagFades);
+    return () => window.removeEventListener('resize', updateTagFades);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Chips themselves fade to transparent at overflowing edges (mobile only —
+  // on sm+ the row wraps instead of scrolling, so both states stay false)
+  const tagsMask =
+    tagsLeft && tagsRight
+      ? 'linear-gradient(to right, transparent, black 24px, black calc(100% - 24px), transparent)'
+      : tagsLeft
+        ? 'linear-gradient(to right, transparent, black 24px)'
+        : tagsRight
+          ? 'linear-gradient(to left, transparent, black 24px)'
+          : undefined;
+
   if (!game || !sub || !service) return <Navigate to={game ? `/boosting/${game.id}` : '/'} replace />;
 
   const points = [
@@ -115,8 +146,6 @@ export default function ServicePage() {
             Home
           </Link>
           <ChevronRight className="h-3.5 w-3.5" />
-          <span>Boosting</span>
-          <ChevronRight className="h-3.5 w-3.5" />
           <Link to={`/boosting/${game.id}`} className="transition-colors hover:text-gold-300">
             {game.name}
           </Link>
@@ -132,26 +161,33 @@ export default function ServicePage() {
         </nav>
       </Reveal>
       <Reveal delay={100}>
-        <h1 className="mt-5 text-left font-display text-4xl font-extrabold tracking-tight text-white sm:text-5xl">
+        <h1 className="mt-5 text-left font-display text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
           {service.name}
         </h1>
       </Reveal>
       <Reveal delay={200}>
-        <p className="mt-4 max-w-2xl text-left text-sm leading-relaxed text-slate-300 sm:text-base">
+        <p className="mt-4 max-w-2xl text-left text-xs leading-relaxed text-slate-300 sm:text-sm">
           {service.longDescription ?? service.description}
         </p>
       </Reveal>
       <Reveal delay={300}>
-        <div className="mt-6 flex flex-wrap gap-3">
-          {points.map((p, i) => (
-            <span
-              key={p.text}
-              className="flex items-center gap-1.5 rounded-full border border-navy-700/70 bg-navy-850/80 px-3.5 py-1.5 text-xs font-semibold text-slate-300 backdrop-blur-sm"
-            >
-              <p.icon className={`h-3.5 w-3.5 ${i === 1 ? 'text-cyan-400' : 'text-gold-400'}`} />
-              {p.text}
-            </span>
-          ))}
+        <div className="mt-6">
+          <div
+            ref={tagsRef}
+            onScroll={updateTagFades}
+            style={{ maskImage: tagsMask, WebkitMaskImage: tagsMask }}
+            className="no-scrollbar flex touch-pan-y gap-3 max-sm:overflow-x-auto sm:flex-wrap"
+          >
+            {points.map((p, i) => (
+              <span
+                key={p.text}
+                className="flex shrink-0 items-center gap-1.5 rounded-full border border-navy-700/70 bg-navy-850/80 px-3.5 py-1.5 text-xs font-semibold text-slate-300 backdrop-blur-sm"
+              >
+                <p.icon className={`h-3.5 w-3.5 ${i === 1 ? 'text-cyan-400' : 'text-gold-400'}`} />
+                {p.text}
+              </span>
+            ))}
+          </div>
         </div>
       </Reveal>
     </div>
@@ -252,7 +288,7 @@ export default function ServicePage() {
       <MobileCategoryBar items={game.subcategories} activeId={sub.id} gameId={game.id} />
 
       {/* ============ SIDEBAR + CONTENT + PURCHASE ============ */}
-      <div className="relative mx-auto flex max-w-[1440px] flex-col gap-10 px-4 py-10 sm:px-6 lg:grid lg:grid-cols-[240px_minmax(0,1fr)_340px] lg:gap-8 lg:py-12 lg:px-8">
+      <div className="relative mx-auto flex max-w-[1440px] flex-col gap-10 px-[21px] py-10 sm:px-6 lg:grid lg:grid-cols-[240px_minmax(0,1fr)_340px] lg:gap-8 lg:py-12 lg:px-8">
         {/* Faded service image behind the top of the page */}
         <div className="pointer-events-none absolute left-1/2 top-0 -z-10 h-[460px] w-screen -translate-x-1/2" aria-hidden>
           <div className="absolute inset-0">
@@ -298,8 +334,8 @@ export default function ServicePage() {
           </div>
         </aside>
 
-        {/* Middle top: title, text, tags */}
-        <div className="min-w-0 lg:col-start-2 lg:row-start-1">{header}</div>
+        {/* Middle top: title, text, tags — negative margin trims the flex gap below on mobile */}
+        <div className="min-w-0 max-lg:-mb-4 lg:col-start-2 lg:row-start-1">{header}</div>
 
         {/* Right: purchase block (price block floats via its own sticky) */}
         <aside className="min-w-0 lg:col-start-3 lg:row-span-2 lg:row-start-1 lg:flex lg:flex-col">
@@ -311,7 +347,7 @@ export default function ServicePage() {
       </div>
 
       {/* ============ CUSTOM ORDER CTA ============ */}
-      <section id="custom-order-section" className="mx-auto max-w-[1440px] px-4 pb-4 sm:px-6 lg:px-8">
+      <section id="custom-order-section" className="mx-auto max-w-[1440px] px-[21px] pb-4 sm:px-6 lg:px-8">
         <CustomOrderCta />
       </section>
     </div>

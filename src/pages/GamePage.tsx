@@ -41,14 +41,12 @@ export default function GamePage() {
         <div className="absolute inset-0 bg-gradient-to-r from-navy-900/95 via-navy-900/75 to-navy-900/40" />
         <div className="absolute inset-0 bg-gradient-to-t from-navy-900 via-transparent to-navy-900/60" />
 
-        <div className="relative mx-auto max-w-[1440px] px-4 pb-12 pt-16 sm:px-6 sm:py-20 lg:px-8">
+        <div className="relative mx-auto max-w-[1440px] px-[21px] pb-12 pt-16 sm:px-6 sm:py-20 lg:px-8">
           <Reveal>
             <nav className="flex items-center gap-1.5 text-xs font-medium text-slate-400" aria-label="Breadcrumb">
               <Link to="/" className="transition-colors hover:text-gold-300">
                 Home
               </Link>
-              <ChevronRight className="h-3.5 w-3.5" />
-              <span>Boosting</span>
               <ChevronRight className="h-3.5 w-3.5" />
               <span className="text-gold-300">{game.name}</span>
             </nav>
@@ -84,7 +82,7 @@ export default function GamePage() {
       />
 
       {/* ============ SIDEBAR + FILTERED SERVICES ============ */}
-      <div className="mx-auto grid max-w-[1440px] gap-10 px-4 py-12 sm:px-6 lg:grid-cols-[240px_minmax(0,1fr)] lg:px-8">
+      <div className="mx-auto grid max-w-[1440px] gap-10 px-[21px] py-12 sm:px-6 lg:grid-cols-[240px_minmax(0,1fr)] lg:px-8">
         {/* Left: subcategory filter list */}
         <aside className="hidden lg:block">
           <div className="sticky top-8">
@@ -144,7 +142,7 @@ export default function GamePage() {
       </div>
 
       {/* ============ CUSTOM ORDER CTA ============ */}
-      <section className="mx-auto max-w-[1440px] px-4 pb-4 sm:px-6 lg:px-8">
+      <section className="mx-auto max-w-[1440px] px-[21px] pb-4 sm:px-6 lg:px-8">
         <CustomOrderCta />
       </section>
     </div>
