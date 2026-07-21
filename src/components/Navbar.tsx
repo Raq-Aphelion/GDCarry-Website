@@ -239,7 +239,7 @@ export default function Navbar() {
                             className="absolute inset-0"
                             style={{
                               background:
-                                'linear-gradient(to right, rgba(10,18,40,0.45) 0%, rgba(10,18,40,0.45) calc(100% - 50px), #0a1228 100%)',
+                                'linear-gradient(to right, rgb(var(--navy-850) / 0.45) 0%, rgb(var(--navy-850) / 0.45) calc(100% - 50px), rgb(var(--navy-850)) 100%)',
                             }}
                           />
                         </div>
@@ -374,7 +374,7 @@ export default function Navbar() {
                   className="absolute inset-0"
                   style={{
                     background:
-                      'linear-gradient(to right, rgba(7,13,33,0.45) 0%, rgba(7,13,33,0.45) 55%, rgba(7,13,33,1) 100%)',
+                      'linear-gradient(to right, rgb(var(--navy-900) / 0.45) 0%, rgb(var(--navy-900) / 0.45) 55%, rgb(var(--navy-900)) 100%)',
                   }}
                 />
               </div>

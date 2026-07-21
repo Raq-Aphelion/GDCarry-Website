@@ -213,10 +213,11 @@ export default function PurchaseBox({ service, gameShort }: { service: Service; 
 
   // Whole-box stickiness, re-measured on every content/viewport resize:
   // - fits the screen -> 'fit': top pinned at 96px like the categories panel
-  // - overflowing   -> 'overflow': sticky with top = vh - 80 - contentH, so
+  // - overflowing   -> 'overflow': sticky with top = vh - gap - contentH, so
   //   the box scrolls normally until the moment it is fully extended, then
-  //   pins with its bottom edge 80px above the bottom of the screen — the
-  //   furthest point at which the custom-order CTA still clears the box.
+  //   pins with its bottom edge `gap` px above the bottom of the screen —
+  //   where `gap` mirrors the vertical rhythm between the sidebar's "Need
+  //   something else?" block and the "Can't find your boost?" CTA below.
   const rootRef = useRef<HTMLDivElement>(null);
   const [stick, setStick] = useState<'fit' | 'overflow' | null>(null);
   const [overflowTop, setOverflowTop] = useState(0);
@@ -237,14 +238,29 @@ export default function PurchaseBox({ service, gameShort }: { service: Service; 
       } else {
         stickRef.current = 'overflow';
         setStick('overflow');
+        // Bottom clearance = the gap between the bottom of the sidebar's
+        // "Need something else?" block and the top of the "Can't find your
+        // boost?" CTA. The sidebar releases exactly at the aside's bottom
+        // edge, and both the aside and the CTA are in normal flow — so the
+        // rect difference is a scroll-invariant layout constant (~65px).
+        let gap = 80;
+        const aside = document.getElementById('category-sidebar');
+        const cta = document.getElementById('custom-order-section');
+        if (aside && cta) {
+          const g = cta.getBoundingClientRect().top - aside.getBoundingClientRect().bottom;
+          if (g > 0) gap = Math.round(g);
+        }
         // CSS sticky top is measured from the scroller's top edge, which sits
         // 64px below the viewport top (navbar height) — hence the extra -64.
-        setOverflowTop(Math.round(vh - 80 - contentH - 64));
+        setOverflowTop(Math.round(vh - gap - contentH - 64));
       }
     };
     measure();
     const ro = new ResizeObserver(measure);
     ro.observe(el);
+    // Accordions in the main column move the CTA and thus change the gap.
+    const main = el.closest('main') ?? document.querySelector('main');
+    if (main) ro.observe(main);
     window.addEventListener('resize', measure);
     return () => {
       ro.disconnect();
@@ -297,7 +313,7 @@ export default function PurchaseBox({ service, gameShort }: { service: Service; 
       }
       style={stick === 'overflow' ? { top: overflowTop } : undefined}
     >
-      <div className="overflow-visible rounded-[5px] bg-navy-850">
+      <div className="purchase-box overflow-visible rounded-[5px] bg-navy-850">
         {/* Service image */}
         <div className="relative h-28 overflow-hidden rounded-t-[5px]">
           <FadeImage src={service.image} alt="" className="h-full w-full" />
@@ -455,7 +471,7 @@ export default function PurchaseBox({ service, gameShort }: { service: Service; 
       <div ref={wrapRef} className="mt-4" style={fixedStyle ? { height: blockH.current } : undefined}>
         <div
           style={fixedStyle ?? undefined}
-          className={`rounded-[5px] border border-navy-700/70 bg-navy-800 p-4 text-center shadow-2xl ${
+          className={`purchase-price-block rounded-[5px] border border-navy-700/70 bg-navy-800 p-4 text-center shadow-2xl ${
             fixedStyle ? 'price-block-glow' : ''
           }`}
         >
@@ -467,7 +483,7 @@ export default function PurchaseBox({ service, gameShort }: { service: Service; 
           <button
             onClick={addToCart}
             disabled={!dc}
-            className="mt-3.5 w-full rounded-[5px] bg-gradient-to-r from-gold-400 to-gold-600 py-2.5 font-display text-sm font-bold text-navy-900 transition-all hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:brightness-100"
+            className="purchase-cta mt-3.5 w-full rounded-[5px] bg-gradient-to-r from-gold-400 to-gold-600 py-2.5 font-display text-sm font-bold text-navy-900 transition-all hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:brightness-100"
           >
             Add to cart
           </button>

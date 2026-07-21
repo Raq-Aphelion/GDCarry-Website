@@ -263,7 +263,7 @@ export default function ServicePage() {
         </div>
 
         {/* Left: categories, pushed to the top */}
-        <aside className="hidden lg:col-start-1 lg:row-span-2 lg:row-start-1 lg:block">
+        <aside id="category-sidebar" className="hidden lg:col-start-1 lg:row-span-2 lg:row-start-1 lg:block">
           <div className="sticky top-8">
             <p className="px-3 text-xs font-bold uppercase tracking-[0.2em] text-slate-500">Categories</p>
             <ul className="mt-3 divide-y divide-navy-700/50">
@@ -289,7 +289,7 @@ export default function ServicePage() {
               })}
             </ul>
 
-            <div className="mt-8 rounded-[5px] bg-navy-850 p-4">
+            <div id="sidebar-bottom-cta" className="mt-8 rounded-[5px] bg-navy-850 p-4">
               <p className="font-display text-sm font-bold text-gold-300">Need something else?</p>
               <p className="mt-1 text-xs leading-relaxed text-slate-400">
                 Custom {game.short} orders are quoted within the hour.
@@ -311,7 +311,7 @@ export default function ServicePage() {
       </div>
 
       {/* ============ CUSTOM ORDER CTA ============ */}
-      <section className="mx-auto max-w-[1440px] px-4 pb-4 sm:px-6 lg:px-8">
+      <section id="custom-order-section" className="mx-auto max-w-[1440px] px-4 pb-4 sm:px-6 lg:px-8">
         <CustomOrderCta />
       </section>
     </div>

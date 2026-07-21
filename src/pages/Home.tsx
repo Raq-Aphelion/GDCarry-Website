@@ -142,7 +142,7 @@ export default function Home() {
             aria-hidden="true"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-navy-900/80 via-navy-900/55 to-navy-900" />
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,rgba(7,13,33,0.5)_78%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,rgb(var(--navy-900)_/_0.5)_78%)]" />
         </div>
 
         <div className="relative mx-auto flex min-h-[calc(100svh-64px)] w-full max-w-[1440px] flex-col items-center justify-center px-4 py-14 sm:px-6 lg:h-[936px] lg:min-h-0 lg:py-0 lg:px-8">

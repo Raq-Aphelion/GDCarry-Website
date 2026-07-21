@@ -14,9 +14,9 @@ export default function DiceLogo({ size = 40, className = '' }: { size?: number;
     >
       <defs>
         <linearGradient id={`${gid}-gold`} x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor="#ffe08a" />
-          <stop offset="55%" stopColor="#eeb232" />
-          <stop offset="100%" stopColor="#b97e10" />
+          <stop offset="0%" style={{ stopColor: 'rgb(var(--cyan-300))' }} />
+          <stop offset="55%" style={{ stopColor: 'rgb(var(--cyan-500))' }} />
+          <stop offset="100%" style={{ stopColor: 'rgb(var(--cyan-700))' }} />
         </linearGradient>
       </defs>
       {/* Back die — face of five */}
@@ -28,14 +28,12 @@ export default function DiceLogo({ size = 40, className = '' }: { size?: number;
           height="28"
           rx="7"
           fill={`url(#${gid}-gold)`}
-          stroke="#7c5a0c"
+          stroke="rgb(var(--cyan-700))"
           strokeWidth="1.5"
         />
-        <circle cx="15" cy="18" r="2.6" fill="#0a1228" />
-        <circle cx="29" cy="18" r="2.6" fill="#0a1228" />
-        <circle cx="22" cy="25" r="2.6" fill="#0a1228" />
-        <circle cx="15" cy="32" r="2.6" fill="#0a1228" />
-        <circle cx="29" cy="32" r="2.6" fill="#0a1228" />
+        {[ [15,18], [29,18], [22,25], [15,32], [29,32] ].map(([cx, cy]) => (
+          <circle key={`${cx}-${cy}`} cx={cx} cy={cy} r="2.6" style={{ fill: 'rgb(var(--navy-850))' }} />
+        ))}
       </g>
       {/* Front die — face of three */}
       <g transform="rotate(12 42 42)">
@@ -46,12 +44,12 @@ export default function DiceLogo({ size = 40, className = '' }: { size?: number;
           height="28"
           rx="7"
           fill={`url(#${gid}-gold)`}
-          stroke="#7c5a0c"
+          stroke="rgb(var(--cyan-700))"
           strokeWidth="1.5"
         />
-        <circle cx="35" cy="35" r="2.6" fill="#0a1228" />
-        <circle cx="42" cy="42" r="2.6" fill="#0a1228" />
-        <circle cx="49" cy="49" r="2.6" fill="#0a1228" />
+        {[ [35,35], [42,42], [49,49] ].map(([cx, cy]) => (
+          <circle key={`${cx}-${cy}`} cx={cx} cy={cy} r="2.6" style={{ fill: 'rgb(var(--navy-850))' }} />
+        ))}
       </g>
     </svg>
   );

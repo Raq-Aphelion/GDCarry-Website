@@ -131,7 +131,7 @@ export function OverlayScrollbar({
         <div
           onPointerDown={onThumbPointerDown}
           style={{ height: thumb.h, transform: `translateY(${thumb.t}px)` }}
-          className="w-full rounded-full bg-[#1c2f66]/80 transition-colors duration-200 hover:bg-[#2a4188]"
+          className="w-full rounded-full bg-[rgb(var(--scroll-thumb)_/_0.8)] transition-colors duration-200 hover:bg-[rgb(var(--scroll-thumb-hover))]"
         />
       )}
     </div>
