@@ -25,10 +25,17 @@ export interface Game {
   short: string;
   tagline: string;
   description: string;
-  image: string;
+  /** Card art used in the home carousel, navbar games menu and game page header */
+  cardImage: string;
   main?: boolean;
   subcategories: Subcategory[];
 }
+
+import cardFfxiv from '@/assets/images/game-cards/GameCard_FFXIV.webp';
+import cardWow from '@/assets/images/game-cards/GameCard_WoW.webp';
+import cardLostArk from '@/assets/images/game-cards/GameCard_LostArk.webp';
+import cardWarframe from '@/assets/images/game-cards/GameCard_Warframe.webp';
+import cardOsrs from '@/assets/images/game-cards/GameCard_OSRS.webp';
 
 const img = (id: number, w = 640, h = 400) => `https://picsum.photos/id/${id}/${w}/${h}`;
 
@@ -40,7 +47,7 @@ export const games: Game[] = [
     tagline: 'Eorzea’s most trusted carry crew',
     description:
       'Our flagship category. Ultimate raiders, Savage speed-runners and Deep Dungeon veterans — the sharpest Grand Dice rollers in Eorzea handle your order.',
-    image: img(96, 1600, 700),
+    cardImage: cardFfxiv,
     main: true,
     subcategories: [
       {
@@ -454,7 +461,7 @@ export const games: Game[] = [
     tagline: 'Azeroth, handled',
     description:
       'Mythic raiding rosters, MDI-level key pushers and gladiator-ranked PvPers across US and EU realms.',
-    image: img(453, 1600, 700),
+    cardImage: cardWow,
     subcategories: [
       {
         id: 'raids',
@@ -573,7 +580,7 @@ export const games: Game[] = [
     tagline: 'Arkesia without the homework',
     description:
       'Legion Raid veterans and bus drivers with thousands of clears. Skip the gatekeeping, keep the loot.',
-    image: img(742, 1600, 700),
+    cardImage: cardLostArk,
     subcategories: [
       {
         id: 'legion-raids',
@@ -691,7 +698,7 @@ export const games: Game[] = [
     tagline: 'Tenno, we lift the grind',
     description:
       'Veteran Tenno who run Eidolons in their sleep. Farming, mastery and endgame clears at speed.',
-    image: img(870, 1600, 700),
+    cardImage: cardWarframe,
     subcategories: [
       {
         id: 'mastery',
@@ -801,7 +808,7 @@ export const games: Game[] = [
     tagline: 'Gielinor’s finest mercenaries',
     description:
       'Inferno-certified pvmers and maxed skillers for both OSRS and RS3. No bots, no shortcuts — just clicks.',
-    image: img(1060, 1600, 700),
+    cardImage: cardOsrs,
     subcategories: [
       {
         id: 'bossing',

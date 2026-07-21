@@ -8,8 +8,9 @@ import ServiceCard from '@/components/ServiceCard';
 import { games, getGame, serviceCount } from '@/data/games';
 import useDragScroll from '@/hooks/useDragScroll';
 
-const HERO_VIDEO = 'https://videos.pexels.com/video-files/3163534/3163534-uhd_2560_1440_30fps.mp4';
-const HERO_POSTER = 'https://picsum.photos/id/1041/1920/1080';
+const HERO_VIDEO_WEBM = '/videos/hero-video.webm';
+const HERO_VIDEO_MP4 = '/videos/hero-video-fallback.mp4';
+const HERO_POSTER = '/videos/hero-image.webp';
 
 const FEATURED_IDS = [
   'ffxiv-dsr',
@@ -104,6 +105,11 @@ export default function Home() {
   const [canLeft, setCanLeft] = useState(false);
   const [canRight, setCanRight] = useState(true);
 
+  // Hero backdrop: video fades in once playing; image only loads as fallback if every video source fails
+  const [videoPlaying, setVideoPlaying] = useState(false);
+  const [videoFailed, setVideoFailed] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
+
   const updateArrows = () => {
     const track = carouselRef.current;
     if (!track) return;
@@ -131,16 +137,34 @@ export default function Home() {
       <section className="relative overflow-hidden">
         {/* Faded fullscreen video backdrop */}
         <div className="absolute inset-0">
+          {/* Transparent until playback starts, then fades in */}
           <video
-            className="h-full w-full object-cover opacity-40"
-            src={HERO_VIDEO}
-            poster={HERO_POSTER}
+            className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-1000 ${
+              videoPlaying ? 'opacity-70' : 'opacity-0'
+            }`}
             autoPlay
             muted
             loop
             playsInline
             aria-hidden="true"
-          />
+            onPlaying={() => setVideoPlaying(true)}
+          >
+            <source src={HERO_VIDEO_WEBM} type="video/webm" />
+            {/* onError on the last <source> fires only when every source failed */}
+            <source src={HERO_VIDEO_MP4} type="video/mp4" onError={() => setVideoFailed(true)} />
+          </video>
+          {/* Fallback image — only loaded and faded in if the video can't play */}
+          {videoFailed && (
+            <img
+              className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-1000 ${
+                imageLoaded ? 'opacity-70' : 'opacity-0'
+              }`}
+              src={HERO_POSTER}
+              alt=""
+              aria-hidden="true"
+              onLoad={() => setImageLoaded(true)}
+            />
+          )}
           <div className="absolute inset-0 bg-gradient-to-b from-navy-900/80 via-navy-900/55 to-navy-900" />
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,rgb(var(--navy-900)_/_0.5)_78%)]" />
         </div>
@@ -219,7 +243,7 @@ export default function Home() {
                   }`}
                 >
                   <FadeImage
-                    src={game.image}
+                    src={game.cardImage}
                     alt={game.name}
                     className="aspect-[16/10]"
                     imgClassName="transition-transform duration-500 group-hover:scale-105"

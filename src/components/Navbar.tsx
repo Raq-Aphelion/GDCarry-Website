@@ -230,7 +230,7 @@ export default function Navbar() {
                       >
                         <div className="absolute inset-y-0 left-0" style={{ width: titlePad + 50 }}>
                           <img
-                            src={g.image}
+                            src={g.cardImage}
                             alt=""
                             className="h-full w-full object-cover opacity-80 transition-opacity group-hover/item:opacity-100"
                             loading="lazy"
@@ -365,7 +365,7 @@ export default function Navbar() {
               {/* Background image fading into the menu surface, like the desktop dropdown */}
               <div className="absolute inset-y-0 left-0 w-[75%]">
                 <img
-                  src={g.image}
+                  src={g.cardImage}
                   alt=""
                   className="h-full w-full object-cover opacity-80 transition-opacity group-hover/item:opacity-100"
                   loading="lazy"

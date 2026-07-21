@@ -36,7 +36,7 @@ export default function GamePage() {
       {/* ============ HEADER — image behind the title, under a gradient ============ */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0">
-          <FadeImage src={game.image} alt="" className="h-full w-full" />
+          <FadeImage src={game.cardImage} alt="" className="h-full w-full" />
         </div>
         <div className="absolute inset-0 bg-gradient-to-r from-navy-900/95 via-navy-900/75 to-navy-900/40" />
         <div className="absolute inset-0 bg-gradient-to-t from-navy-900 via-transparent to-navy-900/60" />
