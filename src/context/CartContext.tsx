@@ -1,5 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import type { Service } from '@/data/games';
+import { lineTotal } from '@/lib/cart';
 import { useToast } from './ToastContext';
 
 export interface CartItem {
@@ -11,6 +12,11 @@ export interface CartItem {
   qty: number;
   /** Chosen configuration lines (data center, gear, logs, add-ons) */
   details?: string[];
+  /** Configured services only: qty is the run count and price is per run —
+      line total = (price × qty + flat) × multiplier. Flat covers one-off
+      gear/log/add-on prices; multiplier is set by the priority add-on. */
+  flat?: number;
+  multiplier?: number;
 }
 
 interface CartContextValue {
@@ -20,7 +26,12 @@ interface CartContextValue {
   isOpen: boolean;
   openCart: () => void;
   closeCart: () => void;
-  addItem: (service: Service, gameShort: string, details?: string[]) => void;
+  addItem: (
+    service: Service & { flat?: number; multiplier?: number },
+    gameShort: string,
+    details?: string[],
+    qty?: number,
+  ) => void;
   removeItem: (id: string) => void;
   setQty: (id: string, qty: number) => void;
   clear: () => void;
@@ -51,11 +62,13 @@ export function CartProvider({ children }: { children: ReactNode }) {
   }, [items]);
 
   const addItem = useCallback(
-    (service: Service, gameShort: string, details?: string[]) => {
+    (service: Service & { flat?: number; multiplier?: number }, gameShort: string, details?: string[], qty = 1) => {
       setItems((prev) => {
         const existing = prev.find((i) => i.id === service.id);
+        // Same service + same options (runs excluded from the id): merge the
+        // run counts into the existing line
         if (existing) {
-          return prev.map((i) => (i.id === service.id ? { ...i, qty: i.qty + 1 } : i));
+          return prev.map((i) => (i.id === service.id ? { ...i, qty: i.qty + qty } : i));
         }
         return [
           ...prev,
@@ -65,8 +78,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
             price: service.price,
             image: service.image,
             gameShort,
-            qty: 1,
+            qty,
             details,
+            flat: service.flat,
+            multiplier: service.multiplier,
           },
         ];
       });
@@ -99,7 +114,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const { count, subtotal } = useMemo(
     () => ({
       count: items.reduce((sum, i) => sum + i.qty, 0),
-      subtotal: items.reduce((sum, i) => sum + i.qty * i.price, 0),
+      subtotal: items.reduce((sum, i) => sum + lineTotal(i), 0),
     }),
     [items],
   );

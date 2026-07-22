@@ -6,6 +6,7 @@ import FadeImage from '@/components/FadeImage';
 import FieldPopup from '@/components/FieldPopup';
 import { OverlayScrollbar } from '@/components/Scrollbar';
 import { useCart, type CartItem } from '@/context/CartContext';
+import { lineTotal } from '@/lib/cart';
 import { useCurrency } from '@/context/CurrencyContext';
 import { useToast } from '@/context/ToastContext';
 import { serviceLink } from '@/data/games';
@@ -112,7 +113,7 @@ export default function CheckoutPage() {
   if (items.length === 0 && stage === 'idle') return <Navigate to="/" replace />;
 
   const orderItems = stage === 'idle' ? items : purchased;
-  const orderTotal = orderItems.reduce((sum, i) => sum + i.qty * i.price, 0);
+  const orderTotal = orderItems.reduce((sum, i) => sum + lineTotal(i), 0);
   const locked = stage !== 'idle';
   // Errors surface on the first Place Order click (like native validation),
   // then re-validate live as the fields are edited
@@ -332,7 +333,7 @@ export default function CheckoutPage() {
                         )}
                       </div>
                       <span className="shrink-0 font-display text-sm font-bold text-cyan-400">
-                        {format(item.price * item.qty)}
+                        {format(lineTotal(item))}
                       </span>
                     </li>
                   ))}

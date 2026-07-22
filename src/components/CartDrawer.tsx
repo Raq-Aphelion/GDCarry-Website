@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router';
 import { Minus, Plus, ShoppingCart, Trash2, X } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
+import { lineTotal } from '@/lib/cart';
 import { useCurrency } from '@/context/CurrencyContext';
 import { OverlayScrollbar } from '@/components/Scrollbar';
 import { serviceLink } from '@/data/games';
@@ -149,7 +150,7 @@ export default function CartDrawer() {
                         </button>
                       </div>
                       <span className="font-display text-sm font-bold text-cyan-400">
-                        {format(item.price * item.qty)}
+                        {format(lineTotal(item))}
                       </span>
                     </div>
                   </div>

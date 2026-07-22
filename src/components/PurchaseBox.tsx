@@ -295,7 +295,9 @@ export default function PurchaseBox({ service, gameShort }: { service: Service; 
       setDcError(true);
       return;
     }
-    const cfgKey = `${method}|${runs}|${dc}|g${gearIdx}|l${logIdx}|${[...addons].sort().join('+')}`;
+    // Runs are excluded from the key/name — identical configs merge into one
+    // cart line whose amount controls adjust the run count
+    const cfgKey = `${method}|${dc}|g${gearIdx}|l${logIdx}|${[...addons].sort().join('+')}`;
     const priorityPct = Math.round((cfg.priorityMultiplier - 1) * 100);
     const details = [
       `Data Center: ${dc}`,
@@ -309,11 +311,14 @@ export default function PurchaseBox({ service, gameShort }: { service: Service; 
       {
         ...service,
         id: `${service.id}::${cfgKey}`,
-        name: `${service.name} · ${activeMethod.label}${runs > 1 ? ` ×${runs}` : ''}`,
-        price: total,
+        name: `${service.name} · ${activeMethod.label}`,
+        price: activeMethod.price, // per run
+        flat: GEAR_OPTIONS[gearIdx].price + LOG_OPTIONS[logIdx].price + flatAddons,
+        multiplier: priority ? cfg.priorityMultiplier : undefined,
       },
       gameShort,
       details,
+      runs,
     );
     openCart();
   };
@@ -366,22 +371,23 @@ export default function PurchaseBox({ service, gameShort }: { service: Service; 
             </div>
           </div>
 
-          {/* Runs */}
+          {/* Runs: the field allows up to 999; the slider's max follows the
+              field value but never drops below the configured default */}
           <div>
             <p className="pl-px text-sm font-semibold text-white">How many runs?</p>
             <input
               type="number"
               min={cfg.runsMin}
-              max={cfg.runsMax}
+              max={999}
               value={runs}
               onChange={(e) =>
-                setRuns(Math.min(cfg.runsMax, Math.max(cfg.runsMin, Number(e.target.value) || cfg.runsMin)))
+                setRuns(Math.min(999, Math.max(cfg.runsMin, Number(e.target.value) || cfg.runsMin)))
               }
               className="mt-2.5 h-10 w-full rounded-[5px] border border-navy-700/70 bg-navy-850 px-3.5 text-sm text-white outline-none transition-colors hover:border-navy-600 focus:border-navy-600"
               aria-label="Number of runs"
             />
             <div className="px-1 pb-2 pt-4">
-              <Slider value={[runs]} onValueChange={([v]) => setRuns(v)} min={cfg.runsMin} max={cfg.runsMax} step={1} />
+              <Slider value={[runs]} onValueChange={([v]) => setRuns(v)} min={cfg.runsMin} max={Math.max(cfg.runsMax, runs)} step={1} />
             </div>
           </div>
 
