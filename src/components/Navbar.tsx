@@ -137,6 +137,11 @@ function SearchBox({
 function MobileCategoryList({ game, expanded }: { game: Game; expanded: boolean }) {
   const [listEl, setListEl] = useState<HTMLUListElement | null>(null);
   const [overflows, setOverflows] = useState(false);
+  const location = useLocation();
+  // Current page markers — same as the desktop dropdown: line on the game row
+  // (handled by the parent), colored font on the active category
+  const onGame = location.pathname === `/boosting/${game.id}`;
+  const catParam = new URLSearchParams(location.search).get('cat');
 
   useEffect(() => {
     if (!listEl) return;
@@ -160,17 +165,26 @@ function MobileCategoryList({ game, expanded }: { game: Game; expanded: boolean 
             ref={setListEl}
             className={`no-scrollbar max-h-60 space-y-0.5 overflow-y-auto pl-3 ${overflows ? 'pr-3' : ''}`}
           >
-            {game.subcategories.map((s) => (
-              <li key={s.id}>
-                <NavLink
-                  to={`/boosting/${game.id}?cat=${s.id}`}
-                  className="flex items-center justify-between rounded-[3px] px-2 py-1.5 text-xs text-slate-400 transition-colors hover:bg-navy-850 hover:text-cyan-400"
-                >
-                  {s.name}
-                  <span className="text-[10px] text-slate-600">{s.services.length}</span>
-                </NavLink>
-              </li>
-            ))}
+            {game.subcategories.map((s) => {
+              const onCat = onGame && catParam === s.id;
+              return (
+                <li key={s.id}>
+                  <NavLink
+                    to={`/boosting/${game.id}?cat=${s.id}`}
+                    className={`flex items-center justify-between rounded-[3px] px-2 py-1.5 text-xs transition-colors ${
+                      onCat
+                        ? 'font-semibold text-cyan-400'
+                        : 'text-slate-400 hover:bg-navy-850 hover:text-cyan-400'
+                    }`}
+                  >
+                    {s.name}
+                    <span className={`text-[10px] ${onCat ? 'text-cyan-400/70' : 'text-slate-600'}`}>
+                      {s.services.length}
+                    </span>
+                  </NavLink>
+                </li>
+              );
+            })}
           </ul>
           {/* Same overlay scrollbar as the page/cart — only while the list overflows */}
           {overflows && (
@@ -337,16 +351,21 @@ export default function Navbar() {
                     }
                     return (
                     <li key={g.id}>
-                      {/* Cyan line down the left edge marks the current game */}
-                      <div
-                        className={`relative flex h-16 items-stretch overflow-hidden ${
-                          onGame ? 'shadow-[inset_3px_0_0_0_rgb(var(--cyan-500))]' : ''
-                        }`}
-                      >
-                        {/* The art links to the game page — its hover is its own
-                            (group/art), it no longer tints the title */}
+                      {/* Cyan line at the right edge of the art marks the current game — a real
+                          element, not an inset shadow (the art would paint over it) */}
+                      <div className="relative flex h-16 items-stretch overflow-hidden">
+                        {onGame && (
+                          <span
+                            className="absolute inset-y-0 z-20 w-[3px] bg-cyan-500"
+                            style={{ left: titlePad + 50 }}
+                            aria-hidden
+                          />
+                        )}
+                        {/* The art links to the game page's "All services" category,
+                            reflected as active in this dropdown — its hover is its
+                            own (group/art), it no longer tints the title */}
                         <Link
-                          to={`/boosting/${g.id}`}
+                          to={`/boosting/${g.id}?cat=all`}
                           aria-label={g.name}
                           className="group/art relative z-10 block shrink-0"
                           style={{ width: titlePad + 50 }}
@@ -384,7 +403,11 @@ export default function Navbar() {
                           aria-label={`${g.name} categories`}
                           className="group/btn relative z-10 flex h-full min-w-0 flex-1 items-center pl-3 pr-3 text-left transition-colors hover:bg-white/5"
                         >
-                          <span className="flex h-6 min-w-6 shrink-0 items-center justify-center rounded-full bg-navy-800/80 px-1.5 text-[10px] font-bold text-slate-300">
+                          <span
+                            className={`flex h-6 min-w-6 shrink-0 items-center justify-center rounded-full bg-navy-800/80 px-1.5 text-[10px] font-bold ${
+                              onGame ? 'text-cyan-400' : 'text-slate-300'
+                            }`}
+                          >
                             {serviceCount(g)}
                           </span>
                           <ChevronDown
@@ -424,12 +447,14 @@ export default function Navbar() {
                                         to={`/boosting/${g.id}?cat=${s.id}`}
                                         className={`flex items-center justify-between rounded-[3px] px-2 py-1.5 text-xs transition-colors ${
                                           onCat
-                                            ? 'font-semibold text-cyan-400 shadow-[inset_2px_0_0_0_rgb(var(--cyan-500))]'
+                                            ? 'font-semibold text-cyan-400'
                                             : 'text-slate-400 hover:bg-navy-800 hover:text-cyan-400'
                                         }`}
                                       >
                                         {s.name}
-                                        <span className="text-[10px] text-slate-600">{s.services.length}</span>
+                                        <span className={`text-[10px] ${onCat ? 'text-cyan-400/70' : 'text-slate-600'}`}>
+                                          {s.services.length}
+                                        </span>
                                       </Link>
                                     </li>
                                   );
@@ -533,9 +558,13 @@ export default function Navbar() {
           <p className="px-3 pb-1 pt-1 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500">Games</p>
           {games.map((g) => {
             const expanded = mobileGameCat === g.id;
+            const onGame = location.pathname === `/boosting/${g.id}`;
             return (
               <div key={g.id}>
+                {/* Cyan line down the left edge marks the current game — a real
+                    element, not an inset shadow (the art would paint over it) */}
                 <div className="group/item relative flex h-16 items-stretch overflow-hidden rounded-[3px]">
+                  {onGame && <span className="absolute inset-y-0 left-0 z-20 w-[3px] bg-cyan-500" aria-hidden />}
                   {/* Background image fading into the menu surface, like the desktop dropdown */}
                   <div className="absolute inset-y-0 left-0 w-[75%]">
                     <img
@@ -553,10 +582,8 @@ export default function Navbar() {
                     />
                   </div>
                   <NavLink
-                    to={`/boosting/${g.id}`}
-                    className={({ isActive }) =>
-                      `relative z-10 flex min-w-0 flex-1 items-center ${isActive ? 'ring-1 ring-cyan-600/40' : ''}`
-                    }
+                    to={`/boosting/${g.id}?cat=all`}
+                    className="relative z-10 flex min-w-0 flex-1 items-center"
                   >
                     <span className="flex shrink-0 items-center gap-2.5 pl-3 text-sm font-semibold text-white transition-colors group-hover/item:text-cyan-400">
                       {/* Logo hidden on very narrow screens — the title takes the left edge */}
@@ -579,7 +606,11 @@ export default function Navbar() {
                     aria-label={`${g.name} categories`}
                     className="relative z-10 flex h-full shrink-0 items-center gap-2 px-3 transition-colors hover:bg-white/5"
                   >
-                    <span className="flex h-6 min-w-6 items-center justify-center rounded-full bg-navy-800/80 px-1.5 text-[10px] font-bold text-slate-300">
+                    <span
+                      className={`flex h-6 min-w-6 items-center justify-center rounded-full bg-navy-800/80 px-1.5 text-[10px] font-bold ${
+                        onGame ? 'text-cyan-400' : 'text-slate-300'
+                      }`}
+                    >
                       {serviceCount(g)}
                     </span>
                     <ChevronDown

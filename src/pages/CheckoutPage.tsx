@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { Link, Navigate, useNavigate } from 'react-router';
-import { CheckCircle2, Circle, Loader2, Mail, MessageCircle, Timer } from 'lucide-react';
+import { CheckCircle2, Circle, Loader2, Mail, MessageCircle, Timer, Bitcoin, Landmark, type LucideIcon } from 'lucide-react';
 import Reveal from '@/components/Reveal';
 import FadeImage from '@/components/FadeImage';
 import FieldPopup from '@/components/FieldPopup';
@@ -25,15 +25,11 @@ type Stage = 'idle' | 'processing' | 'done';
     the page beforehand keeps the cart intact. */
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-const emailErrorFor = (v: string) =>
-  v.trim() === ''
-    ? 'E-mail is required.'
-    : !EMAIL_RE.test(v.trim())
-      ? 'Please enter a valid e-mail address.'
-      : '';
-
-const discordErrorFor = (v: string) =>
-  v.trim().length === 1 ? 'Discord usernames are at least 2 characters — or leave this field empty.' : '';
+const PAYMENT_METHODS: { id: string; label: string; logo?: string; icon?: LucideIcon }[] = [
+  { id: 'paypal', label: 'PayPal', logo: '/payment/paypal.svg' },
+  { id: 'crypto', label: 'Crypto', icon: Bitcoin },
+  { id: 'revolut', label: 'Revolut', icon: Landmark },
+];
 
 export default function CheckoutPage() {
   const { items, clear } = useCart();
@@ -51,6 +47,8 @@ export default function CheckoutPage() {
   const contactRef = useRef<HTMLElement>(null);
   // Field errors surface on the first Place Order click, not while typing
   const [submitAttempted, setSubmitAttempted] = useState(false);
+  // A field's error bubble is hidden while that field is focused
+  const [emailFocused, setEmailFocused] = useState(false);
   // Single payment option for now — selectable but can never be unselected
   const [method, setMethod] = useState('paypal');
   const [stage, setStage] = useState<Stage>('idle');
@@ -58,12 +56,18 @@ export default function CheckoutPage() {
   const [purchased, setPurchased] = useState<CartItem[]>([]);
   const [countdown, setCountdown] = useState(RETURN_COUNTDOWN_S);
 
-  // Left column height drives the order box's max height (lg side-by-side only)
+  // Left column height drives the order box's max height (lg side-by-side only):
+  // the right column (order box + wait text + button) matches the left column,
+  // so the Place Order button's bottom aligns with the left column's bottom
   const [leftColEl, setLeftColEl] = useState<HTMLDivElement | null>(null);
+  const [actionEl, setActionEl] = useState<HTMLDivElement | null>(null);
   const [orderMaxH, setOrderMaxH] = useState<number | undefined>(undefined);
   // Order list scroller + overflow state (drives the overlay scrollbar inset)
   const [orderListEl, setOrderListEl] = useState<HTMLUListElement | null>(null);
   const [orderOverflows, setOrderOverflows] = useState(false);
+  // Edge fades on the sides the list content overflows
+  const [orderFadeTop, setOrderFadeTop] = useState(false);
+  const [orderFadeBottom, setOrderFadeBottom] = useState(false);
 
   // Close the hint popup on any click outside of it
   useEffect(() => {
@@ -88,26 +92,41 @@ export default function CheckoutPage() {
 
   useEffect(() => {
     if (!leftColEl) return;
-    const update = () =>
-      setOrderMaxH(window.matchMedia(TWO_COL_QUERY).matches ? leftColEl.offsetHeight : undefined);
+    const update = () => {
+      if (!window.matchMedia(TWO_COL_QUERY).matches) {
+        setOrderMaxH(undefined);
+        return;
+      }
+      // 32 = the space-y-8 gap between the order box and the action block
+      setOrderMaxH(Math.max(160, leftColEl.offsetHeight - (actionEl?.offsetHeight ?? 0) - 32));
+    };
     update();
     const ro = new ResizeObserver(update);
     ro.observe(leftColEl);
+    if (actionEl) ro.observe(actionEl);
     window.addEventListener('resize', update);
     return () => {
       ro.disconnect();
       window.removeEventListener('resize', update);
     };
-  }, [leftColEl]);
+  }, [leftColEl, actionEl]);
 
   useEffect(() => {
     if (!orderListEl) return;
-    const check = () => setOrderOverflows(orderListEl.scrollHeight > orderListEl.clientHeight + 1);
+    const check = () => {
+      setOrderOverflows(orderListEl.scrollHeight > orderListEl.clientHeight + 1);
+      setOrderFadeTop(orderListEl.scrollTop > 4);
+      setOrderFadeBottom(orderListEl.scrollTop < orderListEl.scrollHeight - orderListEl.clientHeight - 4);
+    };
     check();
+    orderListEl.addEventListener('scroll', check, { passive: true });
     const ro = new ResizeObserver(check);
     ro.observe(orderListEl);
     Array.from(orderListEl.children).forEach((c) => ro.observe(c));
-    return () => ro.disconnect();
+    return () => {
+      orderListEl.removeEventListener('scroll', check);
+      ro.disconnect();
+    };
   }, [orderListEl]);
 
   if (items.length === 0 && stage === 'idle') return <Navigate to="/" replace />;
@@ -115,16 +134,34 @@ export default function CheckoutPage() {
   const orderItems = stage === 'idle' ? items : purchased;
   const orderTotal = orderItems.reduce((sum, i) => sum + lineTotal(i), 0);
   const locked = stage !== 'idle';
-  // Errors surface on the first Place Order click (like native validation),
-  // then re-validate live as the fields are edited
-  const emailError = submitAttempted ? emailErrorFor(email) : '';
-  const discordError = submitAttempted ? discordErrorFor(discord) : '';
+  // Contact rules: each field must be empty or valid, and at least one must be
+  // valid. Neither valid -> both flag "one contact method is required" (the
+  // borders stay red, but the bubble clears as soon as either field is
+  // focused). One valid but the other malformed -> that field flags its own
+  // error and blocks.
+  const emailValid = EMAIL_RE.test(email.trim());
+  const discordValid = discord.trim().length >= 2;
+  const emailOk = email.trim() === '' || emailValid;
+  const discordOk = discord.trim() === '' || discordValid;
+  const noContact = submitAttempted && !emailValid && !discordValid;
+  const emailFlag = noContact || (submitAttempted && !emailOk);
+  const discordFlag = noContact || (submitAttempted && !discordOk);
+  const contactFocused = emailFocused || discordFocused;
+  const emailError = !emailFlag || emailFocused || (noContact && contactFocused)
+    ? ''
+    : noContact
+      ? 'One contact method is required.'
+      : 'Please enter a valid e-mail address — or leave this field empty.';
+  const discordError = !discordFlag || discordFocused || (noContact && contactFocused)
+    ? ''
+    : noContact
+      ? 'One contact method is required.'
+      : 'Discord usernames are at least 2 characters — or leave this field empty.';
 
   const purchase = (e: FormEvent) => {
     e.preventDefault();
     setSubmitAttempted(true);
-    // Same lockout as native validation: any field error blocks the order
-    if (emailErrorFor(email) || discordErrorFor(discord)) {
+    if (!emailOk || !discordOk || (!emailValid && !discordValid)) {
       if (!window.matchMedia(TWO_COL_QUERY).matches) {
         contactRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
@@ -166,7 +203,7 @@ export default function CheckoutPage() {
       {/* noValidate: native browser popups are replaced by FieldPopup bubbles */}
       <form noValidate onSubmit={purchase} className="mt-8 grid items-start gap-8 lg:grid-cols-2">
         {/* ============ LEFT: CONTACT + PAYMENT ============ */}
-        <div ref={setLeftColEl} className="space-y-8">
+        <div ref={setLeftColEl} className="min-w-0 space-y-8">
           <Reveal delay={100}>
             <section ref={contactRef} className="purchase-box-glow rounded-[5px] bg-navy-800 p-5 sm:p-6">
               <h2 className="font-display text-lg font-bold text-white">Contact details</h2>
@@ -174,27 +211,6 @@ export default function CheckoutPage() {
                 Please enter your details to allow us to contact you and complete your order.
               </p>
               <fieldset disabled={locked} className="mt-5 space-y-4">
-                <label className="block">
-                  <span className="mb-1.5 block text-xs font-bold uppercase tracking-[0.2em] text-cyan-400">
-                    E-mail <span className="font-medium normal-case tracking-normal text-slate-600">(required)</span>
-                  </span>
-                  <div className="relative">
-                    <Mail className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
-                    <FieldPopup message={emailError} />
-                    <input
-                      type="email"
-                      required
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder="you@example.com"
-                      className={`h-[42px] w-full rounded-[3px] border bg-navy-900/80 pl-10 pr-3 text-sm text-white placeholder:text-slate-500 outline-none transition-colors disabled:opacity-60 ${
-                        emailError
-                          ? 'border-red-500/60'
-                          : 'border-navy-700/70 hover:border-navy-600 focus:border-navy-600'
-                      }`}
-                    />
-                  </div>
-                </label>
                 {/* Not a wrapping <label>: the hint button must stay the only
                     thing that toggles the popup (a label would activate the
                     first labelable element — the button — from anywhere in the row) */}
@@ -202,8 +218,7 @@ export default function CheckoutPage() {
                   <span className="mb-1.5 flex items-center justify-between gap-2">
                     <label htmlFor="checkout-discord" className="text-xs font-bold uppercase tracking-[0.2em] text-cyan-400">
                       Discord{' '}
-                      {/* Own line on mobile, leaving the row free for "Can't find it?" */}
-                      <span className="block font-medium normal-case tracking-normal text-slate-600 sm:inline">(optional — faster contact)</span>
+                      <span className="font-medium normal-case tracking-normal text-slate-600">(faster contact)</span>
                     </label>
                     {/* Hint popup: hover on desktop, click-toggle on touch —
                         closes on second click or any click outside */}
@@ -234,7 +249,7 @@ export default function CheckoutPage() {
                   </span>
                   <div className="relative">
                     <MessageCircle className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
-                    <FieldPopup message={discordFocused ? discordError : ''} />
+                    <FieldPopup message={discordError} />
                     <input
                       id="checkout-discord"
                       type="text"
@@ -244,13 +259,39 @@ export default function CheckoutPage() {
                       onBlur={() => setDiscordFocused(false)}
                       placeholder="username"
                       className={`h-[42px] w-full rounded-[3px] border bg-navy-900/80 pl-10 pr-3 text-sm text-white placeholder:text-slate-500 outline-none transition-colors disabled:opacity-60 ${
-                        discordError
+                        discordFlag
                           ? 'border-red-500/60'
                           : 'border-navy-700/70 hover:border-navy-600 focus:border-navy-600'
                       }`}
                     />
                   </div>
                 </div>
+                <label className="block">
+                  <span className="mb-1.5 block text-xs font-bold uppercase tracking-[0.2em] text-cyan-400">
+                    E-mail <span className="font-medium normal-case tracking-normal text-slate-600">(slower contact)</span>
+                  </span>
+                  <div className="relative">
+                    <Mail className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
+                    <FieldPopup message={emailError} />
+                    <input
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      onFocus={() => setEmailFocused(true)}
+                      onBlur={() => setEmailFocused(false)}
+                      placeholder="you@example.com"
+                      className={`h-[42px] w-full rounded-[3px] border bg-navy-900/80 pl-10 pr-3 text-sm text-white placeholder:text-slate-500 outline-none transition-colors disabled:opacity-60 ${
+                        emailFlag
+                          ? 'border-red-500/60'
+                          : 'border-navy-700/70 hover:border-navy-600 focus:border-navy-600'
+                      }`}
+                    />
+                  </div>
+                </label>
+                <p className="text-xs leading-relaxed text-slate-500">
+                  Your contact details will be linked to your order. If live chat is unavailable, we’ll use them
+                  to contact you regarding your order if needed.
+                </p>
               </fieldset>
             </section>
           </Reveal>
@@ -258,48 +299,68 @@ export default function CheckoutPage() {
           <Reveal delay={200}>
             <section className="purchase-box-glow rounded-[5px] bg-navy-800 p-5 sm:p-6">
               <h2 className="font-display text-lg font-bold text-white">Payment method</h2>
-              {/* Single option for now — clicking re-selects it, it can never be unselected */}
-              <button
-                type="button"
-                onClick={() => setMethod('paypal')}
-                disabled={locked}
-                aria-pressed={method === 'paypal'}
-                className="group mt-4 flex w-full cursor-pointer items-center gap-3 rounded-[5px] border border-cyan-600/40 bg-navy-900/80 px-4 py-3 text-left transition-colors hover:border-cyan-500/60 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:border-cyan-600/40"
-              >
-                <img src="/payment/paypal.svg" alt="PayPal" className="h-5 w-auto" />
-                <span className="text-sm font-semibold text-white">PayPal</span>
-                {/* Held down: the checkmark fades into a greyed-out empty circle,
-                    and back to selected on release */}
-                <span className="relative ml-auto h-5 w-5 shrink-0">
-                  <CheckCircle2 className="absolute inset-0 h-5 w-5 text-cyan-400 transition-opacity duration-200 group-active:opacity-0" aria-label="Selected" />
-                  <Circle className="absolute inset-0 h-5 w-5 text-slate-600 opacity-0 transition-opacity duration-200 group-active:opacity-100" aria-hidden />
-                </span>
-              </button>
+              {/* Exactly one method is always selected — clicking switches, never unselects */}
+              <div className="mt-4 space-y-3">
+                {PAYMENT_METHODS.map((m) => {
+                  const selected = method === m.id;
+                  return (
+                    <button
+                      key={m.id}
+                      type="button"
+                      onClick={() => setMethod(m.id)}
+                      disabled={locked}
+                      aria-pressed={selected}
+                      className={`group flex w-full cursor-pointer items-center gap-3 rounded-[5px] border bg-navy-900/80 px-4 py-3 text-left transition-colors disabled:cursor-not-allowed disabled:opacity-60 ${
+                        selected
+                          ? 'border-cyan-600/40 hover:border-cyan-500/60 disabled:hover:border-cyan-600/40'
+                          : 'border-navy-700/70 hover:border-navy-600 disabled:hover:border-navy-700/70'
+                      }`}
+                    >
+                      {m.logo ? (
+                        <img src={m.logo} alt={m.label} className="h-5 w-auto" />
+                      ) : m.icon ? (
+                        <m.icon className="h-5 w-5 text-slate-300" />
+                      ) : null}
+                      <span className="text-sm font-semibold text-white">{m.label}</span>
+                      {selected ? (
+                        /* Held down: the checkmark fades into a greyed-out empty
+                           circle, and back to selected on release */
+                        <span className="relative ml-auto h-5 w-5 shrink-0">
+                          <CheckCircle2 className="absolute inset-0 h-5 w-5 text-cyan-400 transition-opacity duration-200 group-active:opacity-0" aria-label="Selected" />
+                          <Circle className="absolute inset-0 h-5 w-5 text-slate-600 opacity-0 transition-opacity duration-200 group-active:opacity-100" aria-hidden />
+                        </span>
+                      ) : (
+                        <Circle className="ml-auto h-5 w-5 shrink-0 text-slate-600" aria-hidden />
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
             </section>
           </Reveal>
         </div>
 
         {/* ============ RIGHT: ORDER + PURCHASE ============ */}
-        <div className="space-y-8">
+        <div className="min-w-0 space-y-8">
           <Reveal delay={150}>
             {/* Bottom edge aligns with the left column on lg; the item list
-                scrolls inside (overlay scrollbar) when it overflows */}
+                scrolls inside (overlay scrollbar) when it overflows — then the
+                list pads right so the pill doesn't crowd the entries */}
             <section
               style={{ maxHeight: orderMaxH }}
               className="flex flex-col rounded-[5px] bg-navy-850 p-5 shadow-2xl sm:p-6"
             >
-              <h2 className="flex shrink-0 items-center gap-2 font-display text-lg font-bold text-white">
+              <h2 className="flex shrink-0 items-center gap-2 border-b border-navy-700/60 pb-4 font-display text-lg font-bold text-white">
                 Your order
                 {/* Same count pill as the cart sidebar */}
                 <span className="rounded-full bg-navy-800 px-2 py-0.5 text-xs font-semibold text-slate-300">
                   {orderItems.reduce((s, i) => s + i.qty, 0)} item{orderItems.reduce((s, i) => s + i.qty, 0) !== 1 ? 's' : ''}
                 </span>
               </h2>
-              <div className="relative mt-4 flex min-h-0 flex-1 flex-col">
-                {/* pr-3 (only while overflowing) keeps item prices clear of the scrollbar pill */}
+              <div className="relative mt-5 flex min-h-0 flex-1 flex-col">
                 <ul
                   ref={setOrderListEl}
-                  className={`no-scrollbar min-h-0 flex-1 divide-y divide-navy-700/50 overflow-y-auto ${orderOverflows ? 'pr-3' : ''}`}
+                  className={`no-scrollbar min-h-0 flex-1 divide-y divide-navy-700/50 overflow-y-auto ${orderOverflows ? 'pr-4' : ''}`}
                 >
                   {orderItems.map((item) => (
                     <li key={item.id} className="flex gap-3 py-3 first:pt-0 last:pb-0">
@@ -338,6 +399,19 @@ export default function CheckoutPage() {
                     </li>
                   ))}
                 </ul>
+                {/* Edge fades where the list content overflows */}
+                <div
+                  className={`pointer-events-none absolute inset-x-0 top-0 z-10 h-6 bg-gradient-to-b from-navy-850 to-transparent transition-opacity duration-300 ${
+                    orderFadeTop ? 'opacity-100' : 'opacity-0'
+                  }`}
+                  aria-hidden
+                />
+                <div
+                  className={`pointer-events-none absolute inset-x-0 bottom-0 z-10 h-6 bg-gradient-to-t from-navy-850 to-transparent transition-opacity duration-300 ${
+                    orderFadeBottom ? 'opacity-100' : 'opacity-0'
+                  }`}
+                  aria-hidden
+                />
                 {/* Same overlay scrollbar as the page/cart — mounted only while the
                     list overflows; -right-3 tucks it into the section's padding */}
                 {orderOverflows && (
@@ -347,7 +421,7 @@ export default function CheckoutPage() {
                   />
                 )}
               </div>
-              <div className="mt-4 flex shrink-0 items-center justify-between border-t border-navy-700/60 pt-4">
+              <div className="mt-5 flex shrink-0 items-center justify-between border-t border-navy-700/60 pt-4">
                 <span className="text-sm text-slate-400">Total</span>
                 <span className="font-display text-xl font-bold text-cyan-400">{format(orderTotal)}</span>
               </div>
@@ -355,10 +429,11 @@ export default function CheckoutPage() {
           </Reveal>
 
           <Reveal delay={250}>
-            <p className="flex items-center justify-center gap-1.5 text-xs text-slate-400">
-              <Timer className="h-3.5 w-3.5 shrink-0 text-cyan-500" />
-              Average response time: within an hour of the order placement.
-            </p>
+            <div ref={setActionEl}>
+              <p className="flex items-center justify-center gap-1.5 text-xs text-slate-400">
+                <Timer className="h-3.5 w-3.5 shrink-0 text-cyan-500" />
+                Average response time: within an hour of the order placement.
+              </p>
             {stage === 'done' ? (
               <div className="mt-4 rounded-[5px] border border-cyan-600/40 bg-navy-850 p-6 text-center shadow-2xl">
                 <CheckCircle2 className="mx-auto h-10 w-10 text-cyan-400" />
@@ -384,6 +459,7 @@ export default function CheckoutPage() {
                 )}
               </button>
             )}
+            </div>
           </Reveal>
         </div>
       </form>

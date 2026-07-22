@@ -11,6 +11,24 @@ export default function CartDrawer() {
   const { isOpen, closeCart, items, setQty, removeItem, subtotal, clear } = useCart();
   const { format } = useCurrency();
   const [listEl, setListEl] = useState<HTMLDivElement | null>(null);
+  // The wider right padding exists only to make room for the overlay scrollbar
+  const [overflows, setOverflows] = useState(false);
+
+  useEffect(() => {
+    if (!listEl) return;
+    const check = () => setOverflows(listEl.scrollHeight > listEl.clientHeight + 1);
+    check();
+    const ro = new ResizeObserver(check);
+    ro.observe(listEl);
+    Array.from(listEl.children).forEach((c) => ro.observe(c));
+    // Item add/remove changes scrollHeight without resizing observed children
+    const mo = new MutationObserver(check);
+    mo.observe(listEl, { childList: true, subtree: true });
+    return () => {
+      ro.disconnect();
+      mo.disconnect();
+    };
+  }, [listEl]);
 
   // Escape to close + visually hide the overlay scrollbar while open.
   // Scrolling stays fully functional (overflow is never locked — locking it
@@ -87,7 +105,7 @@ export default function CartDrawer() {
         ) : (
           <>
             <div className="relative min-h-0 flex-1">
-              <div ref={setListEl} className="cart-items-scroll h-full space-y-3 overflow-y-auto pl-5 pr-8 py-4">
+              <div ref={setListEl} className={`cart-items-scroll h-full space-y-3 overflow-y-auto py-4 pl-5 ${overflows ? 'pr-8' : 'pr-5'}`}>
               {items.map((item) => (
                 <div
                   key={item.id}

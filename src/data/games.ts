@@ -1019,13 +1019,12 @@ export const games: Game[] = [
   },
 ];
 
-// 'All' aggregates every FFXIV service without duplicating data entries
-const ffxivGame = games.find((g) => g.id === 'ffxiv');
-if (ffxivGame) {
+// 'All services' aggregates every game's services without duplicating data entries
+for (const game of games) {
   const uniqueServices = [
-    ...new Map(ffxivGame.subcategories.flatMap((s) => s.services).map((sv) => [sv.id, sv])).values(),
+    ...new Map(game.subcategories.flatMap((s) => s.services).map((sv) => [sv.id, sv])).values(),
   ];
-  ffxivGame.subcategories.unshift({ id: 'all', name: 'All services', services: uniqueServices });
+  game.subcategories.unshift({ id: 'all', name: 'All services', services: uniqueServices });
 }
 
 export const getGame = (id: string) => games.find((g) => g.id === id);
