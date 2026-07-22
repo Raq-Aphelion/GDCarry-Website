@@ -327,14 +327,16 @@ export default function Home() {
               </Link>
             </div>
           </Reveal>
-          {/* One row only: mobile shows 3, sm 2, lg 3, 5 in a row from 720p (xl)
-              up; cards that would wrap to a second row are removed. */}
-          <div className="mt-10 grid gap-5 sm:mt-6 sm:grid-cols-2 lg:mt-10 lg:grid-cols-3 xl:grid-cols-5">
+          {/* One row only: mobile shows 3, sm 2, md 3, lg 4, 5 in a row from
+              720p (xl) up; cards that would wrap to a second row are removed.
+              Cards cap at 280px (ServiceCard max-w) — center them in their
+              cells so any extra row width becomes even outer margins. */}
+          <div className="mt-10 grid justify-items-center gap-5 sm:mt-6 sm:grid-cols-2 md:grid-cols-3 lg:mt-10 lg:grid-cols-4 xl:grid-cols-5">
             {featured.slice(0, 5).map((s, i) => (
               <Reveal
                 key={s.id}
                 delay={i * 90}
-                className={i === 2 ? 'sm:hidden lg:block' : i >= 3 ? 'hidden xl:block' : ''}
+                className={`w-full max-w-[280px] ${i === 2 ? 'sm:hidden md:block' : i === 3 ? 'hidden lg:block' : i === 4 ? 'hidden xl:block' : ''}`}
               >
                 <ServiceCard service={s} />
               </Reveal>
