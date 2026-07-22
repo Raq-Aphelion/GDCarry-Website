@@ -12,7 +12,6 @@ import {
   X,
   type LucideIcon,
 } from 'lucide-react';
-import DiceLogo from './DiceLogo';
 import { OverlayScrollbar } from './Scrollbar';
 import { allServices, games, serviceCount, type Game, type ServiceSearchResult } from '@/data/games';
 import { useCart } from '@/context/CartContext';
@@ -73,7 +72,7 @@ function SearchBox({
           if (e.key === 'Enter' && results.length > 0) onGoResult(results[0].game.id, results[0].subId);
         }}
         placeholder="Search boosts, games, categories…"
-        className="h-[42px] w-full rounded-[3px] border border-navy-700/70 bg-navy-850/90 pl-10 pr-9 text-sm text-white placeholder:text-slate-500 outline-none transition-colors hover:border-navy-600 focus:border-navy-600"
+        className="h-[42px] w-full cursor-pointer rounded-[3px] border border-navy-700/70 bg-navy-850/90 pl-10 pr-9 text-sm text-white placeholder:text-slate-500 outline-none transition-colors hover:border-navy-600 focus:border-navy-600"
         aria-label="Search services"
       />
       {query && (
@@ -303,8 +302,12 @@ export default function Navbar() {
     >
       <nav className="mx-auto flex h-16 max-w-[1440px] items-center gap-3 px-[25px] sm:px-6 lg:px-8">
         {/* Brand */}
-        <Link to="/" className="group mr-1 flex shrink-0 items-center gap-2.5 max-[340px]:gap-1.5 lg:mr-4">
-          <DiceLogo size={36} className="transition-transform duration-300 group-hover:-rotate-6 max-[340px]:h-7 max-[340px]:w-7" />
+        <Link to="/" className="group mr-1 flex shrink-0 cursor-pointer items-center gap-2.5 max-[340px]:gap-1.5 lg:mr-4">
+          <img
+            src="/images/gd_logo.png"
+            alt=""
+            className="h-9 w-auto pt-0.5 transition-transform duration-300 group-hover:-rotate-6 max-[340px]:h-7"
+          />
           <span className="font-display text-lg font-bold tracking-tight text-white max-[340px]:text-base">
             GD <span className="text-gradient-cyan">Carry</span>
           </span>
@@ -318,7 +321,7 @@ export default function Navbar() {
               setGamesOpen((v) => !v);
               setCurrencyOpen(false);
             }}
-            className={`flex h-[42px] shrink-0 items-center gap-2 rounded-[3px] px-3.5 text-sm font-semibold transition-all duration-300 ease-out hover:shadow-lg hover:shadow-black/25 ${
+            className={`flex h-[42px] shrink-0 cursor-pointer items-center gap-2 rounded-[3px] px-3.5 text-sm font-semibold transition-all duration-300 ease-out hover:shadow-lg hover:shadow-black/25 ${
               gamesOpen
                 ? 'bg-gradient-to-r from-navy-700 to-navy-800 text-cyan-400'
                 : 'bg-gradient-to-r from-navy-800 to-navy-850 text-white hover:from-navy-700 hover:to-navy-800 hover:text-cyan-400'
@@ -401,7 +404,7 @@ export default function Navbar() {
                           onClick={() => setDesktopGameCat(expanded ? null : g.id)}
                           aria-expanded={expanded}
                           aria-label={`${g.name} categories`}
-                          className="group/btn relative z-10 flex h-full min-w-0 flex-1 items-center pl-3 pr-3 text-left transition-colors hover:bg-white/5"
+                          className="group/btn relative z-10 flex h-full min-w-0 flex-1 cursor-pointer items-center pl-3 pr-3 text-left transition-colors hover:bg-white/5"
                         >
                           <span
                             className={`flex h-6 min-w-6 shrink-0 items-center justify-center rounded-full bg-navy-800/80 px-1.5 text-[10px] font-bold ${
@@ -604,7 +607,7 @@ export default function Navbar() {
                     onClick={() => setMobileGameCat(expanded ? null : g.id)}
                     aria-expanded={expanded}
                     aria-label={`${g.name} categories`}
-                    className="relative z-10 flex h-full shrink-0 items-center gap-2 px-3 transition-colors hover:bg-white/5"
+                    className="relative z-10 flex h-full shrink-0 cursor-pointer items-center gap-2 px-3 transition-colors hover:bg-white/5"
                   >
                     <span
                       className={`flex h-6 min-w-6 items-center justify-center rounded-full bg-navy-800/80 px-1.5 text-[10px] font-bold ${

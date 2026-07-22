@@ -1,6 +1,5 @@
 import { Link } from 'react-router';
 import { BookOpen, Briefcase, Cookie, LifeBuoy, Lock, MessageCircle, Scale, ShieldCheck, Undo2 } from 'lucide-react';
-import DiceLogo from './DiceLogo';
 import { games } from '@/data/games';
 import { useToast } from '@/context/ToastContext';
 
@@ -13,12 +12,12 @@ export default function Footer() {
     <footer className="mt-8 border-t border-navy-700/60 bg-navy-950/70 lg:mt-12">
       <div className="mx-auto grid max-w-[1440px] gap-10 px-[25px] py-10 sm:px-6 md:grid-cols-2 lg:flex lg:items-start lg:justify-start lg:gap-[clamp(2.5rem,7vw,11rem)] lg:px-8">
         <div className="text-center md:text-left">
-          <Link to="/" className="group flex items-center justify-center gap-2.5 md:justify-start">
-            <DiceLogo size={36} className="transition-transform duration-300 group-hover:rotate-6" />
+          <div className="flex items-center justify-center gap-2.5 md:justify-start">
+            <img src="/images/gd_logo.png" alt="" className="h-9 w-auto" />
             <span className="font-display text-lg font-bold tracking-tight text-white max-md:text-base">
-              GD <span className="text-gradient-cyan">Carry</span>
+              GRAND DICE
             </span>
-          </Link>
+          </div>
           <p className="mx-auto mt-4 max-w-xs text-sm leading-relaxed text-slate-400 max-md:text-xs md:mx-0">
             Grand Dice. Professional boosting and carry services by verified top-tier players — safe, fast and
             always hand-played.

@@ -219,7 +219,7 @@ export default function Home() {
                   ))}
                 </span>
                 <span className="font-semibold text-white">Excellent</span>
-                <span className="text-slate-400"><span className="max-sm:hidden">— </span>800+ verified player reviews</span>
+                <span className="text-slate-400"><span className="max-sm:hidden">— </span>1,100+ verified player reviews</span>
               </div>
             </Reveal>
           </div>
@@ -397,7 +397,7 @@ export default function Home() {
                   ))}
                 </div>
                 <span className="text-sm text-slate-400">
-                  <span className="font-semibold text-white">4.9 / 5</span> from 800+ verified orders
+                  <span className="font-semibold text-white">4.9 / 5</span> from 1,100+ verified orders
                 </span>
               </div>
             </div>
