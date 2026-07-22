@@ -152,6 +152,8 @@ export default function PurchaseBox({ service, gameShort }: { service: Service; 
   // the sticky box handles everything else, including the CTA hand-off.
   const wrapRef = useRef<HTMLDivElement>(null);
   const blockH = useRef(0);
+  // Render-side copy of blockH (refs must not be read during render)
+  const [blockHpx, setBlockHpx] = useState(0);
   const [fixedStyle, setFixedStyle] = useState<CSSProperties | null>(null);
 
   const update = useCallback(() => {
@@ -160,7 +162,10 @@ export default function PurchaseBox({ service, gameShort }: { service: Service; 
     const r = w.getBoundingClientRect();
     const child = w.firstElementChild as HTMLElement | null;
     const h = (child ? child.getBoundingClientRect().height : r.height) || blockH.current;
-    if (h > 0) blockH.current = h;
+    if (h > 0) {
+      blockH.current = h;
+      setBlockHpx(h); // React bails out when unchanged — no re-render churn
+    }
     const vh = window.innerHeight;
     if (stickRef.current && window.innerWidth >= 1024) {
       // Sticky box: keep the price block reachable before the box pins, then
@@ -188,6 +193,9 @@ export default function PurchaseBox({ service, gameShort }: { service: Service; 
   }, []);
 
   useEffect(() => {
+    // Measuring the DOM and syncing it to state on mount is exactly what
+    // effects are for — the block must be positioned before first paint.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     update();
     const scroller = document.getElementById('page-scroll');
     scroller?.addEventListener('scroll', update, { passive: true });
@@ -290,9 +298,16 @@ export default function PurchaseBox({ service, gameShort }: { service: Service; 
   const toggleAddon = (id: string) =>
     setAddons((prev) => (prev.includes(id) ? prev.filter((a) => a !== id) : [...prev, id]));
 
+  // Scroll target when "Add to cart" is clicked without a data center (mobile:
+  // the select sits far above the floating button)
+  const dcRef = useRef<HTMLDivElement>(null);
+
   const addToCart = () => {
     if (!dc) {
       setDcError(true);
+      if (window.matchMedia('(max-width: 1023px)').matches) {
+        dcRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
       return;
     }
     // Runs are excluded from the key/name — identical configs merge into one
@@ -392,7 +407,7 @@ export default function PurchaseBox({ service, gameShort }: { service: Service; 
           </div>
 
           {/* Data center */}
-          <div>
+          <div ref={dcRef}>
             <p className="pl-px text-sm font-semibold text-white">
               Data Center <span className="text-xs font-normal text-slate-500">(required)</span>
             </p>
@@ -500,7 +515,7 @@ export default function PurchaseBox({ service, gameShort }: { service: Service; 
       </div>
 
       {/* Total + checkout — floats above content, touching the bottom of the screen */}
-      <div ref={wrapRef} className="mt-4" style={fixedStyle ? { height: blockH.current } : undefined}>
+      <div ref={wrapRef} className="mt-4" style={fixedStyle ? { height: blockHpx } : undefined}>
         <div
           style={fixedStyle ?? undefined}
           className={`purchase-price-block rounded-[5px] border border-navy-700/70 bg-navy-800 p-4 text-center shadow-2xl ${

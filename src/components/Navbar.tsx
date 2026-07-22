@@ -14,7 +14,7 @@ import {
 } from 'lucide-react';
 import DiceLogo from './DiceLogo';
 import { OverlayScrollbar } from './Scrollbar';
-import { allServices, games, serviceCount, type ServiceSearchResult } from '@/data/games';
+import { allServices, games, serviceCount, type Game, type ServiceSearchResult } from '@/data/games';
 import { useCart } from '@/context/CartContext';
 import { useCurrency, type Currency } from '@/context/CurrencyContext';
 import { useToast } from '@/context/ToastContext';
@@ -37,6 +37,10 @@ const CURRENCIES: { c: Currency; symbol: string; label: string; icon: LucideIcon
   { c: 'EUR', symbol: '€', label: 'Euro', icon: Euro },
   { c: 'USD', symbol: '$', label: 'US Dollar', icon: DollarSign },
 ];
+
+/** Category column count in the games dropdown — set by the biggest game
+    (FFXIV). Every game aligns to this grid, even with a single column. */
+const CAT_COLS = Math.max(...games.map((g) => Math.ceil(g.subcategories.length / 5)));
 
 /** Search input + results dropdown. Rendered twice (desktop nav and mobile
     menu), so it's a real component: each instance needs its own dropdown
@@ -127,9 +131,67 @@ function SearchBox({
   );
 }
 
+/** Mobile menu category list for one game: capped height, scrolls with the
+    site's overlay scrollbar when it overflows — the service counts shift left
+    (pr-3) only while the scrollbar is visible. */
+function MobileCategoryList({ game, expanded }: { game: Game; expanded: boolean }) {
+  const [listEl, setListEl] = useState<HTMLUListElement | null>(null);
+  const [overflows, setOverflows] = useState(false);
+
+  useEffect(() => {
+    if (!listEl) return;
+    const check = () => setOverflows(listEl.scrollHeight > listEl.clientHeight + 1);
+    check();
+    const ro = new ResizeObserver(check);
+    ro.observe(listEl);
+    Array.from(listEl.children).forEach((c) => ro.observe(c));
+    return () => ro.disconnect();
+  }, [listEl]);
+
+  return (
+    <div
+      className={`grid transition-all duration-300 ${
+        expanded ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
+      }`}
+    >
+      <div className="overflow-hidden">
+        <div className="relative my-1.5 ml-3 border-l border-navy-700/60">
+          <ul
+            ref={setListEl}
+            className={`no-scrollbar max-h-60 space-y-0.5 overflow-y-auto pl-3 ${overflows ? 'pr-3' : ''}`}
+          >
+            {game.subcategories.map((s) => (
+              <li key={s.id}>
+                <NavLink
+                  to={`/boosting/${game.id}?cat=${s.id}`}
+                  className="flex items-center justify-between rounded-[3px] px-2 py-1.5 text-xs text-slate-400 transition-colors hover:bg-navy-850 hover:text-cyan-400"
+                >
+                  {s.name}
+                  <span className="text-[10px] text-slate-600">{s.services.length}</span>
+                </NavLink>
+              </li>
+            ))}
+          </ul>
+          {/* Same overlay scrollbar as the page/cart — only while the list overflows */}
+          {overflows && (
+            <OverlayScrollbar
+              scroller={listEl}
+              className="absolute bottom-0 right-0 top-0 w-2"
+            />
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  // Which game's category list is expanded in the mobile menu (accordion)
+  const [mobileGameCat, setMobileGameCat] = useState<string | null>(null);
+  // Same accordion state for the desktop games dropdown
+  const [desktopGameCat, setDesktopGameCat] = useState<string | null>(null);
   const [gamesOpen, setGamesOpen] = useState(false);
   const [currencyOpen, setCurrencyOpen] = useState(false);
   const [searchFocused, setSearchFocused] = useState(false);
@@ -141,6 +203,8 @@ export default function Navbar() {
   const { toast } = useToast();
   const location = useLocation();
   const navigate = useNavigate();
+  // Current ?cat= selection — drives the active markers in the games dropdown
+  const catParam = new URLSearchParams(location.search).get('cat');
 
   useEffect(() => {
     const scroller = document.getElementById('page-scroll');
@@ -151,13 +215,19 @@ export default function Navbar() {
     return () => scroller.removeEventListener('scroll', onScroll);
   }, []);
 
-  // Close menus on navigation
-  useEffect(() => {
+  // Close menus on navigation — render-time state adjustment (the React-endorsed
+  // alternative to a setState-in-effect: guarded by comparing to the previous value)
+  const locKey = location.pathname + location.search;
+  const [prevLocKey, setPrevLocKey] = useState(locKey);
+  if (prevLocKey !== locKey) {
+    setPrevLocKey(locKey);
     setMobileOpen(false);
     setGamesOpen(false);
     setCurrencyOpen(false);
+    setMobileGameCat(null);
+    setDesktopGameCat(null);
     setQuery('');
-  }, [location.pathname, location.search]);
+  }
 
   // Align dropdown game titles with the searchbar's icon column
   useEffect(() => {
@@ -219,9 +289,9 @@ export default function Navbar() {
     >
       <nav className="mx-auto flex h-16 max-w-[1440px] items-center gap-3 px-[25px] sm:px-6 lg:px-8">
         {/* Brand */}
-        <Link to="/" className="group mr-1 flex shrink-0 items-center gap-2.5 lg:mr-4">
-          <DiceLogo size={36} className="transition-transform duration-300 group-hover:-rotate-6" />
-          <span className="font-display text-lg font-bold tracking-tight text-white">
+        <Link to="/" className="group mr-1 flex shrink-0 items-center gap-2.5 max-[340px]:gap-1.5 lg:mr-4">
+          <DiceLogo size={36} className="transition-transform duration-300 group-hover:-rotate-6 max-[340px]:h-7 max-[340px]:w-7" />
+          <span className="font-display text-lg font-bold tracking-tight text-white max-[340px]:text-base">
             GD <span className="text-gradient-cyan">Carry</span>
           </span>
         </Link>
@@ -258,17 +328,33 @@ export default function Navbar() {
               <div className="dropdown-in absolute left-0 right-0 top-full z-20 mt-2 overflow-hidden rounded-[3px] border border-navy-700/70 bg-navy-850 shadow-2xl">
                 <ul className="p-1.5">
                   {games.map((g) => {
+                    const expanded = desktopGameCat === g.id;
+                    const onGame = location.pathname === `/boosting/${g.id}`;
+                    // Category columns: max 5 entries each, rail line between them
+                    const chunks = [];
+                    for (let i = 0; i < g.subcategories.length; i += 5) {
+                      chunks.push(g.subcategories.slice(i, i + 5));
+                    }
                     return (
                     <li key={g.id}>
-                      <Link
-                        to={`/boosting/${g.id}`}
-                        className="group/item relative flex h-16 items-center overflow-hidden"
+                      {/* Cyan line down the left edge marks the current game */}
+                      <div
+                        className={`relative flex h-16 items-stretch overflow-hidden ${
+                          onGame ? 'shadow-[inset_3px_0_0_0_rgb(var(--cyan-500))]' : ''
+                        }`}
                       >
-                        <div className="absolute inset-y-0 left-0" style={{ width: titlePad + 50 }}>
+                        {/* The art links to the game page — its hover is its own
+                            (group/art), it no longer tints the title */}
+                        <Link
+                          to={`/boosting/${g.id}`}
+                          aria-label={g.name}
+                          className="group/art relative z-10 block shrink-0"
+                          style={{ width: titlePad + 50 }}
+                        >
                           <img
                             src={g.cardImage}
                             alt=""
-                            className="h-full w-full object-cover opacity-80 transition-opacity group-hover/item:opacity-100"
+                            className="absolute inset-0 h-full w-full object-cover opacity-80 transition-opacity group-hover/art:opacity-100"
                             loading="lazy"
                           />
                           {/* Navy veil over the art: stronger at the edges, dimmer in the
@@ -289,22 +375,70 @@ export default function Navbar() {
                               loading="lazy"
                             />
                           </span>
-                        </div>
-                        <span
-                          className="relative z-10 flex shrink-0 items-center gap-[22px] pl-5 text-sm font-semibold text-white transition-colors group-hover/item:text-cyan-400"
-                          style={{ marginLeft: titlePad + 56 }}
+                        </Link>
+                        {/* Count + chevron right of the art, then title + listing —
+                            all one expander button with its own hover (group/btn) */}
+                        <button
+                          onClick={() => setDesktopGameCat(expanded ? null : g.id)}
+                          aria-expanded={expanded}
+                          aria-label={`${g.name} categories`}
+                          className="group/btn relative z-10 flex h-full min-w-0 flex-1 items-center pl-3 pr-3 text-left transition-colors hover:bg-white/5"
                         >
-                          {/* Diamond marker guiding from the art to the title — same motif as the service card bullets */}
-                          <span className="h-1.5 w-1.5 shrink-0 rotate-45 bg-cyan-500" aria-hidden />
-                          {g.name}
-                        </span>
-                        <span className="relative z-10 min-w-0 flex-1 truncate px-6 text-xs text-slate-600">
-                          {g.subcategories.map((s) => s.name).join(' • ')}
-                        </span>
-                        <span className="relative z-10 shrink-0 pr-3 text-xs text-slate-400">
-                          {serviceCount(g)} services
-                        </span>
-                      </Link>
+                          <span className="flex h-6 min-w-6 shrink-0 items-center justify-center rounded-full bg-navy-800/80 px-1.5 text-[10px] font-bold text-slate-300">
+                            {serviceCount(g)}
+                          </span>
+                          <ChevronDown
+                            className={`ml-2 h-4 w-4 shrink-0 text-cyan-400/70 transition-transform duration-300 ${expanded ? 'rotate-180' : ''}`}
+                          />
+                          <span className="shrink-0 pl-4 text-sm font-semibold text-white transition-colors group-hover/btn:text-cyan-400">
+                            {g.name}
+                          </span>
+                          <span className="min-w-0 flex-1 truncate px-6 text-xs text-slate-600">
+                            {g.subcategories.map((s) => s.name).join(' • ')}
+                          </span>
+                        </button>
+                      </div>
+                      {/* Category columns (max 5 each) — expands in place, pushing games below down */}
+                      <div
+                        className={`grid transition-all duration-300 ${
+                          expanded ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
+                        }`}
+                      >
+                        <div className="overflow-hidden">
+                          <div className="ml-3 flex py-1.5">
+                            {chunks.map((chunk, ci) => (
+                              // Fixed to the FFXIV column width so single-column games
+                              // align to the same grid; last column closes with a right rail
+                              <ul
+                                key={ci}
+                                style={{ width: `${100 / CAT_COLS}%` }}
+                                className={`shrink-0 space-y-0.5 border-l border-navy-700/60 px-3 ${
+                                  ci === chunks.length - 1 ? 'border-r' : ''
+                                }`}
+                              >
+                                {chunk.map((s) => {
+                                  const onCat = onGame && catParam === s.id;
+                                  return (
+                                    <li key={s.id}>
+                                      <Link
+                                        to={`/boosting/${g.id}?cat=${s.id}`}
+                                        className={`flex items-center justify-between rounded-[3px] px-2 py-1.5 text-xs transition-colors ${
+                                          onCat
+                                            ? 'font-semibold text-cyan-400 shadow-[inset_2px_0_0_0_rgb(var(--cyan-500))]'
+                                            : 'text-slate-400 hover:bg-navy-800 hover:text-cyan-400'
+                                        }`}
+                                      >
+                                        {s.name}
+                                        <span className="text-[10px] text-slate-600">{s.services.length}</span>
+                                      </Link>
+                                    </li>
+                                  );
+                                })}
+                              </ul>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
                     </li>
                     );
                   })}
@@ -323,7 +457,7 @@ export default function Navbar() {
                 setCurrencyOpen((v) => !v);
                 setGamesOpen(false);
               }}
-              className={`flex h-[42px] w-[42px] items-center justify-center gap-2 rounded-[3px] border text-sm font-semibold transition-all duration-300 ease-out hover:shadow-lg hover:shadow-black/25 lg:w-[94px] lg:border-0 lg:px-2.5 ${
+              className={`flex h-[42px] w-[42px] items-center justify-center gap-2 rounded-[3px] border text-sm font-semibold transition-all duration-300 ease-out hover:shadow-lg hover:shadow-black/25 max-[340px]:h-9 max-[340px]:w-9 lg:w-[94px] lg:border-0 lg:px-2.5 ${
                 currencyOpen
                   ? 'border-navy-600 bg-gradient-to-r from-navy-700 to-navy-800 text-cyan-400'
                   : 'border-navy-700/70 bg-navy-850/90 text-slate-300 hover:border-navy-600 hover:text-cyan-400 lg:bg-gradient-to-r lg:from-navy-800 lg:to-navy-850 lg:text-white lg:hover:from-navy-700 lg:hover:to-navy-800 lg:hover:text-cyan-400'
@@ -331,7 +465,7 @@ export default function Navbar() {
               aria-expanded={currencyOpen}
               aria-label="Change currency"
             >
-              <activeCurrency.icon className="h-5 w-5 lg:h-4 lg:w-4" />
+              <activeCurrency.icon className="h-5 w-5 max-[340px]:h-4 max-[340px]:w-4 lg:h-4 lg:w-4" />
               <span className="hidden lg:inline">{activeCurrency.c}</span>
               <ChevronDown className={`hidden h-3.5 w-3.5 text-cyan-400/60 transition-transform lg:block ${currencyOpen ? 'rotate-180' : ''}`} />
             </button>
@@ -364,10 +498,10 @@ export default function Navbar() {
           {/* Cart */}
           <button
             onClick={openCart}
-            className="relative flex h-[42px] w-[42px] items-center justify-center rounded-[3px] border border-navy-700/70 bg-navy-850/90 text-slate-300 transition-all hover:border-navy-600 hover:text-cyan-400"
+            className="relative flex h-[42px] w-[42px] items-center justify-center rounded-[3px] border border-navy-700/70 bg-navy-850/90 text-slate-300 transition-all hover:border-navy-600 hover:text-cyan-400 max-[340px]:h-9 max-[340px]:w-9"
             aria-label="Open cart"
           >
-            <ShoppingCart className="h-5 w-5" />
+            <ShoppingCart className="h-5 w-5 max-[340px]:h-4 max-[340px]:w-4" />
             {count > 0 && (
               <span className="absolute -right-1.5 -top-1.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-cyan-600 px-1 text-[11px] font-bold text-navy-900 glow">
                 {count}
@@ -378,66 +512,86 @@ export default function Navbar() {
           {/* Mobile hamburger */}
           <button
             onClick={() => setMobileOpen((v) => !v)}
-            className="rounded-[3px] border border-navy-700/70 bg-navy-850/80 p-2.5 text-slate-300 transition-colors hover:text-white lg:hidden"
+            className="rounded-[3px] border border-navy-700/70 bg-navy-850/80 p-2.5 text-slate-300 transition-colors hover:text-white max-[340px]:p-2 lg:hidden"
             aria-label="Toggle menu"
             aria-expanded={mobileOpen}
           >
-            {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            {mobileOpen ? <X className="h-5 w-5 max-[340px]:h-4 max-[340px]:w-4" /> : <Menu className="h-5 w-5 max-[340px]:h-4 max-[340px]:w-4" />}
           </button>
         </div>
       </nav>
 
-      {/* Mobile menu */}
+      {/* Mobile menu — capped at the smaller of 760px / viewport height; if the
+          content overflows on very small screens it scrolls (no visible scrollbar) */}
       <div
         className={`overflow-hidden transition-[max-height] duration-300 ease-in-out lg:hidden ${
-          mobileOpen ? 'max-h-[560px]' : 'max-h-0'
+          mobileOpen ? 'max-h-[min(760px,calc(100svh_-_4rem))]' : 'max-h-0'
         }`}
       >
-        <div className="space-y-1.5 border-t border-navy-700/60 bg-navy-900/95 px-[25px] py-4 backdrop-blur-xl">
+        <div className="no-scrollbar max-h-[inherit] space-y-1.5 overflow-y-auto border-t border-navy-700/60 bg-navy-900/95 px-[25px] py-4 backdrop-blur-xl">
           <div className="pb-2">{searchBox}</div>
           <p className="px-3 pb-1 pt-1 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500">Games</p>
-          {games.map((g) => (
-            <NavLink
-              key={g.id}
-              to={`/boosting/${g.id}`}
-              className={({ isActive }) =>
-                `group/item relative flex h-16 items-center overflow-hidden rounded-[3px] ${
-                  isActive ? 'ring-1 ring-cyan-600/40' : ''
-                }`
-              }
-            >
-              {/* Background image fading into the menu surface, like the desktop dropdown */}
-              <div className="absolute inset-y-0 left-0 w-[75%]">
-                <img
-                  src={g.cardImage}
-                  alt=""
-                  className="h-full w-full object-cover opacity-80 transition-opacity group-hover/item:opacity-100"
-                  loading="lazy"
-                />
-                <div
-                  className="absolute inset-0"
-                  style={{
-                    background:
-                      'linear-gradient(to right, rgb(var(--navy-900) / 0.45) 0%, rgb(var(--navy-900) / 0.45) 55%, rgb(var(--navy-900)) 100%)',
-                  }}
-                />
+          {games.map((g) => {
+            const expanded = mobileGameCat === g.id;
+            return (
+              <div key={g.id}>
+                <div className="group/item relative flex h-16 items-stretch overflow-hidden rounded-[3px]">
+                  {/* Background image fading into the menu surface, like the desktop dropdown */}
+                  <div className="absolute inset-y-0 left-0 w-[75%]">
+                    <img
+                      src={g.cardImage}
+                      alt=""
+                      className="h-full w-full object-cover opacity-80 transition-opacity group-hover/item:opacity-100"
+                      loading="lazy"
+                    />
+                    <div
+                      className="absolute inset-0"
+                      style={{
+                        background:
+                          'linear-gradient(to right, rgb(var(--navy-900) / 0.45) 0%, rgb(var(--navy-900) / 0.45) 55%, rgb(var(--navy-900)) 100%)',
+                      }}
+                    />
+                  </div>
+                  <NavLink
+                    to={`/boosting/${g.id}`}
+                    className={({ isActive }) =>
+                      `relative z-10 flex min-w-0 flex-1 items-center ${isActive ? 'ring-1 ring-cyan-600/40' : ''}`
+                    }
+                  >
+                    <span className="flex shrink-0 items-center gap-2.5 pl-3 text-sm font-semibold text-white transition-colors group-hover/item:text-cyan-400">
+                      {/* Logo hidden on very narrow screens — the title takes the left edge */}
+                      <span className="flex h-7 w-[92px] items-center justify-center px-3 max-[360px]:hidden">
+                        <img
+                          src={GAME_LOGOS[g.id].url}
+                          alt=""
+                          className={`max-h-7 w-auto object-contain ${GAME_LOGOS[g.id].invert ? 'invert' : ''} ${GAME_LOGOS[g.id].scale ?? ''}`}
+                          loading="lazy"
+                        />
+                      </span>
+                      {g.name}
+                    </span>
+                  </NavLink>
+                  {/* Full-height expander: count + chevron, tucked to the right
+                      edge so it never overlaps the game title */}
+                  <button
+                    onClick={() => setMobileGameCat(expanded ? null : g.id)}
+                    aria-expanded={expanded}
+                    aria-label={`${g.name} categories`}
+                    className="relative z-10 flex h-full shrink-0 items-center gap-2 px-3 transition-colors hover:bg-white/5"
+                  >
+                    <span className="flex h-6 min-w-6 items-center justify-center rounded-full bg-navy-800/80 px-1.5 text-[10px] font-bold text-slate-300">
+                      {serviceCount(g)}
+                    </span>
+                    <ChevronDown
+                      className={`h-4 w-4 text-cyan-400/70 transition-transform duration-300 ${expanded ? 'rotate-180' : ''}`}
+                    />
+                  </button>
+                </div>
+                {/* Compact category list — expands in place, pushing games below down */}
+                <MobileCategoryList game={g} expanded={expanded} />
               </div>
-              <span className="relative z-10 flex shrink-0 items-center gap-2.5 pl-3 text-sm font-semibold text-white transition-colors group-hover/item:text-cyan-400">
-                <span className="flex h-7 w-[92px] items-center justify-center px-3">
-                  <img
-                    src={GAME_LOGOS[g.id].url}
-                    alt=""
-                    className={`max-h-7 w-auto object-contain ${GAME_LOGOS[g.id].invert ? 'invert' : ''} ${GAME_LOGOS[g.id].scale ?? ''}`}
-                    loading="lazy"
-                  />
-                </span>
-                {g.name}
-              </span>
-              <span className="relative z-10 ml-auto mr-4 flex h-6 min-w-6 shrink-0 items-center justify-center rounded-full bg-navy-800/80 px-1.5 text-[10px] font-bold text-slate-300">
-                {serviceCount(g)}
-              </span>
-            </NavLink>
-          ))}
+            );
+          })}
         </div>
       </div>
     </header>

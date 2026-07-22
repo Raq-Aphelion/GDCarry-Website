@@ -23,6 +23,6 @@ export function useToast() {
  * existing call sites keep working without rendering any popups.
  */
 export function ToastProvider({ children }: { children: ReactNode }) {
-  const toast = useCallback((_t: ToastInput) => {}, []);
+  const toast = useCallback(() => {}, []);
   return <ToastContext.Provider value={{ toast }}>{children}</ToastContext.Provider>;
 }

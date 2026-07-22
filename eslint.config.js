@@ -20,4 +20,13 @@ export default defineConfig([
       globals: globals.browser,
     },
   },
+  {
+    // Contexts export their hooks next to the provider by design, and
+    // src/components/ui is stock shadcn (exports variant helpers) — the
+    // fast-refresh component-only rule doesn't apply to either.
+    files: ['src/context/**/*.tsx', 'src/components/ui/**/*.tsx'],
+    rules: {
+      'react-refresh/only-export-components': 'off',
+    },
+  },
 ])

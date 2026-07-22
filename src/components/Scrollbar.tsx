@@ -87,6 +87,9 @@ export function OverlayScrollbar({
       const thumbRange = track.clientHeight - INSET_Y - thumb.h;
       if (thumbRange <= 0) return;
       const prevBehavior = scroller.style.scrollBehavior;
+      // Imperative DOM scroll control is the point of this component — the
+      // scroller element is external, not React state.
+      // eslint-disable-next-line react-hooks/immutability
       scroller.style.scrollBehavior = 'auto';
       setActive(true);
       const onMove = (ev: PointerEvent) => {
@@ -142,6 +145,9 @@ export function OverlayScrollbar({
 export default function Scrollbar() {
   const [scroller, setScroller] = useState<HTMLElement | null>(null);
   useEffect(() => {
+    // The #page-scroll node only exists after mount — a mount effect is the
+    // correct tool here (a lazy useState initializer would read null forever).
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setScroller(document.getElementById('page-scroll'));
   }, []);
   return (

@@ -182,6 +182,12 @@ export default function GamePage() {
           {/* sm 2 per row; md 3 — below lg the sidebar becomes the carousel, so the
               full row fits 3 cards; lg keeps 3 (sidebar takes 240px, 4 would squeeze
               cards to ~155px); xl 4 — cards cap at 280px and never drop below ~213px */}
+          {activeSub.services.length === 0 ? (
+            // Matches the service card height (ServiceCard min-h)
+            <div className="mt-5 flex h-[380px] items-center justify-center rounded-[5px] bg-navy-850 text-sm text-slate-500">
+              No boosts in this category yet
+            </div>
+          ) : (
           <div className="mt-5 grid justify-items-center gap-5 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
             {activeSub.services.map((service, i) => (
               <Fragment key={service.id}>
@@ -208,6 +214,7 @@ export default function GamePage() {
               </div>
             )}
           </div>
+          )}
         </div>
       </div>
 

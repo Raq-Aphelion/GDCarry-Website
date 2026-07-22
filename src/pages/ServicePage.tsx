@@ -83,7 +83,7 @@ function Bullets({ items }: { items: string[] }) {
   return (
     <ul className="space-y-2">
       {items.map((item) => (
-        <li key={item} className="flex items-start gap-2.5 text-sm leading-relaxed text-slate-400">
+        <li key={item} className="flex items-start gap-2.5 text-sm leading-relaxed text-slate-400 max-sm:text-xs">
           <span className="mt-[7px] h-1.5 w-1.5 shrink-0 rotate-45 bg-cyan-500/70" />
           {item}
         </li>
@@ -211,8 +211,8 @@ export default function ServicePage() {
                 <r.icon className="h-5 w-5 text-cyan-400" strokeWidth={1.75} />
               </span>
               <div className="min-w-0 text-left">
-                <p className="text-sm font-bold text-white">{r.title}</p>
-                <p className="mt-1 text-sm leading-relaxed text-slate-400">{r.text}</p>
+                <p className="text-sm font-bold text-white max-sm:text-xs">{r.title}</p>
+                <p className="mt-1 text-sm leading-relaxed text-slate-400 max-sm:text-xs">{r.text}</p>
               </div>
             </div>
           ))}
@@ -246,7 +246,7 @@ export default function ServicePage() {
                       {s.items && <Bullets items={s.items} />}
                       {s.groups?.map((g) => (
                         <div key={g.heading}>
-                          <p className="mb-2.5 text-sm font-bold text-white">{g.heading}</p>
+                          <p className="mb-2.5 text-sm font-bold text-white max-sm:text-xs">{g.heading}</p>
                           <Bullets items={g.items} />
                         </div>
                       ))}
