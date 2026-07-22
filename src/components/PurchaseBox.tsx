@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
 import { Check, ChevronDown, Clock, Minus, Plus, Settings2 } from 'lucide-react';
 import FadeImage from './FadeImage';
+import FieldPopup from './FieldPopup';
 import { Slider } from '@/components/ui/slider';
 import { useCart } from '@/context/CartContext';
 import { useCurrency } from '@/context/CurrencyContext';
@@ -36,12 +37,15 @@ function CustomSelect({
   options,
   onSelect,
   ariaLabel,
+  invalid = false,
 }: {
   value: string;
   placeholder?: string;
   options: SelectOption[];
   onSelect: (index: number) => void;
   ariaLabel: string;
+  /** Red border while a validation bubble is showing */
+  invalid?: boolean;
 }) {
   const [open, setOpen] = useState(false);
 
@@ -55,7 +59,11 @@ function CustomSelect({
         aria-expanded={open}
         aria-label={ariaLabel}
         className={`relative z-20 flex h-10 w-full items-center justify-between gap-2 rounded-[5px] border bg-navy-850 px-3.5 text-sm transition-colors ${
-          open ? 'rounded-b-none border-navy-600' : 'border-navy-700/70 hover:border-navy-600'
+          open
+            ? 'rounded-b-none border-navy-600'
+            : invalid
+              ? 'border-red-500/60'
+              : 'border-navy-700/70 hover:border-navy-600'
         } ${value ? 'text-slate-300' : 'text-slate-500'}`}
       >
         <span className="truncate">{value || placeholder}</span>
@@ -126,6 +134,8 @@ export default function PurchaseBox({ service, gameShort }: { service: Service; 
   const [logIdx, setLogIdx] = useState(0);
   const [addons, setAddons] = useState<string[]>([]);
   const [optionsOpen, setOptionsOpen] = useState(false);
+  // Set when "Add to cart" is clicked without a data center; cleared on select
+  const [dcError, setDcError] = useState(false);
 
   // Box stickiness (desktop): 'fit' pins the whole box by its top like the
   // categories panel; 'overflow' pins it by its bottom edge 80px above the
@@ -281,7 +291,10 @@ export default function PurchaseBox({ service, gameShort }: { service: Service; 
     setAddons((prev) => (prev.includes(id) ? prev.filter((a) => a !== id) : [...prev, id]));
 
   const addToCart = () => {
-    if (!dc) return;
+    if (!dc) {
+      setDcError(true);
+      return;
+    }
     const cfgKey = `${method}|${runs}|${dc}|g${gearIdx}|l${logIdx}|${[...addons].sort().join('+')}`;
     const priorityPct = Math.round((cfg.priorityMultiplier - 1) * 100);
     const details = [
@@ -375,15 +388,20 @@ export default function PurchaseBox({ service, gameShort }: { service: Service; 
           {/* Data center */}
           <div>
             <p className="pl-px text-sm font-semibold text-white">
-              Data Center <span className="text-red-400">*</span>
+              Data Center <span className="text-xs font-normal text-slate-500">(required)</span>
             </p>
-            <div className="mt-2.5">
+            <div className="relative mt-2.5">
+              <FieldPopup message={dcError ? 'Select a data center first.' : ''} />
               <CustomSelect
                 value={dc}
                 placeholder="Select Data Center"
                 options={DATA_CENTERS.map((d) => ({ label: d }))}
-                onSelect={(i) => setDc(DATA_CENTERS[i])}
+                onSelect={(i) => {
+                  setDc(DATA_CENTERS[i]);
+                  setDcError(false);
+                }}
                 ariaLabel="Select data center"
+                invalid={dcError}
               />
             </div>
           </div>
@@ -490,8 +508,7 @@ export default function PurchaseBox({ service, gameShort }: { service: Service; 
           </p>
           <button
             onClick={addToCart}
-            disabled={!dc}
-            className="purchase-cta mt-3.5 w-full rounded-[5px] bg-gradient-to-r from-cyan-500 to-cyan-700 py-2.5 font-display text-sm font-bold text-navy-900 transition-all hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:brightness-100"
+            className="purchase-cta mt-3.5 w-full rounded-[5px] bg-gradient-to-r from-cyan-500 to-cyan-700 py-2.5 font-display text-sm font-bold text-navy-900 transition-all hover:brightness-110"
           >
             Add to cart
           </button>

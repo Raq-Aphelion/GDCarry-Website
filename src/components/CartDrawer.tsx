@@ -3,13 +3,12 @@ import { Link } from 'react-router';
 import { Minus, Plus, ShoppingCart, Trash2, X } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { useCurrency } from '@/context/CurrencyContext';
-import { useToast } from '@/context/ToastContext';
 import { OverlayScrollbar } from '@/components/Scrollbar';
+import { serviceLink } from '@/data/games';
 
 export default function CartDrawer() {
   const { isOpen, closeCart, items, setQty, removeItem, subtotal, clear } = useCart();
   const { format } = useCurrency();
-  const { toast } = useToast();
   const [listEl, setListEl] = useState<HTMLDivElement | null>(null);
 
   // Escape to close + visually hide the overlay scrollbar while open.
@@ -93,12 +92,20 @@ export default function CartDrawer() {
                   key={item.id}
                   className="flex gap-3 rounded-[5px] bg-navy-850 p-3"
                 >
-                  <img
-                    src={item.image}
-                    alt={item.name}
-                    className="h-16 w-16 shrink-0 rounded-[5px] object-cover object-top"
-                    loading="lazy"
-                  />
+                  {/* Configured services carry a ::config suffix — strip it for the link */}
+                  <Link
+                    to={serviceLink(item.id.split('::')[0])}
+                    onClick={closeCart}
+                    className="shrink-0"
+                    aria-label={`View ${item.name}`}
+                  >
+                    <img
+                      src={item.image}
+                      alt={item.name}
+                      className="h-16 w-16 rounded-[5px] object-cover object-top transition-opacity hover:opacity-80"
+                      loading="lazy"
+                    />
+                  </Link>
                   <div className="min-w-0 flex-1">
                     <div className="flex items-start justify-between gap-2">
                       <div className="min-w-0">
@@ -163,28 +170,19 @@ export default function CartDrawer() {
               />
             </div>
 
-            <div className="border-t border-navy-700/60 px-5 py-4">
+            <div className="border-t border-navy-700/60 px-5 pb-6 pt-4">
               <div className="flex items-center justify-between">
                 <span className="text-sm text-slate-400">Subtotal</span>
-                <span className="font-display text-xl font-bold text-gradient-blue">{format(subtotal)}</span>
+                <span className="font-display text-xl font-bold text-cyan-400">{format(subtotal)}</span>
               </div>
-              <p className="mt-1 text-xs text-slate-500">
-                Delivery window is confirmed with your booster after checkout.
-              </p>
-              <button
-                onClick={() => {
-                  toast({
-                    title: 'Order placed',
-                    description: 'Demo checkout complete — a Grand Dice booster would reach out within minutes.',
-                    variant: 'blue',
-                  });
-                  clear();
-                  closeCart();
-                }}
-                className="mt-4 w-full rounded-[5px] bg-gradient-to-r from-cyan-500 to-cyan-700 py-3 font-display text-sm font-bold text-navy-900 transition-all hover:brightness-110 hover:glow"
+              <div className="mt-3 border-t border-navy-700/60" />
+              <Link
+                to="/checkout"
+                onClick={closeCart}
+                className="mt-4 block w-full rounded-[5px] bg-gradient-to-r from-cyan-500 to-cyan-700 py-3 text-center font-display text-sm font-bold text-navy-900 transition-all hover:brightness-110 hover:glow"
               >
-                Checkout · {format(subtotal)}
-              </button>
+                Order · {format(subtotal)}
+              </Link>
             </div>
           </>
         )}

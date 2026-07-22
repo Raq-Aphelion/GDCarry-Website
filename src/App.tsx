@@ -5,6 +5,7 @@ import Footer from '@/components/Footer';
 import CartDrawer from '@/components/CartDrawer';
 import Scrollbar from '@/components/Scrollbar';
 import Home from '@/pages/Home';
+import CheckoutPage from '@/pages/CheckoutPage';
 import GamePage from '@/pages/GamePage';
 import ServicePage from '@/pages/ServicePage';
 import LegalPage from '@/pages/LegalPage';
@@ -39,6 +40,7 @@ export default function App() {
                   <Route path="/" element={<Home />} />
                   <Route path="/boosting/:gameId" element={<GamePage />} />
                   <Route path="/boosting/:gameId/:serviceId" element={<ServicePage />} />
+                  <Route path="/checkout" element={<CheckoutPage />} />
                   <Route path="/legal/:docId" element={<LegalPage />} />
                   <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>

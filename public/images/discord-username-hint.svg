@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="168" viewBox="0 0 480 168">
+  <!-- Mock of Discord's bottom-left user panel: avatar, display name, username.
+       The panel hugs its content like the real app. -->
+  <rect width="480" height="168" rx="8" fill="#1e1f22"/>
+  <rect x="60" y="24" width="360" height="120" rx="10" fill="#111214"/>
+  <circle cx="108" cy="84" r="30" fill="#5865f2"/>
+  <circle cx="128" cy="103" r="9" fill="#23a55a" stroke="#111214" stroke-width="4"/>
+  <text x="156" y="76" fill="#ffffff" font-family="sans-serif" font-size="26" font-weight="700">Display Name</text>
+  <text x="156" y="106" fill="#b5bac1" font-family="sans-serif" font-size="19">username</text>
+</svg>

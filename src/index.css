@@ -190,6 +190,13 @@
   .cyan-glow {
     box-shadow: 0 0 14px -4px rgb(var(--cyan-600) / 0.5);
   }
+  /* The purchase/options box signature: 1px cyan outline + soft cyan glow.
+     .purchase-box pairs it with a gradient; reused plain on checkout blocks. */
+  .purchase-box-glow {
+    box-shadow:
+      0 0 0 1px rgb(var(--cyan-600) / 0.22),
+      0 24px 60px -24px rgb(var(--cyan-600) / 0.3);
+  }
   .no-scrollbar::-webkit-scrollbar {
     display: none;
   }
