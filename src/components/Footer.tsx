@@ -43,8 +43,10 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-6 sm:gap-10 md:col-span-2 lg:flex-1 lg:gap-[clamp(1.5rem,3vw,3rem)] xl:grid-cols-4">
-        <div className="hidden xl:block">
+        {/* Link columns: 2 on mobile (no Games), 3 from sm, 4 from xl. At lg the
+            group hugs the right side (ml-auto); from xl it stretches again. */}
+        <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 sm:gap-10 md:col-span-2 lg:ml-auto lg:gap-[clamp(1.5rem,3vw,3rem)] xl:ml-0 xl:flex-1 xl:grid-cols-4">
+        <div className="hidden sm:block">
           <h3 className="font-display text-sm font-bold uppercase tracking-wider text-cyan-500">Games</h3>
           <ul className="mt-4 space-y-2.5">
             {games.map((g) => (
@@ -122,7 +124,7 @@ export default function Footer() {
       <div className="border-t border-navy-700/60">
         <div className="mx-auto flex max-w-[1440px] flex-col items-center justify-between gap-3 px-[25px] py-4 text-xs text-slate-500 sm:px-6 md:flex-row lg:px-8">
           <p className="shrink-0">© 2026 GD Carry • Grand Dice</p>
-          <p className="text-center sm:whitespace-nowrap md:text-right">
+          <p className="text-center md:text-right lg:whitespace-nowrap">
             Not affiliated with or endorsed by Square Enix, Blizzard Entertainment, Amazon Games, Digital Extremes
             or Jagex.
           </p>

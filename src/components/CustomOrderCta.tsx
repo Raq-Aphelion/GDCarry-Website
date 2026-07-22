@@ -2,8 +2,16 @@ import Reveal from './Reveal';
 import { useToast } from '@/context/ToastContext';
 
 /** "Can't find your boost?" custom-order call-to-action panel.
-    `compact` shortens the secondary text (used inline inside card grids). */
-export default function CustomOrderCta({ compact = false }: { compact?: boolean }) {
+    `compact` shortens the secondary text (used inline inside card grids).
+    `lateTextBreak` delays the hard text break to 1200px — for the inline grid
+    variant, whose column is narrower than the full-width bottom block. */
+export default function CustomOrderCta({
+  compact = false,
+  lateTextBreak = false,
+}: {
+  compact?: boolean;
+  lateTextBreak?: boolean;
+}) {
   const { toast } = useToast();
 
   return (
@@ -13,13 +21,21 @@ export default function CustomOrderCta({ compact = false }: { compact?: boolean 
         <div className="pointer-events-none absolute -bottom-16 -right-16 h-56 w-56 rounded-full bg-cyan-400/15 blur-3xl" />
         <div className="relative flex flex-col items-center gap-6 text-center sm:flex-row sm:items-center sm:justify-between sm:text-left">
           <div className="max-w-xl">
-            <h2 className="whitespace-nowrap font-display text-xl font-extrabold text-white sm:text-3xl">
+            {/* One line only from lg up — below that the row layout + button
+                would overflow the panel (visible ~750px and narrower) */}
+            <h2 className="font-display text-xl font-extrabold text-white sm:text-3xl lg:whitespace-nowrap">
               Can’t find <span className="text-gradient-blue">your boost?</span>
             </h2>
             <p className="mt-2 text-sm leading-relaxed text-slate-400">
-              {compact
-                ? 'Tell us what you need.'
-                : 'Custom orders are our specialty. Tell us what you need — any game, any goal — and we’ll roll a quote within the hour.'}
+              {compact ? (
+                'Tell us what you need.'
+              ) : (
+                <>
+                  Custom orders are our specialty. Tell us what you need — any game,
+                  {/* Desktop only: second clause on its own line */}
+                  <br className={lateTextBreak ? 'hidden min-[1200px]:block' : 'hidden lg:block'} /> any goal — and we’ll roll a quote within the hour.
+                </>
+              )}
             </p>
           </div>
           <button

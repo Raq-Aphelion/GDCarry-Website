@@ -179,26 +179,34 @@ export default function GamePage() {
               <div className="h-px flex-1 bg-gradient-to-r from-navy-700/70 to-transparent max-sm:hidden" />
             </div>
           </Reveal>
-          <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {/* sm 2 per row; md 3 — below lg the sidebar becomes the carousel, so the
+              full row fits 3 cards; lg keeps 3 (sidebar takes 240px, 4 would squeeze
+              cards to ~155px); xl 4 — cards cap at 280px and never drop below ~213px */}
+          <div className="mt-5 grid justify-items-center gap-5 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
             {activeSub.services.map((service, i) => (
               <Fragment key={service.id}>
-                <Reveal delay={Math.min(i, 3) * 80}>
+                {/* Cards cap at 280px (ServiceCard max-w) — centered in their
+                    cells like the home page's popular picks, so extra row width
+                    becomes even outer margins */}
+                <Reveal delay={Math.min(i, 3) * 80} className="w-full max-w-[280px]">
                   <ServiceCard service={service} />
                 </Reveal>
                 {/* 'All services' only: one inline custom-order CTA per viewport —
-                    mobile after the 5th card (compact text, card width), desktop after 2 rows (8 cards) */}
-                {activeSub.id === 'all' && i === 4 && (
+                    mobile after 2 rows (2nd card, compact text, card width), sm and up
+                    pinned to row 3 (below) so exactly 2 rows of cards sit above it at
+                    any column count */}
+                {activeSub.id === 'all' && i === 1 && (
                   <div className="mx-auto w-full max-w-[280px] sm:hidden">
                     <CustomOrderCta compact />
                   </div>
                 )}
-                {activeSub.id === 'all' && i === 7 && (
-                  <div className="hidden sm:col-span-2 sm:block lg:col-span-4">
-                    <CustomOrderCta />
-                  </div>
-                )}
               </Fragment>
             ))}
+            {activeSub.id === 'all' && (
+              <div className="hidden w-full sm:col-span-2 sm:row-start-3 sm:block md:col-span-3 xl:col-span-4">
+                <CustomOrderCta lateTextBreak />
+              </div>
+            )}
           </div>
         </div>
       </div>
