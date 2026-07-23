@@ -302,3 +302,23 @@ input[type='number'] {
     0 10px 30px -10px rgb(var(--cyan-600) / 0.45),
     inset 0 1px 0 rgb(255 255 255 / 0.18);
 }
+
+/* Live Helper Chat widget — host-page framing only. The widget renders as
+   cross-origin iframes (#lhc_container_v2 wraps them), so the chat interior's
+   colors can't be styled from here: they're set in the LHC admin theme
+   (Settings → Themes → Custom CSS). What we own is the frame: rounded corners,
+   dark ring + glow shadow, and layering consistent with the site. */
+#lhc_container_v2 iframe {
+  border-radius: var(--radius);
+  box-shadow:
+    0 0 0 1px rgb(var(--cyan-600) / 0.25),
+    0 16px 40px -16px rgb(0 0 0 / 0.7),
+    0 10px 30px -12px rgb(var(--cyan-600) / 0.35);
+  transition: box-shadow 0.2s ease;
+}
+#lhc_container_v2 iframe:hover {
+  box-shadow:
+    0 0 0 1px rgb(var(--cyan-600) / 0.4),
+    0 16px 40px -16px rgb(0 0 0 / 0.7),
+    0 14px 36px -10px rgb(var(--cyan-600) / 0.5);
+}
