@@ -3,6 +3,7 @@ import { Navigate, Route, Routes, useLocation } from 'react-router';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import CartDrawer from '@/components/CartDrawer';
+import LiveChatWidget from '@/components/LiveChatWidget';
 import Scrollbar from '@/components/Scrollbar';
 import Home from '@/pages/Home';
 import CheckoutPage from '@/pages/CheckoutPage';
@@ -30,6 +31,7 @@ export default function App() {
           <CartProvider>
           <div className="flex h-[100svh] flex-col overflow-hidden">
             <ScrollToTop />
+            <LiveChatWidget />
             <Navbar />
             {/* The page scrolls inside this container, not the viewport — so the
                 scrollbar physically starts below the navbar and is fully
