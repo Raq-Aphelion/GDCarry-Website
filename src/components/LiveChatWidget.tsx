@@ -22,6 +22,8 @@ export default function LiveChatWidget() {
       domain: 'gdcarry.com',
       leaveamessage: true,
       check_messages: false,
+      // No proactive invitations — the widget only opens on explicit user action
+      proactive: false,
     };
     const po = document.createElement('script');
     po.id = 'lhc-loader';
