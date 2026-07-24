@@ -45,10 +45,10 @@ export default function MobileCategoryBar({
   }, [items]);
 
   const chip = (id: string) =>
-    `shrink-0 rounded-full px-4 py-2 text-xs font-bold transition-all ${
+    `shrink-0 rounded-full border px-4 py-2 text-xs font-bold transition-all ${
       activeId === id
-        ? 'border border-cyan-500 bg-gradient-to-r from-cyan-500 to-cyan-700 text-navy-900 glow'
-        : 'border border-navy-700/70 bg-navy-850/80 text-slate-300 hover:text-white'
+        ? 'border-cyan-600 bg-cyan-600 text-navy-900 glow'
+        : 'border-navy-700/70 bg-navy-850/80 text-slate-300 hover:text-white'
     }`;
 
   return (

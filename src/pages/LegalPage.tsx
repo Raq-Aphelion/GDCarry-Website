@@ -1,6 +1,8 @@
+import { useEffect, useState } from 'react';
 import { Link, Navigate, NavLink, useParams } from 'react-router';
 import { CalendarClock, ChevronRight, MessageCircle } from 'lucide-react';
 import PageMeta from '@/components/PageMeta';
+import useDragScroll from '@/hooks/useDragScroll';
 import Reveal from '@/components/Reveal';
 import { getLegalDoc, legalDocs, type LegalBlock } from '@/data/legal';
 
@@ -30,6 +32,23 @@ function Blocks({ blocks }: { blocks: LegalBlock[] }) {
 export default function LegalPage() {
   const { docId } = useParams<{ docId: string }>();
   const doc = getLegalDoc(docId);
+  // Same drag-to-scroll behaviour as the game category chip carousel
+  const chipsRef = useDragScroll();
+  // Edge fades appear only on the sides that have overflowing chips
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
+  const updateChipFades = () => {
+    const el = chipsRef.current;
+    if (!el) return;
+    setCanScrollLeft(el.scrollLeft > 4);
+    setCanScrollRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 4);
+  };
+  useEffect(() => {
+    updateChipFades();
+    window.addEventListener('resize', updateChipFades);
+    return () => window.removeEventListener('resize', updateChipFades);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   if (!doc) return <Navigate to="/legal/terms" replace />;
 
@@ -75,21 +94,38 @@ export default function LegalPage() {
       </section>
 
       {/* ============ MOBILE CATEGORY CHIPS ============ */}
-      <div className="sticky top-16 z-30 border-b border-navy-700/50 bg-navy-900/85 backdrop-blur-xl lg:hidden">
-        <div className="no-scrollbar flex gap-2 overflow-x-auto px-[25px] py-3">
-          {legalDocs.map((d) => (
-            <NavLink
-              key={d.id}
-              to={`/legal/${d.id}`}
-              className={`shrink-0 rounded-full px-4 py-2 text-xs font-bold transition-all ${
-                d.id === doc.id
-                  ? 'bg-cyan-600 text-navy-900 glow'
-                  : 'border border-navy-700/70 bg-navy-850/80 text-slate-300 hover:text-white'
-              }`}
-            >
-              {d.title}
-            </NavLink>
-          ))}
+      <div className="sticky top-0 z-30 border-b border-navy-700/50 bg-navy-900/85 backdrop-blur-xl lg:hidden">
+        <div className="relative">
+          <div
+            ref={chipsRef}
+            onScroll={updateChipFades}
+            className="no-scrollbar flex touch-pan-y gap-2 overflow-x-auto px-[25px] py-3"
+          >
+            {legalDocs.map((d) => (
+              <NavLink
+                key={d.id}
+                to={`/legal/${d.id}`}
+                className={`shrink-0 rounded-full border px-4 py-2 text-xs font-bold transition-all ${
+                  d.id === doc.id
+                    ? 'border-cyan-600 bg-cyan-600 text-navy-900 glow'
+                    : 'border-navy-700/70 bg-navy-850/80 text-slate-300 hover:text-white'
+                }`}
+              >
+                {d.title}
+              </NavLink>
+            ))}
+          </div>
+          {/* Edge fades on the sides that have overflowing chips */}
+          <div
+            className={`pointer-events-none absolute inset-y-0 left-0 w-8 bg-gradient-to-r from-navy-900 to-transparent transition-opacity duration-300 ${
+              canScrollLeft ? 'opacity-100' : 'opacity-0'
+            }`}
+          />
+          <div
+            className={`pointer-events-none absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-navy-900 to-transparent transition-opacity duration-300 ${
+              canScrollRight ? 'opacity-100' : 'opacity-0'
+            }`}
+          />
         </div>
       </div>
 

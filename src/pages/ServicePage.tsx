@@ -242,7 +242,7 @@ export default function ServicePage() {
                     open ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
                   }`}
                 >
-                  <div className="overflow-hidden">
+                  <div className="min-w-0 overflow-hidden">
                     <div className="space-y-5 px-5 pb-5 text-left">
                       {s.items && <Bullets items={s.items} />}
                       {s.groups?.map((g) => (

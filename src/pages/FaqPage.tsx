@@ -210,7 +210,7 @@ export default function FaqPage() {
                             open ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
                           }`}
                         >
-                          <div className="overflow-hidden">
+                          <div className="min-w-0 overflow-hidden">
                             <div className="space-y-4 px-5 pb-5 text-left">
                               {item.answers.map((a, ai) => (
                                 <div key={ai}>

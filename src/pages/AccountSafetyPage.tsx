@@ -1,5 +1,5 @@
 import { Link } from 'react-router';
-import { ChevronRight, MessageCircle } from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
 import PageMeta from '@/components/PageMeta';
 import Reveal from '@/components/Reveal';
 
@@ -46,22 +46,6 @@ const SECTIONS: SafetySection[] = [
           'Credentials are used exclusively for the duration of your service and nothing else.',
           'Your account information is not stored after the order is completed and is never shared with anyone outside the assigned booster.',
           'We recommend setting a temporary password before the boost starts and changing it back once the order is marked complete.',
-          'Keep two-factor authentication enabled where the game supports it — our manager will coordinate the login code with you at the agreed time.',
-        ],
-      },
-    ],
-  },
-  {
-    heading: 'What we will never do',
-    blocks: [
-      {
-        type: 'ul',
-        items: [
-          'Use cheats, exploits, bots or any automation on your account.',
-          'Message your friends, free company, linkshell or guild members — or answer whispers on your behalf.',
-          'Spend currency, sell items, discard gear or move anything on your account that was not agreed as part of the order.',
-          'Change your character, settings, keybinds or UI layout beyond what the service strictly requires.',
-          'Ask for your password outside the official order process, or request payment through channels other than those listed in our FAQ.',
         ],
       },
     ],
@@ -94,10 +78,6 @@ const SECTIONS: SafetySection[] = [
       {
         type: 'p',
         text: 'If you prefer zero account sharing, choose an AFK or Self Play / Coaching order — you keep full control of your account at all times.',
-      },
-      {
-        type: 'p',
-        text: 'Grand Dice is not affiliated with or endorsed by Square Enix, Blizzard Entertainment, Amazon Games, Digital Extremes or Jagex. All game names, trademarks and assets are the property of their respective owners.',
       },
     ],
   },
@@ -173,20 +153,6 @@ export default function AccountSafetyPage() {
                   <Blocks blocks={s.blocks} />
                 </section>
               ))}
-            </div>
-          </Reveal>
-
-          {/* ============ STILL HAVE QUESTIONS ============ */}
-          <Reveal>
-            <div className="card-surface mt-8 rounded-[5px] p-6 sm:p-8">
-              <p className="flex items-center gap-2 font-display text-base font-bold text-cyan-400">
-                <MessageCircle className="h-4 w-4" />
-                Security concerns?
-              </p>
-              <p className="mt-2 text-sm leading-relaxed text-slate-400">
-                Talk to our live chat manager before you order — we will walk you through exactly how your account is
-                handled for your specific service.
-              </p>
             </div>
           </Reveal>
         </div>

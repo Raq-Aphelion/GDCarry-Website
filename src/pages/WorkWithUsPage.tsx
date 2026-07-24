@@ -237,10 +237,10 @@ export default function WorkWithUsPage() {
                               type="button"
                               onClick={() => toggleGame(g)}
                               aria-pressed={active}
-                              className={`rounded-full px-4 py-2 text-xs font-bold transition-all ${
+                              className={`rounded-full border px-4 py-2 text-xs font-bold transition-all ${
                                 active
-                                  ? 'bg-cyan-600 text-navy-900 glow'
-                                  : `border bg-navy-850/80 text-slate-300 hover:text-white ${
+                                  ? 'border-cyan-600 bg-cyan-600 text-navy-900 glow'
+                                  : `bg-navy-850/80 text-slate-300 hover:text-white ${
                                       gamesInvalid ? 'border-red-500/60' : 'border-navy-700/70'
                                     }`
                               }`}

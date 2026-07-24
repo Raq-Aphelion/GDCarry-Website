@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
-import { Check, ChevronDown, Clock, Minus, Plus, Settings2 } from 'lucide-react';
+import { Armchair, Check, ChevronDown, Clock, Gamepad2, Minus, Plus, Settings2 } from 'lucide-react';
 import FadeImage from './FadeImage';
 import FieldPopup from './FieldPopup';
 import { Slider } from '@/components/ui/slider';
@@ -18,6 +18,7 @@ const DATA_CENTERS = [
   'Elemental',
   'Gaia',
   'Mana',
+  'Meteor',
   'Materia',
 ];
 
@@ -58,7 +59,7 @@ function CustomSelect({
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
         aria-label={ariaLabel}
-        className={`relative z-20 flex h-10 w-full items-center justify-between gap-2 rounded-[5px] border bg-navy-850 px-3.5 text-sm transition-colors ${
+        className={`relative z-20 flex h-10 w-full items-center justify-between gap-2 rounded-[5px] border bg-navy-850 px-3.5 text-left text-sm transition-colors ${
           open
             ? 'rounded-b-none border-navy-600'
             : invalid
@@ -66,7 +67,7 @@ function CustomSelect({
               : 'border-navy-700/70 hover:border-navy-600'
         } ${value ? 'text-slate-300' : 'text-slate-500'}`}
       >
-        <span className="truncate">{value || placeholder}</span>
+        <span className="min-w-0 flex-1 truncate">{value || placeholder}</span>
         <ChevronDown
           className={`h-4 w-4 shrink-0 text-slate-500 transition-transform duration-300 ${open ? 'rotate-180' : ''}`}
         />
@@ -93,7 +94,7 @@ function CustomSelect({
                       : 'text-slate-300 hover:bg-navy-800 hover:text-white'
                   }`}
                 >
-                  <span className="truncate">{o.label}</span>
+                  <span className="min-w-0 truncate">{o.label}</span>
                   {o.hint ? (
                     <span className="shrink-0 text-xs font-bold text-cyan-400">{o.hint}</span>
                   ) : selected ? (
@@ -119,12 +120,20 @@ export default function PurchaseBox({ service, gameShort }: { service: Service; 
   const ADDONS = cfg.addons;
 
   const basePrice = priceOf(service.id, service.price);
+  // Services with explicit per-method prices in the DB (e.g. DSR) bypass the
+  // afkDiscount model entirely
+  const methodPrices = db.methodPrices?.[service.id];
   const methods = useMemo(
     () => [
-      { id: 'piloted', label: 'Piloted', price: basePrice },
-      { id: 'afk', label: 'AFK Carry', price: Math.max(basePrice - cfg.afkDiscount, 0) },
+      { id: 'piloted', label: 'Piloted', price: methodPrices?.piloted ?? basePrice, icon: Gamepad2 },
+      {
+        id: 'afk',
+        label: 'AFK Carry',
+        price: methodPrices?.afk ?? Math.max(basePrice - cfg.afkDiscount, 0),
+        icon: Armchair,
+      },
     ],
-    [basePrice, cfg.afkDiscount],
+    [basePrice, cfg.afkDiscount, methodPrices],
   );
 
   const [method, setMethod] = useState(methods[0].id);
@@ -134,6 +143,18 @@ export default function PurchaseBox({ service, gameShort }: { service: Service; 
   const [logIdx, setLogIdx] = useState(0);
   const [addons, setAddons] = useState<string[]>([]);
   const [optionsOpen, setOptionsOpen] = useState(false);
+  // True only after the expand animation finished — the wrapper clips
+  // (overflow-hidden) during the animation, then releases so dropdowns
+  // (gear/logs) can overlay the blocks below instead of being clipped.
+  const [optionsExpanded, setOptionsExpanded] = useState(false);
+  useEffect(() => {
+    if (!optionsOpen) {
+      setOptionsExpanded(false);
+      return;
+    }
+    const t = setTimeout(() => setOptionsExpanded(true), 500);
+    return () => clearTimeout(t);
+  }, [optionsOpen]);
   // Set when "Add to cart" is clicked without a data center; cleared on select
   const [dcError, setDcError] = useState(false);
 
@@ -287,16 +308,32 @@ export default function PurchaseBox({ service, gameShort }: { service: Service; 
   }, []);
 
   const activeMethod = methods.find((m) => m.id === method) ?? methods[0];
-  const priority = addons.includes('priority');
-  const flatAddons = ADDONS.filter((a) => a.id !== 'priority' && addons.includes(a.id)).reduce(
-    (s, a) => s + a.price,
+  // AFK Carry has no FFXIV Logs option and no Private Stream add-on — both
+  // are excluded from the UI and from every calculation
+  const isAfk = method === 'afk';
+  const effLogIdx = isAfk ? 0 : logIdx;
+  const effectiveAddons = isAfk ? addons.filter((a) => a !== 'stream') : addons;
+  // Per-service addon price overrides from the DB (e.g. DSR duty unlock)
+  const addonPriceOf = (a: (typeof ADDONS)[number]) => db.addonPrices?.[service.id]?.[a.id] ?? a.price;
+  const priority = effectiveAddons.includes('priority');
+  const logsPercent = LOG_OPTIONS[effLogIdx].percent ?? 0;
+  const flatAddons = ADDONS.filter((a) => a.id !== 'priority' && effectiveAddons.includes(a.id)).reduce(
+    (s, a) => s + addonPriceOf(a),
     0,
   );
-  const base = activeMethod.price * runs + GEAR_OPTIONS[gearIdx].price + LOG_OPTIONS[logIdx].price + flatAddons;
-  const total = priority ? base * cfg.priorityMultiplier : base;
+  // Priority and the parse tier multiply only (method price × runs);
+  // gear, flat log fees and add-ons are added afterwards, unaffected.
+  const runsPart = activeMethod.price * runs * (priority ? cfg.priorityMultiplier : 1);
+  const total =
+    runsPart * (1 + logsPercent / 100) + GEAR_OPTIONS[gearIdx].price + LOG_OPTIONS[effLogIdx].price + flatAddons;
 
   const toggleAddon = (id: string) =>
     setAddons((prev) => (prev.includes(id) ? prev.filter((a) => a !== id) : [...prev, id]));
+
+  // The 'totem' add-on is a duty unlock — shown with the service-specific
+  // duty name where one applies (DSR requires P4S completion)
+  const addonLabel = (a: (typeof ADDONS)[number]) =>
+    a.id === 'totem' && service.id === 'ffxiv-dsr' ? 'P4S completion' : a.label;
 
   // Scroll target when "Add to cart" is clicked without a data center (mobile:
   // the select sits far above the floating button)
@@ -312,14 +349,14 @@ export default function PurchaseBox({ service, gameShort }: { service: Service; 
     }
     // Runs are excluded from the key/name — identical configs merge into one
     // cart line whose amount controls adjust the run count
-    const cfgKey = `${method}|${dc}|g${gearIdx}|l${logIdx}|${[...addons].sort().join('+')}`;
+    const cfgKey = `${method}|${dc}|g${gearIdx}|l${effLogIdx}|${[...effectiveAddons].sort().join('+')}`;
     const priorityPct = Math.round((cfg.priorityMultiplier - 1) * 100);
     const details = [
       `Data Center: ${dc}`,
       ...(GEAR_OPTIONS[gearIdx].price > 0 ? [GEAR_OPTIONS[gearIdx].label] : []),
-      ...(LOG_OPTIONS[logIdx].price > 0 ? [LOG_OPTIONS[logIdx].label] : []),
-      ...ADDONS.filter((a) => addons.includes(a.id)).map((a) =>
-        a.id === 'priority' ? `${a.label} (+${priorityPct}%)` : a.label,
+      ...(LOG_OPTIONS[effLogIdx].price > 0 || logsPercent > 0 ? [LOG_OPTIONS[effLogIdx].label] : []),
+      ...ADDONS.filter((a) => effectiveAddons.includes(a.id)).map((a) =>
+        a.id === 'priority' ? `${addonLabel(a)} (+${priorityPct}%)` : addonLabel(a),
       ),
     ];
     addItem(
@@ -328,8 +365,9 @@ export default function PurchaseBox({ service, gameShort }: { service: Service; 
         id: `${service.id}::${cfgKey}`,
         name: `${service.name} · ${activeMethod.label}`,
         price: activeMethod.price, // per run
-        flat: GEAR_OPTIONS[gearIdx].price + LOG_OPTIONS[logIdx].price + flatAddons,
+        flat: GEAR_OPTIONS[gearIdx].price + LOG_OPTIONS[effLogIdx].price + flatAddons,
         multiplier: priority ? cfg.priorityMultiplier : undefined,
+        logsPercent: logsPercent > 0 ? logsPercent : undefined,
       },
       gameShort,
       details,
@@ -367,20 +405,22 @@ export default function PurchaseBox({ service, gameShort }: { service: Service; 
                   key={m.id}
                   onClick={() => setMethod(m.id)}
                   aria-pressed={method === m.id}
-                  className={`rounded-[5px] border px-3 py-2 text-center transition-all duration-300 ${
+                  className={`flex items-center justify-center gap-2 rounded-[5px] border px-3 py-2.5 transition-all duration-300 ${
                     method === m.id
                       ? 'border-navy-600 bg-navy-800 text-white cyan-glow'
                       : 'border-navy-700/70 bg-navy-850 text-slate-500 hover:border-navy-600 hover:text-slate-300'
                   }`}
                 >
+                  <m.icon
+                    className={`h-4 w-4 shrink-0 ${method === m.id ? 'text-cyan-400' : 'opacity-70'}`}
+                  />
                   <span
-                    className={`block text-[11px] font-semibold uppercase tracking-wider ${
+                    className={`text-[11px] font-semibold uppercase tracking-wider ${
                       method === m.id ? 'text-cyan-400' : 'opacity-70'
                     }`}
                   >
                     {m.label}
                   </span>
-                  <span className="mt-0.5 block font-display text-sm font-bold">{format(m.price)}</span>
                 </button>
               ))}
             </div>
@@ -449,7 +489,9 @@ export default function PurchaseBox({ service, gameShort }: { service: Service; 
                 optionsOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
               }`}
             >
-              <div className="overflow-hidden">
+              {/* min-w-0 on the grid item prevents a long selected label from
+                  blowing the track (and the field) out past the block padding */}
+              <div className={`min-w-0 ${optionsExpanded ? 'overflow-visible' : 'overflow-hidden'}`}>
                 <div className="space-y-3 px-4 pb-3 pt-1">
                   <div>
                     <p className="mb-2 pl-px text-xs font-semibold text-slate-300">Gear Options</p>
@@ -463,22 +505,24 @@ export default function PurchaseBox({ service, gameShort }: { service: Service; 
                       ariaLabel="Gear options"
                     />
                   </div>
-                  <div>
-                    <p className="mb-2 pl-px text-xs font-semibold text-slate-300">FFXIV Logs</p>
-                    <CustomSelect
-                      value={LOG_OPTIONS[logIdx].label}
-                      options={LOG_OPTIONS.map((l) => ({
-                        label: l.label,
-                        hint: l.price > 0 ? `+${format(l.price)}` : undefined,
-                      }))}
-                      onSelect={setLogIdx}
-                      ariaLabel="FFXIV Logs options"
-                    />
-                  </div>
+                  {!isAfk && (
+                    <div>
+                      <p className="mb-2 pl-px text-xs font-semibold text-slate-300">FFXIV Logs</p>
+                      <CustomSelect
+                        value={LOG_OPTIONS[logIdx].label}
+                        options={LOG_OPTIONS.map((l) => ({
+                          label: l.label,
+                          hint: l.price > 0 ? `+${format(l.price)}` : l.percent ? `+${l.percent}%` : undefined,
+                        }))}
+                        onSelect={setLogIdx}
+                        ariaLabel="FFXIV Logs options"
+                      />
+                    </div>
+                  )}
                   <div>
                     <p className="mb-2 pl-px text-xs font-semibold text-slate-300">Add-ons</p>
                     <div className="space-y-1.5">
-                      {ADDONS.map((a) => {
+                      {ADDONS.filter((a) => !(isAfk && a.id === 'stream')).map((a) => {
                         const checked = addons.includes(a.id);
                         return (
                           <button
@@ -496,11 +540,11 @@ export default function PurchaseBox({ service, gameShort }: { service: Service; 
                             >
                               <Check className="h-3 w-3" strokeWidth={3.5} />
                             </span>
-                            <span className="flex-1 text-sm text-slate-300">{a.label}</span>
+                            <span className="flex-1 text-sm text-slate-300">{addonLabel(a)}</span>
                             <span className="text-xs font-bold text-cyan-400">
                               {a.id === 'priority'
                                 ? `+${Math.round((cfg.priorityMultiplier - 1) * 100)}%`
-                                : `+${format(a.price)}`}
+                                : `+${format(addonPriceOf(a))}`}
                             </span>
                           </button>
                         );

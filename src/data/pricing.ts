@@ -11,6 +11,8 @@
 export interface PricingOption {
   label: string;
   price: number;
+  /** Percentage surcharge applied to (method price × runs × priority) */
+  percent?: number;
 }
 
 export interface PricingAddon {
@@ -29,12 +31,16 @@ export interface PricingDb {
     afkDiscount: number;
     runsMin: number;
     runsMax: number;
-    /** Total multiplier when the Priority add-on is selected */
+    /** Multiplier applied to (method price × runs) when Priority is selected */
     priorityMultiplier: number;
     gearOptions: PricingOption[];
     logOptions: PricingOption[];
     addons: PricingAddon[];
   };
+  /** Service id -> explicit per-method prices (overrides afkDiscount model) */
+  methodPrices?: Record<string, { piloted: number; afk: number }>;
+  /** Service id -> addon id -> per-service addon price override */
+  addonPrices?: Record<string, Record<string, number>>;
   /** Service id -> base price in EUR (overrides the bundled fallback) */
   servicePrices: Record<string, number>;
 }
@@ -49,18 +55,24 @@ export const DEFAULT_PRICING: PricingDb = {
     priorityMultiplier: 2,
     gearOptions: [
       { label: "I don't need extra gear", price: 0 },
-      { label: 'Full BiS-ready set', price: 79.99 },
+      { label: 'Pentamelded Crafted Set', price: 40 },
     ],
     logOptions: [
-      { label: "I don't want a parse", price: 0 },
-      { label: 'FFXIV Logs parse included', price: 14.99 },
+      { label: "I don't want a parse", price: 0, percent: 0 },
+      { label: 'White / Green Parse (0-49% Logs)', price: 0, percent: 10 },
+      { label: 'Blue Parse (50-74% Logs)', price: 0, percent: 50 },
+      { label: 'Purple Parse (74-94% Logs)', price: 0, percent: 100 },
+      { label: 'Orange Parse (95-98% Logs)', price: 0, percent: 400 },
+      { label: 'Pink Parse (99% Logs)', price: 0, percent: 600 },
     ],
     addons: [
-      { id: 'totem', label: 'Extra Totem', price: 39.99 },
+      { id: 'totem', label: 'Duty unlock', price: 39.99 },
       { id: 'stream', label: 'Private Stream', price: 10.0 },
       { id: 'priority', label: 'Priority', price: 0 },
     ],
   },
+  methodPrices: {},
+  addonPrices: {},
   servicePrices: {},
 };
 
@@ -73,6 +85,8 @@ export async function loadPricing(): Promise<PricingDb> {
     return {
       currency: { ...DEFAULT_PRICING.currency, ...db.currency },
       purchaseBox: { ...DEFAULT_PRICING.purchaseBox, ...db.purchaseBox },
+      methodPrices: db.methodPrices ?? {},
+      addonPrices: db.addonPrices ?? {},
       servicePrices: db.servicePrices ?? {},
     };
   } catch {

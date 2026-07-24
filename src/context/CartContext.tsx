@@ -12,11 +12,13 @@ export interface CartItem {
   qty: number;
   /** Chosen configuration lines (data center, gear, logs, add-ons) */
   details?: string[];
-  /** Configured services only: qty is the run count and price is per run —
-      line total = (price × qty + flat) × multiplier. Flat covers one-off
-      gear/log/add-on prices; multiplier is set by the priority add-on. */
+  /** Configured services only: qty is the run count and price is per run.
+      Priority multiplier and logsPercent apply only to (price × qty);
+      flat covers one-off gear/log/add-on prices, added afterwards. */
   flat?: number;
   multiplier?: number;
+  /** FFXIV Logs parse tier surcharge, in percent of (price × qty × multiplier) */
+  logsPercent?: number;
 }
 
 interface CartContextValue {
@@ -27,7 +29,7 @@ interface CartContextValue {
   openCart: () => void;
   closeCart: () => void;
   addItem: (
-    service: Service & { flat?: number; multiplier?: number },
+    service: Service & { flat?: number; multiplier?: number; logsPercent?: number },
     gameShort: string,
     details?: string[],
     qty?: number,
@@ -62,7 +64,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   }, [items]);
 
   const addItem = useCallback(
-    (service: Service & { flat?: number; multiplier?: number }, gameShort: string, details?: string[], qty = 1) => {
+    (service: Service & { flat?: number; multiplier?: number; logsPercent?: number }, gameShort: string, details?: string[], qty = 1) => {
       setItems((prev) => {
         const existing = prev.find((i) => i.id === service.id);
         // Same service + same options (runs excluded from the id): merge the
@@ -82,6 +84,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
             details,
             flat: service.flat,
             multiplier: service.multiplier,
+            logsPercent: service.logsPercent,
           },
         ];
       });

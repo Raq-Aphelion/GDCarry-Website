@@ -332,21 +332,27 @@ export default function CheckoutPage() {
                         onClick={() => setContactVia(o.id)}
                         disabled={locked}
                         aria-pressed={selected}
-                        className={`group flex w-full cursor-pointer items-center gap-3 rounded-[5px] border bg-navy-900/80 px-4 py-3 text-left transition-colors disabled:cursor-not-allowed disabled:opacity-60 ${
+                        className={`group grid w-full cursor-pointer grid-cols-[1fr_auto] items-center gap-x-3 gap-y-2 rounded-[5px] border bg-navy-900/80 px-4 py-3 text-left transition-colors disabled:cursor-not-allowed disabled:opacity-60 max-[359px]:flex max-[359px]:flex-col max-[359px]:items-center sm:flex sm:gap-3 ${
                           selected
                             ? 'border-cyan-600/40 hover:border-cyan-500/60 disabled:hover:border-cyan-600/40'
                             : 'border-navy-700/70 hover:border-navy-600 disabled:hover:border-navy-700/70'
                         }`}
                       >
-                        <o.icon className="h-5 w-5 shrink-0 text-slate-300" />
-                        <span className="text-sm font-semibold text-white">{o.label}</span>
+                        {/* Mobile: bigger icon on top, label below, checkmark
+                            vertically centered across both rows. Below 360px:
+                            fully stacked and centered (grid classes go inert
+                            under flex). Desktop (sm:flex): original single row. */}
+                        <o.icon className="col-start-1 row-start-1 h-6 w-6 shrink-0 text-slate-300 sm:order-1 sm:h-5 sm:w-5" />
+                        <span className="col-start-1 row-start-2 text-sm font-semibold text-white sm:order-2">
+                          {o.label}
+                        </span>
                         {selected ? (
-                          <span className="relative ml-auto h-5 w-5 shrink-0">
+                          <span className="relative col-start-2 row-span-2 ml-auto h-5 w-5 shrink-0 self-center justify-self-end max-[359px]:ml-0 sm:order-3">
                             <CheckCircle2 className="absolute inset-0 h-5 w-5 text-cyan-400 transition-opacity duration-200 group-active:opacity-0" aria-label="Selected" />
                             <Circle className="absolute inset-0 h-5 w-5 text-slate-600 opacity-0 transition-opacity duration-200 group-active:opacity-100" aria-hidden />
                           </span>
                         ) : (
-                          <Circle className="ml-auto h-5 w-5 shrink-0 text-slate-600" aria-hidden />
+                          <Circle className="col-start-2 row-span-2 ml-auto h-5 w-5 shrink-0 self-center justify-self-end text-slate-600 max-[359px]:ml-0 sm:order-3" aria-hidden />
                         )}
                       </button>
                     );
