@@ -1,5 +1,5 @@
 import Reveal from './Reveal';
-import { useToast } from '@/context/ToastContext';
+import { openLiveChat } from '@/lib/livechat';
 
 /** "Can't find your boost?" custom-order call-to-action panel.
     `compact` shortens the secondary text (used inline inside card grids).
@@ -12,8 +12,6 @@ export default function CustomOrderCta({
   compact?: boolean;
   lateTextBreak?: boolean;
 }) {
-  const { toast } = useToast();
-
   return (
     <Reveal>
       <div id="custom-order-cta" className="relative overflow-hidden rounded-[5px] bg-gradient-to-r from-navy-800 via-navy-850 to-navy-800 px-8 py-8 sm:px-12">
@@ -39,13 +37,7 @@ export default function CustomOrderCta({
             </p>
           </div>
           <button
-            onClick={() =>
-              toast({
-                title: 'Custom order desk',
-                description: 'Demo build — the live chat desk would open right here.',
-                variant: 'cyan',
-              })
-            }
+            onClick={() => openLiveChat()}
             className="shrink-0 rounded-[5px] bg-gradient-to-r from-cyan-500 to-cyan-700 px-8 py-3.5 font-display text-sm font-bold text-navy-900 transition-all hover:brightness-110"
           >
             Request a custom order

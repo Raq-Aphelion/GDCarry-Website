@@ -6,12 +6,13 @@ import FadeImage from '@/components/FadeImage';
 import MobileCategoryBar from '@/components/MobileCategoryBar';
 import Reveal from '@/components/Reveal';
 import { OverlayScrollbar } from '@/components/Scrollbar';
+import PageMeta from '@/components/PageMeta';
 import ServiceCard from '@/components/ServiceCard';
 import { getGame, serviceCount } from '@/data/games';
-import ffxivBg from '@/assets/images/backgrounds/ffxiv-bg-1.png';
+import ffxivBg from '@/assets/images/backgrounds/ffxiv-bg-1.webp';
 import wowBg from '@/assets/images/backgrounds/wow-bg.jpg';
-import lostArkBg from '@/assets/images/backgrounds/lostark-bg.png';
-import warframeBg from '@/assets/images/backgrounds/warframe-bg.png';
+import lostArkBg from '@/assets/images/backgrounds/lostark-bg.webp';
+import warframeBg from '@/assets/images/backgrounds/warframe-bg.webp';
 import runescapeBg from '@/assets/images/backgrounds/osrs-bg.webp';
 
 /** Hero background per game; falls back to the card art if none is defined. */
@@ -63,6 +64,11 @@ export default function GamePage() {
 
   return (
     <div>
+      <PageMeta
+        title={`${game.name} Boosting & Carry Services`}
+        description={game.description}
+        path={`/boosting/${game.id}`}
+      />
       {/* ============ HEADER — image behind the title, under a gradient ============ */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0">

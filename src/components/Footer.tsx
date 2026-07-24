@@ -2,6 +2,7 @@ import { Link } from 'react-router';
 import { BookOpen, Briefcase, Cookie, LifeBuoy, Lock, MessageCircle, Scale, ShieldCheck, Undo2 } from 'lucide-react';
 import { games } from '@/data/games';
 import { useToast } from '@/context/ToastContext';
+import { openLiveChat } from '@/lib/livechat';
 
 export default function Footer() {
   const { toast } = useToast();
@@ -65,20 +66,30 @@ export default function Footer() {
           <h3 className="font-display text-sm font-bold uppercase tracking-wider text-cyan-500 max-md:text-xs">Support</h3>
           <ul className="mt-4 space-y-2.5">
             {[
-              { icon: MessageCircle, label: 'Live chat' },
-              { icon: LifeBuoy, label: 'FAQ' },
-              { icon: ShieldCheck, label: 'Account safety' },
-              { icon: BookOpen, label: 'Guides' },
-              { icon: Briefcase, label: 'Work with us' },
+              { icon: MessageCircle, label: 'Live chat', action: () => openLiveChat() },
+              { icon: LifeBuoy, label: 'FAQ', to: '/faq' },
+              { icon: ShieldCheck, label: 'Account safety', to: '/account-safety' },
+              { icon: BookOpen, label: 'Guides', to: '/guides' },
+              { icon: Briefcase, label: 'Work with us', to: '/work-with-us' },
             ].map((s) => (
               <li key={s.label}>
-                <button
-                  onClick={soon}
-                  className="flex items-center gap-2 text-sm text-slate-400 transition-colors hover:text-cyan-300 max-md:text-xs"
-                >
-                  <s.icon className="h-3.5 w-3.5" />
-                  {s.label}
-                </button>
+                {s.to ? (
+                  <Link
+                    to={s.to}
+                    className="flex items-center gap-2 text-sm text-slate-400 transition-colors hover:text-cyan-300 max-md:text-xs"
+                  >
+                    <s.icon className="h-3.5 w-3.5" />
+                    {s.label}
+                  </Link>
+                ) : (
+                  <button
+                    onClick={s.action ?? soon}
+                    className="flex items-center gap-2 text-sm text-slate-400 transition-colors hover:text-cyan-300 max-md:text-xs"
+                  >
+                    <s.icon className="h-3.5 w-3.5" />
+                    {s.label}
+                  </button>
+                )}
               </li>
             ))}
           </ul>

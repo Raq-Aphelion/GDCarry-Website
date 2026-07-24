@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { Link, Navigate, useNavigate } from 'react-router';
 import { CheckCircle2, Circle, Loader2, Mail, MessageCircle, Timer, Bitcoin, Landmark, type LucideIcon } from 'lucide-react';
 import Reveal from '@/components/Reveal';
+import PageMeta from '@/components/PageMeta';
 import FadeImage from '@/components/FadeImage';
 import FieldPopup from '@/components/FieldPopup';
 import { OverlayScrollbar } from '@/components/Scrollbar';
@@ -10,7 +11,7 @@ import { lineTotal } from '@/lib/cart';
 import { useCurrency } from '@/context/CurrencyContext';
 import { useToast } from '@/context/ToastContext';
 import { serviceLink } from '@/data/games';
-import ffxivBg from '@/assets/images/backgrounds/ffxiv-bg.png';
+import ffxivBg from '@/assets/images/backgrounds/ffxiv-bg.webp';
 
 /** Simulated processing time — the spinner runs until the "order" completes. */
 const PROCESSING_MS = 1200;
@@ -182,6 +183,7 @@ export default function CheckoutPage() {
 
   return (
     <div className="relative mx-auto max-w-5xl px-[25px] py-12 sm:px-6 lg:px-8">
+      <PageMeta title="Checkout" description="GD Carry checkout." path="/checkout" noIndex />
       {/* Faded game art behind the top of the page — same background as the service page */}
       <div className="pointer-events-none absolute left-1/2 top-0 -z-10 h-[460px] w-screen -translate-x-1/2" aria-hidden>
         <div className="absolute inset-0">

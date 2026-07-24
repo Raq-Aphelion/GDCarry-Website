@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router';
 import { ArrowRight, Badge, ChevronDown, ChevronLeft, ChevronRight, ShieldCheck, Star, Timer, Users, Zap } from 'lucide-react';
 import CustomOrderCta from '@/components/CustomOrderCta';
+import PageMeta, { JsonLd, SITE_URL } from '@/components/PageMeta';
 import FadeImage from '@/components/FadeImage';
 import Reveal from '@/components/Reveal';
 import ServiceCard from '@/components/ServiceCard';
@@ -17,7 +18,7 @@ const FEATURED_IDS = [
   'ffxiv-savage-tier',
   'ffxiv-potd-solo',
   'ffxiv-cc-rank',
-  'ffxiv-bis-farm',
+  'ffxiv-gil-pack',
 ];
 
 const PERKS = [
@@ -153,6 +154,35 @@ export default function Home() {
 
   return (
     <div>
+      <PageMeta
+        title="Professional Game Boosting Services — FFXIV, WoW & More"
+        description="Grand Dice (GD Carry) — professional boosting services, gaming boosts and secure carries for FFXIV, World of Warcraft, Lost Ark, Warframe and RuneScape. Hand-played by verified pro players, on time and guaranteed."
+        path="/"
+      />
+      <JsonLd
+        data={{
+          '@context': 'https://schema.org',
+          '@graph': [
+            {
+              '@type': 'Organization',
+              '@id': `${SITE_URL}/#organization`,
+              name: 'Grand Dice',
+              alternateName: ['GD Carry', 'Grand Dice Carry', 'GD Boost'],
+              url: SITE_URL,
+              logo: `${SITE_URL}/images/gd_logo.png`,
+              description:
+                'Professional boosting services and carries for FFXIV, World of Warcraft, Lost Ark, Warframe and RuneScape.',
+            },
+            {
+              '@type': 'WebSite',
+              '@id': `${SITE_URL}/#website`,
+              url: SITE_URL,
+              name: 'GD Carry — Grand Dice',
+              publisher: { '@id': `${SITE_URL}/#organization` },
+            },
+          ],
+        }}
+      />
       {/* ============ HERO + GAME CAROUSEL ============ */}
       <section className="relative overflow-hidden">
         {/* Faded fullscreen video backdrop */}

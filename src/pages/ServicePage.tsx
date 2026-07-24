@@ -2,13 +2,14 @@ import { useEffect, useState } from 'react';
 import { Link, Navigate, useParams } from 'react-router';
 import { ArrowRight, BadgeCheck, ChevronDown, ChevronRight, Gamepad2, Gem, Medal, Swords, Trophy } from 'lucide-react';
 import CustomOrderCta from '@/components/CustomOrderCta';
+import PageMeta from '@/components/PageMeta';
 import FadeImage from '@/components/FadeImage';
 import MobileCategoryBar from '@/components/MobileCategoryBar';
 import PurchaseBox from '@/components/PurchaseBox';
 import Reveal from '@/components/Reveal';
 import ServiceCard from '@/components/ServiceCard';
 import { getGame } from '@/data/games';
-import ffxivBg from '@/assets/images/backgrounds/ffxiv-bg.png';
+import ffxivBg from '@/assets/images/backgrounds/ffxiv-bg.webp';
 import useDragScroll from '@/hooks/useDragScroll';
 
 const REWARDS = [
@@ -288,6 +289,11 @@ export default function ServicePage() {
 
   return (
     <div>
+      <PageMeta
+        title={`${service.name} Carry — FFXIV Boosting`}
+        description={`${service.description} — secure, hand-played FFXIV boosting service by Grand Dice (GD Carry).`}
+        path={`/boosting/ffxiv/${service.id}`}
+      />
       {/* ============ MOBILE CATEGORY CAROUSEL — seamless with the navbar ============ */}
       <MobileCategoryBar items={game.subcategories} activeId={sub.id} gameId={game.id} />
 

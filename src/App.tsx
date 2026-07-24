@@ -10,6 +10,10 @@ import CheckoutPage from '@/pages/CheckoutPage';
 import GamePage from '@/pages/GamePage';
 import ServicePage from '@/pages/ServicePage';
 import LegalPage from '@/pages/LegalPage';
+import FaqPage from '@/pages/FaqPage';
+import AccountSafetyPage from '@/pages/AccountSafetyPage';
+import GuidesPage from '@/pages/GuidesPage';
+import WorkWithUsPage from '@/pages/WorkWithUsPage';
 import { ToastProvider } from '@/context/ToastContext';
 import { PricingProvider } from '@/context/PricingContext';
 import { CurrencyProvider } from '@/context/CurrencyContext';
@@ -44,6 +48,11 @@ export default function App() {
                   <Route path="/boosting/:gameId/:serviceId" element={<ServicePage />} />
                   <Route path="/checkout" element={<CheckoutPage />} />
                   <Route path="/legal/:docId" element={<LegalPage />} />
+                  <Route path="/faq" element={<FaqPage />} />
+                  <Route path="/account-safety" element={<AccountSafetyPage />} />
+                  <Route path="/work-with-us" element={<WorkWithUsPage />} />
+                  <Route path="/guides" element={<GuidesPage />} />
+                  <Route path="/guides/:guideId" element={<GuidesPage />} />
                   <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>
               </main>

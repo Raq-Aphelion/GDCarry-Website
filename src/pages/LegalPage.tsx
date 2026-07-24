@@ -1,5 +1,6 @@
 import { Link, Navigate, NavLink, useParams } from 'react-router';
 import { CalendarClock, ChevronRight, MessageCircle } from 'lucide-react';
+import PageMeta from '@/components/PageMeta';
 import Reveal from '@/components/Reveal';
 import { getLegalDoc, legalDocs, type LegalBlock } from '@/data/legal';
 
@@ -34,6 +35,11 @@ export default function LegalPage() {
 
   return (
     <div>
+      <PageMeta
+        title={doc.title}
+        description={`${doc.title} for GD Carry — Grand Dice boosting services, carries and coaching.`}
+        path={`/legal/${doc.id}`}
+      />
       {/* ============ HEADER ============ */}
       <section className="relative overflow-hidden border-b border-navy-700/50">
         <div className="absolute inset-0 bg-gradient-to-r from-navy-850 via-navy-900 to-navy-850" />
