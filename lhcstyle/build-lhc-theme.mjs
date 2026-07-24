@@ -1,6 +1,6 @@
-// Generates docs/gdcarry-lhc-theme.json — an importable Live Helper Chat
+// Generates lhcstyle/gdcarry-lhc-theme.json — an importable Live Helper Chat
 // widget theme matching the GD Carry site style.
-// Usage: node docs/build-lhc-theme.mjs
+// Usage: node lhcstyle/build-lhc-theme.mjs
 //
 // Schema notes (verified against LHC master, modules/lhtheme/import.php):
 // - The import file is a FLAT object (no wrapper); unknown keys are ignored.
@@ -79,7 +79,7 @@ const customContainerCss =
   'border: none !important; border-radius: 12px !important; overflow: hidden !important; ' +
   'box-shadow: 0 0 0 1px rgba(59,130,246,.22), 0 24px 60px -24px rgba(59,130,246,.30), 0 25px 50px -12px rgba(0,0,0,.55) !important;';
 
-const customWidgetCss = `/* ===== GD Carry dark theme — widget interior v9 ===== */
+const customWidgetCss = `/* ===== GD Carry dark theme — widget interior v13 ===== */
 
 :root { --lhc-message-padding: 7px 10px; }
 
@@ -107,20 +107,24 @@ body { background-color: #0f0f11 !important; }
   max-height: 100% !important;
 }
 
-/* Conversation area: always-on styled scrollbar (desktop AND mobile),
-   generous side padding, glow background ONLY here (painting it on the
-   inner scroller too produced a visible seam with few messages). */
+/* Conversation area: scrollbar only when actually overflowing (stable gutter
+   reserves its lane either way — no layout shift, no empty bar). Left padding
+   (22px) matches right padding (12px) + gutter (~10px) so operator bubbles
+   and visitor bubbles sit the same distance from the window edges.
+   Glow background ONLY here (painting it on the inner scroller too produced
+   a visible seam with few messages). */
 #messagesBlock {
-  overflow-y: scroll !important;
+  overflow-y: auto !important;
   overflow-x: hidden !important;
   flex: 1 1 auto !important;
   min-height: 0 !important;
   max-width: 100% !important;
+  scrollbar-gutter: stable !important;
   background-color: #0f0f11 !important;
   background-image:
     radial-gradient(600px 300px at 85% -10%, rgba(96, 165, 250, 0.06), transparent 60%),
     radial-gradient(450px 250px at -10% 10%, rgba(96, 165, 250, 0.04), transparent 55%);
-  padding: 12px 22px !important;
+  padding: 12px 12px 12px 22px !important;
 }
 #messages-scroll {
   overflow-x: hidden !important;
@@ -128,25 +132,23 @@ body { background-color: #0f0f11 !important; }
 }
 
 /* "Encrypted and private" note — lives at the top of the scrollable message
-   flow and scrolls away with it (replaces the theme's after-status field,
-   which rendered as a fixed background strip behind the messages) */
+   flow and scrolls away with it */
 #messages-scroll::before {
   content: 'Your conversation is encrypted and private.';
   display: block;
   text-align: center;
   font-size: 11px;
   color: #64748b;
-  padding: 2px 14px 8px;
+  padding: 10px 14px 14px;
 }
 
 .message-row { max-width: 100% !important; }
 
 /* Start-chat / offline form view:
    #id-container-fluid gets a FIXED share of the window (flex:1 inside the
-   100% widget-body). This also fixes the "window stretches when typing" bug —
-   LHC resizes the iframe from this element's offsetHeight, which now never
-   changes. The form fields + button are pinned to the bottom above the
-   footer; the intro card area is the flexible/scrollable middle. */
+   100% widget-body) — LHC resizes the iframe from this element's
+   offsetHeight, which now never changes. Fields + button pinned to the
+   bottom above the footer; the intro card area is the flexible middle. */
 .start-chat #id-container-fluid,
 .offline-chat #id-container-fluid {
   display: flex !important;
@@ -205,8 +207,7 @@ body { background-color: #0f0f11 !important; }
 }
 
 /* The question column fills the middle; the composer is a snug one-line box
-   pinned to the bottom that grows line-by-line with the input. Its growth
-   is capped and the fields row scrolls, so it can never overlap the card. */
+   pinned to the bottom, growing line-by-line up to 3 rows, then scrolling */
 .start-chat form .row.pt-2 > [class*="col"]:has(.form-group textarea) {
   flex: 1 1 auto !important;
   display: flex !important;
@@ -223,7 +224,7 @@ body { background-color: #0f0f11 !important; }
 .start-chat .form-group textarea.form-control {
   flex: 0 0 auto !important;
   min-height: 42px !important;
-  max-height: 110px !important;
+  max-height: 76px !important;
   padding: 9px 12px !important;
   overflow-y: auto !important;
   resize: none !important;
@@ -233,9 +234,13 @@ body { background-color: #0f0f11 !important; }
   margin-bottom: 6px !important;
 }
 
-/* Name field — single row, same height as the composer */
+/* Name + e-mail fields — single row, same height as the composer.
+   (Enable both in Start chat form settings: Name = required, E-mail =
+   optional; LHC validates the e-mail format server-side when filled.) */
 .start-chat input[name="Username"].form-control,
-.offline-chat input[name="Username"].form-control {
+.offline-chat input[name="Username"].form-control,
+.start-chat input[name="Email"].form-control,
+.offline-chat input[name="Email"].form-control {
   height: 42px !important;
   min-height: 42px !important;
 }
@@ -250,9 +255,10 @@ body { background-color: #0f0f11 !important; }
   display: none !important;
 }
 
-/* Operator/assistant profile block — gone entirely: the block itself, the
-   whole profile strip whenever it contains one (photo or assistant icon),
-   sender avatars in the message flow, and the rating thumbs */
+/* Operator/assistant profile block — gone entirely, version-proof: anything
+   in the profile strip that contains an image, avatar or assistant icon is
+   suppressed (the queue/pending text is text-only, so it survives), plus
+   sender avatars and rating thumbs */
 .operator-info,
 .up-vote-action,
 .down-vote-action,
@@ -263,7 +269,11 @@ body { background-color: #0f0f11 !important; }
 }
 #lhc-profile-body:has(.operator-info),
 #lhc-profile-body:has(.op-photo),
-#lhc-profile-body:has(.icon-assistant) {
+#lhc-profile-body:has(.icon-assistant),
+#lhc-profile-body:has(img),
+#chat-status-container:has(img),
+#chat-status-container:has(.icon-assistant),
+#chat-status-container:has(.material-icons) {
   display: none !important;
 }
 
@@ -342,13 +352,13 @@ body { background-color: #0f0f11 !important; }
   color: #93c5fd !important;
 }
 
-/* Queue / pending status strip — navy at the top, fading to transparent
-   at the bottom, centered, no divider lines */
+/* Queue / pending status strip — navy gradient fading downward, centered,
+   with a matching divider line at the bottom */
 #lhc-profile-body,
 #chat-status-container {
   background: linear-gradient(180deg, #151519 0%, rgba(21, 21, 25, 0) 100%) !important;
   border: none !important;
-  border-bottom: none !important;
+  border-bottom: 1px solid #26262e !important;
   color: #f1f5f9;
   padding: 14px 16px 10px !important;
   text-align: center !important;
@@ -420,8 +430,7 @@ body { background-color: #0f0f11 !important; }
 }
 
 /* Timestamps — small and quiet; shown only on the LAST message of each
-   sender's run (before the other person replies), plus the final message.
-   Requires the theme's timestamp options enabled (show below message). */
+   sender's run (before the other person replies), plus the final message */
 .msg-date {
   font-size: 10px !important;
   color: #64748b !important;
@@ -436,11 +445,22 @@ body { background-color: #0f0f11 !important; }
   display: block !important;
 }
 
-/* System messages, typing indicator */
+/* System messages */
 .system-response,
 .system-response .msg-date,
 .sys-tit {
   color: #64748b !important;
+}
+
+/* Typing indicator — renamed (swap for display:none to disable entirely) */
+#id-operator-typing {
+  background: #0f0f11 !important;
+  font-size: 0 !important;
+}
+#id-operator-typing::before {
+  content: 'Support is typing now...';
+  font-size: 11px;
+  color: #94a3b8;
 }
 
 /* Sender name — no italics, no icon, slightly smaller */
@@ -457,18 +477,22 @@ body { background-color: #0f0f11 !important; }
   display: none !important;
 }
 
-#id-operator-typing {
-  background: #0f0f11 !important;
-  color: #94a3b8 !important;
-}
 .new-msg {
   background: #2563eb !important;
   color: #ffffff !important;
 }
 
-/* Scroll-to-bottom button — lifted up, smaller label */
+/* Scroll-to-bottom button — centered pill sized to its text, always on top
+   of any in-widget overlay (e.g. the image download icon) */
 #id-btn-bottom-scroll {
   bottom: 14px !important;
+  left: 0 !important;
+  right: 0 !important;
+  width: max-content !important;
+  max-width: 90% !important;
+  margin: 0 auto !important;
+  display: block !important;
+  z-index: 60 !important;
 }
 #id-btn-bottom-scroll .btn {
   background: #26262e !important;
@@ -476,6 +500,7 @@ body { background-color: #0f0f11 !important; }
   border: none !important;
   font-size: 11px !important;
   padding: 3px 9px !important;
+  width: auto !important;
 }
 
 /* Send area — dark divider, no cogwheel, centered row with side padding */
@@ -511,9 +536,8 @@ body { background-color: #0f0f11 !important; }
 }
 #chat-dropdown-options-wrapper { display: none !important; }
 
-/* Message input — one line, grows to max 3 rows, then scrolls internally
-   with a visible scrollbar; no resize handle. Enter sends (script in
-   header_html), no line breaks. */
+/* Message input — one line, grows to max 3 rows, then scrolls internally;
+   no resize handle. Enter sends (script in header_html), no line breaks. */
 #CSChatMessage {
   background-color: transparent !important;
   color: #f1f5f9 !important;
@@ -523,15 +547,16 @@ body { background-color: #0f0f11 !important; }
   min-height: 38px !important;
   height: auto !important;
   max-height: 72px !important;
-  overflow-y: scroll !important;
+  overflow-y: auto !important;
   resize: none !important;
-  padding: 8px 4px !important;
+  padding: 8px 10px 8px 4px !important;
   margin: 0 !important;
   field-sizing: content;
 }
 #CSChatMessage::placeholder { color: #94a3b8 !important; }
 
-/* Send button — theme-matching paper plane in its own outlined circle */
+/* Send button — theme-matching paper plane in its own outlined circle;
+   dimmed + inert when LHC marks it unavailable (empty input / closed chat) */
 #ChatSendButtonContainer .material-icons,
 .send-icon {
   font-size: 0 !important;
@@ -545,6 +570,10 @@ body { background-color: #0f0f11 !important; }
   background: #1b1b20 !important;
   border: 1px solid rgba(59, 130, 246, 0.35) !important;
   border-radius: 999px !important;
+}
+.send-icon.text-muted-light {
+  opacity: 0.45 !important;
+  pointer-events: none !important;
 }
 #ChatSendButtonContainer .material-icons::before,
 .send-icon::before {
@@ -625,10 +654,13 @@ form .btn-secondary[type="submit"]:hover { filter: brightness(1.1); }
 }
 .btn-link { color: #60a5fa !important; }
 
-/* Footer strip — opaque, pinned to the bottom, bled to the window edges
-   (the 50% - 50vw margins cancel any parent padding, killing the
-   transparent side strips) */
+/* Footer strip — hidden everywhere EXCEPT the live conversation view
+   (body:has works no matter where LHC mounts the footer element) */
 .lhc-custom-footer-below {
+  display: none !important;
+}
+body:has(.online-chat) .lhc-custom-footer-below {
+  display: block !important;
   background-color: #0f0f11 !important;
   border-top: 1px solid #26262e !important;
   flex: 0 0 auto !important;
@@ -647,10 +679,25 @@ form .btn-secondary[type="submit"]:hover { filter: brightness(1.1); }
   border-radius: 5px;
 }
 
-/* Scrollbars — same as the site, visible everywhere (desktop + mobile) */
+/* Scrollbars — the site's style: thin navy pill, transparent track, and NO
+   arrow buttons anywhere (desktop + mobile) */
 * { scrollbar-width: thin !important; scrollbar-color: #3a3a46 transparent; }
 ::-webkit-scrollbar { width: 10px; height: 10px; }
 ::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-button,
+::-webkit-scrollbar-button:vertical:start:decrement,
+::-webkit-scrollbar-button:vertical:start:increment,
+::-webkit-scrollbar-button:vertical:end:decrement,
+::-webkit-scrollbar-button:vertical:end:increment,
+::-webkit-scrollbar-button:horizontal:start:decrement,
+::-webkit-scrollbar-button:horizontal:start:increment,
+::-webkit-scrollbar-button:horizontal:end:decrement,
+::-webkit-scrollbar-button:horizontal:end:increment {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+::-webkit-scrollbar-corner { background: transparent !important; }
 ::-webkit-scrollbar-thumb {
   background: #3a3a46;
   border-radius: 999px;
@@ -661,7 +708,27 @@ form .btn-secondary[type="submit"]:hover { filter: brightness(1.1); }
   background: #52525f;
   border: 2px solid transparent;
   background-clip: padding-box;
-}`;
+}
+
+/* Custom JS overlay scrollbar (engine in header_html): once active, native
+   bars are fully hidden — Windows Chrome's Fluent scrollbar ignores
+   ::-webkit-scrollbar-button and cannot be de-arrowed with CSS alone */
+html.gdc-cscroll * { scrollbar-width: none !important; }
+html.gdc-cscroll ::-webkit-scrollbar { display: none !important; }
+.gdc-scroll-thumb {
+  position: fixed;
+  width: 6px;
+  border-radius: 999px;
+  background: #3a3a46;
+  opacity: 0;
+  transition: opacity 0.2s;
+  z-index: 80;
+}
+.gdc-scroll-thumb:hover,
+.gdc-scroll-thumb.gdc-drag {
+  background: #52525f;
+}
+.gdc-scroll-thumb.gdc-visible { opacity: 1; }`;
 
 const popupExtra = `body {
   background-color: #0f0f11 !important;
@@ -691,7 +758,7 @@ const customPageCss = `#lhc_container_v2 #lhc_status_widget_v2 {
     0 25px 50px -12px rgba(0, 0, 0, 0.55) !important;
 }
 
-/* Need-help widget fully suppressed (also disabled server-side — see notes) */
+/* Need-help widget fully suppressed */
 #lhc_container_v2 #lhc_needhelp_widget_v2 {
   display: none !important;
 }
@@ -719,26 +786,26 @@ const customPageCss = `#lhc_container_v2 #lhc_status_widget_v2 {
 
 const chatBadgeIcon = `<div style="width:34px;height:34px;border-radius:999px;background:linear-gradient(135deg,#1b1b20 0%,#151519 100%);border:1px solid rgba(59,130,246,.35);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><img src="${svgChat('93c5fd')}" alt="" style="width:18px;height:18px;"></div>`;
 
-const introCardOperator = `<div style="margin:16px 0 0;padding:16px;border:1px solid #26262e;border-radius:8px;background:linear-gradient(180deg,rgba(38,38,46,.35),#151519 55%);box-shadow:0 0 0 1px rgba(59,130,246,.12);">
-  <div style="display:flex;align-items:center;gap:14px;">
+const introCardOperator = `<div style="margin:16px 0 0;padding:16px;border:1px solid #26262e;border-radius:8px;background:linear-gradient(180deg,rgba(38,38,46,.35),#151519 55%);box-shadow:0 0 0 1px rgba(59,130,246,.12);text-align:center;">
+  <div style="display:flex;align-items:center;justify-content:center;gap:14px;">
     ${chatBadgeIcon}
-    <div style="line-height:1.2;">
+    <div style="line-height:1.2;text-align:left;">
       <div style="font-family:Sora,Inter,sans-serif;font-weight:700;font-size:15px;color:#f1f5f9;">Chat with Grand Dice</div>
       <div style="font-size:12px;color:#93c5fd;margin-top:1px;">Average reply under 5 mins</div>
     </div>
   </div>
-  <p style="margin:10px 0 0;font-size:12px;line-height:1.5;color:#94a3b8;">Tell us your game and what you need — raids, dungeons, leveling, coaching. Our staff will reach out to you.</p>
+  <p style="margin:10px 0 0;font-size:12px;line-height:1.5;color:#94a3b8;">Tell us your game and what you need.</p>
 </div>`;
 
-const introCardBot = `<div style="margin:16px 0 0;padding:16px;border:1px solid #26262e;border-radius:8px;background:linear-gradient(180deg,rgba(38,38,46,.35),#151519 55%);box-shadow:0 0 0 1px rgba(59,130,246,.12);">
-  <div style="display:flex;align-items:center;gap:14px;">
+const introCardBot = `<div style="margin:16px 0 0;padding:16px;border:1px solid #26262e;border-radius:8px;background:linear-gradient(180deg,rgba(38,38,46,.35),#151519 55%);box-shadow:0 0 0 1px rgba(59,130,246,.12);text-align:center;">
+  <div style="display:flex;align-items:center;justify-content:center;gap:14px;">
     ${chatBadgeIcon}
-    <div style="line-height:1.2;">
+    <div style="line-height:1.2;text-align:left;">
       <div style="font-family:Sora,Inter,sans-serif;font-weight:700;font-size:15px;color:#f1f5f9;">Grand Dice Assistant</div>
       <div style="font-size:12px;color:#93c5fd;margin-top:1px;">Instant answers, 24/7</div>
     </div>
   </div>
-  <p style="margin:10px 0 0;font-size:12px;line-height:1.5;color:#94a3b8;">Our assistant will collect the details first — our staff will reach out to you.</p>
+  <p style="margin:10px 0 0;font-size:12px;line-height:1.5;color:#94a3b8;">Tell us your game and what you need.</p>
 </div>`;
 
 const headerIdentity = `<div style="display:flex;align-items:center;gap:10px;">
@@ -785,6 +852,70 @@ new MutationObserver(function () {
     }
   }
 }).observe(document.documentElement, { childList: true, subtree: true });
+
+/* Smooth scroll-to-bottom (capture phase, beats React's instant jump) */
+document.addEventListener('click', function (e) {
+  var pill = e.target && e.target.closest ? e.target.closest('#id-btn-bottom-scroll') : null;
+  if (pill) {
+    e.preventDefault();
+    e.stopPropagation();
+    var m = document.getElementById('messagesBlock') || document.getElementById('messages-scroll');
+    if (m) m.scrollTo({ top: m.scrollHeight, behavior: 'smooth' });
+  }
+}, true);
+
+/* Custom overlay scrollbar — same look as the site's; native bars get
+   hidden via html.gdc-cscroll (Windows Chrome Fluent scrollbars ignore
+   ::-webkit-scrollbar-button, so CSS alone can't remove their arrows) */
+(function () {
+  var hosts = ['#messagesBlock', '#CSChatMessage', '.start-chat textarea.form-control'];
+  function attach(host) {
+    if (host.__gdcSb) return;
+    host.__gdcSb = true;
+    document.documentElement.classList.add('gdc-cscroll');
+    var thumb = document.createElement('div');
+    thumb.className = 'gdc-scroll-thumb';
+    document.body.appendChild(thumb);
+    var hideT = null;
+    function update() {
+      if (!host.isConnected) { thumb.remove(); return; }
+      var r = host.getBoundingClientRect();
+      var sh = host.scrollHeight, st = host.scrollTop;
+      if (sh <= r.height + 1 || r.height === 0) { thumb.classList.remove('gdc-visible'); return; }
+      var ratio = r.height / sh;
+      thumb.style.height = Math.max(r.height * ratio, 24) + 'px';
+      thumb.style.top = (r.top + st * ratio) + 'px';
+      thumb.style.left = (r.right - 8) + 'px';
+      thumb.classList.add('gdc-visible');
+      clearTimeout(hideT);
+      hideT = setTimeout(function () { thumb.classList.remove('gdc-visible'); }, 1200);
+    }
+    host.addEventListener('scroll', update, { passive: true });
+    host.addEventListener('mouseenter', update);
+    new ResizeObserver(update).observe(host);
+    thumb.addEventListener('mousedown', function (e) {
+      e.preventDefault();
+      thumb.classList.add('gdc-drag');
+      var y0 = e.clientY, s0 = host.scrollTop;
+      var ratio = host.getBoundingClientRect().height / host.scrollHeight;
+      function mv(ev) { host.scrollTop = s0 + (ev.clientY - y0) / ratio; }
+      function up() {
+        thumb.classList.remove('gdc-drag');
+        document.removeEventListener('mousemove', mv);
+        document.removeEventListener('mouseup', up);
+      }
+      document.addEventListener('mousemove', mv);
+      document.addEventListener('mouseup', up);
+    });
+    update();
+  }
+  new MutationObserver(function () {
+    hosts.forEach(function (sel) {
+      var el = document.querySelector(sel);
+      if (el) attach(el);
+    });
+  }).observe(document.documentElement, { childList: true, subtree: true });
+})();
 </script>`;
 
 // ---------------------------------------------------------------- Theme object
@@ -795,6 +926,7 @@ const botConfiguration = {
   wheight: '520',
   show_ts: '1',
   show_ts_below: '1',
+  uprev: '1',
   custom_html_widget: introCardOperator,
   custom_html: introCardOperator,
   custom_html_widget_bot: introCardBot,
