@@ -1,8 +1,9 @@
-import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Armchair, Check, ChevronDown, Clock, Gamepad2, Minus, Plus, Settings2 } from 'lucide-react';
 import FadeImage from './FadeImage';
 import FieldPopup from './FieldPopup';
 import { Slider } from '@/components/ui/slider';
+import { usePurchaseFloat } from '@/hooks/usePurchaseFloat';
 import { useCart } from '@/context/CartContext';
 import { useCurrency } from '@/context/CurrencyContext';
 import { usePricing } from '@/context/PricingContext';
@@ -40,14 +41,15 @@ interface SelectOption {
 }
 
 /** Custom dropdown: the panel unfolds seamlessly from the field and always
- *  paints above the floating price block. */
-function CustomSelect({
+ *  paints above the floating price block. Shared with GilPurchaseBox. */
+export function CustomSelect({
   value,
   placeholder,
   options,
   onSelect,
   ariaLabel,
   invalid = false,
+  disabled = false,
 }: {
   value: string;
   placeholder?: string;
@@ -56,6 +58,8 @@ function CustomSelect({
   ariaLabel: string;
   /** Red border while a validation bubble is showing */
   invalid?: boolean;
+  /** Greyed out and non-interactive (e.g. waiting on a parent selection) */
+  disabled?: boolean;
 }) {
   const [open, setOpen] = useState(false);
 
@@ -65,15 +69,16 @@ function CustomSelect({
         <button aria-hidden tabIndex={-1} className="fixed inset-0 z-10 cursor-default" onClick={() => setOpen(false)} />
       )}
       <button
-        onClick={() => setOpen((o) => !o)}
+        onClick={() => !disabled && setOpen((o) => !o)}
         aria-expanded={open}
         aria-label={ariaLabel}
-        className={`relative z-20 flex h-10 w-full items-center justify-between gap-2 rounded-[5px] border bg-navy-850 px-3.5 text-left text-sm transition-colors ${
+        disabled={disabled}
+        className={`relative z-20 flex h-10 w-full items-center justify-between gap-2 rounded-[5px] border bg-navy-850 px-3.5 text-left text-sm transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${
           open
             ? 'rounded-b-none border-navy-600'
             : invalid
               ? 'border-red-500/60'
-              : 'border-navy-700/70 hover:border-navy-600'
+              : 'border-navy-700/70 hover:border-navy-600 disabled:hover:border-navy-700/70'
         } ${value ? 'text-slate-300' : 'text-slate-500'}`}
       >
         <span className="min-w-0 flex-1 truncate">{value || placeholder}</span>
@@ -153,167 +158,17 @@ export default function PurchaseBox({ service, gameShort }: { service: Service; 
   // (gear/logs) can overlay the blocks below instead of being clipped.
   const [optionsExpanded, setOptionsExpanded] = useState(false);
   useEffect(() => {
-    if (!optionsOpen) {
-      setOptionsExpanded(false);
-      return;
-    }
+    if (!optionsOpen) return;
     const t = setTimeout(() => setOptionsExpanded(true), 500);
     return () => clearTimeout(t);
   }, [optionsOpen]);
   // Set when "Add to cart" is clicked without a data center; cleared on select
   const [dcError, setDcError] = useState(false);
 
-  // Box stickiness (desktop): 'fit' pins the whole box by its top like the
-  // categories panel; 'overflow' pins it by its bottom edge 80px above the
-  // screen bottom once fully extended. Set by the measuring effect below.
-  const stickRef = useRef<'fit' | 'overflow' | null>(null);
-
-  // Floating price block: while its natural spot sits fully inside the
-  // viewport (below the navbar, above the screen edge) it stays in flow.
-  // Otherwise it detaches: pinned to the top like the category sidebar when
-  // scrolled past (dropping to the screen bottom only if it would overflow),
-  // pinned to the screen bottom when its spot is still below the fold, and
-  // always clamped so it stops before the "request a custom order" segment.
-  // When the whole box is sticky, only the below-fold float stays active —
-  // the sticky box handles everything else, including the CTA hand-off.
-  const wrapRef = useRef<HTMLDivElement>(null);
-  const blockH = useRef(0);
-  // Render-side copy of blockH (refs must not be read during render)
-  const [blockHpx, setBlockHpx] = useState(0);
-  const [fixedStyle, setFixedStyle] = useState<CSSProperties | null>(null);
-
-  const update = useCallback(() => {
-    const w = wrapRef.current;
-    if (!w) return;
-    const r = w.getBoundingClientRect();
-    const child = w.firstElementChild as HTMLElement | null;
-    const h = (child ? child.getBoundingClientRect().height : r.height) || blockH.current;
-    if (h > 0) {
-      blockH.current = h;
-      setBlockHpx(h); // React bails out when unchanged — no re-render churn
-    }
-    const vh = window.innerHeight;
-    if (stickRef.current && window.innerWidth >= 1024) {
-      // Sticky box: keep the price block reachable before the box pins, then
-      // let it ride with the box (never detach near the CTA).
-      if (r.bottom > vh + 1) {
-        setFixedStyle({ position: 'fixed', top: vh - h, left: r.left, width: r.width, zIndex: 20 });
-      } else {
-        setFixedStyle(null);
-      }
-      return;
-    }
-    if (r.top >= 96 && r.bottom <= vh + 1) {
-      setFixedStyle(null);
-      return;
-    }
-    let top: number;
-    if (r.top < 96) top = Math.min(96, vh - h); // scrolled past: pin like categories, sink only if overflowing
-    else top = vh - h; // below the fold: touch the bottom of the screen
-    const aside = w.closest('aside');
-    if (aside) {
-      const cb = aside.getBoundingClientRect().bottom;
-      if (top + h > cb) top = cb - h; // stop before the custom-order CTA
-    }
-    setFixedStyle({ position: 'fixed', top, left: r.left, width: r.width, zIndex: 20 });
-  }, []);
-
-  useEffect(() => {
-    // Measuring the DOM and syncing it to state on mount is exactly what
-    // effects are for — the block must be positioned before first paint.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    update();
-    const scroller = document.getElementById('page-scroll');
-    scroller?.addEventListener('scroll', update, { passive: true });
-    window.addEventListener('resize', update);
-    return () => {
-      scroller?.removeEventListener('scroll', update);
-      window.removeEventListener('resize', update);
-    };
-  }, [update]);
-
-  // Track the Additional Options expand/collapse animation frame by frame so
-  // the floating block never gets pushed off-screen, even for a split second.
-  // The ResizeObserver runs before paint, so the block is re-pinned before
-  // any transitional frame can be shown; the rAF loop is a backstop.
-  useEffect(() => {
-    const col = wrapRef.current?.parentElement;
-    if (!col || typeof ResizeObserver === 'undefined') return;
-    const ro = new ResizeObserver(() => update());
-    ro.observe(col);
-    return () => ro.disconnect();
-  }, [update]);
-
-  useEffect(() => {
-    let raf = 0;
-    const start = performance.now();
-    const tick = (now: number) => {
-      update();
-      if (now - start < 550) raf = requestAnimationFrame(tick);
-    };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-    // Also re-runs on every method switch: AFK hides fields, which changes
-    // the box height and the sticky measure — without this the price block
-    // can keep a stale pin/unpin from the transient layout (the "stuck gap")
-  }, [optionsOpen, method, update]);
-
-  // Whole-box stickiness, re-measured on every content/viewport resize:
-  // - fits the screen -> 'fit': top pinned at 96px like the categories panel
-  // - overflowing   -> 'overflow': sticky with top = vh - gap - contentH, so
-  //   the box scrolls normally until the moment it is fully extended, then
-  //   pins with its bottom edge `gap` px above the bottom of the screen —
-  //   where `gap` mirrors the vertical rhythm between the sidebar's "Need
-  //   something else?" block and the "Can't find your boost?" CTA below.
-  const rootRef = useRef<HTMLDivElement>(null);
-  const [stick, setStick] = useState<'fit' | 'overflow' | null>(null);
-  const [overflowTop, setOverflowTop] = useState(0);
-  useEffect(() => {
-    const el = rootRef.current;
-    if (!el || typeof ResizeObserver === 'undefined') return;
-    const measure = () => {
-      // Measure the content (card + price block), not the root box — when not
-      // sticky the root is flex-stretched to the full row height.
-      const kids = el.children;
-      if (kids.length === 0) return;
-      const contentH =
-        kids[kids.length - 1].getBoundingClientRect().bottom - kids[0].getBoundingClientRect().top;
-      const vh = window.innerHeight;
-      if (contentH <= vh - 96 - 16) {
-        stickRef.current = 'fit';
-        setStick('fit');
-      } else {
-        stickRef.current = 'overflow';
-        setStick('overflow');
-        // Bottom clearance = the gap between the bottom of the sidebar's
-        // "Need something else?" block and the top of the "Can't find your
-        // boost?" CTA. The sidebar releases exactly at the aside's bottom
-        // edge, and both the aside and the CTA are in normal flow — so the
-        // rect difference is a scroll-invariant layout constant (~65px).
-        let gap = 80;
-        const aside = document.getElementById('category-sidebar');
-        const cta = document.getElementById('custom-order-section');
-        if (aside && cta) {
-          const g = cta.getBoundingClientRect().top - aside.getBoundingClientRect().bottom;
-          if (g > 0) gap = Math.round(g);
-        }
-        // CSS sticky top is measured from the scroller's top edge, which sits
-        // 64px below the viewport top (navbar height) — hence the extra -64.
-        setOverflowTop(Math.round(vh - gap - contentH - 64));
-      }
-    };
-    measure();
-    const ro = new ResizeObserver(measure);
-    ro.observe(el);
-    // Accordions in the main column move the CTA and thus change the gap.
-    const main = el.closest('main') ?? document.querySelector('main');
-    if (main) ro.observe(main);
-    window.addEventListener('resize', measure);
-    return () => {
-      ro.disconnect();
-      window.removeEventListener('resize', measure);
-    };
-  }, []);
+  // Sticky box + floating price block (shared with GilPurchaseBox)
+  const { rootRef, wrapRef, stick, overflowTop, fixedStyle, blockHpx } = usePurchaseFloat(
+    `${method}|${optionsOpen}`,
+  );
 
   const activeMethod = methods.find((m) => m.id === method) ?? methods[0];
   // AFK Carry has no FFXIV Logs option and no Private Stream add-on — both
@@ -345,9 +200,18 @@ export default function PurchaseBox({ service, gameShort }: { service: Service; 
     setAddons((prev) => (prev.includes(id) ? prev.filter((a) => a !== id) : [...prev, id]));
 
   // The 'unlock' add-on is a duty unlock — shown with the service-specific
-  // duty name where one applies (DSR requires P4S completion)
-  const addonLabel = (a: (typeof ADDONS)[number]) =>
-    a.id === 'unlock' && service.id === 'ffxiv-dsr' ? 'P4S completion' : a.label;
+  // duty name where one applies
+  const UNLOCK_LABELS: Record<string, string> = {
+    'ffxiv-dsr': 'P4S completion',
+    'ffxiv-uwu': 'O8S completion',
+    'ffxiv-ucob': 'O4S completion',
+    'ffxiv-tea': 'E4S completion',
+    'ffxiv-top': 'P8S completion',
+    'ffxiv-fru': 'M4S completion',
+    'ffxiv-udm': 'M12S completion',
+  };
+  const addonLabel = (a: (typeof ADDON_LIST)[number]) =>
+    a.id === 'unlock' && UNLOCK_LABELS[service.id] ? UNLOCK_LABELS[service.id] : a.label;
 
   // Scroll target when "Add to cart" is clicked without a data center (mobile:
   // the select sits far above the floating button)
@@ -377,11 +241,11 @@ export default function PurchaseBox({ service, gameShort }: { service: Service; 
       {
         ...service,
         id: `${service.id}::${cfgKey}`,
-        name: `${service.name} · ${activeMethod.label}`,
         price: activeMethod.price, // per run
         flat: GEAR_OPTIONS[gearIdx].price + LOG_OPTIONS[effLogIdx].price + flatAddons,
         multiplier: priority ? cfg.priorityMultiplier : undefined,
         logsPercent: logsPercent > 0 ? logsPercent : undefined,
+        method: activeMethod.label,
       },
       gameShort,
       details,
@@ -495,7 +359,10 @@ export default function PurchaseBox({ service, gameShort }: { service: Service; 
           {/* Additional options */}
           <div className={`aob rounded-[5px] border border-navy-700/70 bg-navy-850 ${optionsOpen ? 'expanded' : ''}`}>
             <button
-              onClick={() => setOptionsOpen((o) => !o)}
+              onClick={() => {
+                setOptionsOpen((o) => !o);
+                setOptionsExpanded(false);
+              }}
               aria-expanded={optionsOpen}
               className="aob-toggle flex h-[38px] w-full items-center justify-between pl-4 pr-3.5 text-left"
             >
@@ -603,7 +470,7 @@ export default function PurchaseBox({ service, gameShort }: { service: Service; 
             Add to cart
           </button>
           <div className="mt-3 flex items-center justify-center gap-3 opacity-80">
-            {['paypal', 'visa', 'mastercard', 'applepay', 'googlepay'].map((p) => (
+            {['paypal', 'crypto', 'revolut'].map((p) => (
               <img key={p} src={`/payment/${p}.svg`} alt={p} className="h-3.5 w-auto" loading="lazy" />
             ))}
           </div>

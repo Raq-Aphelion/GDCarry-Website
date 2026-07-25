@@ -1,5 +1,5 @@
 import { Link } from 'react-router';
-import { BookOpen, Briefcase, Cookie, LifeBuoy, Lock, MessageCircle, Scale, ShieldCheck, Undo2 } from 'lucide-react';
+import { BookOpen, Briefcase, Check, Cookie, LifeBuoy, Lock, MessageCircle, Scale, ShieldCheck, Undo2 } from 'lucide-react';
 import { games } from '@/data/games';
 import { useToast } from '@/context/ToastContext';
 import { openLiveChat } from '@/lib/livechat';
@@ -26,10 +26,8 @@ export default function Footer() {
           <div className="mt-7 flex items-center justify-center gap-5 md:justify-start">
             {[
               { id: 'paypal', label: 'PayPal' },
-              { id: 'visa', label: 'Visa' },
-              { id: 'mastercard', label: 'Mastercard' },
-              { id: 'applepay', label: 'Apple Pay' },
-              { id: 'googlepay', label: 'Google Pay' },
+              { id: 'crypto', label: 'Crypto' },
+              { id: 'revolut', label: 'Revolut' },
             ].map((p) => (
               <img
                 key={p.id}
@@ -101,9 +99,9 @@ export default function Footer() {
           </h3>
           <ul className="mt-4 space-y-2.5">
             {[
-              { icon: Scale, label: 'Terms and conditions', to: '/legal/terms' },
-              { icon: Lock, label: 'Privacy policy', to: '/legal/privacy' },
-              { icon: Cookie, label: 'Cookie policy', to: '/legal/cookies' },
+              { icon: Scale, label: 'Terms & Conditions', to: '/legal/terms' },
+              { icon: Lock, label: 'Privacy Policy', to: '/legal/privacy' },
+              { icon: Cookie, label: 'Cookie Policy', to: '/legal/cookies' },
               { icon: Undo2, label: 'Refund Policy', to: '/legal/refund' },
             ].map((s) => (
               <li key={s.label}>
@@ -122,10 +120,12 @@ export default function Footer() {
         <div className="hidden xl:block">
           <h3 className="font-display text-sm font-bold uppercase tracking-wider text-cyan-500 max-md:text-xs">Why Grand Dice</h3>
           <ul className="mt-4 space-y-2.5 text-sm text-slate-500 max-md:text-xs">
-            <li>Account safety first</li>
-            <li>Fast fullfilment</li>
-            <li>On-time, guaranteed</li>
-            <li>Verified pro roster</li>
+            {['Account safety first', 'Fast fullfilment', 'On-time, guaranteed', 'Verified pro roster'].map((perk) => (
+              <li key={perk} className="flex items-center gap-2">
+                <Check className="h-3.5 w-3.5 shrink-0 text-cyan-500" strokeWidth={3} />
+                {perk}
+              </li>
+            ))}
           </ul>
         </div>
         </div>

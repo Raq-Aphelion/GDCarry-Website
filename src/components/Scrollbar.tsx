@@ -75,7 +75,9 @@ export function OverlayScrollbar({
 
   // Drag the thumb: map pointer travel to scroll range. Smooth scrolling is
   // suspended for the duration so the content follows the pointer 1:1.
+  // scroller/thumb are external DOM elements, not React state.
   const onThumbPointerDown = useCallback(
+    // eslint-disable-next-line react-hooks/immutability
     (e: React.PointerEvent<HTMLDivElement>) => {
       e.preventDefault();
       e.stopPropagation();

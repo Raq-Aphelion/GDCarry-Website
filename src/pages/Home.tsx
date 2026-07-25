@@ -14,7 +14,7 @@ const HERO_VIDEO_MP4 = '/videos/hero-video-fallback.mp4';
 const HERO_POSTER = '/videos/hero-image.webp';
 
 const FEATURED_IDS = [
-  'ffxiv-dsr',
+  'ffxiv-uwu',
   'ffxiv-savage-tier',
   'ffxiv-potd-solo',
   'ffxiv-cc-rank',

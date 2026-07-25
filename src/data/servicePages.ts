@@ -1,4 +1,4 @@
-import { BadgeCheck, Gem, Medal, Trophy, type LucideIcon } from 'lucide-react';
+import { BadgeCheck, Coins, Gem, Medal, ShieldCheck, Timer, Trophy, Undo2, type LucideIcon } from 'lucide-react';
 
 export interface ServicePageReward {
   icon: LucideIcon;
@@ -15,6 +15,8 @@ export interface ServicePageAccordionSection {
 export interface ServicePageContent {
   /** Short label used as the last breadcrumb segment, e.g. 'DSR' */
   short: string;
+  /** Section heading above the rewards — defaults to "Duty's Rewards" */
+  rewardsHeading?: string;
   rewards: ServicePageReward[];
   accordion: ServicePageAccordionSection[];
 }
@@ -24,7 +26,7 @@ const HOW_IT_WORKS: ServicePageAccordionSection = {
   items: [
     'Contact The Live Chat',
     'Pay the required amount with your selected payment method',
-    "It's scheduled based on raider availability and times you'll be logged in",
+    "It's scheduled based on our availability and times you'll be logged in",
     "You'll be notified of completion via discord or email",
   ],
 };
@@ -117,14 +119,14 @@ export const SERVICE_PAGES: Record<string, ServicePageContent> = {
     rewards: rewards(
       'Dreadwyrm Totem',
       'The Unending Coil of Bahamut Adventure Plate',
-      'The Dreadwyrm Legend',
+      'The Legend',
       {
-        title: 'Ultimate Achievement',
+        title: 'Achievement: “Resistance is Futile”',
         text: 'Achievement unlocked upon defeating Bahamut Prime in The Unending Coil of Bahamut.',
       },
     ),
     accordion: [
-      requirements('Required unlock duty completed (available as an add-on)', 'ilvl 730 or higher gear'),
+      requirements('Deltascape V4.0 (Savage) Completed (available as an add-on)', 'ilvl 740 or higher gear'),
       HOW_IT_WORKS,
       PILOTED_VS_AFK,
     ],
@@ -134,14 +136,14 @@ export const SERVICE_PAGES: Record<string, ServicePageContent> = {
     rewards: rewards(
       'Ultima Totem',
       "The Weapon's Refrain Adventure Plate",
-      'The Perfect Legend',
+      'The Ultimate Legend',
       {
         title: 'Ultimate Achievement',
         text: "Achievement unlocked upon defeating The Ultima Weapon in The Weapon's Refrain.",
       },
     ),
     accordion: [
-      requirements('Required unlock duty completed (available as an add-on)', 'ilvl 730 or higher gear'),
+      requirements('Sigmascape V4.0 (Savage) Completed (available as an add-on)', 'ilvl 740 or higher gear'),
       HOW_IT_WORKS,
       PILOTED_VS_AFK,
     ],
@@ -149,16 +151,16 @@ export const SERVICE_PAGES: Record<string, ServicePageContent> = {
   'ffxiv-tea': {
     short: 'TEA',
     rewards: rewards(
-      'Alexander Totem',
+      'Colossus Totem',
       'The Epic of Alexander Adventure Plate',
-      'The Alpha Legend',
+      'The Perfect Legend',
       {
-        title: 'Ultimate Achievement',
+        title: 'Achievement: “When I Ruled the World”',
         text: 'Achievement unlocked upon defeating Perfect Alexander in The Epic of Alexander.',
       },
     ),
     accordion: [
-      requirements('Required unlock duty completed (available as an add-on)', 'ilvl 730 or higher gear'),
+      requirements("Eden's Gate: Sepulture (Savage) Completed (available as an add-on)", 'ilvl 740 or higher gear'),
       HOW_IT_WORKS,
       PILOTED_VS_AFK,
     ],
@@ -168,14 +170,14 @@ export const SERVICE_PAGES: Record<string, ServicePageContent> = {
     rewards: rewards(
       'Omega Totem',
       'The Omega Protocol Adventure Plate',
-      'The Omega Legend',
+      'The Alpha Legend',
       {
         title: 'Ultimate Achievement',
         text: 'Achievement unlocked upon defeating Alpha Omega in The Omega Protocol.',
       },
     ),
     accordion: [
-      requirements('Required unlock duty completed (available as an add-on)', 'ilvl 740 or higher gear'),
+      requirements('Abyssos: The Eighth Circle (Savage) Completed (available as an add-on)', 'ilvl 740 or higher gear'),
       HOW_IT_WORKS,
       PILOTED_ONLY,
     ],
@@ -183,16 +185,16 @@ export const SERVICE_PAGES: Record<string, ServicePageContent> = {
   'ffxiv-fru': {
     short: 'FRU',
     rewards: rewards(
-      'Edenmorn Totem',
+      'Oracle Totem',
       'The Futures Rewritten Adventure Plate',
-      'The Eternal Legend',
+      'Genesis of Legends',
       {
-        title: 'Ultimate Achievement',
+        title: 'Achievement: “Alternative Destiny”',
         text: 'Achievement unlocked upon completing The Futures Rewritten.',
       },
     ),
     accordion: [
-      requirements('Required unlock duty completed (available as an add-on)', 'ilvl 740 or higher gear'),
+      requirements('AAC Light-heavyweight M4 (Savage) Completed (available as an add-on)', 'ilvl 740 or higher gear'),
       HOW_IT_WORKS,
       PILOTED_ONLY,
     ],
@@ -200,16 +202,16 @@ export const SERVICE_PAGES: Record<string, ServicePageContent> = {
   'ffxiv-udm': {
     short: 'UDM',
     rewards: rewards(
-      'Dancing Mad Totem',
-      'Dancing Mad Adventure Plate',
-      'Exclusive Ultimate Title',
+      "Mad Harlequin's Totem",
+      'The Dancing Mad Adventure Plate (in a later patch)',
+      'Cruel Legend Title',
       {
-        title: 'Ultimate Achievement',
-        text: 'Achievement unlocked upon completing Dancing Mad.',
+        title: 'Achievement: “Son of a…”',
+        text: 'Achievement unlocked upon defeating Ultimate Kefka.',
       },
     ),
     accordion: [
-      requirements('Required unlock duty completed (available as an add-on)', 'ilvl 760 or higher gear'),
+      requirements('AAC Heavyweight M4 (Savage) Completed (available as an add-on)', 'ilvl 795 or higher gear'),
       HOW_IT_WORKS,
       PILOTED_ONLY,
     ],
@@ -219,7 +221,7 @@ export const SERVICE_PAGES: Record<string, ServicePageContent> = {
     rewards: [
       {
         icon: Gem,
-        title: 'All Ultimate Weapons',
+        title: '6 Piloted Totems OR 4 AFK ones',
         text: 'Every Ultimate weapon from UWU, UCOB, TEA, DSR, TOP and FRU in one bundle.',
       },
       {
@@ -234,16 +236,69 @@ export const SERVICE_PAGES: Record<string, ServicePageContent> = {
       },
       {
         icon: Medal,
-        title: 'Ultimate Achievements',
+        title: 'All Ultimate Achievements',
         text: 'Achievements unlocked upon completing every included Ultimate.',
       },
     ],
     accordion: [
-      requirements('All required unlock duties completed (available as add-ons)', 'ilvl 740 or higher gear'),
+      requirements('All revelant savage fights Completed (M4S, P4S, P8S, E4S, O4S and O8S)', 'ilvl 740 or higher gear'),
       HOW_IT_WORKS,
       PILOTED_VS_AFK,
     ],
   },
+};
+
+/** The FFXIV Gil subpage — same layout as the ultimate pages, but with its
+    own GilPurchaseBox instead of the standard one. */
+SERVICE_PAGES['ffxiv-gil-pack'] = {
+  short: 'Gil',
+  rewardsHeading: 'What you get',
+  rewards: [
+    {
+      icon: Coins,
+      title: 'Any Amount, Any World',
+      text: 'From 5M to 900M gil per order — delivered to any world on any data center.',
+    },
+    {
+      icon: ShieldCheck,
+      title: 'Secure Trade Methods',
+      text: 'Only the safest hand-trade methods are used for every delivery.',
+    },
+    {
+      icon: Timer,
+      title: '15 Minute Average Delivery',
+      text: 'Most orders are delivered within minutes of confirmation.',
+    },
+    {
+      icon: Undo2,
+      title: 'Money-Back Guarantee',
+      text: 'If we can not deliver on time, the difference comes back to you.',
+    },
+  ],
+  accordion: [
+    {
+      title: 'Requirements',
+      items: [
+        'Have an active Final Fantasy XIV account subscription (Free Trial accounts cannot trade)',
+        'Reach level 10 or higher with unlocked access to residential zones',
+        'Be available for the trade at the agreed place and time',
+      ],
+    },
+    HOW_IT_WORKS,
+    {
+      title: 'How is the gil delivered?',
+      groups: [
+        {
+          heading: 'Secure trade',
+          items: [
+            'A manager schedules the trade with you right after the order is confirmed',
+            'The gil is handed over in-game using only the safest trade methods',
+            'You confirm the received amount and the order is marked complete',
+          ],
+        },
+      ],
+    },
+  ],
 };
 
 export function getServicePage(id?: string) {

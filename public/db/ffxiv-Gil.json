@@ -1,0 +1,10 @@
+{
+  "gil": {
+    "pricePerMillion": 0.75
+  },
+  "methodPrices": {
+    "ffxiv-gil-pack": {
+      "piloted": 3.75
+    }
+  }
+}

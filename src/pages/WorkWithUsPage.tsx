@@ -16,7 +16,7 @@ const PERKS = [
   {
     icon: Coins,
     title: 'Paid per order',
-    text: 'Transparent per-order rates, paid out on completion. The harder the content, the higher the cut.',
+    text: 'Transparent per-order rates — payments are made in either gil or cash, depending on the order. The harder the content, the higher the cut.',
   },
   {
     icon: CalendarClock,
@@ -132,28 +132,27 @@ export default function WorkWithUsPage() {
         </div>
       </section>
 
-      {/* ============ PERKS ============ */}
-      <div className="mx-auto max-w-[1440px] px-[25px] pt-12 sm:px-6 lg:px-8">
-        <div className="grid gap-5 sm:grid-cols-3">
-          {PERKS.map((p, i) => (
-            <Reveal key={p.title} delay={i * 80}>
-              <div className="card-surface flex h-full items-start gap-4 rounded-[5px] p-5">
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[5px] bg-navy-800">
-                  <p.icon className="h-5 w-5 text-cyan-400" strokeWidth={1.75} />
-                </span>
-                <div>
-                  <p className="text-sm font-bold text-white">{p.title}</p>
-                  <p className="mt-1 text-sm leading-relaxed text-slate-400 max-sm:text-xs">{p.text}</p>
-                </div>
-              </div>
-            </Reveal>
-          ))}
-        </div>
-      </div>
-
-      {/* ============ APPLICATION FORM ============ */}
+      {/* ============ PERKS + APPLICATION FORM ============ */}
       <div className="mx-auto max-w-[1440px] px-[25px] py-12 sm:px-6 lg:px-8">
-        <div className="max-w-3xl">
+        <div className="flex flex-col gap-12 lg:flex-row lg:items-start lg:gap-10">
+          {/* Perks: 3-col row on mobile/tablet, single right-hand column on desktop */}
+          <div className="grid gap-5 sm:grid-cols-3 lg:order-2 lg:flex-1 lg:grid-cols-1">
+            {PERKS.map((p, i) => (
+              <Reveal key={p.title} delay={i * 80}>
+                <div className="card-surface flex h-full items-start gap-4 rounded-[5px] p-5">
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[5px] bg-navy-800">
+                    <p.icon className="h-5 w-5 text-cyan-400" strokeWidth={1.75} />
+                  </span>
+                  <div>
+                    <p className="text-sm font-bold text-white">{p.title}</p>
+                    <p className="mt-1 text-sm leading-relaxed text-slate-400 max-sm:text-xs">{p.text}</p>
+                  </div>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+
+          <div className="min-w-0 lg:order-1 lg:w-3/5 lg:shrink-0">
           <Reveal>
             <section className="purchase-box-glow rounded-[5px] bg-navy-800 p-5 sm:p-8">
               {stage === 'done' ? (
@@ -306,6 +305,7 @@ export default function WorkWithUsPage() {
               )}
             </section>
           </Reveal>
+          </div>
         </div>
       </div>
     </div>

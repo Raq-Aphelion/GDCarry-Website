@@ -3,7 +3,8 @@
     "usdPerEur": 1.15
   },
   "categories": [
-    "ffxiv-UltimateRaids"
+    "ffxiv-UltimateRaids",
+    "ffxiv-Gil"
   ],
   "purchaseBox": {
     "runsMin": 1,

@@ -49,6 +49,8 @@ export interface PricingDb {
   /** Service id -> explicit per-method prices (overrides afkDiscount model).
       Omit `afk` for piloted-only services — the AFK button is then hidden. */
   methodPrices?: Record<string, { piloted: number; afk?: number }>;
+  /** Gil currency pricing (from the ffxiv-Gil category file) */
+  gil?: { pricePerMillion: number };
   /** Service id -> addon id -> per-service addon price override */
   addonPrices?: Record<string, Record<string, number>>;
   /** Service id -> per-method addon lists that REPLACE the global 'unlock'
@@ -103,15 +105,17 @@ export async function loadPricing(): Promise<PricingDb> {
     const methodPrices: NonNullable<PricingDb['methodPrices']> = {};
     const addonPrices: NonNullable<PricingDb['addonPrices']> = {};
     const serviceAddons: NonNullable<PricingDb['serviceAddons']> = {};
+    let gil: PricingDb['gil'];
     await Promise.all(
       (db.categories ?? []).map(async (file) => {
         try {
           const r = await fetch(`${base}db/${file}.json`, { cache: 'no-store' });
           if (!r.ok) return;
-          const cat = (await r.json()) as Pick<PricingDb, 'methodPrices' | 'addonPrices' | 'serviceAddons'>;
+          const cat = (await r.json()) as Pick<PricingDb, 'methodPrices' | 'addonPrices' | 'serviceAddons' | 'gil'>;
           Object.assign(methodPrices, cat.methodPrices);
           Object.assign(addonPrices, cat.addonPrices);
           Object.assign(serviceAddons, cat.serviceAddons);
+          if (cat.gil) gil = cat.gil;
         } catch {
           /* broken category file — skip it */
         }
@@ -125,6 +129,7 @@ export async function loadPricing(): Promise<PricingDb> {
       methodPrices,
       addonPrices,
       serviceAddons,
+      gil,
       servicePrices: db.servicePrices ?? {},
     };
   } catch {

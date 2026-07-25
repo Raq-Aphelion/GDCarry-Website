@@ -187,6 +187,32 @@ function GuideArticle({ guideId }: { guideId: string }) {
                 <section key={s.heading} className="mt-8">
                   <h2 className="font-display text-lg font-bold text-white sm:text-xl">{s.heading}</h2>
                   <Blocks blocks={s.blocks} />
+                  {s.table && (
+                    <div className="no-scrollbar mt-4 overflow-x-auto">
+                      <table className="w-full min-w-[720px] text-left text-xs">
+                        <thead>
+                          <tr>
+                            {s.table.columns.map((c) => (
+                              <th key={c} className="whitespace-nowrap border-b border-navy-700/60 pb-2.5 pr-4 font-bold text-cyan-400">
+                                {c}
+                              </th>
+                            ))}
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {s.table.rows.map((row) => (
+                            <tr key={row[0]} className="border-b border-navy-700/40 last:border-0">
+                              {row.map((cell, ci) => (
+                                <td key={ci} className={`py-2.5 pr-4 ${ci === 0 ? 'font-semibold text-white' : 'text-slate-400'}`}>
+                                  {cell}
+                                </td>
+                              ))}
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
                 </section>
               ))}
               {guide.links && guide.links.length > 0 && (

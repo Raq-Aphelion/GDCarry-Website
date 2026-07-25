@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { Link, Navigate, useNavigate } from 'react-router';
-import { CheckCircle2, Circle, Loader2, Mail, MessageCircle, Timer, Bitcoin, Landmark, type LucideIcon } from 'lucide-react';
+import { CheckCircle2, Circle, Loader2, Mail, MessageCircle, Timer, type LucideIcon } from 'lucide-react';
 import Reveal from '@/components/Reveal';
 import PageMeta, { SITE_URL } from '@/components/PageMeta';
 import FadeImage from '@/components/FadeImage';
 import FieldPopup from '@/components/FieldPopup';
 import { OverlayScrollbar } from '@/components/Scrollbar';
 import { useCart, type CartItem } from '@/context/CartContext';
-import { lineTotal } from '@/lib/cart';
+import { cartMeta, displayDetails, lineTotal } from '@/lib/cart';
 import { useCurrency } from '@/context/CurrencyContext';
 import { useToast } from '@/context/ToastContext';
 import { openLiveChatPrefill } from '@/lib/livechat';
@@ -35,8 +35,8 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const PAYMENT_METHODS: { id: string; label: string; logo?: string; icon?: LucideIcon }[] = [
   { id: 'paypal', label: 'PayPal', logo: '/payment/paypal.svg' },
-  { id: 'crypto', label: 'Crypto', icon: Bitcoin },
-  { id: 'revolut', label: 'Revolut', icon: Landmark },
+  { id: 'crypto', label: 'Crypto', logo: '/payment/crypto.svg' },
+  { id: 'revolut', label: 'Revolut', logo: '/payment/revolut.svg' },
 ];
 
 /** Discord brand glyph (lucide-react ships no brand icons). Path: simple-icons, CC0. */
@@ -192,7 +192,7 @@ export default function CheckoutPage() {
         const details = (item.details ?? []).map((d) => `🔹 ${d}`).join('\n');
         return [
           `[b]${n + 1}. ${item.name}[/b]`,
-          `${item.gameShort} · ×${item.qty} — ${format(lineTotal(item))}`,
+          `${cartMeta(item)} — ${format(lineTotal(item))}`,
           details,
           `[img]${new URL(item.image, SITE_URL).href}[/img]`,
         ]
@@ -543,11 +543,11 @@ export default function CheckoutPage() {
                       <div className="min-w-0 flex-1">
                         <p className="truncate text-sm font-semibold text-white">{item.name}</p>
                         <p className="text-xs font-medium uppercase tracking-wide text-cyan-400/80">
-                          {item.gameShort} · ×{item.qty}
+                          {cartMeta(item)}
                         </p>
-                        {item.details && item.details.length > 0 && (
+                        {displayDetails(item).length > 0 && (
                           <ul className="mt-1.5 space-y-0.5">
-                            {item.details.map((d) => (
+                            {displayDetails(item).map((d) => (
                               <li key={d} className="flex items-center gap-1.5 text-xs text-slate-400">
                                 <span className="inline-block h-1 w-1 rotate-45 bg-cyan-500/70" />
                                 {d}
@@ -611,20 +611,33 @@ export default function CheckoutPage() {
                 </p>
               </div>
             ) : (
-              <button
-                type="submit"
-                disabled={locked}
-                className="mt-4 flex w-full items-center justify-center gap-2 rounded-[5px] bg-gradient-to-r from-cyan-500 to-cyan-700 py-3.5 font-display text-sm font-bold text-navy-900 transition-all hover:brightness-110 hover:glow disabled:cursor-wait disabled:opacity-80"
-              >
-                {stage === 'processing' ? (
-                  <>
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                    Processing…
-                  </>
-                ) : (
-                  <>Place Order · {format(orderTotal)}</>
-                )}
-              </button>
+              <>
+                <button
+                  type="submit"
+                  disabled={locked}
+                  className="mt-4 flex w-full items-center justify-center gap-2 rounded-[5px] bg-gradient-to-r from-cyan-500 to-cyan-700 py-3.5 font-display text-sm font-bold text-navy-900 transition-all hover:brightness-110 hover:glow disabled:cursor-wait disabled:opacity-80"
+                >
+                  {stage === 'processing' ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      Processing…
+                    </>
+                  ) : (
+                    <>Place Order</>
+                  )}
+                </button>
+                <p className="mt-3 text-center text-xs leading-relaxed text-slate-500">
+                  By ordering at <span className="font-bold text-slate-300">Grand Dice</span>, you agree to our{' '}
+                  <Link to="/legal/terms" className="text-cyan-400 transition-colors hover:text-cyan-300">
+                    Terms
+                  </Link>{' '}
+                  and{' '}
+                  <Link to="/legal/privacy" className="text-cyan-400 transition-colors hover:text-cyan-300">
+                    Privacy Policy
+                  </Link>
+                  .
+                </p>
+              </>
             )}
             </div>
           </Reveal>

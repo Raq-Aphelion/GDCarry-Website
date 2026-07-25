@@ -6,10 +6,12 @@ import PageMeta from '@/components/PageMeta';
 import FadeImage from '@/components/FadeImage';
 import MobileCategoryBar from '@/components/MobileCategoryBar';
 import PurchaseBox from '@/components/PurchaseBox';
+import GilPurchaseBox from '@/components/GilPurchaseBox';
 import Reveal from '@/components/Reveal';
 import ServiceCard from '@/components/ServiceCard';
 import { getGame } from '@/data/games';
 import { getServicePage } from '@/data/servicePages';
+import { SERVICE_TAG_ICONS as POINT_ICONS } from '@/data/serviceIcons';
 import ffxivBg from '@/assets/images/backgrounds/ffxiv-bg.webp';
 import useDragScroll from '@/hooks/useDragScroll';
 
@@ -67,11 +69,10 @@ export default function ServicePage() {
   const content = getServicePage(serviceId);
   if (!content) return <Navigate to={`/boosting/${game.id}?cat=${sub.id}`} replace />;
 
-  const points = [
-    { icon: Swords, text: service.delivery },
-    { icon: BadgeCheck, text: service.description },
-    { icon: Gamepad2, text: service.note ?? 'Hand-played · Money-back guarantee' },
-  ];
+  const points = (POINT_ICONS[service.id] ?? [Swords, BadgeCheck, Gamepad2]).map((icon, i) => ({
+    icon,
+    text: [service.tag1, service.tag2, service.tag3 ?? 'Hand-played · Money-back guarantee'][i],
+  }));
 
   const others = sub.services.filter((sv) => sv.id !== service.id);
 
@@ -100,11 +101,12 @@ export default function ServicePage() {
       <Reveal delay={100}>
         <h1 className="mt-5 text-left font-display text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
           {service.name}
+          {sub.id === 'ultimate-raids' && service.id !== 'ffxiv-ultimate-bundle' && ' (Ultimate)'}
         </h1>
       </Reveal>
       <Reveal delay={200}>
         <p className="mt-4 max-w-2xl text-left text-xs leading-relaxed text-slate-300 sm:text-sm">
-          {service.longDescription ?? service.description}
+          {service.longDescription ?? service.tag2}
         </p>
       </Reveal>
       <Reveal delay={300}>
@@ -135,7 +137,9 @@ export default function ServicePage() {
       {/* ============ DUTY'S REWARDS ============ */}
       <Reveal>
         <div className="flex items-center gap-3">
-          <h2 className="font-display text-xl font-bold text-white sm:text-2xl">Duty&apos;s Rewards</h2>
+          <h2 className="font-display text-xl font-bold text-white sm:text-2xl">
+            {content.rewardsHeading ?? "Duty's Rewards"}
+          </h2>
           <div className="h-px flex-1 bg-gradient-to-r from-navy-700/70 to-transparent" />
         </div>
       </Reveal>
@@ -196,29 +200,33 @@ export default function ServicePage() {
       </div>
 
       {/* ============ MORE FROM THIS CATEGORY ============ */}
-      <Reveal>
-        <div className="mt-12 flex items-center gap-3">
-          <h2 className="font-display text-xl font-bold text-white sm:text-2xl">
-            More from <br className="sm:hidden" />
-            {sub.name}
-          </h2>
-          <div className="h-px flex-1 bg-gradient-to-r from-navy-700/70 to-transparent" />
-          <Link
-            to={`/boosting/${game.id}?cat=${sub.id}`}
-            className="flex shrink-0 items-center gap-1.5 rounded-[5px] border border-navy-700/70 px-3.5 py-2 text-xs font-bold text-slate-300 transition-colors hover:border-cyan-600/30 hover:text-cyan-400"
-          >
-            Check all
-            <ArrowRight className="h-3.5 w-3.5" />
-          </Link>
-        </div>
-      </Reveal>
-      <div className="mt-5 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
-        {others.slice(0, 3).map((sv, i) => (
-          <Reveal key={sv.id} delay={Math.min(i, 3) * 80} className={i === 1 ? 'hidden sm:block' : i === 2 ? 'hidden xl:block' : ''}>
-            <ServiceCard service={sv} />
+      {others.length > 0 && (
+        <>
+          <Reveal>
+            <div className="mt-12 flex items-center gap-3">
+              <h2 className="font-display text-xl font-bold text-white sm:text-2xl">
+                More from <br className="sm:hidden" />
+                {sub.name}
+              </h2>
+              <div className="h-px flex-1 bg-gradient-to-r from-navy-700/70 to-transparent" />
+              <Link
+                to={`/boosting/${game.id}?cat=${sub.id}`}
+                className="flex shrink-0 items-center gap-1.5 rounded-[5px] border border-navy-700/70 px-3.5 py-2 text-xs font-bold text-slate-300 transition-colors hover:border-cyan-600/30 hover:text-cyan-400"
+              >
+                Check all
+                <ArrowRight className="h-3.5 w-3.5" />
+              </Link>
+            </div>
           </Reveal>
-        ))}
-      </div>
+          <div className="mt-5 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+            {others.slice(0, 3).map((sv, i) => (
+              <Reveal key={sv.id} delay={Math.min(i, 3) * 80} className={i === 1 ? 'hidden sm:block' : i === 2 ? 'hidden xl:block' : ''}>
+                <ServiceCard service={sv} />
+              </Reveal>
+            ))}
+          </div>
+        </>
+      )}
     </div>
   );
 
@@ -226,7 +234,7 @@ export default function ServicePage() {
     <div>
       <PageMeta
         title={`${service.name} Carry — FFXIV Boosting`}
-        description={`${service.description} — secure, hand-played FFXIV boosting service by Grand Dice (GD Carry).`}
+        description={`${service.tag2} — secure, hand-played FFXIV boosting service by Grand Dice (GD Carry).`}
         path={`/boosting/ffxiv/${service.id}`}
       />
       {/* ============ MOBILE CATEGORY CAROUSEL — seamless with the navbar ============ */}
@@ -287,9 +295,13 @@ export default function ServicePage() {
         {/* Middle top: title, text, tags — negative margin trims the flex gap below on mobile */}
         <div className="min-w-0 max-lg:-mb-4 lg:col-start-2 lg:row-start-1">{header}</div>
 
-        {/* Right: purchase block (price block floats via its own sticky) */}
+        {/* Right: purchase block (gil uses its own box; price block floats via its own sticky) */}
         <aside className="min-w-0 lg:col-start-3 lg:row-span-2 lg:row-start-1 lg:flex lg:flex-col">
-          <PurchaseBox service={service} gameShort={game.short} />
+          {service.id === 'ffxiv-gil-pack' ? (
+            <GilPurchaseBox service={service} gameShort={game.short} />
+          ) : (
+            <PurchaseBox service={service} gameShort={game.short} />
+          )}
         </aside>
 
         {/* Middle: rewards + accordion + related */}

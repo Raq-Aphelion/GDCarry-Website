@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router';
 import { Minus, Plus, ShoppingCart, Trash2, X } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
-import { lineTotal } from '@/lib/cart';
+import { cartMeta, displayDetails, lineTotal } from '@/lib/cart';
 import { useCurrency } from '@/context/CurrencyContext';
 import { OverlayScrollbar } from '@/components/Scrollbar';
 import { serviceLink } from '@/data/games';
@@ -137,10 +137,10 @@ export default function CartDrawer() {
                     <div className="flex items-start justify-between gap-2">
                       <div className="min-w-0">
                         <p className="truncate text-sm font-semibold text-white">{item.name}</p>
-                        <p className="text-xs font-medium uppercase tracking-wide text-cyan-400/80">{item.gameShort}</p>
-                        {item.details && item.details.length > 0 && (
+                        <p className="text-xs font-medium uppercase tracking-wide text-cyan-400/80">{cartMeta(item)}</p>
+                        {displayDetails(item).length > 0 && (
                           <ul className="mt-1.5 space-y-0.5">
-                            {item.details.map((d) => (
+                            {displayDetails(item).map((d) => (
                               <li key={d} className="flex items-center gap-1.5 text-xs text-slate-400">
                                 <span className="inline-block h-1 w-1 rotate-45 bg-cyan-500/70" />
                                 {d}
@@ -208,7 +208,7 @@ export default function CartDrawer() {
                 onClick={closeCart}
                 className="mt-4 block w-full rounded-[5px] bg-gradient-to-r from-cyan-500 to-cyan-700 py-3 text-center font-display text-sm font-bold text-navy-900 transition-all hover:brightness-110 hover:glow"
               >
-                Order · {format(subtotal)}
+                Proceed to Order
               </Link>
             </div>
           </>

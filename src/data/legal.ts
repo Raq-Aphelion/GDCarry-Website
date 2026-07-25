@@ -16,7 +16,7 @@ export interface LegalDoc {
 export const legalDocs: LegalDoc[] = [
   {
     id: 'terms',
-    title: 'Terms and Conditions',
+    title: 'Terms & Conditions',
     updated: 'Last Updated 15th November 2025',
     intro: [],
     sections: [

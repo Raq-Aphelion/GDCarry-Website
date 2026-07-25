@@ -1,6 +1,7 @@
 import { Link } from 'react-router';
 import FadeImage from './FadeImage';
 import { serviceLink, type Service } from '@/data/games';
+import { SERVICE_TAG_ICONS } from '@/data/serviceIcons';
 import { useCurrency } from '@/context/CurrencyContext';
 import { usePricing } from '@/context/PricingContext';
 
@@ -13,6 +14,8 @@ export default function ServiceCard({ service }: { service: Service }) {
   const { format } = useCurrency();
   const { priceOf } = usePricing();
   const price = priceOf(service.id, service.price);
+  // Per-service tag icons replace the diamond bullets when defined
+  const [DeliveryIcon, DescIcon, NoteIcon] = SERVICE_TAG_ICONS[service.id] ?? [];
 
   return (
     <Link
@@ -39,16 +42,28 @@ export default function ServiceCard({ service }: { service: Service }) {
 
         <ul className="mt-2.5 space-y-1.5 text-xs">
           <li className="flex items-center gap-2">
-            <span className="h-1.5 w-1.5 shrink-0 rotate-45 bg-cyan-500" />
-            <span className="font-medium text-cyan-400">{service.delivery}</span>
+            {DeliveryIcon ? (
+              <DeliveryIcon className="h-3.5 w-3.5 shrink-0 text-cyan-500" />
+            ) : (
+              <span className="h-1.5 w-1.5 shrink-0 rotate-45 bg-cyan-500" />
+            )}
+            <span className="truncate font-medium text-cyan-400">{service.tag1}</span>
           </li>
           <li className="flex items-center gap-2">
-            <span className="h-1.5 w-1.5 shrink-0 rotate-45 bg-slate-500" />
-            <span className="line-clamp-1 text-slate-300">{service.description}</span>
+            {DescIcon ? (
+              <DescIcon className="h-3.5 w-3.5 shrink-0 text-cyan-500" />
+            ) : (
+              <span className="h-1.5 w-1.5 shrink-0 rotate-45 bg-slate-500" />
+            )}
+            <span className="truncate text-slate-300">{service.tag2}</span>
           </li>
           <li className="flex items-center gap-2">
-            <span className="h-1.5 w-1.5 shrink-0 rotate-45 bg-slate-500" />
-            <span className="text-slate-300">{service.note ?? 'Hand-played · Money-back guarantee'}</span>
+            {NoteIcon ? (
+              <NoteIcon className="h-3.5 w-3.5 shrink-0 text-cyan-500" />
+            ) : (
+              <span className="h-1.5 w-1.5 shrink-0 rotate-45 bg-slate-500" />
+            )}
+            <span className="truncate text-slate-300">{service.tag3 ?? 'Hand-played · Money-back guarantee'}</span>
           </li>
         </ul>
 

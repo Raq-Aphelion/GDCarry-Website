@@ -786,8 +786,8 @@ const customPageCss = `#lhc_container_v2 #lhc_status_widget_v2 {
 
 const chatBadgeIcon = `<div style="width:34px;height:34px;border-radius:999px;background:linear-gradient(135deg,#1b1b20 0%,#151519 100%);border:1px solid rgba(59,130,246,.35);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><img src="${svgChat('93c5fd')}" alt="" style="width:18px;height:18px;"></div>`;
 
-const introCardOperator = `<div style="margin:16px 0 0;padding:16px;border:1px solid #26262e;border-radius:8px;background:linear-gradient(180deg,rgba(38,38,46,.35),#151519 55%);box-shadow:0 0 0 1px rgba(59,130,246,.12);text-align:center;">
-  <div style="display:flex;align-items:center;justify-content:center;gap:14px;">
+const introCardOperator = `<div style="margin:16px 0 0;padding:16px;border:1px solid #26262e;border-radius:8px;background:linear-gradient(180deg,rgba(38,38,46,.35),#151519 55%);box-shadow:0 0 0 1px rgba(59,130,246,.12);text-align:left;">
+  <div style="display:flex;align-items:center;justify-content:flex-start;gap:14px;">
     ${chatBadgeIcon}
     <div style="line-height:1.2;text-align:left;">
       <div style="font-family:Sora,Inter,sans-serif;font-weight:700;font-size:15px;color:#f1f5f9;">Chat with Grand Dice</div>
@@ -797,8 +797,8 @@ const introCardOperator = `<div style="margin:16px 0 0;padding:16px;border:1px s
   <p style="margin:10px 0 0;font-size:12px;line-height:1.5;color:#94a3b8;">Tell us your game and what you need.</p>
 </div>`;
 
-const introCardBot = `<div style="margin:16px 0 0;padding:16px;border:1px solid #26262e;border-radius:8px;background:linear-gradient(180deg,rgba(38,38,46,.35),#151519 55%);box-shadow:0 0 0 1px rgba(59,130,246,.12);text-align:center;">
-  <div style="display:flex;align-items:center;justify-content:center;gap:14px;">
+const introCardBot = `<div style="margin:16px 0 0;padding:16px;border:1px solid #26262e;border-radius:8px;background:linear-gradient(180deg,rgba(38,38,46,.35),#151519 55%);box-shadow:0 0 0 1px rgba(59,130,246,.12);text-align:left;">
+  <div style="display:flex;align-items:center;justify-content:flex-start;gap:14px;">
     ${chatBadgeIcon}
     <div style="line-height:1.2;text-align:left;">
       <div style="font-family:Sora,Inter,sans-serif;font-weight:700;font-size:15px;color:#f1f5f9;">Grand Dice Assistant</div>

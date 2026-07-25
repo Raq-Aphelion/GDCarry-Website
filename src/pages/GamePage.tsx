@@ -44,6 +44,7 @@ export default function GamePage() {
 
   // Follow ?cat= changes (e.g. navbar search) and reset when switching games
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- syncs state from the URL (external system)
     setActive(validCat(catParam) ?? game?.subcategories[0]?.id ?? '');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gameId, catParam]);
@@ -203,18 +204,20 @@ export default function GamePage() {
                 <Reveal delay={Math.min(i, 3) * 80} className="w-full max-w-[280px]">
                   <ServiceCard service={service} />
                 </Reveal>
-                {/* 'All services' only: one inline custom-order CTA per viewport —
-                    mobile after 2 rows (2nd card, compact text, card width), sm and up
-                    pinned to row 3 (below) so exactly 2 rows of cards sit above it at
-                    any column count */}
-                {activeSub.id === 'all' && i === 1 && (
+                {/* Inline custom-order CTA on mobile: only in categories with
+                    more than 7 card rows (7+ services at 1 col), pinned after
+                    the 2nd card so 2 rows sit above it */}
+                {activeSub.services.length > 7 && i === 1 && (
                   <div className="mx-auto w-full max-w-[280px] sm:hidden">
                     <CustomOrderCta compact />
                   </div>
                 )}
               </Fragment>
             ))}
-            {activeSub.id === 'all' && (
+            {/* Desktop grid-breaker: only in categories with more than 3 card
+                rows (12+ services at 4 cols), pinned to row 3 so exactly 2
+                rows of cards sit above it */}
+            {activeSub.services.length > 12 && (
               <div className="hidden w-full sm:col-span-2 sm:row-start-3 sm:block md:col-span-3 xl:col-span-4">
                 <CustomOrderCta lateTextBreak />
               </div>

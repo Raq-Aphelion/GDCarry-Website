@@ -10,6 +10,8 @@ export interface CartItem {
   image: string;
   gameShort: string;
   qty: number;
+  /** Boost method for configured services (e.g. 'Piloted', 'AFK Carry') */
+  method?: string;
   /** Chosen configuration lines (data center, gear, logs, add-ons) */
   details?: string[];
   /** Configured services only: qty is the run count and price is per run.
@@ -29,7 +31,7 @@ interface CartContextValue {
   openCart: () => void;
   closeCart: () => void;
   addItem: (
-    service: Service & { flat?: number; multiplier?: number; logsPercent?: number },
+    service: Service & { flat?: number; multiplier?: number; logsPercent?: number; method?: string },
     gameShort: string,
     details?: string[],
     qty?: number,
@@ -64,13 +66,29 @@ export function CartProvider({ children }: { children: ReactNode }) {
   }, [items]);
 
   const addItem = useCallback(
-    (service: Service & { flat?: number; multiplier?: number; logsPercent?: number }, gameShort: string, details?: string[], qty = 1) => {
+    (
+      service: Service & { flat?: number; multiplier?: number; logsPercent?: number; method?: string },
+      gameShort: string,
+      details?: string[],
+      qty = 1,
+    ) => {
       setItems((prev) => {
         const existing = prev.find((i) => i.id === service.id);
         // Same service + same options (runs excluded from the id): merge the
         // run counts into the existing line
         if (existing) {
-          return prev.map((i) => (i.id === service.id ? { ...i, qty: i.qty + qty } : i));
+          // Gil: deny extra adds once the line is at the 900 cap; runs hard-capped at 999
+          if (service.id.startsWith('ffxiv-gil-pack') && existing.qty >= 900) return prev;
+          return prev.map((i) =>
+            i.id === service.id
+              ? {
+                  ...i,
+                  qty: service.id.startsWith('ffxiv-gil-pack')
+                    ? Math.min(900, i.qty + qty)
+                    : Math.min(999, i.qty + qty),
+                }
+              : i,
+          );
         }
         return [
           ...prev,
@@ -85,6 +103,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
             flat: service.flat,
             multiplier: service.multiplier,
             logsPercent: service.logsPercent,
+            method: service.method,
           },
         ];
       });
@@ -107,7 +126,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
         removeItem(id);
         return;
       }
-      setItems((prev) => prev.map((i) => (i.id === id ? { ...i, qty } : i)));
+      // Gil quantities are millions of gil — clamp to the sellable range;
+      // everything else (runs) hard-caps at 999
+      const clamped = id.startsWith('ffxiv-gil-pack') ? Math.min(900, Math.max(5, qty)) : Math.min(999, qty);
+      setItems((prev) => prev.map((i) => (i.id === id ? { ...i, qty: clamped } : i)));
     },
     [removeItem],
   );

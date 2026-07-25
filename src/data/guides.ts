@@ -3,6 +3,8 @@ export type GuideBlock = { type: 'p'; text: string } | { type: 'ul'; items: stri
 export interface GuideSection {
   heading: string;
   blocks: GuideBlock[];
+  /** Optional data table rendered after the section's blocks */
+  table?: { columns: string[]; rows: string[][] };
 }
 
 export interface Guide {
@@ -418,6 +420,77 @@ export const guides: Guide[] = [
     links: [
       { label: 'All FFXIV boosting services', to: '/boosting/ffxiv' },
       { label: 'FFXIV boosting explained', to: '/guides/ffxiv-boosting-carry-explained' },
+    ],
+  },
+  {
+    id: 'ffxiv-ultimate-rewards',
+    title: 'FFXIV Ultimate Raid Rewards Guide: Every Totem, Weapon, Title and Plate',
+    navTitle: 'Ultimate rewards',
+    image: '/images/guides/ultimate-rewards.webp',
+    excerpt:
+      'Every Ultimate in Final Fantasy XIV leaves a permanent mark on your account — a glowing weapon, an exclusive title, an Adventure Plate design and a place in your achievement history. Here is the full reward breakdown for all seven encounters, plus how to plan your clears.',
+    updated: 'Last Updated 26th July 2026',
+    sections: [
+      {
+        heading: 'Rewards that stay forever',
+        blocks: [
+          {
+            type: 'p',
+            text: 'Clearing an Ultimate is a one-time investment with a permanent payout. Nothing it awards is time-limited, replaced by later patches, or lost when your gear resets — the weapon, title, plate and achievement all stay on your account for good.',
+          },
+        ],
+      },
+      {
+        heading: 'Totems and ultimate weapons',
+        blocks: [
+          {
+            type: 'p',
+            text: 'Each clear earns you one raid-specific totem, and these are the keys to the flashiest weapons in the game. Hand them in at Uah’shepya in Solution Nine and you can pick any job-specific ultimate weapon from that raid — each one carrying its raid’s signature glow and model.',
+          },
+        ],
+      },
+      {
+        heading: 'Titles, plates and achievements',
+        blocks: [
+          {
+            type: 'p',
+            text: 'Ultimate titles display permanently in front of your character name and cannot be earned anywhere else — they are the true proof of the kill. Adventure Plate designs are public on your character profile for every player to see, and the achievement is logged in your character history forever, whether or not you ever equip the title.',
+          },
+        ],
+      },
+      {
+        heading: 'Every reward at a glance',
+        blocks: [],
+        table: {
+          columns: ['Ultimate', 'Totem', 'Weapon Exchange', 'Title', 'Adventure Plate', 'Achievement'],
+          rows: [
+            ['UCoB', 'Dreadwyrm Totem', 'Dreadwyrm Weapons', 'The Legend', 'Unending Coil of Bahamut design', 'Resistance Is Futile'],
+            ['UWU', 'Ultima Totem', 'Ultima Weapons', 'The Ultimate Legend', "Weapon's Refrain design", 'Ultimatum'],
+            ['TEA', 'Colossus Totem', 'Alexander Weapons', 'The Perfect Legend', 'Epic of Alexander design', 'When I Ruled the World'],
+            ['DSR', 'Dragonsong Totem', 'Weapons of the Heavens', "The Heavens' Legend", "Dragonsong's Reprise design", 'As Suits a Hero'],
+            ['TOP', 'Omega Totem', 'Omega Weapons', 'The Alpha Legend', 'The Omega Protocol design', 'Heart to Heartless'],
+            ['FRU', 'Oracle Totem', 'Edenmorn Weapons', 'Genesis of Legends', 'Futures Rewritten design', 'Alternative Destiny'],
+            ['DMU', "Mad Harlequin's Totem", 'Palazzo Diamond Weapons', 'Cruel Legend', 'Dancing Mad design', 'Son of a…'],
+          ],
+        },
+      },
+      {
+        heading: 'Planning your clears',
+        blocks: [
+          {
+            type: 'p',
+            text: 'Legacy Ultimates — UCoB through FRU — have no weekly lockout, so totems can be farmed across as many resets as you want. The newest encounter is the exception, so prioritise it first if you care about its weapon before the hype dies down.',
+          },
+          {
+            type: 'p',
+            text: 'A sensible route is to start with the cheapest entries — UWU and UCOB — then step up to TEA, then DSR and TOP, and finish with FRU and UDM. If you want everything at once, the Ultimate Bundle covers all six piloted clears in one discounted order.',
+          },
+        ],
+      },
+    ],
+    links: [
+      { label: 'All Ultimate carries', to: '/boosting/ffxiv?cat=ultimate-raids' },
+      { label: 'The Ultimate Bundle', to: '/boosting/ffxiv/ffxiv-ultimate-bundle' },
     ],
   },
 ];
