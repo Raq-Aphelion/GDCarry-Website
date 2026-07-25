@@ -1,10 +1,17 @@
 /**
  * Pricing database layer.
  *
- * All prices and multipliers live in the editable JSON database at
- * `public/db/pricing.json` (served at `db/pricing.json`). The app loads it at
- * startup; the defaults below are only a fallback if the database cannot be
- * reached. To change any price or multiplier, edit the JSON file — no rebuild
+ * The database is split into files under `public/db/` (served at `db/`):
+ * - `pricing.json` — global: currency, purchase-box options, and a
+ *   `categories` list of per-category files to load.
+ * - `<game>-<Category>.json` (e.g. `ffxiv-UltimateRaids.json`) — per-category
+ *   `methodPrices` (per-service piloted/afk prices; omit `afk` for
+ *   piloted-only) and `addonPrices` (per-service addon price overrides).
+ *
+ * Service cards show the lower method price ("From …"); services without a
+ * methodPrices entry fall back to their bundled price. The app loads all of
+ * this at startup; the defaults below are only a fallback if the database
+ * cannot be reached. To change any price, edit the JSON files — no rebuild
  * is required.
  */
 
@@ -26,6 +33,8 @@ export interface PricingDb {
     /** Conversion multiplier: 1 EUR = usdPerEur USD */
     usdPerEur: number;
   };
+  /** Per-category database files (without .json) to merge in */
+  categories?: string[];
   purchaseBox: {
     /** Flat EUR discount applied to the AFK Carry method */
     afkDiscount: number;
@@ -37,11 +46,16 @@ export interface PricingDb {
     logOptions: PricingOption[];
     addons: PricingAddon[];
   };
-  /** Service id -> explicit per-method prices (overrides afkDiscount model) */
-  methodPrices?: Record<string, { piloted: number; afk: number }>;
+  /** Service id -> explicit per-method prices (overrides afkDiscount model).
+      Omit `afk` for piloted-only services — the AFK button is then hidden. */
+  methodPrices?: Record<string, { piloted: number; afk?: number }>;
   /** Service id -> addon id -> per-service addon price override */
   addonPrices?: Record<string, Record<string, number>>;
-  /** Service id -> base price in EUR (overrides the bundled fallback) */
+  /** Service id -> per-method addon lists that REPLACE the global 'unlock'
+      addon (stream/priority stay). Used by bundles whose unlocks differ per
+      method and differ from the single duty unlock. */
+  serviceAddons?: Record<string, { piloted?: PricingAddon[]; afk?: PricingAddon[] }>;
+  /** Service id -> flat base price override (legacy; prefer methodPrices) */
   servicePrices: Record<string, number>;
 }
 
@@ -66,27 +80,51 @@ export const DEFAULT_PRICING: PricingDb = {
       { label: 'Pink Parse (99% Logs)', price: 0, percent: 600 },
     ],
     addons: [
-      { id: 'totem', label: 'Duty unlock', price: 39.99 },
+      { id: 'unlock', label: 'Duty unlock', price: 39.99 },
       { id: 'stream', label: 'Private Stream', price: 10.0 },
       { id: 'priority', label: 'Priority', price: 0 },
     ],
   },
   methodPrices: {},
   addonPrices: {},
+  serviceAddons: {},
   servicePrices: {},
 };
 
-/** Fetch the pricing database, falling back to the bundled defaults. */
+/** Fetch the pricing database (global + category files), falling back to the
+    bundled defaults. Broken or missing category files are skipped. */
 export async function loadPricing(): Promise<PricingDb> {
   try {
-    const res = await fetch(`${import.meta.env.BASE_URL}db/pricing.json`, { cache: 'no-store' });
+    const base = import.meta.env.BASE_URL;
+    const res = await fetch(`${base}db/pricing.json`, { cache: 'no-store' });
     if (!res.ok) throw new Error(String(res.status));
     const db = (await res.json()) as PricingDb;
+
+    const methodPrices: NonNullable<PricingDb['methodPrices']> = {};
+    const addonPrices: NonNullable<PricingDb['addonPrices']> = {};
+    const serviceAddons: NonNullable<PricingDb['serviceAddons']> = {};
+    await Promise.all(
+      (db.categories ?? []).map(async (file) => {
+        try {
+          const r = await fetch(`${base}db/${file}.json`, { cache: 'no-store' });
+          if (!r.ok) return;
+          const cat = (await r.json()) as Pick<PricingDb, 'methodPrices' | 'addonPrices' | 'serviceAddons'>;
+          Object.assign(methodPrices, cat.methodPrices);
+          Object.assign(addonPrices, cat.addonPrices);
+          Object.assign(serviceAddons, cat.serviceAddons);
+        } catch {
+          /* broken category file — skip it */
+        }
+      }),
+    );
+
     return {
       currency: { ...DEFAULT_PRICING.currency, ...db.currency },
+      categories: db.categories,
       purchaseBox: { ...DEFAULT_PRICING.purchaseBox, ...db.purchaseBox },
-      methodPrices: db.methodPrices ?? {},
-      addonPrices: db.addonPrices ?? {},
+      methodPrices,
+      addonPrices,
+      serviceAddons,
       servicePrices: db.servicePrices ?? {},
     };
   } catch {

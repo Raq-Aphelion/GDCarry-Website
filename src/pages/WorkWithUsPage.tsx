@@ -3,13 +3,12 @@ import { Link } from 'react-router';
 import { CheckCircle2, ChevronRight, Loader2, Mail, MessageCircle, Coins, CalendarClock, Trophy } from 'lucide-react';
 import PageMeta from '@/components/PageMeta';
 import Reveal from '@/components/Reveal';
-import { openLiveChat } from '@/lib/livechat';
 import { useToast } from '@/context/ToastContext';
 
-/** Paste your Discord channel webhook URL here — applications are posted as a
-    Discord embed for the bot to pick up. While empty, the form falls back to
-    opening the live chat instead of submitting. */
-const DISCORD_WEBHOOK_URL = '';
+/** Google Apps Script endpoint that receives booster applications
+    (fields are read by the script by name — keep them in sync). */
+const SCRIPT_URL =
+  'https://script.google.com/macros/s/AKfycbyO-6iZZeasHImMtYFgPSOBX15uiV6kSx2yWEXO1EwPcYzqwEpuaoD3DWXj-1kvlTzO/exec';
 
 const GAMES = ['Final Fantasy XIV', 'World of Warcraft', 'Lost Ark', 'Warframe', 'RuneScape'];
 
@@ -71,44 +70,21 @@ export default function WorkWithUsPage() {
       experience.trim().length >= 10;
     if (!valid) return;
 
-    // Webhook not wired yet — hand the applicant to the live chat instead.
-    if (!DISCORD_WEBHOOK_URL) {
-      toast({
-        title: 'Almost there',
-        description: 'Applications are currently handled by our live chat manager — tell them you want to boost for Grand Dice.',
-        variant: 'cyan',
-      });
-      openLiveChat();
-      return;
-    }
-
     setStage('submitting');
     try {
-      const res = await fetch(DISCORD_WEBHOOK_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          username: 'Grand Dice Applications',
-          embeds: [
-            {
-              title: 'New booster application',
-              color: 0x22d3ee,
-              timestamp: new Date().toISOString(),
-              fields: [
-                { name: 'Discord', value: discord.trim(), inline: true },
-                { name: 'Email', value: email.trim(), inline: true },
-                { name: 'Games', value: games.join(', '), inline: false },
-                { name: 'Specialization', value: specialization.trim() || '—', inline: false },
-                { name: 'Experience & achievements', value: experience.trim().slice(0, 1024), inline: false },
-                { name: 'Proof links', value: proof.trim() || '—', inline: false },
-                { name: 'Availability', value: availability.trim() || '—', inline: true },
-                { name: 'Why them?', value: motivation.trim() || '—', inline: false },
-              ],
-            },
-          ],
-        }),
-      });
-      if (!res.ok) throw new Error(`Webhook responded ${res.status}`);
+      const formData = new FormData();
+      formData.set('Discord Username', discord.trim());
+      formData.set('E-Mail', email.trim());
+      formData.set('Games You Boost', games.join(', '));
+      formData.set('Main Specialization', specialization.trim());
+      formData.set('Experience & Achievements', experience.trim());
+      formData.set('Proof Links', proof.trim());
+      formData.set('Availability', availability.trim());
+      formData.set('Why Should We Pick You?', motivation.trim());
+
+      const res = await fetch(SCRIPT_URL, { method: 'POST', body: formData });
+      const result = await res.json();
+      if (result.result !== 'success') throw new Error(result.message || 'rejected');
       setStage('done');
     } catch {
       setStage('form');

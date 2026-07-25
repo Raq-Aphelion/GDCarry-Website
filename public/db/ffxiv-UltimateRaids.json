@@ -1,0 +1,84 @@
+{
+  "methodPrices": {
+    "ffxiv-dsr": {
+      "piloted": 140,
+      "afk": 315
+    },
+    "ffxiv-top": {
+      "piloted": 140
+    },
+    "ffxiv-ucob": {
+      "piloted": 98,
+      "afk": 105
+    },
+    "ffxiv-uwu": {
+      "piloted": 98,
+      "afk": 105
+    },
+    "ffxiv-tea": {
+      "piloted": 126,
+      "afk": 184
+    },
+    "ffxiv-fru": {
+      "piloted": 175
+    },
+    "ffxiv-udm": {
+      "piloted": 450
+    },
+    "ffxiv-ultimate-bundle": {
+      "piloted": 660,
+      "afk": 705
+    }
+  },
+  "addonPrices": {
+    "ffxiv-dsr": {
+      "unlock": 35
+    },
+    "ffxiv-top": {
+      "unlock": 54
+    },
+    "ffxiv-ucob": {
+      "unlock": 7
+    },
+    "ffxiv-uwu": {
+      "unlock": 7
+    },
+    "ffxiv-tea": {
+      "unlock": 7
+    },
+    "ffxiv-fru": {
+      "unlock": 70
+    },
+    "ffxiv-udm": {
+      "unlock": 105
+    }
+  },
+  "serviceAddons": {
+    "ffxiv-ultimate-bundle": {
+      "piloted": [
+        {
+          "id": "all-ult-unlocks",
+          "label": "All Ult Unlocks",
+          "price": 180
+        },
+        {
+          "id": "normal-mode-unlocks",
+          "label": "Normal Mode Unlocks",
+          "price": 360
+        }
+      ],
+      "afk": [
+        {
+          "id": "all-ult-unlocks",
+          "label": "All Ult Unlocks",
+          "price": 56
+        },
+        {
+          "id": "normal-mode-unlocks",
+          "label": "Normal Mode Unlocks",
+          "price": 240
+        }
+      ]
+    }
+  }
+}

@@ -174,9 +174,10 @@ export function openLiveChatPrefill(data: LiveChatPrefill, attemptsLeft = 10) {
     const tick = () => {
       ticks++;
       const el = document.getElementById('lhc_widget_v2') as HTMLIFrameElement | null;
-      // Keep the whole widget invisible + inert until the chat is running —
-      // re-applied every tick because reloadWidget recreates the element.
+      // Tell the fx watcher to leave this element alone while the order
+      // handoff controls its visibility
       if (el && el.style.opacity !== '1') {
+        el.dataset.gdOrderFlow = '1';
         el.style.transition = 'opacity .45s ease';
         el.style.opacity = '0';
         el.style.pointerEvents = 'none';
@@ -214,6 +215,7 @@ export function openLiveChatPrefill(data: LiveChatPrefill, attemptsLeft = 10) {
         // Fade in — either with the styled order message, or (fallback) with
         // the prefilled form so the user can finish manually
         if (el) {
+          delete el.dataset.gdOrderFlow;
           el.style.opacity = '1';
           el.style.pointerEvents = '';
         }

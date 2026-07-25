@@ -31,7 +31,14 @@ export function PricingProvider({ children }: { children: ReactNode }) {
   // Hold rendering until the database is loaded so no stale price ever shows.
   if (!db) return null;
 
-  const priceOf = (serviceId: string, fallback: number) => db.servicePrices[serviceId] ?? fallback;
+  // Services with per-method DB pricing display the lower of the two method
+  // prices on their card ("From …"); everything else uses the flat override
+  // or the bundled fallback.
+  const priceOf = (serviceId: string, fallback: number) => {
+    const mp = db.methodPrices?.[serviceId];
+    if (mp) return Math.min(mp.piloted, mp.afk ?? Infinity);
+    return db.servicePrices[serviceId] ?? fallback;
+  };
 
   return <PricingContext.Provider value={{ db, priceOf }}>{children}</PricingContext.Provider>;
 }

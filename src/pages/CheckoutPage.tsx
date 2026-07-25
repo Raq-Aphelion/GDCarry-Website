@@ -517,7 +517,7 @@ export default function CheckoutPage() {
                 Your order
                 {/* Same count pill as the cart sidebar */}
                 <span className="rounded-full bg-navy-800 px-2 py-0.5 text-xs font-semibold text-slate-300">
-                  {orderItems.reduce((s, i) => s + i.qty, 0)} item{orderItems.reduce((s, i) => s + i.qty, 0) !== 1 ? 's' : ''}
+                  {orderItems.length} item{orderItems.length !== 1 ? 's' : ''}
                 </span>
               </h2>
               <div className="relative mt-5 flex min-h-0 flex-1 flex-col">

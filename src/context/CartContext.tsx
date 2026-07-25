@@ -116,7 +116,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const { count, subtotal } = useMemo(
     () => ({
-      count: items.reduce((sum, i) => sum + i.qty, 0),
+      // Count cart LINES, not units — a 10-run configured order is one item
+      count: items.length,
       subtotal: items.reduce((sum, i) => sum + lineTotal(i), 0),
     }),
     [items],

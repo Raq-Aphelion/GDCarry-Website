@@ -44,7 +44,7 @@ const SECTIONS: FaqSection[] = [
         answers: [
           { text: 'All payments are made once we can confirm your order and you’re happy with the price.' },
           {
-            text: 'There’s no automated payment system in place yet, so every transaction is manually made via the livechat manager.',
+            text: 'There’s no automated payment system in place yet, so every transaction is manually made via the livechat manager or Discord (e-mail as a backup method).',
           },
         ],
       },

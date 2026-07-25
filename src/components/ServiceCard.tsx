@@ -12,6 +12,7 @@ import { usePricing } from '@/context/PricingContext';
 export default function ServiceCard({ service }: { service: Service }) {
   const { format } = useCurrency();
   const { priceOf } = usePricing();
+  const price = priceOf(service.id, service.price);
 
   return (
     <Link
@@ -51,9 +52,9 @@ export default function ServiceCard({ service }: { service: Service }) {
           </li>
         </ul>
 
-        <p className="mt-4 flex items-baseline gap-1.5 text-xs text-slate-400">
+        <p className={`mt-4 flex items-baseline gap-1.5 text-xs text-slate-400 ${price > 0 ? '' : 'invisible'}`}>
           From
-          <span className="font-display text-lg font-bold text-white">{format(priceOf(service.id, service.price))}</span>
+          <span className="font-display text-lg font-bold text-white">{price > 0 ? format(price) : '0'}</span>
         </p>
       </div>
     </Link>

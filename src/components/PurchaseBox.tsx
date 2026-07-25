@@ -25,6 +25,15 @@ const DATA_CENTERS = [
 // Gear/log/add-on options, discounts and multipliers come from the pricing
 // database (public/db/pricing.json) via usePricing().
 
+/** Per-service "Included:" note shown under the Boost Method buttons —
+    switches with the active method. Raid names render highlighted. */
+const INCLUDED: Record<string, { piloted: string[]; afk: string[] }> = {
+  'ffxiv-ultimate-bundle': {
+    piloted: ['UWU', 'UCOB', 'TEA', 'DSR', 'TOP', 'FRU'],
+    afk: ['UWU', 'UCOB', 'TEA', 'DSR'],
+  },
+};
+
 interface SelectOption {
   label: string;
   hint?: string;
@@ -69,7 +78,7 @@ function CustomSelect({
       >
         <span className="min-w-0 flex-1 truncate">{value || placeholder}</span>
         <ChevronDown
-          className={`h-4 w-4 shrink-0 text-slate-500 transition-transform duration-300 ${open ? 'rotate-180' : ''}`}
+          className={`h-4 w-4 shrink-0 transition-transform duration-300 ${open ? 'rotate-180 text-slate-500' : 'text-cyan-400'}`}
         />
       </button>
       <div
@@ -120,21 +129,17 @@ export default function PurchaseBox({ service, gameShort }: { service: Service; 
   const ADDONS = cfg.addons;
 
   const basePrice = priceOf(service.id, service.price);
-  // Services with explicit per-method prices in the DB (e.g. DSR) bypass the
-  // afkDiscount model entirely
+  // Services with explicit per-method prices in the DB (e.g. ultimates) bypass
+  // the afkDiscount model; a missing `afk` means the service is piloted-only.
   const methodPrices = db.methodPrices?.[service.id];
-  const methods = useMemo(
-    () => [
+  const methods = useMemo(() => {
+    const list = [
       { id: 'piloted', label: 'Piloted', price: methodPrices?.piloted ?? basePrice, icon: Gamepad2 },
-      {
-        id: 'afk',
-        label: 'AFK Carry',
-        price: methodPrices?.afk ?? Math.max(basePrice - cfg.afkDiscount, 0),
-        icon: Armchair,
-      },
-    ],
-    [basePrice, cfg.afkDiscount, methodPrices],
-  );
+    ];
+    const afkPrice = methodPrices ? methodPrices.afk : Math.max(basePrice - cfg.afkDiscount, 0);
+    if (afkPrice != null) list.push({ id: 'afk', label: 'AFK Carry', price: afkPrice, icon: Armchair });
+    return list;
+  }, [basePrice, cfg.afkDiscount, methodPrices]);
 
   const [method, setMethod] = useState(methods[0].id);
   const [runs, setRuns] = useState(cfg.runsMin);
@@ -248,7 +253,10 @@ export default function PurchaseBox({ service, gameShort }: { service: Service; 
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [optionsOpen, update]);
+    // Also re-runs on every method switch: AFK hides fields, which changes
+    // the box height and the sticky measure — without this the price block
+    // can keep a stale pin/unpin from the transient layout (the "stuck gap")
+  }, [optionsOpen, method, update]);
 
   // Whole-box stickiness, re-measured on every content/viewport resize:
   // - fits the screen -> 'fit': top pinned at 96px like the categories panel
@@ -311,13 +319,19 @@ export default function PurchaseBox({ service, gameShort }: { service: Service; 
   // AFK Carry has no FFXIV Logs option and no Private Stream add-on — both
   // are excluded from the UI and from every calculation
   const isAfk = method === 'afk';
+  // Services with per-method addon lists in the DB (bundles) swap the global
+  // 'unlock' addon for their own list — stream/priority stay untouched.
+  const bundleAddons = db.serviceAddons?.[service.id]?.[isAfk ? 'afk' : 'piloted'];
+  const ADDON_LIST = bundleAddons
+    ? ADDONS.flatMap((a) => (a.id === 'unlock' ? bundleAddons : [a]))
+    : ADDONS;
   const effLogIdx = isAfk ? 0 : logIdx;
   const effectiveAddons = isAfk ? addons.filter((a) => a !== 'stream') : addons;
   // Per-service addon price overrides from the DB (e.g. DSR duty unlock)
   const addonPriceOf = (a: (typeof ADDONS)[number]) => db.addonPrices?.[service.id]?.[a.id] ?? a.price;
   const priority = effectiveAddons.includes('priority');
   const logsPercent = LOG_OPTIONS[effLogIdx].percent ?? 0;
-  const flatAddons = ADDONS.filter((a) => a.id !== 'priority' && effectiveAddons.includes(a.id)).reduce(
+  const flatAddons = ADDON_LIST.filter((a) => a.id !== 'priority' && effectiveAddons.includes(a.id)).reduce(
     (s, a) => s + addonPriceOf(a),
     0,
   );
@@ -330,10 +344,10 @@ export default function PurchaseBox({ service, gameShort }: { service: Service; 
   const toggleAddon = (id: string) =>
     setAddons((prev) => (prev.includes(id) ? prev.filter((a) => a !== id) : [...prev, id]));
 
-  // The 'totem' add-on is a duty unlock — shown with the service-specific
+  // The 'unlock' add-on is a duty unlock — shown with the service-specific
   // duty name where one applies (DSR requires P4S completion)
   const addonLabel = (a: (typeof ADDONS)[number]) =>
-    a.id === 'totem' && service.id === 'ffxiv-dsr' ? 'P4S completion' : a.label;
+    a.id === 'unlock' && service.id === 'ffxiv-dsr' ? 'P4S completion' : a.label;
 
   // Scroll target when "Add to cart" is clicked without a data center (mobile:
   // the select sits far above the floating button)
@@ -355,7 +369,7 @@ export default function PurchaseBox({ service, gameShort }: { service: Service; 
       `Data Center: ${dc}`,
       ...(GEAR_OPTIONS[gearIdx].price > 0 ? [GEAR_OPTIONS[gearIdx].label] : []),
       ...(LOG_OPTIONS[effLogIdx].price > 0 || logsPercent > 0 ? [LOG_OPTIONS[effLogIdx].label] : []),
-      ...ADDONS.filter((a) => effectiveAddons.includes(a.id)).map((a) =>
+      ...ADDON_LIST.filter((a) => effectiveAddons.includes(a.id)).map((a) =>
         a.id === 'priority' ? `${addonLabel(a)} (+${priorityPct}%)` : addonLabel(a),
       ),
     ];
@@ -424,6 +438,17 @@ export default function PurchaseBox({ service, gameShort }: { service: Service; 
                 </button>
               ))}
             </div>
+            {INCLUDED[service.id] && (
+              <p className="mt-3.5 pl-px text-xs leading-relaxed text-slate-400">
+                Included:{' '}
+                {INCLUDED[service.id][isAfk ? 'afk' : 'piloted'].map((raid, i, arr) => (
+                  <span key={raid}>
+                    <span className="font-bold text-cyan-400">{raid}</span>
+                    {i < arr.length - 2 ? ', ' : i === arr.length - 2 ? ' and ' : ''}
+                  </span>
+                ))}
+              </p>
+            )}
           </div>
 
           {/* Runs: the field allows up to 999; the slider's max follows the
@@ -431,14 +456,14 @@ export default function PurchaseBox({ service, gameShort }: { service: Service; 
           <div>
             <p className="pl-px text-sm font-semibold text-white">How many runs?</p>
             <input
-              type="number"
-              min={cfg.runsMin}
-              max={999}
+              type="text"
+              inputMode="numeric"
+              pattern="[0-9]*"
               value={runs}
               onChange={(e) =>
-                setRuns(Math.min(999, Math.max(cfg.runsMin, Number(e.target.value) || cfg.runsMin)))
+                setRuns(Math.min(999, Math.max(cfg.runsMin, Number(e.target.value.replace(/\D/g, '')) || cfg.runsMin)))
               }
-              className="mt-2.5 h-10 w-full rounded-[5px] border border-navy-700/70 bg-navy-850 px-3.5 text-sm text-white outline-none transition-colors hover:border-navy-600 focus:border-navy-600"
+              className="mt-2.5 h-10 w-full rounded-[5px] border border-navy-700/70 bg-navy-850 px-3.5 py-2 text-sm leading-none text-white outline-none transition-colors hover:border-navy-600 focus:border-navy-600"
               aria-label="Number of runs"
             />
             <div className="px-1 pb-2 pt-4">
@@ -468,11 +493,11 @@ export default function PurchaseBox({ service, gameShort }: { service: Service; 
           </div>
 
           {/* Additional options */}
-          <div className="rounded-[5px] border border-navy-700/50">
+          <div className={`aob rounded-[5px] border border-navy-700/70 bg-navy-850 ${optionsOpen ? 'expanded' : ''}`}>
             <button
               onClick={() => setOptionsOpen((o) => !o)}
               aria-expanded={optionsOpen}
-              className="flex h-10 w-full items-center justify-between pl-4 pr-3.5 text-left"
+              className="aob-toggle flex h-[38px] w-full items-center justify-between pl-4 pr-3.5 text-left"
             >
               <span className="flex items-center gap-2 pl-px text-sm font-normal text-slate-300">
                 <Settings2 className="h-4 w-4 text-slate-400" />
@@ -481,7 +506,7 @@ export default function PurchaseBox({ service, gameShort }: { service: Service; 
               {optionsOpen ? (
                 <Minus className="h-4 w-4 text-slate-500" />
               ) : (
-                <Plus className="h-4 w-4 text-slate-500" />
+                <Plus className="h-4 w-4 text-cyan-400" />
               )}
             </button>
             <div
@@ -522,7 +547,7 @@ export default function PurchaseBox({ service, gameShort }: { service: Service; 
                   <div>
                     <p className="mb-2 pl-px text-xs font-semibold text-slate-300">Add-ons</p>
                     <div className="space-y-1.5">
-                      {ADDONS.filter((a) => !(isAfk && a.id === 'stream')).map((a) => {
+                      {ADDON_LIST.filter((a) => !(isAfk && a.id === 'stream')).map((a) => {
                         const checked = addons.includes(a.id);
                         return (
                           <button

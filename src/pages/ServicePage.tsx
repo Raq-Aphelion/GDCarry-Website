@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, Navigate, useParams } from 'react-router';
-import { ArrowRight, BadgeCheck, ChevronDown, ChevronRight, Gamepad2, Gem, Medal, Swords, Trophy } from 'lucide-react';
+import { ArrowRight, BadgeCheck, ChevronDown, ChevronRight, Gamepad2, Swords } from 'lucide-react';
 import CustomOrderCta from '@/components/CustomOrderCta';
 import PageMeta from '@/components/PageMeta';
 import FadeImage from '@/components/FadeImage';
@@ -9,76 +9,9 @@ import PurchaseBox from '@/components/PurchaseBox';
 import Reveal from '@/components/Reveal';
 import ServiceCard from '@/components/ServiceCard';
 import { getGame } from '@/data/games';
+import { getServicePage } from '@/data/servicePages';
 import ffxivBg from '@/assets/images/backgrounds/ffxiv-bg.webp';
 import useDragScroll from '@/hooks/useDragScroll';
-
-const REWARDS = [
-  {
-    icon: Gem,
-    title: 'Dragonsong Totem',
-    text: 'Ultimate Specific totems that can be exchanged for a weapon of your choosing.',
-  },
-  {
-    icon: BadgeCheck,
-    title: "Dragonsong's Reprise Adventure Plate",
-    text: 'Exclusive Adventure Plate Designs.',
-  },
-  {
-    icon: Trophy,
-    title: "The Heavens' Legend",
-    text: 'Exclusive title acquired from completing the duty.',
-  },
-  {
-    icon: Medal,
-    title: 'Achievement: “As Suits a Hero”',
-    text: "Achievement unlocked upon defeating King Thordan in Dragonsong's Reprise.",
-  },
-];
-
-interface AccordionSection {
-  title: string;
-  items?: string[];
-  groups?: { heading: string; items: string[] }[];
-}
-
-const ACCORDION: AccordionSection[] = [
-  {
-    title: 'Requirements',
-    items: [
-      'Have a level 100 Job',
-      'Own the Dawntrail Expansion',
-      'Asphodelos: The Fourth Circle (Savage) Completed',
-      'ilvl 740 or higher gear',
-    ],
-  },
-  {
-    title: 'How does it work?',
-    items: [
-      'Contact The Live Chat',
-      'Pay the required amount with your selected payment method',
-      "It's scheduled based on raider availability and times you'll be logged in",
-      "You'll be notified of completion via discord or email",
-    ],
-  },
-  {
-    title: 'Piloted vs AFK Carry',
-    groups: [
-      {
-        heading: 'Piloted Version',
-        items: ['A Professional Raider will be logged onto your account and complete the content on your behalf'],
-      },
-      {
-        heading: 'AFK Carry',
-        items: [
-          'AFK Carry is a non-piloted version of the clear where you clear as a sandbag',
-          "You'll join the party with the rest of the team via your own PC / PS5 / XBOX",
-          'Some of the more difficult carries will require you to accept raises',
-          'No knowledge of the fight is required for an AFK Carry',
-        ],
-      },
-    ],
-  },
-];
 
 function Bullets({ items }: { items: string[] }) {
   return (
@@ -96,7 +29,7 @@ function Bullets({ items }: { items: string[] }) {
 export default function ServicePage() {
   const { gameId, serviceId } = useParams<{ gameId: string; serviceId: string }>();
   const game = gameId ? getGame(gameId) : undefined;
-  const sub = game?.subcategories.find((s) => s.services.some((sv) => sv.id === serviceId));
+  const sub = game?.subcategories.find((s) => s.id !== 'all' && s.services.some((sv) => sv.id === serviceId));
   const service = sub?.services.find((sv) => sv.id === serviceId);
   const [openSection, setOpenSection] = useState(0);
 
@@ -131,6 +64,8 @@ export default function ServicePage() {
           : undefined;
 
   if (!game || !sub || !service) return <Navigate to={game ? `/boosting/${game.id}` : '/'} replace />;
+  const content = getServicePage(serviceId);
+  if (!content) return <Navigate to={`/boosting/${game.id}?cat=${sub.id}`} replace />;
 
   const points = [
     { icon: Swords, text: service.delivery },
@@ -159,7 +94,7 @@ export default function ServicePage() {
             {sub.name}
           </Link>
           <ChevronRight className="h-3.5 w-3.5" />
-          <span className="text-cyan-400">DSR</span>
+          <span className="text-cyan-400">{content.short}</span>
         </nav>
       </Reveal>
       <Reveal delay={100}>
@@ -206,7 +141,7 @@ export default function ServicePage() {
       </Reveal>
       <Reveal delay={100}>
         <div className="card-surface mt-5 divide-y divide-navy-700/50 rounded-[5px]">
-          {REWARDS.map((r) => (
+          {content.rewards.map((r) => (
             <div key={r.title} className="flex items-start gap-4 p-4 sm:p-5">
               <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[5px] bg-navy-800">
                 <r.icon className="h-5 w-5 text-cyan-400" strokeWidth={1.75} />
@@ -222,7 +157,7 @@ export default function ServicePage() {
 
       {/* ============ INFO ACCORDION ============ */}
       <div className="mt-8 space-y-3">
-        {ACCORDION.map((s, i) => {
+        {content.accordion.map((s, i) => {
           const open = openSection === i;
           return (
             <Reveal key={s.title} delay={i * 80}>

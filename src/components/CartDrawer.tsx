@@ -6,6 +6,7 @@ import { lineTotal } from '@/lib/cart';
 import { useCurrency } from '@/context/CurrencyContext';
 import { OverlayScrollbar } from '@/components/Scrollbar';
 import { serviceLink } from '@/data/games';
+import { setLhcCartOffset } from '@/lib/lhcWidgetFx';
 
 export default function CartDrawer() {
   const { isOpen, closeCart, items, setQty, removeItem, subtotal, clear } = useCart();
@@ -29,6 +30,13 @@ export default function CartDrawer() {
       mo.disconnect();
     };
   }, [listEl]);
+
+  // Shift the live chat badge/window aside while the cart is open
+  // (slide left on desktop, fade out on mobile), restoring on close.
+  useEffect(() => {
+    setLhcCartOffset(isOpen);
+    return () => setLhcCartOffset(false);
+  }, [isOpen]);
 
   // Escape to close + visually hide the overlay scrollbar while open.
   // Scrolling stays fully functional (overflow is never locked — locking it
@@ -72,7 +80,7 @@ export default function CartDrawer() {
             Your Cart
             {items.length > 0 && (
               <span className="rounded-full bg-navy-800 px-2 py-0.5 text-xs font-semibold text-slate-300">
-                {items.reduce((s, i) => s + i.qty, 0)} item{items.length !== 1 ? 's' : ''}
+                {items.length} item{items.length !== 1 ? 's' : ''}
               </span>
             )}
           </h2>

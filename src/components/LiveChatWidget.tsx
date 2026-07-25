@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { initLhcWidgetFx } from '@/lib/lhcWidgetFx';
 
 /** Live Helper Chat widget — injects the LHC embed script once on app mount.
     Snippet generated in LHC admin → Embed code → Widget embed code (new). */
@@ -38,6 +39,8 @@ export default function LiveChatWidget() {
       ('' + date.getFullYear() + date.getMonth() + date.getDate());
     const s = document.getElementsByTagName('script')[0];
     s.parentNode?.insertBefore(po, s);
+
+    initLhcWidgetFx();
   }, []);
 
   return null;

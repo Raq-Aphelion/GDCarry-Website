@@ -190,6 +190,17 @@
   .cyan-glow {
     box-shadow: 0 0 14px -4px rgb(var(--cyan-600) / 0.5);
   }
+  /* Additional Options block: same 1px cyan outline as the main purchase
+     box — on hover while collapsed, kept while expanded, gone when closed. */
+  .aob {
+    transition: box-shadow 0.3s ease;
+  }
+  .aob:not(.expanded):has(> .aob-toggle:hover) {
+    box-shadow: 0 0 0 1px rgb(var(--cyan-600) / 0.22);
+  }
+  .aob.expanded {
+    box-shadow: 0 0 0 1px rgb(var(--cyan-600) / 0.22);
+  }
   /* The purchase/options box signature: 1px cyan outline + soft cyan glow.
      .purchase-box pairs it with a gradient; reused plain on checkout blocks. */
   .purchase-box-glow {
