@@ -5,14 +5,17 @@ interface RevealProps {
   /** Stagger delay in ms */
   delay?: number;
   className?: string;
+  /** Skip the reveal-on-scroll animation and render visible immediately */
+  instant?: boolean;
 }
 
 /** Fades + slides children in the first time they enter the viewport. */
-export default function Reveal({ children, delay = 0, className = '' }: RevealProps) {
+export default function Reveal({ children, delay = 0, className = '', instant = false }: RevealProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState(instant);
 
   useEffect(() => {
+    if (instant) return;
     const el = ref.current;
     if (!el) return;
     const io = new IntersectionObserver(
@@ -26,7 +29,7 @@ export default function Reveal({ children, delay = 0, className = '' }: RevealPr
     );
     io.observe(el);
     return () => io.disconnect();
-  }, []);
+  }, [instant]);
 
   return (
     <div

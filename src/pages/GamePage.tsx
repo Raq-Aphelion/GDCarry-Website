@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import { Link, Navigate, useParams, useSearchParams } from 'react-router';
 import { ChevronRight, Layers, Package } from 'lucide-react';
 import CustomOrderCta from '@/components/CustomOrderCta';
@@ -41,6 +41,9 @@ export default function GamePage() {
   // True only while the category list actually overflows — drives the inset
   // that keeps the buttons clear of the overlay scrollbar pill
   const [catOverflows, setCatOverflows] = useState(false);
+  // The services grid section — smooth-scroll target on category change
+  const gridRef = useRef<HTMLDivElement>(null);
+  const prevActive = useRef(active);
 
   // Follow ?cat= changes (e.g. navbar search) and reset when switching games
   useEffect(() => {
@@ -48,6 +51,32 @@ export default function GamePage() {
     setActive(validCat(catParam) ?? game?.subcategories[0]?.id ?? '');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gameId, catParam]);
+
+  // On category change, smooth-scroll so the grid's top edge (where the header
+  // background ends and the content segment starts) lands right below the
+  // navbar — on mobile, below the sticky category chips bar instead.
+  // Only scrolls when the category actually CHANGES (never on first open, so
+  // the title block / background is what you see when the page loads).
+  useEffect(() => {
+    if (prevActive.current === active) return;
+    prevActive.current = active;
+    const el = gridRef.current;
+    const scroller = document.getElementById('page-scroll');
+    if (!el || !scroller) return;
+    const isMobile = window.matchMedia('(max-width: 1023px)').matches;
+    const bar = document.getElementById('mobile-category-bar');
+    let top =
+      el.getBoundingClientRect().top + scroller.scrollTop - scroller.getBoundingClientRect().top;
+    if (isMobile && bar) {
+      top -= bar.getBoundingClientRect().height;
+    } else {
+      // Desktop: land exactly where the category sidebar becomes sticky
+      // (top-8 = 32px) — the aside is the section's first child, so its
+      // natural top = section top + the section's padding-top
+      top += parseFloat(getComputedStyle(el).paddingTop) - 32;
+    }
+    scroller.scrollTo({ top, behavior: 'smooth' });
+  }, [active]);
 
   useEffect(() => {
     if (!catListEl) return;
@@ -124,7 +153,7 @@ export default function GamePage() {
       />
 
       {/* ============ SIDEBAR + FILTERED SERVICES ============ */}
-      <div className="mx-auto grid max-w-[1440px] gap-10 px-[25px] py-12 sm:px-6 lg:grid-cols-[240px_minmax(0,1fr)] lg:px-8">
+      <div ref={gridRef} className="mx-auto grid max-w-[1440px] gap-10 px-[25px] py-12 sm:px-6 lg:grid-cols-[240px_minmax(0,1fr)] lg:px-8">
         {/* Left: subcategory filter list */}
         <aside className="hidden lg:block">
           <div className="sticky top-8 flex max-h-[calc(100vh-4rem)] flex-col">
@@ -201,7 +230,7 @@ export default function GamePage() {
                 {/* Cards cap at 280px (ServiceCard max-w) — centered in their
                     cells like the home page's popular picks, so extra row width
                     becomes even outer margins */}
-                <Reveal delay={Math.min(i, 3) * 80} className="w-full max-w-[280px]">
+                <Reveal delay={Math.min(i, 3) * 80} className="w-full max-w-[280px]" instant>
                   <ServiceCard service={service} />
                 </Reveal>
                 {/* Inline custom-order CTA on mobile: only in categories with

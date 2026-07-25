@@ -52,7 +52,7 @@ export default function MobileCategoryBar({
     }`;
 
   return (
-    <div className="sticky top-0 z-30 border-b border-navy-700/60 bg-navy-900/85 backdrop-blur-xl lg:hidden">
+    <div id="mobile-category-bar" className="sticky top-0 z-30 border-b border-navy-700/60 bg-navy-900/85 backdrop-blur-xl lg:hidden">
       <div className="relative">
         <div ref={dragRef} onScroll={updateFades} className="no-scrollbar flex touch-pan-y gap-2 overflow-x-auto px-[25px] py-3">
           {items.map((s) =>
