@@ -18,6 +18,9 @@ export interface Subcategory {
   id: string;
   name: string;
   services: Service[];
+  /** Ids of services from other subcategories to display here as duplicate
+      proxy cards — deduped from counts by their shared id. */
+  proxies?: string[];
 }
 
 export interface Game {
@@ -81,33 +84,11 @@ export const games: Game[] = [
       {
         id: 'current-patch',
         name: 'Current Patch',
-        services: [
-          {
-            id: 'ffxiv-aac-savage',
-            name: 'AAC Savage Tier Clear',
-            tag2: 'Current raid tier cleared with loot priority on your job.',
-            price: 0,
-            tag1: 'All 4 floors',
-            image: scBlank,
-            tag: 'Hot',
-          },
-          {
-            id: 'ffxiv-new-ex',
-            name: 'New Extreme Trial Farm',
-            tag2: 'Latest EX trial farmed — mount and totems included.',
-            price: 0,
-            tag1: 'Day-one kills',
-            image: scBlank,
-          },
-          {
-            id: 'ffxiv-patch-catchup',
-            name: 'Patch Catch-Up Bundle',
-            tag2: 'MSQ, unlocks and gear catch-up for the newest patch.',
-            price: 0,
-            tag1: 'Same week',
-            image: scBlank,
-          },
-        ],
+        services: [],
+        // Proxy cards from other categories, shown here as duplicates — they
+        // share the original service's id, so serviceCount dedupes them and
+        // they never inflate the totals. Add service ids to display them.
+        proxies: ['ffxiv-udm'],
       },
       {
         id: 'ultimate-raids',

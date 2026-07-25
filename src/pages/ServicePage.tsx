@@ -275,7 +275,7 @@ export default function ServicePage() {
                     >
                       {s.name}
                       <span className={`text-xs ${isActive ? 'text-cyan-400/70' : 'text-slate-500'}`}>
-                        {s.services.length}
+                        {s.services.length + (s.proxies?.length ?? 0)}
                       </span>
                     </Link>
                   </li>

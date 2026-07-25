@@ -91,6 +91,20 @@ export default function GamePage() {
   if (!game) return <Navigate to="/" replace />;
 
   const activeSub = game.subcategories.find((s) => s.id === active) ?? game.subcategories[0];
+  // Proxy cards (e.g. Current Patch): duplicates of services from other
+  // subcategories — resolved by id so counts never double them
+  const activeServices = [
+    ...activeSub.services,
+    ...(activeSub.proxies ?? [])
+      .map((id) => {
+        for (const s of game.subcategories) {
+          const hit = s.services.find((sv) => sv.id === id);
+          if (hit) return hit;
+        }
+        return undefined;
+      })
+      .filter((sv): sv is NonNullable<typeof sv> => sv !== undefined),
+  ];
 
   return (
     <div>
@@ -179,7 +193,7 @@ export default function GamePage() {
                       >
                         {sub.name}
                         <span className={`text-xs ${isActive ? 'text-cyan-400/70' : 'text-slate-500'}`}>
-                          {sub.services.length}
+                          {sub.services.length + (sub.proxies?.length ?? 0)}
                         </span>
                       </button>
                     </li>
@@ -210,7 +224,7 @@ export default function GamePage() {
             <div className="flex items-center gap-3 max-sm:justify-center">
               <h2 className="font-display text-xl font-bold text-white sm:text-2xl">{activeSub.name}</h2>
               <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-navy-800 text-xs font-bold text-slate-400">
-                {activeSub.services.length}
+                {activeServices.length}
               </span>
               <div className="h-px flex-1 bg-gradient-to-r from-navy-700/70 to-transparent max-sm:hidden" />
             </div>
@@ -218,14 +232,14 @@ export default function GamePage() {
           {/* sm 2 per row; md 3 — below lg the sidebar becomes the carousel, so the
               full row fits 3 cards; lg keeps 3 (sidebar takes 240px, 4 would squeeze
               cards to ~155px); xl 4 — cards cap at 280px and never drop below ~213px */}
-          {activeSub.services.length === 0 ? (
+          {activeServices.length === 0 ? (
             // Matches the service card height (ServiceCard min-h)
             <div className="mt-5 flex h-[380px] items-center justify-center rounded-[5px] bg-navy-850 text-sm text-slate-500">
               No boosts in this category yet
             </div>
           ) : (
           <div className="mt-5 grid justify-items-center gap-5 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
-            {activeSub.services.map((service, i) => (
+            {activeServices.map((service, i) => (
               <Fragment key={service.id}>
                 {/* Cards cap at 280px (ServiceCard max-w) — centered in their
                     cells like the home page's popular picks, so extra row width
@@ -236,7 +250,7 @@ export default function GamePage() {
                 {/* Inline custom-order CTA on mobile: only in categories with
                     more than 7 card rows (7+ services at 1 col), pinned after
                     the 2nd card so 2 rows sit above it */}
-                {activeSub.services.length > 7 && i === 1 && (
+                {activeServices.length > 7 && i === 1 && (
                   <div className="mx-auto w-full max-w-[280px] sm:hidden">
                     <CustomOrderCta compact />
                   </div>
@@ -246,7 +260,7 @@ export default function GamePage() {
             {/* Desktop grid-breaker: only in categories with more than 3 card
                 rows (12+ services at 4 cols), pinned to row 3 so exactly 2
                 rows of cards sit above it */}
-            {activeSub.services.length > 12 && (
+            {activeServices.length > 12 && (
               <div className="hidden w-full sm:col-span-2 sm:row-start-3 sm:block md:col-span-3 xl:col-span-4">
                 <CustomOrderCta lateTextBreak />
               </div>

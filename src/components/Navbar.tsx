@@ -178,7 +178,7 @@ function MobileCategoryList({ game, expanded }: { game: Game; expanded: boolean 
                   >
                     {s.name}
                     <span className={`text-[10px] ${onCat ? 'text-cyan-400/70' : 'text-slate-600'}`}>
-                      {s.services.length}
+                      {s.services.length + (s.proxies?.length ?? 0)}
                     </span>
                   </NavLink>
                 </li>
@@ -456,7 +456,7 @@ export default function Navbar() {
                                       >
                                         {s.name}
                                         <span className={`text-[10px] ${onCat ? 'text-cyan-400/70' : 'text-slate-600'}`}>
-                                          {s.services.length}
+                                          {s.services.length + (s.proxies?.length ?? 0)}
                                         </span>
                                       </Link>
                                     </li>
