@@ -251,7 +251,7 @@ export default function GilPurchaseBox({ service, gameShort }: { service: Servic
           Add to cart
         </button>
         <div className="mt-3 flex items-center justify-center gap-3 opacity-80">
-          {['paypal', 'crypto', 'revolut'].map((p) => (
+          {['paypal', 'revolut', 'crypto'].map((p) => (
             <img key={p} src={`/payment/${p}.svg`} alt={p} className="h-3.5 w-auto" loading="lazy" />
           ))}
         </div>

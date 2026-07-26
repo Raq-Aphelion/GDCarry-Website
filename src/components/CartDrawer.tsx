@@ -1,12 +1,41 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router';
 import { Minus, Plus, ShoppingCart, Trash2, X } from 'lucide-react';
-import { useCart } from '@/context/CartContext';
+import { useCart, type CartItem } from '@/context/CartContext';
 import { cartMeta, displayDetails, lineTotal } from '@/lib/cart';
 import { useCurrency } from '@/context/CurrencyContext';
 import { OverlayScrollbar } from '@/components/Scrollbar';
 import { serviceLink } from '@/data/games';
 import { setLhcCartOffset } from '@/lib/lhcWidgetFx';
+
+/** Editable quantity field: shows the committed qty, but while focused the
+    user can type a number directly — committed on blur/Enter (setQty clamps
+    to each item's allowed range; 0 removes the line). */
+function QtyInput({ item, onCommit }: { item: CartItem; onCommit: (id: string, qty: number) => void }) {
+  const [text, setText] = useState<string | null>(null);
+  const commit = () => {
+    if (text !== null) {
+      const n = parseInt(text, 10);
+      if (!Number.isNaN(n)) onCommit(item.id, n);
+      setText(null);
+    }
+  };
+  return (
+    <input
+      type="text"
+      inputMode="numeric"
+      value={text ?? String(item.qty)}
+      disabled={item.qtyLocked}
+      onChange={(e) => setText(e.target.value.replace(/[^0-9]/g, '').slice(0, 4))}
+      onBlur={commit}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter') (e.target as HTMLInputElement).blur();
+      }}
+      aria-label="Quantity"
+      className="w-8 bg-transparent text-center text-sm font-semibold text-white outline-none transition-colors focus:text-cyan-300 disabled:cursor-not-allowed disabled:opacity-50"
+    />
+  );
+}
 
 export default function CartDrawer() {
   const { isOpen, closeCart, items, setQty, removeItem, subtotal, clear } = useCart();
@@ -161,15 +190,17 @@ export default function CartDrawer() {
                       <div className="flex items-center rounded-[5px] border border-navy-700/70">
                         <button
                           onClick={() => setQty(item.id, item.qty - 1)}
-                          className="p-1.5 text-slate-400 transition-colors hover:text-white"
+                          disabled={item.qtyLocked}
+                          className="p-1.5 text-slate-400 transition-colors hover:text-white disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:text-slate-400"
                           aria-label="Decrease quantity"
                         >
                           <Minus className="h-3.5 w-3.5" />
                         </button>
-                        <span className="w-7 text-center text-sm font-semibold text-white">{item.qty}</span>
+                        <QtyInput item={item} onCommit={setQty} />
                         <button
                           onClick={() => setQty(item.id, item.qty + 1)}
-                          className="p-1.5 text-slate-400 transition-colors hover:text-white"
+                          disabled={item.qtyLocked}
+                          className="p-1.5 text-slate-400 transition-colors hover:text-white disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:text-slate-400"
                           aria-label="Increase quantity"
                         >
                           <Plus className="h-3.5 w-3.5" />

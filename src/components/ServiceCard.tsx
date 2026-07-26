@@ -36,7 +36,7 @@ export default function ServiceCard({ service }: { service: Service }) {
 
       {/* Content */}
       <div className="relative flex flex-1 flex-col justify-end p-4">
-        <h3 className="font-display text-sm font-bold text-white transition-colors group-hover:text-cyan-400">
+        <h3 className="truncate font-display text-sm font-bold text-white transition-colors group-hover:text-cyan-400">
           {service.name}
         </h3>
 

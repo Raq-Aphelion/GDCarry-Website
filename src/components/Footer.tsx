@@ -26,8 +26,8 @@ export default function Footer() {
           <div className="mt-7 flex items-center justify-center gap-5 md:justify-start">
             {[
               { id: 'paypal', label: 'PayPal' },
-              { id: 'crypto', label: 'Crypto' },
               { id: 'revolut', label: 'Revolut' },
+              { id: 'crypto', label: 'Crypto' },
             ].map((p) => (
               <img
                 key={p.id}

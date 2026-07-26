@@ -244,7 +244,7 @@ export default function GamePage() {
                 {/* Cards cap at 280px (ServiceCard max-w) — centered in their
                     cells like the home page's popular picks, so extra row width
                     becomes even outer margins */}
-                <Reveal delay={Math.min(i, 3) * 80} className="w-full max-w-[280px]" instant>
+                <Reveal className="w-full max-w-[280px]" immediate>
                   <ServiceCard service={service} />
                 </Reveal>
                 {/* Inline custom-order CTA on mobile: only in categories with

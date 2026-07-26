@@ -35,8 +35,8 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const PAYMENT_METHODS: { id: string; label: string; logo?: string; icon?: LucideIcon }[] = [
   { id: 'paypal', label: 'PayPal', logo: '/payment/paypal.svg' },
-  { id: 'crypto', label: 'Crypto', logo: '/payment/crypto.svg' },
   { id: 'revolut', label: 'Revolut', logo: '/payment/revolut.svg' },
+  { id: 'crypto', label: 'Crypto', logo: '/payment/crypto.svg' },
 ];
 
 /** Discord brand glyph (lucide-react ships no brand icons). Path: simple-icons, CC0. */
@@ -451,9 +451,21 @@ export default function CheckoutPage() {
                   </div>
                 </label>
                 <p className="text-xs leading-relaxed text-slate-500">
-                  {contactVia === 'chat'
-                    ? 'Your contact details will be linked to your order. The live chat opens automatically after checkout with your order details filled in — if it’s unavailable, we’ll use your e-mail instead.'
-                    : 'We’ll message you on Discord to confirm and schedule your order — double-check your username and keep friend requests open. Your e-mail is only used as a backup if we can’t reach you there.'}
+                  {contactVia === 'chat' ? (
+                    <>
+                      Your contact details will be linked to your order.{' '}
+                      <span className="font-bold text-white">The live chat opens automatically after checkout</span>{' '}
+                      with your order details filled in — if it’s unavailable, we’ll use your e-mail instead.
+                    </>
+                  ) : (
+                    <>
+                      We’ll message you on Discord to confirm and schedule your order —{' '}
+                      <span className="font-bold text-white">
+                        double-check your username and keep friend requests open.
+                      </span>{' '}
+                      Your e-mail is only used as a backup if we can’t reach you there.
+                    </>
+                  )}
                 </p>
               </fieldset>
             </section>

@@ -14,11 +14,11 @@ const HERO_VIDEO_MP4 = '/videos/hero-video-fallback.mp4';
 const HERO_POSTER = '/videos/hero-image.webp';
 
 const FEATURED_IDS = [
-  'ffxiv-uwu',
+  'ffxiv-gil-pack',
   'ffxiv-savage-tier',
+  'ffxiv-uwu',
   'ffxiv-potd-solo',
   'ffxiv-cc-rank',
-  'ffxiv-gil-pack',
 ];
 
 const PERKS = [
@@ -98,9 +98,11 @@ const STEPS = [
 export default function Home() {
   const carouselRef = useDragScroll<HTMLDivElement>();
   const ffxiv = getGame('ffxiv');
-  const featured = ffxiv
-    ? ffxiv.subcategories.flatMap((s) => s.services).filter((s) => FEATURED_IDS.includes(s.id))
-    : [];
+  // FEATURED_IDS order defines the card order (1st entry = 1st spot)
+  const allServices = ffxiv ? ffxiv.subcategories.flatMap((s) => s.services) : [];
+  const featured = FEATURED_IDS.map((id) => allServices.find((s) => s.id === id)).filter(
+    (s): s is (typeof allServices)[number] => !!s,
+  );
 
   // Finite carousel — arrows grey out at the left/right edges
   const [canLeft, setCanLeft] = useState(false);

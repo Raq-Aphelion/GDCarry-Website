@@ -483,7 +483,7 @@ export const guides: Guide[] = [
           },
           {
             type: 'p',
-            text: 'A sensible route is to start with the cheapest entries — UWU and UCOB — then step up to TEA, then DSR and TOP, and finish with FRU and UDM. If you want everything at once, the Ultimate Bundle covers all six piloted clears in one discounted order.',
+            text: 'A sensible route is to start with the cheapest entries — UWU and UCOB — then step up to TEA, then DSR and TOP, and finish with FRU and DMU. If you want everything at once, the Ultimate Bundle covers all six piloted clears in one discounted order.',
           },
         ],
       },

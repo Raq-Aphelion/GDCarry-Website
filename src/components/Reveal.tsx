@@ -7,15 +7,21 @@ interface RevealProps {
   className?: string;
   /** Skip the reveal-on-scroll animation and render visible immediately */
   instant?: boolean;
+  /** Skip the viewport check but still play the slide-in once on mount */
+  immediate?: boolean;
 }
 
 /** Fades + slides children in the first time they enter the viewport. */
-export default function Reveal({ children, delay = 0, className = '', instant = false }: RevealProps) {
+export default function Reveal({ children, delay = 0, className = '', instant = false, immediate = false }: RevealProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const [visible, setVisible] = useState(instant);
+  const [visible, setVisible] = useState(instant && !immediate);
 
   useEffect(() => {
-    if (instant) return;
+    if (instant && !immediate) return;
+    if (immediate) {
+      const t = setTimeout(() => setVisible(true), 30);
+      return () => clearTimeout(t);
+    }
     const el = ref.current;
     if (!el) return;
     const io = new IntersectionObserver(
@@ -29,7 +35,7 @@ export default function Reveal({ children, delay = 0, className = '', instant = 
     );
     io.observe(el);
     return () => io.disconnect();
-  }, [instant]);
+  }, [instant, immediate]);
 
   return (
     <div

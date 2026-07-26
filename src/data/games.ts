@@ -50,6 +50,11 @@ import scTea from '@/assets/images/service-cards/ffxiv/ultimate-raids/sc-tea.web
 import scUcob from '@/assets/images/service-cards/ffxiv/ultimate-raids/sc-ucob.webp';
 import scUwu from '@/assets/images/service-cards/ffxiv/ultimate-raids/sc-uwu.webp';
 import scUltBundle from '@/assets/images/service-cards/ffxiv/ultimate-raids/sc-ult-bundle.webp';
+import scPandaemonium from '@/assets/images/service-cards/ffxiv/savage-raids/ffxiv-pandaemonium.png';
+import scArcadion from '@/assets/images/service-cards/ffxiv/savage-raids/ffxiv-arcadion.png';
+import scEden from '@/assets/images/service-cards/ffxiv/savage-raids/ffxiv-eden.png';
+import scOmega from '@/assets/images/service-cards/ffxiv/savage-raids/ffxiv-omega.png';
+import scAlexander from '@/assets/images/service-cards/ffxiv/savage-raids/ffxiv-alexander.png';
 import { SERVICE_PAGES } from '@/data/servicePages';
 
 export const games: Game[] = [
@@ -88,15 +93,15 @@ export const games: Game[] = [
         // Proxy cards from other categories, shown here as duplicates — they
         // share the original service's id, so serviceCount dedupes them and
         // they never inflate the totals. Add service ids to display them.
-        proxies: ['ffxiv-udm'],
+        proxies: ['ffxiv-dmu', 'ffxiv-savage-tier'],
       },
       {
         id: 'ultimate-raids',
         name: 'Ultimate Raids',
         services: [
           {
-            id: 'ffxiv-udm',
-            name: 'Dancing Mad',
+            id: 'ffxiv-dmu',
+            name: 'Dancing Mad (Ultimate)',
             tag2: 'Adventurer Plate + Title',
             price: 0,
             tag1: 'Palazzo Diamond Weapon',
@@ -108,7 +113,7 @@ export const games: Game[] = [
           },
           {
             id: 'ffxiv-fru',
-            name: 'The Futures Rewritten',
+            name: 'The Futures Rewritten (Ultimate)',
             tag2: 'Adventurer Plate + Title',
             price: 0,
             tag1: 'Ultimate Edenmorn Weapon',
@@ -119,7 +124,7 @@ export const games: Game[] = [
           },
           {
             id: 'ffxiv-top',
-            name: 'The Omega Protocol',
+            name: 'The Omega Protocol (Ultimate)',
             tag2: 'Adventurer Plate + Title',
             price: 0,
             tag1: 'Ultimate Omega Weapon',
@@ -130,7 +135,7 @@ export const games: Game[] = [
           },
           {
             id: 'ffxiv-dsr',
-            name: 'Dragonsong’s Reprise',
+            name: 'Dragonsong’s Reprise (Ultimate)',
             tag2: 'Adventurer Plate + Title',
             price: 0,
             tag1: 'Ultimate Heaven Weapon',
@@ -141,7 +146,7 @@ export const games: Game[] = [
           },
           {
             id: 'ffxiv-tea',
-            name: 'The Epic of Alexander',
+            name: 'The Epic of Alexander (Ultimate)',
             tag2: 'Adventurer Plate + Title',
             price: 0,
             tag1: 'Ultimate Alexander Weapon',
@@ -152,7 +157,7 @@ export const games: Game[] = [
           },
           {
             id: 'ffxiv-ucob',
-            name: 'The Unending Coil of Bahamut',
+            name: 'The Unending Coil of Bahamut (Ultimate)',
             tag2: 'Adventurer Plate + Title',
             price: 0,
             tag1: 'Ultima Weapon',
@@ -163,7 +168,7 @@ export const games: Game[] = [
           },
           {
             id: 'ffxiv-uwu',
-            name: 'The Weapon’s Refrain',
+            name: 'The Weapon’s Refrain (Ultimate)',
             tag2: 'Adventurer Plate + Title',
             price: 0,
             tag1: 'Ultimate Dreadwyrm Weapon',
@@ -192,44 +197,59 @@ export const games: Game[] = [
         services: [
           {
             id: 'ffxiv-savage-tier',
-            name: 'Arcadion Savage Series',
-            tag2: 'Get 790/795 ilvl gear',
+            name: 'Arcadion Raids (Savage)',
+            tag2: 'Full loot priority',
             price: 0,
-            tag1: 'Exclusive mounts & minions',
-            image: scBlank,
-            tag: 'Hot',
+            tag1: 'Savage ilvl 790/795 gear',
+            tag3: 'Piloted or AFK Carry*',
+            longDescription:
+              'Fighters from across the star step into the Arcadion’s ring, where glory is won before a roaring crowd. From the Light-heavyweight ladder to the Heavyweight throne, only the unbroken earn the right to call themselves Grand Champion. Will you answer the call?',
+            image: scArcadion,
+            tag: 'Popular',
           },
           {
             id: 'ffxiv-pandaemonium-savage',
-            name: 'Pandaemonium Savage Series',
-            tag2: 'Sunforged + 2 more mounts',
+            name: 'Pandaemonium Raids (Savage)',
+            tag2: 'Full loot priority',
+            longDescription:
+              'Far beneath the ground upon which mortals tread, steeped in darkness deep as starless night, ancient power lies dormant. Too hungry, too brutal, too monstrous─what cannot be controlled must be contained, here, in Pandæmonium. Dare you make the descent?',
             price: 0,
-            tag1: 'Quick clears of all tiers',
-            image: scBlank,
+            tag1: 'Savage Endwalker glamour',
+            tag3: 'Piloted or AFK Carry',
+            image: scPandaemonium,
           },
           {
             id: 'ffxiv-eden-savage',
-            name: 'Eden Savage Series',
+            name: 'Eden Raids (Savage)',
             tag2: 'Full loot priority',
             price: 0,
-            tag1: '3 unique sets of glamour',
-            image: scBlank,
+            tag1: 'Savage Shadowbringers glamour',
+            tag3: 'Piloted or AFK Carry',
+            longDescription:
+              'In the light-swallowed emptiness of the First, the memories of primals past take shape once more. To restore the flow of the elements, you must face Eden’s recreations one by one — and the promise that waits at the journey’s end.',
+            image: scEden,
           },
           {
             id: 'ffxiv-omega-savage',
-            name: 'Omega Savage Series',
-            tag2: 'Iconic Stormblood glamour',
+            name: 'Omega Raids (Savage)',
+            tag2: 'Full loot priority',
             price: 0,
-            tag1: '3 unique mounts for a full run',
-            image: scBlank,
+            tag1: 'Savage Stormblood glamour',
+            tag3: 'Piloted or AFK Carry',
+            longDescription:
+              'Deep within the rift between worlds, the ancient machine Omega conducts its merciless experiments, pitting warriors against recreated foes from across the realms. Endure its trials and prove yourself the strongest subject of all.',
+            image: scOmega,
           },
           {
             id: 'ffxiv-alexander-savage',
-            name: 'Alexander Savage Series',
-            tag2: 'Iconic Heavensward glamour',
+            name: 'Alexander Raids (Savage)',
+            tag2: 'Full loot priority',
             price: 0,
-            tag1: 'Full series clear with all loot',
-            image: scBlank,
+            tag1: 'Savage Heavensward glamour',
+            tag3: 'Piloted or AFK Carry',
+            longDescription:
+              'In the Dravanian hinterlands rises Alexander, a colossal primal of steel and steam summoned by the Illuminati. Within its iron frame, the goblins’ mad designs churn on — dare you shut the machine god down from the inside?',
+            image: scAlexander,
           },
         ],
       },

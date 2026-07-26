@@ -139,10 +139,10 @@ export default function PurchaseBox({ service, gameShort }: { service: Service; 
   const methodPrices = db.methodPrices?.[service.id];
   const methods = useMemo(() => {
     const list = [
-      { id: 'piloted', label: 'Piloted', price: methodPrices?.piloted ?? basePrice, icon: Gamepad2 },
+      { id: 'piloted', label: 'Piloted', price: methodPrices?.piloted ?? basePrice, icon: Armchair },
     ];
     const afkPrice = methodPrices ? methodPrices.afk : Math.max(basePrice - cfg.afkDiscount, 0);
-    if (afkPrice != null) list.push({ id: 'afk', label: 'AFK Carry', price: afkPrice, icon: Armchair });
+    if (afkPrice != null) list.push({ id: 'afk', label: 'AFK Carry', price: afkPrice, icon: Gamepad2 });
     return list;
   }, [basePrice, cfg.afkDiscount, methodPrices]);
 
@@ -208,7 +208,7 @@ export default function PurchaseBox({ service, gameShort }: { service: Service; 
     'ffxiv-tea': 'E4S completion',
     'ffxiv-top': 'P8S completion',
     'ffxiv-fru': 'M4S completion',
-    'ffxiv-udm': 'M12S completion',
+    'ffxiv-dmu': 'M12S completion',
   };
   const addonLabel = (a: (typeof ADDON_LIST)[number]) =>
     a.id === 'unlock' && UNLOCK_LABELS[service.id] ? UNLOCK_LABELS[service.id] : a.label;
@@ -470,7 +470,7 @@ export default function PurchaseBox({ service, gameShort }: { service: Service; 
             Add to cart
           </button>
           <div className="mt-3 flex items-center justify-center gap-3 opacity-80">
-            {['paypal', 'crypto', 'revolut'].map((p) => (
+            {['paypal', 'revolut', 'crypto'].map((p) => (
               <img key={p} src={`/payment/${p}.svg`} alt={p} className="h-3.5 w-auto" loading="lazy" />
             ))}
           </div>

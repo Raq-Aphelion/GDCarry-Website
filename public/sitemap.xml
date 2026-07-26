@@ -33,7 +33,7 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-udm</loc>
+    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-dmu</loc>
     <priority>0.8</priority>
   </url>
   <url>
@@ -42,6 +42,26 @@
   </url>
   <url>
     <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-gil-pack</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-pandaemonium-savage</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-savage-tier</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-eden-savage</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-omega-savage</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-alexander-savage</loc>
     <priority>0.8</priority>
   </url>
   <url>

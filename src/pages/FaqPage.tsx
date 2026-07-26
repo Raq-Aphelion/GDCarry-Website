@@ -28,7 +28,7 @@ const SECTIONS: FaqSection[] = [
       {
         q: 'Available Payment Methods',
         answers: [
-          { text: 'We currently accept PayPal, Cryptocurrency and Revolut as our primary payment methods.' },
+          { text: 'We currently accept PayPal, Revolut and Cryptocurrency as our primary payment methods.' },
         ],
       },
       {
@@ -147,7 +147,7 @@ export default function FaqPage() {
       <JsonLd data={faqSchema} />
       <PageMeta
         title="FAQ — Payments, Orders & Boost Types"
-        description="Frequently asked questions about Grand Dice boosting services: payment methods (PayPal, crypto, Revolut), order types (Pilot, AFK, Self Play / Coaching), delivery times and custom carry requests."
+        description="Frequently asked questions about Grand Dice boosting services: payment methods (PayPal, Revolut, crypto), order types (Pilot, AFK, Self Play / Coaching), delivery times and custom carry requests."
         path="/faq"
       />
       {/* ============ HEADER ============ */}

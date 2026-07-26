@@ -32,9 +32,11 @@ export function PricingProvider({ children }: { children: ReactNode }) {
   if (!db) return null;
 
   // Services with per-method DB pricing display the lower of the two method
-  // prices on their card ("From …"); everything else uses the flat override
-  // or the bundled fallback.
+  // prices on their card ("From …"); savage raid series use the first piloted
+  // tier bundle; everything else uses the flat override or bundled fallback.
   const priceOf = (serviceId: string, fallback: number) => {
+    const ss = db.savageSeries?.[serviceId];
+    if (ss) return ss.piloted?.bundles?.[0]?.price ?? fallback;
     const mp = db.methodPrices?.[serviceId];
     if (mp) return Math.min(mp.piloted, mp.afk ?? Infinity);
     return db.servicePrices[serviceId] ?? fallback;

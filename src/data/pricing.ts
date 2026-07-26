@@ -26,6 +26,17 @@ export interface PricingAddon {
   id: string;
   label: string;
   price: number;
+  /** Greyed out and unclickable in the purchase box (e.g. AFK-heavyweight) */
+  disabled?: boolean;
+}
+
+/** Pandaemonium per-method pricing (bundles, per-tier fights, unlocks, completion times) */
+export interface PandaMethodPricing {
+  bundles: PricingAddon[];
+  fights: Record<string, PricingAddon[]>;
+  unlocks: PricingAddon[];
+  stream: number;
+  completion: { normal: string; priority: string };
 }
 
 export interface PricingDb {
@@ -51,6 +62,10 @@ export interface PricingDb {
   methodPrices?: Record<string, { piloted: number; afk?: number }>;
   /** Gil currency pricing (from the ffxiv-Gil category file) */
   gil?: { pricePerMillion: number };
+  /** Savage raid series pricing (from ffxiv-SavageRaids), keyed by service id
+      then method id. A service's card "From" price is its piloted tier
+      bundle's first option. */
+  savageSeries?: Record<string, Record<string, PandaMethodPricing>>;
   /** Service id -> addon id -> per-service addon price override */
   addonPrices?: Record<string, Record<string, number>>;
   /** Service id -> per-method addon lists that REPLACE the global 'unlock'
@@ -106,16 +121,21 @@ export async function loadPricing(): Promise<PricingDb> {
     const addonPrices: NonNullable<PricingDb['addonPrices']> = {};
     const serviceAddons: NonNullable<PricingDb['serviceAddons']> = {};
     let gil: PricingDb['gil'];
+    let savageSeries: PricingDb['savageSeries'];
     await Promise.all(
       (db.categories ?? []).map(async (file) => {
         try {
           const r = await fetch(`${base}db/${file}.json`, { cache: 'no-store' });
           if (!r.ok) return;
-          const cat = (await r.json()) as Pick<PricingDb, 'methodPrices' | 'addonPrices' | 'serviceAddons' | 'gil'>;
+          const cat = (await r.json()) as Pick<
+            PricingDb,
+            'methodPrices' | 'addonPrices' | 'serviceAddons' | 'gil' | 'savageSeries'
+          >;
           Object.assign(methodPrices, cat.methodPrices);
           Object.assign(addonPrices, cat.addonPrices);
           Object.assign(serviceAddons, cat.serviceAddons);
           if (cat.gil) gil = cat.gil;
+          if (cat.savageSeries) savageSeries = { ...savageSeries, ...cat.savageSeries };
         } catch {
           /* broken category file — skip it */
         }
@@ -130,6 +150,7 @@ export async function loadPricing(): Promise<PricingDb> {
       addonPrices,
       serviceAddons,
       gil,
+      savageSeries,
       servicePrices: db.servicePrices ?? {},
     };
   } catch {

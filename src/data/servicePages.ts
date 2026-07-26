@@ -1,9 +1,11 @@
-import { BadgeCheck, Coins, Gem, Medal, ShieldCheck, Timer, Trophy, Undo2, type LucideIcon } from 'lucide-react';
+import { BadgeCheck, Coins, Gem, Medal, ShieldCheck, Swords, Timer, Trophy, Undo2, type LucideIcon } from 'lucide-react';
 
 export interface ServicePageReward {
   icon: LucideIcon;
   title: string;
-  text: string;
+  text?: string;
+  /** Replaces `text`: mount names rendered as buttons (future mount links) */
+  items?: string[];
 }
 
 export interface ServicePageAccordionSection {
@@ -199,8 +201,8 @@ export const SERVICE_PAGES: Record<string, ServicePageContent> = {
       PILOTED_ONLY,
     ],
   },
-  'ffxiv-udm': {
-    short: 'UDM',
+  'ffxiv-dmu': {
+    short: 'DMU',
     rewards: rewards(
       "Mad Harlequin's Totem",
       'The Dancing Mad Adventure Plate (in a later patch)',
@@ -211,7 +213,7 @@ export const SERVICE_PAGES: Record<string, ServicePageContent> = {
       },
     ),
     accordion: [
-      requirements('AAC Heavyweight M4 (Savage) Completed (available as an add-on)', 'ilvl 795 or higher gear'),
+      requirements('AAC Heavyweight M4 (Savage) Completed (available as an add-on)', 'ilvl 790 or higher gear'),
       HOW_IT_WORKS,
       PILOTED_ONLY,
     ],
@@ -298,6 +300,196 @@ SERVICE_PAGES['ffxiv-gil-pack'] = {
         },
       ],
     },
+  ],
+};
+
+SERVICE_PAGES['ffxiv-pandaemonium-savage'] = {
+  short: 'Pandaemonium',
+  rewards: [
+    {
+      icon: Swords,
+      title: 'Savage Gear',
+      text: 'Savage gear ranging from ilvl 600 to 660 depending on the tier (various weapon types).',
+    },
+    {
+      icon: Trophy,
+      title: 'Encounter Specific Mounts (Not guaranteed)',
+      items: ['Demi-Phoinix', 'Sunforged', 'Megaloambystoma'],
+    },
+    {
+      icon: Gem,
+      title: 'Wind-up Athena (P12S)',
+      text: 'Exclusive glamour and pet drops from the savage fights.',
+    },
+    {
+      icon: Medal,
+      title: 'Achievement: “Apotheosis Agria I” & More',
+      text: 'Achievement unlocked upon defeating Endwalker Savage Tier.',
+    },
+  ],
+  accordion: [
+    {
+      title: 'Requirements',
+      items: [
+        'Have a level 100 Job',
+        'Own the Dawntrail Expansion',
+        'Normal Mode Completion / Fight Unlocked (available as additional services)',
+      ],
+    },
+    HOW_IT_WORKS,
+    PILOTED_VS_AFK,
+  ],
+};
+
+SERVICE_PAGES['ffxiv-savage-tier'] = {
+  short: 'Arcadion',
+  rewards: [
+    {
+      icon: Swords,
+      title: 'Savage Gear',
+      text: "Dark Horse, Babyface & Grand Champion gear ranging from ilvl 730 to 795 depending on the tier.",
+    },
+    {
+      icon: Trophy,
+      title: 'Encounter Specific Mounts (Not guaranteed)',
+      items: ['Monowheel S1', 'Air-wheeler C9', 'Lowrider T1RANT'],
+    },
+    {
+      icon: Gem,
+      title: 'Black Cat Card, Illustrated Tokens & Facewear',
+      text: 'Exclusive collectibles, exchange tokens and glamour from the savage fights.',
+    },
+    {
+      icon: Medal,
+      title: 'Achievement: “Cruising at the Savage Apex I” & More',
+      text: 'Achievement unlocked upon defeating Dawntrail Savage Tier.',
+    },
+  ],
+  accordion: [
+    {
+      title: 'Requirements',
+      items: [
+        'Have a level 100 Job',
+        'Own the Dawntrail Expansion',
+        'Normal Mode Completion / Fight Unlocked (available as additional services)',
+      ],
+    },
+    HOW_IT_WORKS,
+    PILOTED_VS_AFK,
+  ],
+};
+
+SERVICE_PAGES['ffxiv-eden-savage'] = {
+  short: 'Eden',
+  rewards: [
+    {
+      icon: Swords,
+      title: 'Savage Gear',
+      text: 'Savage gear ranging from ilvl 470 to 535 depending on the tier (various weapon types).',
+    },
+    {
+      icon: Trophy,
+      title: 'Encounter Specific Mounts (Not guaranteed)',
+      items: ['Skyslipper', 'Ramuh', 'Eden'],
+    },
+    {
+      icon: Gem,
+      title: 'Exclusive Glamour & Minion Drops',
+      text: 'Exclusive glamour and collectibles from the savage fights.',
+    },
+    {
+      icon: Medal,
+      title: 'Achievement: “Savage Paradise Within Thee I” & More',
+      text: 'Achievement unlocked upon defeating Shadowbringers Savage Tier.',
+    },
+  ],
+  accordion: [
+    {
+      title: 'Requirements',
+      items: [
+        'Have a level 80 Job',
+        'Own the Shadowbringers Expansion',
+        'Normal Mode Completion / Fight Unlocked (available as additional services)',
+      ],
+    },
+    HOW_IT_WORKS,
+    PILOTED_VS_AFK,
+  ],
+};
+
+SERVICE_PAGES['ffxiv-omega-savage'] = {
+  short: 'Omega',
+  rewards: [
+    {
+      icon: Swords,
+      title: 'Savage Gear',
+      text: 'Savage gear ranging from ilvl 340 to 405 depending on the tier (various weapon types).',
+    },
+    {
+      icon: Trophy,
+      title: 'Encounter Specific Mounts (Not guaranteed)',
+      items: ['Alte Roite', 'Air Force', 'Model O'],
+    },
+    {
+      icon: Gem,
+      title: 'Wind-up Exdeath & Glamour Drops',
+      text: 'Exclusive minions and glamour from the savage fights.',
+    },
+    {
+      icon: Medal,
+      title: 'Achievement: “I Am the Savage Alpha, I Am the Savage Omega I” & More',
+      text: 'Achievement unlocked upon defeating Stormblood Savage Tier.',
+    },
+  ],
+  accordion: [
+    {
+      title: 'Requirements',
+      items: [
+        'Have a level 70 Job',
+        'Own the Stormblood Expansion',
+        'Normal Mode Completion / Fight Unlocked (available as additional services)',
+      ],
+    },
+    HOW_IT_WORKS,
+    PILOTED_VS_AFK,
+  ],
+};
+
+SERVICE_PAGES['ffxiv-alexander-savage'] = {
+  short: 'Alexander',
+  rewards: [
+    {
+      icon: Swords,
+      title: 'Savage Gear',
+      text: 'Gordian, Midan & Alexandrian gear ranging from ilvl 210 to 275 depending on the tier.',
+    },
+    {
+      icon: Trophy,
+      title: 'Encounter Specific Mounts (Not guaranteed)',
+      items: ['Gobwalker', 'Arrhidaeus'],
+    },
+    {
+      icon: Gem,
+      title: 'Exclusive Glamour & Minion Drops',
+      text: 'Exclusive glamour and collectibles from the savage fights.',
+    },
+    {
+      icon: Medal,
+      title: 'Achievement: “Sins of the Savage Creator I” & More',
+      text: 'Achievement unlocked upon defeating Heavensward Savage Tier.',
+    },
+  ],
+  accordion: [
+    {
+      title: 'Requirements',
+      items: [
+        'Have a level 60 Job',
+        'Own the Heavensward Expansion',
+        'Normal Mode Completion / Fight Unlocked (available as additional services)',
+      ],
+    },
+    HOW_IT_WORKS,
+    PILOTED_VS_AFK,
   ],
 };
 

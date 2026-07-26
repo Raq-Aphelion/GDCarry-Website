@@ -21,6 +21,8 @@ export interface CartItem {
   multiplier?: number;
   /** FFXIV Logs parse tier surcharge, in percent of (price × qty × multiplier) */
   logsPercent?: number;
+  /** One-off orders (e.g. Pandaemonium tier bundles): qty controls disabled */
+  qtyLocked?: boolean;
 }
 
 interface CartContextValue {
@@ -31,7 +33,7 @@ interface CartContextValue {
   openCart: () => void;
   closeCart: () => void;
   addItem: (
-    service: Service & { flat?: number; multiplier?: number; logsPercent?: number; method?: string },
+    service: Service & { flat?: number; multiplier?: number; logsPercent?: number; method?: string; qtyLocked?: boolean },
     gameShort: string,
     details?: string[],
     qty?: number,
@@ -67,7 +69,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const addItem = useCallback(
     (
-      service: Service & { flat?: number; multiplier?: number; logsPercent?: number; method?: string },
+      service: Service & { flat?: number; multiplier?: number; logsPercent?: number; method?: string; qtyLocked?: boolean },
       gameShort: string,
       details?: string[],
       qty = 1,
@@ -79,6 +81,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
         if (existing) {
           // Gil: deny extra adds once the line is at the 900 cap; runs hard-capped at 999
           if (service.id.startsWith('ffxiv-gil-pack') && existing.qty >= 900) return prev;
+          // One-off lines (tier bundles etc.) never stack
+          if (existing.qtyLocked) return prev;
           return prev.map((i) =>
             i.id === service.id
               ? {
@@ -104,6 +108,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
             multiplier: service.multiplier,
             logsPercent: service.logsPercent,
             method: service.method,
+            qtyLocked: service.qtyLocked,
           },
         ];
       });

@@ -7,10 +7,12 @@ import FadeImage from '@/components/FadeImage';
 import MobileCategoryBar from '@/components/MobileCategoryBar';
 import PurchaseBox from '@/components/PurchaseBox';
 import GilPurchaseBox from '@/components/GilPurchaseBox';
+import SavageSeriesPurchaseBox from '@/components/SavageSeriesPurchaseBox';
 import Reveal from '@/components/Reveal';
 import ServiceCard from '@/components/ServiceCard';
 import { getGame } from '@/data/games';
 import { getServicePage } from '@/data/servicePages';
+import { usePricing } from '@/context/PricingContext';
 import { SERVICE_TAG_ICONS as POINT_ICONS } from '@/data/serviceIcons';
 import ffxivBg from '@/assets/images/backgrounds/ffxiv-bg.webp';
 import useDragScroll from '@/hooks/useDragScroll';
@@ -30,6 +32,7 @@ function Bullets({ items }: { items: string[] }) {
 
 export default function ServicePage() {
   const { gameId, serviceId } = useParams<{ gameId: string; serviceId: string }>();
+  const { db } = usePricing();
   const game = gameId ? getGame(gameId) : undefined;
   const sub = game?.subcategories.find((s) => s.id !== 'all' && s.services.some((sv) => sv.id === serviceId));
   const service = sub?.services.find((sv) => sv.id === serviceId);
@@ -101,7 +104,6 @@ export default function ServicePage() {
       <Reveal delay={100}>
         <h1 className="mt-5 text-left font-display text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
           {service.name}
-          {sub.id === 'ultimate-raids' && service.id !== 'ffxiv-ultimate-bundle' && ' (Ultimate)'}
         </h1>
       </Reveal>
       <Reveal delay={200}>
@@ -152,7 +154,21 @@ export default function ServicePage() {
               </span>
               <div className="min-w-0 text-left">
                 <p className="text-sm font-bold text-white max-sm:text-xs">{r.title}</p>
-                <p className="mt-1 text-sm leading-relaxed text-slate-400 max-sm:text-xs">{r.text}</p>
+                {r.items ? (
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    {r.items.map((m) => (
+                      <button
+                        key={m}
+                        type="button"
+                        className="rounded-[5px] border border-navy-700/70 bg-navy-800 px-2.5 py-1 text-xs font-medium text-slate-300 transition-colors hover:border-cyan-600/30 hover:text-cyan-400"
+                      >
+                        {m}
+                      </button>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="mt-1 text-sm leading-relaxed text-slate-400 max-sm:text-xs">{r.text}</p>
+                )}
               </div>
             </div>
           ))}
@@ -295,10 +311,12 @@ export default function ServicePage() {
         {/* Middle top: title, text, tags — negative margin trims the flex gap below on mobile */}
         <div className="min-w-0 max-lg:-mb-4 lg:col-start-2 lg:row-start-1">{header}</div>
 
-        {/* Right: purchase block (gil uses its own box; price block floats via its own sticky) */}
+        {/* Right: purchase block (gil/savage series use their own boxes; price block floats via its own sticky) */}
         <aside className="min-w-0 lg:col-start-3 lg:row-span-2 lg:row-start-1 lg:flex lg:flex-col">
           {service.id === 'ffxiv-gil-pack' ? (
             <GilPurchaseBox service={service} gameShort={game.short} />
+          ) : db.savageSeries?.[service.id] ? (
+            <SavageSeriesPurchaseBox key={service.id} service={service} gameShort={game.short} />
           ) : (
             <PurchaseBox service={service} gameShort={game.short} />
           )}

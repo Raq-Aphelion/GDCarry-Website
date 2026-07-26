@@ -22,7 +22,7 @@
     "ffxiv-fru": {
       "piloted": 175
     },
-    "ffxiv-udm": {
+    "ffxiv-dmu": {
       "piloted": 450
     },
     "ffxiv-ultimate-bundle": {
@@ -49,7 +49,7 @@
     "ffxiv-fru": {
       "unlock": 70
     },
-    "ffxiv-udm": {
+    "ffxiv-dmu": {
       "unlock": 105
     }
   },
