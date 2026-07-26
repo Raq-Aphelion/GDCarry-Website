@@ -7,6 +7,7 @@ import FadeImage from '@/components/FadeImage';
 import Reveal from '@/components/Reveal';
 import ServiceCard from '@/components/ServiceCard';
 import { games, getGame, serviceCount } from '@/data/games';
+import { usePricing } from '@/context/PricingContext';
 import useDragScroll from '@/hooks/useDragScroll';
 
 const HERO_VIDEO_WEBM = '/videos/hero-video.webm';
@@ -15,7 +16,7 @@ const HERO_POSTER = '/videos/hero-image.webp';
 
 const FEATURED_IDS = [
   'ffxiv-gil-pack',
-  'ffxiv-savage-tier',
+  'ffxiv-arcadion-savage',
   'ffxiv-uwu',
   'ffxiv-potd-solo',
   'ffxiv-cc-rank',
@@ -97,10 +98,13 @@ const STEPS = [
 
 export default function Home() {
   const carouselRef = useDragScroll<HTMLDivElement>();
+  const { db } = usePricing();
   const ffxiv = getGame('ffxiv');
-  // FEATURED_IDS order defines the card order (1st entry = 1st spot)
+  // FEATURED_IDS order defines the card order (1st entry = 1st spot);
+  // the database `popularPicks` entry overrides it when present
   const allServices = ffxiv ? ffxiv.subcategories.flatMap((s) => s.services) : [];
-  const featured = FEATURED_IDS.map((id) => allServices.find((s) => s.id === id)).filter(
+  const featuredIds = db.popularPicks ?? FEATURED_IDS;
+  const featured = featuredIds.map((id) => allServices.find((s) => s.id === id)).filter(
     (s): s is (typeof allServices)[number] => !!s,
   );
 

@@ -2,10 +2,16 @@
   "currency": {
     "usdPerEur": 1.15
   },
+  "currentPatch": {
+    "name": "Patch 7.55",
+    "proxies": ["ffxiv-dmu", "ffxiv-arcadion-savage"]
+  },
+  "popularPicks": ["ffxiv-gil-pack", "ffxiv-arcadion-savage", "ffxiv-uwu", "ffxiv-potd-solo", "ffxiv-cc-rank"],
   "categories": [
     "ffxiv-UltimateRaids",
     "ffxiv-Gil",
-    "ffxiv-SavageRaids"
+    "ffxiv-SavageRaids",
+    "ffxiv-Leveling"
   ],
   "purchaseBox": {
     "runsMin": 1,
@@ -54,11 +60,6 @@
       }
     ],
     "addons": [
-      {
-        "id": "unlock",
-        "label": "Duty unlock",
-        "price": 39.99
-      },
       {
         "id": "stream",
         "label": "Private Stream",

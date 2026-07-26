@@ -131,7 +131,9 @@ export default function PurchaseBox({ service, gameShort }: { service: Service; 
   const cfg = db.purchaseBox;
   const GEAR_OPTIONS = cfg.gearOptions;
   const LOG_OPTIONS = cfg.logOptions;
-  const ADDONS = cfg.addons;
+  // The duty-unlock addon comes from the ffxiv-UltimateRaids category file;
+  // stream/priority stay in the base purchaseBox config
+  const ADDONS = [...(db.unlockAddon ? [db.unlockAddon] : []), ...cfg.addons];
 
   const basePrice = priceOf(service.id, service.price);
   // Services with explicit per-method prices in the DB (e.g. ultimates) bypass

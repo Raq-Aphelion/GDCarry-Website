@@ -49,7 +49,7 @@ export default function SavageSeriesPurchaseBox({ service, gameShort }: { servic
   const LOG_OPTIONS = db.purchaseBox.logOptions;
   const GEAR_OPTIONS = db.purchaseBox.gearOptions;
   // Gear Options (shared with the ultimate raids box) — Arcadion only
-  const showGear = service.id === 'ffxiv-savage-tier';
+  const showGear = service.id === 'ffxiv-arcadion-savage';
 
   const [method, setMethod] = useState<MethodId>('piloted');
   const cfg = db.savageSeries?.[service.id]?.[method];

@@ -1,0 +1,32 @@
+{
+  "leveling": {
+    "serviceId": "ffxiv-leveling-boost",
+    "fromPrice": 50,
+    "levelMin": 1,
+    "levelMax": 100,
+    "defaultStart": 90,
+    "defaultEnd": 100,
+    "priceTiers": [
+      { "min": 1, "max": 50, "pricePerLevel": 1.5 },
+      { "min": 51, "max": 80, "pricePerLevel": 3 },
+      { "min": 81, "max": 90, "pricePerLevel": 4 },
+      { "min": 91, "max": 100, "pricePerLevel": 5 }
+    ],
+    "msqAddon": { "id": "msq", "label": "Dawntrail MSQ Completion", "price": 30 },
+    "completion": "24 Hours"
+  },
+  "msqBoost": {
+    "serviceId": "ffxiv-msq-skip",
+    "expansions": [
+      { "id": "arr", "label": "2.5 - A Realm Reborn", "price": 30 },
+      { "id": "hw", "label": "3.5 - Heavensward", "price": 30 },
+      { "id": "stb", "label": "4.5 - Stormblood", "price": 30 },
+      { "id": "shb", "label": "5.5 - Shadowbringers", "price": 30 },
+      { "id": "ew", "label": "6.5 - Endwalker", "price": 30 },
+      { "id": "dt", "label": "7.0 - Dawntrail", "price": 30 },
+      { "id": "cp", "label": "7.5 - Trail to the Heavens", "price": 30 }
+    ],
+    "aetherCurrents": { "label": "Aether Currents unlock", "pricePerExpansion": 5, "expansions": ["hw", "stb", "shb", "ew", "dt"] },
+    "completion": "4-6 Days"
+  }
+}

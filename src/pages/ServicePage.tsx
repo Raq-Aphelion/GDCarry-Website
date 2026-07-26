@@ -8,6 +8,8 @@ import MobileCategoryBar from '@/components/MobileCategoryBar';
 import PurchaseBox from '@/components/PurchaseBox';
 import GilPurchaseBox from '@/components/GilPurchaseBox';
 import SavageSeriesPurchaseBox from '@/components/SavageSeriesPurchaseBox';
+import LevelingPurchaseBox from '@/components/LevelingPurchaseBox';
+import MsqPurchaseBox from '@/components/MsqPurchaseBox';
 import Reveal from '@/components/Reveal';
 import ServiceCard from '@/components/ServiceCard';
 import { getGame } from '@/data/games';
@@ -236,7 +238,9 @@ export default function ServicePage() {
           </Reveal>
           <div className="mt-5 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
             {others.slice(0, 3).map((sv, i) => (
-              <Reveal key={sv.id} delay={Math.min(i, 3) * 80} className={i === 1 ? 'hidden sm:block' : i === 2 ? 'hidden xl:block' : ''}>
+              // Keyed by the current service too: navigating between services
+              // via these cards remounts the grid so the animation replays
+              <Reveal key={`${service.id}:${sv.id}`} delay={Math.min(i, 3) * 80} className={i === 1 ? 'hidden sm:block' : i === 2 ? 'hidden xl:block' : ''}>
                 <ServiceCard service={sv} />
               </Reveal>
             ))}
@@ -317,6 +321,10 @@ export default function ServicePage() {
             <GilPurchaseBox service={service} gameShort={game.short} />
           ) : db.savageSeries?.[service.id] ? (
             <SavageSeriesPurchaseBox key={service.id} service={service} gameShort={game.short} />
+          ) : service.id === db.leveling?.serviceId ? (
+            <LevelingPurchaseBox service={service} gameShort={game.short} />
+          ) : service.id === db.msqBoost?.serviceId ? (
+            <MsqPurchaseBox service={service} gameShort={game.short} />
           ) : (
             <PurchaseBox service={service} gameShort={game.short} />
           )}

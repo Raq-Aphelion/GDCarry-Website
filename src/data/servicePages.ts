@@ -1,4 +1,4 @@
-import { BadgeCheck, Coins, Gem, Medal, ShieldCheck, Swords, Timer, Trophy, Undo2, type LucideIcon } from 'lucide-react';
+import { ArrowUp, BadgeCheck, Coins, Gem, Medal, ShieldCheck, Swords, Timer, Trophy, Undo2, type LucideIcon } from 'lucide-react';
 
 export interface ServicePageReward {
   icon: LucideIcon;
@@ -341,7 +341,7 @@ SERVICE_PAGES['ffxiv-pandaemonium-savage'] = {
   ],
 };
 
-SERVICE_PAGES['ffxiv-savage-tier'] = {
+SERVICE_PAGES['ffxiv-arcadion-savage'] = {
   short: 'Arcadion',
   rewards: [
     {
@@ -408,7 +408,6 @@ SERVICE_PAGES['ffxiv-eden-savage'] = {
       title: 'Requirements',
       items: [
         'Have a level 80 Job',
-        'Own the Shadowbringers Expansion',
         'Normal Mode Completion / Fight Unlocked (available as additional services)',
       ],
     },
@@ -446,7 +445,6 @@ SERVICE_PAGES['ffxiv-omega-savage'] = {
       title: 'Requirements',
       items: [
         'Have a level 70 Job',
-        'Own the Stormblood Expansion',
         'Normal Mode Completion / Fight Unlocked (available as additional services)',
       ],
     },
@@ -484,8 +482,85 @@ SERVICE_PAGES['ffxiv-alexander-savage'] = {
       title: 'Requirements',
       items: [
         'Have a level 60 Job',
-        'Own the Heavensward Expansion',
         'Normal Mode Completion / Fight Unlocked (available as additional services)',
+      ],
+    },
+    HOW_IT_WORKS,
+    PILOTED_VS_AFK,
+  ],
+};
+
+SERVICE_PAGES['ffxiv-leveling-boost'] = {
+  short: 'Job Leveling',
+  rewardsHeading: 'What you get',
+  rewards: [
+    {
+      icon: ArrowUp,
+      title: 'Level Up!',
+      text: 'Target job leveled to your chosen level.',
+    },
+    {
+      icon: BadgeCheck,
+      title: 'Become Powerful!',
+      text: 'Access to higher level job actions and traits.',
+    },
+    {
+      icon: Timer,
+      title: 'Time Saver',
+      text: 'Saved time compared to manual leveling.',
+    },
+    {
+      icon: Swords,
+      title: 'Start Raiding Quickly',
+      text: 'Get your job to Max Level and start doing trials & raids instantly!',
+    },
+  ],
+  accordion: [
+    {
+      title: 'Requirements',
+      items: [
+        'Have a main Job at your desired level',
+        'Own the Dawntrail Expansion',
+        'Completion of Dawntrail MSQ (available as an add-on)',
+        'Gear for all levels',
+      ],
+    },
+    HOW_IT_WORKS,
+    PILOTED_VS_AFK,
+  ],
+};
+
+SERVICE_PAGES['ffxiv-msq-skip'] = {
+  short: 'MSQ Boost',
+  rewardsHeading: 'What you get',
+  rewards: [
+    {
+      icon: BadgeCheck,
+      title: 'MSQ Completed',
+      text: 'Main Scenario completed up to your chosen expansion.',
+    },
+    {
+      icon: Swords,
+      title: 'Main Story Rewards',
+      text: 'Acquire MSQ specific Mounts, Minions and Glamour.',
+    },
+    {
+      icon: Timer,
+      title: 'Time Saver',
+      text: 'Skip hundreds of hours of story content and cutscenes.',
+    },
+    {
+      icon: Trophy,
+      title: 'Ready for Endgame',
+      text: 'Jump straight into endgame content on your job of choice.',
+    },
+  ],
+  accordion: [
+    {
+      title: 'Requirements',
+      items: [
+        'Own the expansions being completed',
+        'Have a main Job at the level required for the furthest expansion selected',
       ],
     },
     HOW_IT_WORKS,

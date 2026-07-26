@@ -46,6 +46,15 @@ export interface PricingDb {
   };
   /** Per-category database files (without .json) to merge in */
   categories?: string[];
+  /** Current Patch category: display name and the service ids shown as proxy
+      cards (duplicates from other categories that never inflate counts) */
+  currentPatch?: { name?: string; proxies?: string[] };
+  /** Homepage Popular Picks: service ids in display order (1st = 1st spot) */
+  popularPicks?: string[];
+  /** Shared duty-unlock addon, defined by the ffxiv-UltimateRaids category
+      (the only services whose purchase box offers it). Per-service price
+      overrides live in `addonPrices`. */
+  unlockAddon?: PricingAddon;
   purchaseBox: {
     /** Flat EUR discount applied to the AFK Carry method */
     afkDiscount: number;
@@ -66,6 +75,30 @@ export interface PricingDb {
       then method id. A service's card "From" price is its piloted tier
       bundle's first option. */
   savageSeries?: Record<string, Record<string, PandaMethodPricing>>;
+  /** Powerleveling pricing (from ffxiv-Leveling): per-level price tiers and
+      the MSQ add-on for the leveling purchase box */
+  leveling?: {
+    serviceId: string;
+    /** Card "From" price for the leveling service */
+    fromPrice?: number;
+    levelMin: number;
+    levelMax: number;
+    defaultStart: number;
+    defaultEnd: number;
+    priceTiers: { min: number; max: number; pricePerLevel: number }[];
+    msqAddon: PricingAddon;
+    completion: string;
+  };
+  /** MSQ Completion boost pricing (from ffxiv-Leveling): per-expansion prices.
+      The card "From" price is the first expansion's price. */
+  msqBoost?: {
+    serviceId: string;
+    expansions: PricingAddon[];
+    /** Per-expansion add-on; `expansions` is the whitelist of expansion ids
+        that count toward it (edit to include/exclude any) */
+    aetherCurrents?: { label: string; pricePerExpansion: number; expansions: string[] };
+    completion: string;
+  };
   /** Service id -> addon id -> per-service addon price override */
   addonPrices?: Record<string, Record<string, number>>;
   /** Service id -> per-method addon lists that REPLACE the global 'unlock'
@@ -97,7 +130,6 @@ export const DEFAULT_PRICING: PricingDb = {
       { label: 'Pink Parse (99% Logs)', price: 0, percent: 600 },
     ],
     addons: [
-      { id: 'unlock', label: 'Duty unlock', price: 39.99 },
       { id: 'stream', label: 'Private Stream', price: 10.0 },
       { id: 'priority', label: 'Priority', price: 0 },
     ],
@@ -122,6 +154,9 @@ export async function loadPricing(): Promise<PricingDb> {
     const serviceAddons: NonNullable<PricingDb['serviceAddons']> = {};
     let gil: PricingDb['gil'];
     let savageSeries: PricingDb['savageSeries'];
+    let leveling: PricingDb['leveling'];
+    let msqBoost: PricingDb['msqBoost'];
+    let unlockAddon: PricingDb['unlockAddon'];
     await Promise.all(
       (db.categories ?? []).map(async (file) => {
         try {
@@ -129,13 +164,16 @@ export async function loadPricing(): Promise<PricingDb> {
           if (!r.ok) return;
           const cat = (await r.json()) as Pick<
             PricingDb,
-            'methodPrices' | 'addonPrices' | 'serviceAddons' | 'gil' | 'savageSeries'
+            'methodPrices' | 'addonPrices' | 'serviceAddons' | 'gil' | 'savageSeries' | 'leveling' | 'msqBoost' | 'unlockAddon'
           >;
           Object.assign(methodPrices, cat.methodPrices);
           Object.assign(addonPrices, cat.addonPrices);
           Object.assign(serviceAddons, cat.serviceAddons);
           if (cat.gil) gil = cat.gil;
           if (cat.savageSeries) savageSeries = { ...savageSeries, ...cat.savageSeries };
+          if (cat.leveling) leveling = cat.leveling;
+          if (cat.msqBoost) msqBoost = cat.msqBoost;
+          if (cat.unlockAddon) unlockAddon = cat.unlockAddon;
         } catch {
           /* broken category file — skip it */
         }
@@ -145,12 +183,17 @@ export async function loadPricing(): Promise<PricingDb> {
     return {
       currency: { ...DEFAULT_PRICING.currency, ...db.currency },
       categories: db.categories,
+      currentPatch: db.currentPatch,
+      popularPicks: db.popularPicks,
+      unlockAddon,
       purchaseBox: { ...DEFAULT_PRICING.purchaseBox, ...db.purchaseBox },
       methodPrices,
       addonPrices,
       serviceAddons,
       gil,
       savageSeries,
+      leveling,
+      msqBoost,
       servicePrices: db.servicePrices ?? {},
     };
   } catch {

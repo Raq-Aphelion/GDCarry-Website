@@ -1,4 +1,9 @@
 {
+  "unlockAddon": {
+    "id": "unlock",
+    "label": "Duty unlock",
+    "price": 0
+  },
   "methodPrices": {
     "ffxiv-dsr": {
       "piloted": 140,

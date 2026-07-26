@@ -55,6 +55,8 @@ import scArcadion from '@/assets/images/service-cards/ffxiv/savage-raids/ffxiv-a
 import scEden from '@/assets/images/service-cards/ffxiv/savage-raids/ffxiv-eden.png';
 import scOmega from '@/assets/images/service-cards/ffxiv/savage-raids/ffxiv-omega.png';
 import scAlexander from '@/assets/images/service-cards/ffxiv/savage-raids/ffxiv-alexander.png';
+import scLeveling from '@/assets/images/service-cards/ffxiv/leveling/ffxiv-leveling.png';
+import scMsq from '@/assets/images/service-cards/ffxiv/leveling/ffxiv-msq.png';
 import { SERVICE_PAGES } from '@/data/servicePages';
 
 export const games: Game[] = [
@@ -92,8 +94,9 @@ export const games: Game[] = [
         services: [],
         // Proxy cards from other categories, shown here as duplicates — they
         // share the original service's id, so serviceCount dedupes them and
-        // they never inflate the totals. Add service ids to display them.
-        proxies: ['ffxiv-dmu', 'ffxiv-savage-tier'],
+        // they never inflate the totals. Both the name and the proxy list are
+        // overridden by the `currentPatch` entry in public/db/pricing.json.
+        proxies: ['ffxiv-dmu', 'ffxiv-arcadion-savage'],
       },
       {
         id: 'ultimate-raids',
@@ -196,7 +199,7 @@ export const games: Game[] = [
         name: 'Savage Raids',
         services: [
           {
-            id: 'ffxiv-savage-tier',
+            id: 'ffxiv-arcadion-savage',
             name: 'Arcadion Raids (Savage)',
             tag2: 'Full loot priority',
             price: 0,
@@ -894,29 +897,27 @@ export const games: Game[] = [
         name: 'Leveling',
         services: [
           {
-            id: 'ffxiv-level-100',
-            name: 'Level 1–100 Powerleveling',
-            tag2: 'Full journey to the Dawntrail cap on any job — aetherytes unlocked.',
+            id: 'ffxiv-leveling-boost',
+            name: 'Job Leveling Boost',
+            tag2: 'Job quests included',
             price: 0,
-            tag1: '5–8 days',
-            image: scBlank,
+            tag1: 'Save time and effort',
+            tag3: 'Any job, any level',
+            longDescription:
+              'Skip the grind and level your chosen job quickly and efficiently. Our Job Leveling boost helps you reach your target level while saving time, letting you focus on endgame content, raiding, or gearing without the repetitive leveling process.',
+            image: scLeveling,
             tag: 'Popular',
-          },
-          {
-            id: 'ffxiv-alt-job',
-            name: 'Alt Job Boost 90–100',
-            tag2: 'Push any combat job through the last stretch with optimized dungeon spam.',
-            price: 0,
-            tag1: '2–3 days',
-            image: scBlank,
           },
           {
             id: 'ffxiv-msq-skip',
             name: 'MSQ Completion Boost',
-            tag2: 'Main Scenario completed from any point — ARR through Dawntrail.',
+            tag2: 'Job quests included',
             price: 0,
-            tag1: '4–6 days',
-            image: scBlank,
+            tag1: 'Save time and effort',
+            tag3: 'Any Expansion or Patches',
+            longDescription:
+              'The main scenario is the heart of Eorzea’s story — but not everyone has the time to live through every chapter. Our MSQ Completion boost carries your character through the Main Scenario up to your chosen expansion, unlocking duties, trials and endgame content along the way.',
+            image: scMsq,
           },
         ],
       },
