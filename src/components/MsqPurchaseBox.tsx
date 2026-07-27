@@ -125,7 +125,7 @@ export default function MsqPurchaseBox({ service, gameShort }: { service: Servic
     addItem(
       {
         ...service,
-        id: `${service.id}|${job}|${dc}|${sorted.join(',')}`,
+        id: `${service.id}::${job}|${dc}|${sorted.join(',')}`,
         price: total,
         method: 'Piloted',
         qtyLocked: true,

@@ -53,13 +53,14 @@ const PILOTED_VS_AFK: ServicePageAccordionSection = {
 };
 
 const PILOTED_ONLY: ServicePageAccordionSection = {
-  title: 'Piloted Version',
-  groups: [
-    {
-      heading: 'Piloted Version',
-      items: ['A Professional Raider will be logged onto your account and complete the content on your behalf'],
-    },
-  ],
+  title: 'Piloted Boost',
+  items: ['A Professional Raider will be logged onto your account and complete the content on your behalf'],
+};
+
+/** Leveling services: same single-method accordion, booster wording. */
+const PILOTED_BOOST: ServicePageAccordionSection = {
+  title: 'Piloted Boost',
+  items: ['A Professional Booster will be logged onto your account and complete the content on your behalf'],
 };
 
 /** Requirements shared by every Ultimate; `duty` is the unlock duty line. */
@@ -526,7 +527,7 @@ SERVICE_PAGES['ffxiv-leveling-boost'] = {
       ],
     },
     HOW_IT_WORKS,
-    PILOTED_VS_AFK,
+    PILOTED_BOOST,
   ],
 };
 
@@ -564,7 +565,45 @@ SERVICE_PAGES['ffxiv-msq-skip'] = {
       ],
     },
     HOW_IT_WORKS,
-    PILOTED_VS_AFK,
+    PILOTED_BOOST,
+  ],
+};
+
+SERVICE_PAGES['ffxiv-blu-leveling-boost'] = {
+  short: 'Blue Mage',
+  rewardsHeading: 'What you get',
+  rewards: [
+    {
+      icon: ArrowUp,
+      title: 'Level Up!',
+      text: 'Blue Mage leveled to your chosen level, up to the level 80 cap.',
+    },
+    {
+      icon: Gem,
+      title: 'Every Spell in the Book',
+      text: 'All Blue Mage spells learned (available as an add-on).',
+    },
+    {
+      icon: BadgeCheck,
+      title: 'Masked Carnivale Access',
+      text: 'Job quests and the Masked Carnivale unlocked along the way.',
+    },
+    {
+      icon: Timer,
+      title: 'Time Saver',
+      text: 'Skip the spell hunting and the level grind entirely.',
+    },
+  ],
+  accordion: [
+    {
+      title: 'Requirements',
+      items: [
+        'Have a level 50 or higher Disciple of War or Magic',
+        'Blue Mage unlocked on your account',
+      ],
+    },
+    HOW_IT_WORKS,
+    PILOTED_BOOST,
   ],
 };
 

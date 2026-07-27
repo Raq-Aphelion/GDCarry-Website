@@ -7,6 +7,7 @@ export const SERVICE_TAG_ICONS: Record<string, [LucideIcon, LucideIcon, LucideIc
   'ffxiv-gil-pack': [Coins, ShieldCheck, Globe],
   'ffxiv-leveling-boost': [Timer, SquareCheck, ArrowUp],
   'ffxiv-msq-skip': [Timer, SquareCheck, ArrowUp],
+  'ffxiv-blu-leveling-boost': [Timer, SquareCheck, ArrowUp],
   'ffxiv-pandaemonium-savage': [Package, SquareCheck, Gamepad2],
   'ffxiv-arcadion-savage': [Package, SquareCheck, Gamepad2],
   'ffxiv-eden-savage': [Package, SquareCheck, Gamepad2],

@@ -6,9 +6,9 @@ import { CustomSelect } from './PurchaseBox';
 import { Slider } from '@/components/ui/slider';
 import { useCart } from '@/context/CartContext';
 import { useCurrency } from '@/context/CurrencyContext';
-import { usePricing } from '@/context/PricingContext';
 import { usePurchaseFloat } from '@/hooks/usePurchaseFloat';
 import type { Service } from '@/data/games';
+import type { PricingAddon } from '@/data/pricing';
 
 const DATA_CENTERS = [
   'Aether',
@@ -48,20 +48,43 @@ const JOBS = [
   'Pictomancer (PCT)',
 ];
 
-/** Leveling purchase box: level range (inputs + dual slider), job and data
-    center selects, MSQ add-on — priced per level from the ffxiv-Leveling
-    database category. */
-export default function LevelingPurchaseBox({ service, gameShort }: { service: Service; gameShort: string }) {
+/** Unified config for the level-range purchase box. The standard leveling
+    box adds the job select; Blue Mage skips it and swaps the add-on. */
+export interface LevelBoxConfig {
+  levelMin: number;
+  levelMax: number;
+  defaultStart: number;
+  defaultEnd: number;
+  priceTiers: { min: number; max: number; pricePerLevel: number }[];
+  completion: string;
+  showJob: boolean;
+  addon?: PricingAddon;
+  /** Render the add-on inline above Data Center instead of inside an
+      Additional Options block (used by Blue Mage) */
+  inlineAddon?: boolean;
+}
+
+/** Leveling purchase box: level range (inputs + dual slider), data center
+    select, optional job select and add-on — priced per level from the
+    ffxiv-Leveling database category. */
+export default function LevelingPurchaseBox({
+  service,
+  gameShort,
+  config,
+}: {
+  service: Service;
+  gameShort: string;
+  config: LevelBoxConfig;
+}) {
   const { addItem, openCart } = useCart();
   const { format } = useCurrency();
-  const { db } = usePricing();
-  const cfg = db.leveling;
+  const cfg = config;
 
-  const [start, setStart] = useState(cfg?.defaultStart ?? 90);
-  const [end, setEnd] = useState(cfg?.defaultEnd ?? 100);
+  const [start, setStart] = useState(cfg.defaultStart);
+  const [end, setEnd] = useState(cfg.defaultEnd);
   const [job, setJob] = useState('');
   const [dc, setDc] = useState('');
-  const [msq, setMsq] = useState(false);
+  const [addonChecked, setAddonChecked] = useState(false);
   const [jobError, setJobError] = useState(false);
   const [dcError, setDcError] = useState(false);
   const [optionsOpen, setOptionsOpen] = useState(false);
@@ -77,8 +100,8 @@ export default function LevelingPurchaseBox({ service, gameShort }: { service: S
   );
 
   const clampLevels = (s: number, e: number): [number, number] => {
-    const min = cfg?.levelMin ?? 1;
-    const max = cfg?.levelMax ?? 100;
+    const min = cfg.levelMin;
+    const max = cfg.levelMax;
     s = Math.min(Math.max(s, min), max - 1);
     e = Math.min(Math.max(e, min + 1), max);
     if (s >= e) s = e - 1;
@@ -92,7 +115,6 @@ export default function LevelingPurchaseBox({ service, gameShort }: { service: S
 
   // Per-level price tiers: sum the per-level price of every level gained
   const levelPrice = (() => {
-    if (!cfg) return 0;
     let sum = 0;
     for (let l = start + 1; l <= end; l++) {
       const tier = cfg.priceTiers.find((t) => l >= t.min && l <= t.max);
@@ -100,12 +122,18 @@ export default function LevelingPurchaseBox({ service, gameShort }: { service: S
     }
     return sum;
   })();
-  const msqPrice = msq ? cfg?.msqAddon.price ?? 0 : 0;
-  const total = levelPrice + msqPrice;
+  // Blue Mage: All spells unlock requires the desired level to be the cap —
+  // greyed out, unchecked and excluded from the price at any lower target
+  const addonEnabled = cfg.inlineAddon ? end === cfg.levelMax : true;
+  useEffect(() => {
+    if (!addonEnabled) setAddonChecked(false);
+  }, [addonEnabled]);
+  const addonPrice = addonChecked && addonEnabled ? cfg.addon?.price ?? 0 : 0;
+  const total = levelPrice + addonPrice;
 
   const addToCart = () => {
     let ok = true;
-    if (!job) {
+    if (cfg.showJob && !job) {
       setJobError(true);
       ok = false;
     }
@@ -117,17 +145,17 @@ export default function LevelingPurchaseBox({ service, gameShort }: { service: S
     addItem(
       {
         ...service,
-        id: `${service.id}|${job}|${dc}|${start}-${end}`,
+        id: `${service.id}::${cfg.showJob ? job : 'blu'}|${dc}|${start}-${end}`,
         price: total,
         method: 'Piloted',
         qtyLocked: true,
       },
       gameShort,
       [
-        `Job: ${job}`,
+        ...(cfg.showJob ? [`Job: ${job}`] : []),
         `Level ${start} → ${end}`,
         `Data Center: ${dc}`,
-        ...(msq ? [cfg!.msqAddon.label] : []),
+        ...(addonChecked && addonEnabled && cfg.addon ? [cfg.addon.label] : []),
       ],
       1,
     );
@@ -150,6 +178,26 @@ export default function LevelingPurchaseBox({ service, gameShort }: { service: S
       }}
       className="h-10 w-full rounded-[5px] border border-navy-700/70 bg-navy-850 px-3.5 text-center text-sm text-slate-300 outline-none transition-colors focus:border-navy-600"
     />
+  );
+
+  const addonRow = cfg.addon && (
+    <button
+      type="button"
+      onClick={() => addonEnabled && setAddonChecked((m) => !m)}
+      aria-pressed={addonChecked}
+      disabled={!addonEnabled}
+      className="flex w-full items-center gap-3 rounded-[5px] bg-navy-850 px-2.5 py-1.5 text-left transition-colors hover:bg-navy-800 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-navy-850"
+    >
+      <span
+        className={`flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-[3px] border transition-colors ${
+          addonChecked ? 'border-cyan-500 bg-cyan-600 text-navy-900' : 'border-navy-600 text-transparent'
+        }`}
+      >
+        <Check className="h-3 w-3" strokeWidth={3.5} />
+      </span>
+      <span className="min-w-0 flex-1 truncate text-sm text-slate-300">{cfg.addon.label}</span>
+      <span className="text-xs font-bold text-cyan-400">+{format(cfg.addon.price)}</span>
+    </button>
   );
 
   return (
@@ -184,8 +232,8 @@ export default function LevelingPurchaseBox({ service, gameShort }: { service: S
             </div>
             <Slider
               className="mt-4"
-              min={cfg?.levelMin ?? 1}
-              max={cfg?.levelMax ?? 100}
+              min={cfg.levelMin}
+              max={cfg.levelMax}
               step={1}
               minStepsBetweenThumbs={1}
               value={[start, end]}
@@ -194,26 +242,31 @@ export default function LevelingPurchaseBox({ service, gameShort }: { service: S
             />
           </div>
 
-          {/* Job */}
-          <div>
-            <p className="pl-px text-sm font-semibold text-white">
-              Job <span className="text-xs font-normal text-slate-500">(required)</span>
-            </p>
-            <div className="relative mt-2.5">
-              <FieldPopup message={jobError ? 'Select a job first.' : ''} />
-              <CustomSelect
-                value={job}
-                placeholder="Select Job"
-                options={JOBS.map((j) => ({ label: j }))}
-                onSelect={(i) => {
-                  setJob(JOBS[i]);
-                  setJobError(false);
-                }}
-                ariaLabel="Select job"
-                invalid={jobError}
-              />
+          {/* Job — hidden for single-job variants (Blue Mage) */}
+          {cfg.showJob && (
+            <div>
+              <p className="pl-px text-sm font-semibold text-white">
+                Job <span className="text-xs font-normal text-slate-500">(required)</span>
+              </p>
+              <div className="relative mt-2.5">
+                <FieldPopup message={jobError ? 'Select a job first.' : ''} />
+                <CustomSelect
+                  value={job}
+                  placeholder="Select Job"
+                  options={JOBS.map((j) => ({ label: j }))}
+                  onSelect={(i) => {
+                    setJob(JOBS[i]);
+                    setJobError(false);
+                  }}
+                  ariaLabel="Select job"
+                  invalid={jobError}
+                />
+              </div>
             </div>
-          </div>
+          )}
+
+          {/* Add-on inline above Data Center (Blue Mage layout) */}
+          {cfg.inlineAddon && addonRow && <div>{addonRow}</div>}
 
           {/* Data center */}
           <div>
@@ -236,7 +289,8 @@ export default function LevelingPurchaseBox({ service, gameShort }: { service: S
             </div>
           </div>
 
-          {/* Additional options */}
+          {/* Additional options — only when the add-on lives inside the block */}
+          {!cfg.inlineAddon && cfg.addon && (
           <div className={`aob rounded-[5px] border border-navy-700/70 bg-navy-850 ${optionsOpen ? 'expanded' : ''}`}>
             <button
               onClick={() => {
@@ -265,31 +319,13 @@ export default function LevelingPurchaseBox({ service, gameShort }: { service: S
                 <div className="space-y-4 px-4 pb-3 pt-1">
                   <div>
                     <p className="mb-2 pl-px text-xs font-semibold text-slate-300">Add-ons</p>
-                    <div className="space-y-1.5">
-                      {cfg && (
-                        <button
-                          type="button"
-                          onClick={() => setMsq((m) => !m)}
-                          aria-pressed={msq}
-                          className="flex w-full items-center gap-3 rounded-[5px] bg-navy-850 px-2.5 py-1.5 text-left transition-colors hover:bg-navy-800"
-                        >
-                          <span
-                            className={`flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-[3px] border transition-colors ${
-                              msq ? 'border-cyan-500 bg-cyan-600 text-navy-900' : 'border-navy-600 text-transparent'
-                            }`}
-                          >
-                            <Check className="h-3 w-3" strokeWidth={3.5} />
-                          </span>
-                          <span className="min-w-0 flex-1 truncate text-sm text-slate-300">{cfg.msqAddon.label}</span>
-                          <span className="text-xs font-bold text-cyan-400">+{format(cfg.msqAddon.price)}</span>
-                        </button>
-                      )}
-                    </div>
+                    <div className="space-y-1.5">{addonRow}</div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
+          )}
         </div>
       </div>
 
@@ -304,7 +340,7 @@ export default function LevelingPurchaseBox({ service, gameShort }: { service: S
           <p className="font-display text-2xl font-extrabold text-white">{format(total)}</p>
           <p className="mt-1 flex items-center justify-center gap-1.5 text-xs text-slate-400">
             <Clock className="h-3.5 w-3.5 text-cyan-500" />
-            Average Completion Time: {cfg?.completion ?? '24 Hours'}
+            Average Completion Time: {cfg.completion}
           </p>
           <button
             onClick={addToCart}

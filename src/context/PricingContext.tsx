@@ -48,6 +48,7 @@ export function PricingProvider({ children }: { children: ReactNode }) {
     const ss = db.savageSeries?.[serviceId];
     if (ss) return ss.piloted?.bundles?.[0]?.price ?? fallback;
     if (serviceId === db.leveling?.serviceId && db.leveling.fromPrice != null) return db.leveling.fromPrice;
+    if (serviceId === db.bluLeveling?.serviceId && db.bluLeveling.fromPrice != null) return db.bluLeveling.fromPrice;
     if (serviceId === db.msqBoost?.serviceId && db.msqBoost.expansions?.[0] != null)
       return db.msqBoost.expansions[0].price;
     const mp = db.methodPrices?.[serviceId];

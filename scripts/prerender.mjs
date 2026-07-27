@@ -27,6 +27,7 @@ const ROUTES = [
   '/boosting/ffxiv/ffxiv-arcadion-savage',
   '/boosting/ffxiv/ffxiv-leveling-boost',
   '/boosting/ffxiv/ffxiv-msq-skip',
+  '/boosting/ffxiv/ffxiv-blu-leveling-boost',
   '/boosting/ffxiv/ffxiv-eden-savage',
   '/boosting/ffxiv/ffxiv-omega-savage',
   '/boosting/ffxiv/ffxiv-alexander-savage',

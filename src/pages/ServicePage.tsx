@@ -322,7 +322,17 @@ export default function ServicePage() {
           ) : db.savageSeries?.[service.id] ? (
             <SavageSeriesPurchaseBox key={service.id} service={service} gameShort={game.short} />
           ) : service.id === db.leveling?.serviceId ? (
-            <LevelingPurchaseBox service={service} gameShort={game.short} />
+            <LevelingPurchaseBox
+              service={service}
+              gameShort={game.short}
+              config={{ ...db.leveling, showJob: true, addon: db.leveling.msqAddon }}
+            />
+          ) : service.id === db.bluLeveling?.serviceId ? (
+            <LevelingPurchaseBox
+              service={service}
+              gameShort={game.short}
+              config={{ ...db.bluLeveling, showJob: false, addon: db.bluLeveling.spellsAddon, inlineAddon: true }}
+            />
           ) : service.id === db.msqBoost?.serviceId ? (
             <MsqPurchaseBox service={service} gameShort={game.short} />
           ) : (

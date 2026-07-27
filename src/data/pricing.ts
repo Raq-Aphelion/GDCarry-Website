@@ -99,6 +99,20 @@ export interface PricingDb {
     aetherCurrents?: { label: string; pricePerExpansion: number; expansions: string[] };
     completion: string;
   };
+  /** Blue Mage leveling pricing (from ffxiv-Leveling): 1-80, no job select,
+      with the All Spells add-on */
+  bluLeveling?: {
+    serviceId: string;
+    /** Card "From" price */
+    fromPrice?: number;
+    levelMin: number;
+    levelMax: number;
+    defaultStart: number;
+    defaultEnd: number;
+    priceTiers: { min: number; max: number; pricePerLevel: number }[];
+    spellsAddon: PricingAddon;
+    completion: string;
+  };
   /** Service id -> addon id -> per-service addon price override */
   addonPrices?: Record<string, Record<string, number>>;
   /** Service id -> per-method addon lists that REPLACE the global 'unlock'
@@ -156,6 +170,7 @@ export async function loadPricing(): Promise<PricingDb> {
     let savageSeries: PricingDb['savageSeries'];
     let leveling: PricingDb['leveling'];
     let msqBoost: PricingDb['msqBoost'];
+    let bluLeveling: PricingDb['bluLeveling'];
     let unlockAddon: PricingDb['unlockAddon'];
     await Promise.all(
       (db.categories ?? []).map(async (file) => {
@@ -164,7 +179,7 @@ export async function loadPricing(): Promise<PricingDb> {
           if (!r.ok) return;
           const cat = (await r.json()) as Pick<
             PricingDb,
-            'methodPrices' | 'addonPrices' | 'serviceAddons' | 'gil' | 'savageSeries' | 'leveling' | 'msqBoost' | 'unlockAddon'
+            'methodPrices' | 'addonPrices' | 'serviceAddons' | 'gil' | 'savageSeries' | 'leveling' | 'msqBoost' | 'bluLeveling' | 'unlockAddon'
           >;
           Object.assign(methodPrices, cat.methodPrices);
           Object.assign(addonPrices, cat.addonPrices);
@@ -173,6 +188,7 @@ export async function loadPricing(): Promise<PricingDb> {
           if (cat.savageSeries) savageSeries = { ...savageSeries, ...cat.savageSeries };
           if (cat.leveling) leveling = cat.leveling;
           if (cat.msqBoost) msqBoost = cat.msqBoost;
+          if (cat.bluLeveling) bluLeveling = cat.bluLeveling;
           if (cat.unlockAddon) unlockAddon = cat.unlockAddon;
         } catch {
           /* broken category file — skip it */
@@ -194,6 +210,7 @@ export async function loadPricing(): Promise<PricingDb> {
       savageSeries,
       leveling,
       msqBoost,
+      bluLeveling,
       servicePrices: db.servicePrices ?? {},
     };
   } catch {

@@ -4,7 +4,7 @@
   },
   "currentPatch": {
     "name": "Patch 7.55",
-    "proxies": ["ffxiv-dmu", "ffxiv-arcadion-savage"]
+    "proxies": ["ffxiv-dmu", "ffxiv-arcadion-savage", "ffxiv-msq-skip"]
   },
   "popularPicks": ["ffxiv-gil-pack", "ffxiv-arcadion-savage", "ffxiv-uwu", "ffxiv-potd-solo", "ffxiv-cc-rank"],
   "categories": [

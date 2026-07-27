@@ -57,6 +57,7 @@ import scOmega from '@/assets/images/service-cards/ffxiv/savage-raids/ffxiv-omeg
 import scAlexander from '@/assets/images/service-cards/ffxiv/savage-raids/ffxiv-alexander.png';
 import scLeveling from '@/assets/images/service-cards/ffxiv/leveling/ffxiv-leveling.png';
 import scMsq from '@/assets/images/service-cards/ffxiv/leveling/ffxiv-msq.png';
+import scBlu from '@/assets/images/service-cards/ffxiv/leveling/ffxiv-blue-mage.png';
 import { SERVICE_PAGES } from '@/data/servicePages';
 
 export const games: Game[] = [
@@ -882,14 +883,6 @@ export const games: Game[] = [
             tag1: '1 week',
             image: scBlank,
           },
-          {
-            id: 'ffxiv-blue-mage',
-            name: 'Blue Mage Spellbook',
-            tag2: 'All Blue Mage spells learned and the Masked Carnivale cleared.',
-            price: 0,
-            tag1: '3–5 days',
-            image: scBlank,
-          },
         ],
       },
       {
@@ -907,6 +900,17 @@ export const games: Game[] = [
               'Skip the grind and level your chosen job quickly and efficiently. Our Job Leveling boost helps you reach your target level while saving time, letting you focus on endgame content, raiding, or gearing without the repetitive leveling process.',
             image: scLeveling,
             tag: 'Popular',
+          },
+          {
+            id: 'ffxiv-blu-leveling-boost',
+            name: 'Blue Mage Leveling Boost',
+            tag2: 'All spells unlock (optional)',
+            price: 0,
+            tag1: 'Save time and effort',
+            tag3: 'Any level up to 80',
+            longDescription:
+              'Blue Mage learns by watching — a limited job that copies the spells of friends and foes alike. Our Blue Mage Leveling boost powers your Blue Mage all the way to 80, with the option to fill your spellbook with every spell the job can learn.',
+            image: scBlu,
           },
           {
             id: 'ffxiv-msq-skip',
