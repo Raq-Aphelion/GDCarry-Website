@@ -19,7 +19,6 @@ const FEATURED_IDS = [
   'ffxiv-arcadion-savage',
   'ffxiv-uwu',
   'ffxiv-potd-solo',
-  'ffxiv-cc-rank',
 ];
 
 const PERKS = [

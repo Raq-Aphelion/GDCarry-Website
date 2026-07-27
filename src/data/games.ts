@@ -40,24 +40,54 @@ import cardWow from '@/assets/images/game-cards/GameCard_WoW.webp';
 import cardLostArk from '@/assets/images/game-cards/GameCard_LostArk.webp';
 import cardWarframe from '@/assets/images/game-cards/GameCard_Warframe.webp';
 import cardOsrs from '@/assets/images/game-cards/GameCard_OSRS.webp';
-import scBlank from '@/assets/images/service-cards/ffxiv/sc-blank.webp';
-import scGil from '@/assets/images/service-cards/ffxiv/gil-currency/sc-gil.webp';
-import scDmu from '@/assets/images/service-cards/ffxiv/ultimate-raids/sc-dmu.webp';
-import scFru from '@/assets/images/service-cards/ffxiv/ultimate-raids/sc-fru.webp';
-import scTop from '@/assets/images/service-cards/ffxiv/ultimate-raids/sc-top.webp';
-import scDsr from '@/assets/images/service-cards/ffxiv/ultimate-raids/sc-dsr.webp';
-import scTea from '@/assets/images/service-cards/ffxiv/ultimate-raids/sc-tea.webp';
-import scUcob from '@/assets/images/service-cards/ffxiv/ultimate-raids/sc-ucob.webp';
-import scUwu from '@/assets/images/service-cards/ffxiv/ultimate-raids/sc-uwu.webp';
-import scUltBundle from '@/assets/images/service-cards/ffxiv/ultimate-raids/sc-ult-bundle.webp';
-import scPandaemonium from '@/assets/images/service-cards/ffxiv/savage-raids/ffxiv-pandaemonium.png';
-import scArcadion from '@/assets/images/service-cards/ffxiv/savage-raids/ffxiv-arcadion.png';
-import scEden from '@/assets/images/service-cards/ffxiv/savage-raids/ffxiv-eden.png';
-import scOmega from '@/assets/images/service-cards/ffxiv/savage-raids/ffxiv-omega.png';
-import scAlexander from '@/assets/images/service-cards/ffxiv/savage-raids/ffxiv-alexander.png';
-import scLeveling from '@/assets/images/service-cards/ffxiv/leveling/ffxiv-leveling.png';
-import scMsq from '@/assets/images/service-cards/ffxiv/leveling/ffxiv-msq.png';
-import scBlu from '@/assets/images/service-cards/ffxiv/leveling/ffxiv-blue-mage.png';
+import scBlank from '@/assets/images/service-cards/ffxiv/ffxiv-blank.webp';
+import scGil from '@/assets/images/service-cards/ffxiv/gil-currency/ffxiv-gil.webp';
+import scDmu from '@/assets/images/service-cards/ffxiv/ultimate-raids/ffxiv-dmu.webp';
+import scFru from '@/assets/images/service-cards/ffxiv/ultimate-raids/ffxiv-fru.webp';
+import scTop from '@/assets/images/service-cards/ffxiv/ultimate-raids/ffxiv-top.webp';
+import scDsr from '@/assets/images/service-cards/ffxiv/ultimate-raids/ffxiv-dsr.webp';
+import scTea from '@/assets/images/service-cards/ffxiv/ultimate-raids/ffxiv-tea.webp';
+import scUcob from '@/assets/images/service-cards/ffxiv/ultimate-raids/ffxiv-ucob.webp';
+import scUwu from '@/assets/images/service-cards/ffxiv/ultimate-raids/ffxiv-uwu.webp';
+import scUltBundle from '@/assets/images/service-cards/ffxiv/ultimate-raids/ffxiv-ult-bundle.webp';
+import scPandaemonium from '@/assets/images/service-cards/ffxiv/savage-raids/ffxiv-pandaemonium.webp';
+import scArcadion from '@/assets/images/service-cards/ffxiv/savage-raids/ffxiv-arcadion.webp';
+import scEden from '@/assets/images/service-cards/ffxiv/savage-raids/ffxiv-eden.webp';
+import scOmega from '@/assets/images/service-cards/ffxiv/savage-raids/ffxiv-omega.webp';
+import scAlexander from '@/assets/images/service-cards/ffxiv/savage-raids/ffxiv-alexander.webp';
+import scLeveling from '@/assets/images/service-cards/ffxiv/leveling/ffxiv-leveling.webp';
+import scMsq from '@/assets/images/service-cards/ffxiv/leveling/ffxiv-msq.webp';
+import scBlu from '@/assets/images/service-cards/ffxiv/leveling/ffxiv-blue-mage.webp';
+import scPvpSeries from '@/assets/images/service-cards/ffxiv/pvp/ffxiv-pvp-series.webp';
+import scCcRank from '@/assets/images/service-cards/ffxiv/pvp/ffxiv-cc-rank.webp';
+import scWolfMarks from '@/assets/images/service-cards/ffxiv/pvp/ffxiv-wolf-marks.webp';
+import scWingsOfLegacy from '@/assets/images/service-cards/ffxiv/mounts/extreme-trial-mounts/ffxiv-wings-of-legacy.webp';
+import scApocryphalBahamut from '@/assets/images/service-cards/ffxiv/mounts/extreme-trial-mounts/ffxiv-apocryphal-bahamut.webp';
+import scLanderwaffe from '@/assets/images/service-cards/ffxiv/mounts/extreme-trial-mounts/ffxiv-landerwaffe.webp';
+import scKamuy from '@/assets/images/service-cards/ffxiv/mounts/extreme-trial-mounts/ffxiv-kamuy.webp';
+import scFirebird from '@/assets/images/service-cards/ffxiv/mounts/extreme-trial-mounts/ffxiv-firebird.webp';
+import scKirin from '@/assets/images/service-cards/ffxiv/mounts/extreme-trial-mounts/ffxiv-kirin.webp';
+import scMonowheelS1 from '@/assets/images/service-cards/ffxiv/mounts/savage-raid-mounts/ffxiv-monowheel-s1.webp';
+import scAirWheelerC9 from '@/assets/images/service-cards/ffxiv/mounts/savage-raid-mounts/ffxiv-air-wheeler-c9.webp';
+import scLowriderT1rant from '@/assets/images/service-cards/ffxiv/mounts/savage-raid-mounts/ffxiv-lowrider-t1rant.webp';
+import scDemiPhoinix from '@/assets/images/service-cards/ffxiv/mounts/savage-raid-mounts/ffxiv-demi-phoinix.webp';
+import scSunforged from '@/assets/images/service-cards/ffxiv/mounts/savage-raid-mounts/ffxiv-sunforged.webp';
+import scMegaloambystoma from '@/assets/images/service-cards/ffxiv/mounts/savage-raid-mounts/ffxiv-megaloambystoma.webp';
+import scSkyslipper from '@/assets/images/service-cards/ffxiv/mounts/savage-raid-mounts/ffxiv-skyslipper.webp';
+import scRamuh from '@/assets/images/service-cards/ffxiv/mounts/savage-raid-mounts/ffxiv-ramuh.webp';
+import scEdenMount from '@/assets/images/service-cards/ffxiv/mounts/savage-raid-mounts/ffxiv-eden.webp';
+import scAlteRoite from '@/assets/images/service-cards/ffxiv/mounts/savage-raid-mounts/ffxiv-alte-roite.webp';
+import scAirForce from '@/assets/images/service-cards/ffxiv/mounts/savage-raid-mounts/ffxiv-air-force.webp';
+import scModelO from '@/assets/images/service-cards/ffxiv/mounts/savage-raid-mounts/ffxiv-model-o.webp';
+import scGobwalker from '@/assets/images/service-cards/ffxiv/mounts/savage-raid-mounts/ffxiv-gobwalker.webp';
+import scArrhidaeus from '@/assets/images/service-cards/ffxiv/mounts/savage-raid-mounts/ffxiv-arrhidaeus.webp';
+import scWingsOfRuin from '@/assets/images/service-cards/ffxiv/mounts/extreme-trial-mounts/ffxiv-wings-of-ruin.webp';
+import scWingsOfResolve from '@/assets/images/service-cards/ffxiv/mounts/extreme-trial-mounts/ffxiv-wings-of-resolve.webp';
+import scWingsOfEternity from '@/assets/images/service-cards/ffxiv/mounts/extreme-trial-mounts/ffxiv-wings-of-eternity.webp';
+import scWingsOfKnighthood from '@/assets/images/service-cards/ffxiv/mounts/extreme-trial-mounts/ffxiv-wings-of-the-knighthood.webp';
+import scWingsOfDeath from '@/assets/images/service-cards/ffxiv/mounts/extreme-trial-mounts/ffxiv-wings-of-death.webp';
+import scWingsOfMist from '@/assets/images/service-cards/ffxiv/mounts/extreme-trial-mounts/ffxiv-wings-of-mist.webp';
+import scWingsOfNihility from '@/assets/images/service-cards/ffxiv/mounts/extreme-trial-mounts/ffxiv-wings-of-nihility.webp';
 import { SERVICE_PAGES } from '@/data/servicePages';
 
 export const games: Game[] = [
@@ -88,6 +118,9 @@ export const games: Game[] = [
             tag: 'Popular',
           },
         ],
+        // Proxy cards from other categories (same shared-id dedupe as Current
+        // Patch: shown here, never duplicated or counted in All Services)
+        proxies: ['ffxiv-wolf-marks'],
       },
       {
         id: 'current-patch',
@@ -97,7 +130,7 @@ export const games: Game[] = [
         // share the original service's id, so serviceCount dedupes them and
         // they never inflate the totals. Both the name and the proxy list are
         // overridden by the `currentPatch` entry in public/db/pricing.json.
-        proxies: ['ffxiv-dmu', 'ffxiv-arcadion-savage'],
+        proxies: ['ffxiv-dmu', 'ffxiv-arcadion-savage', 'ffxiv-wings-of-legacy', 'ffxiv-wings-of-nihility', 'ffxiv-lowrider-t1rant'],
       },
       {
         id: 'ultimate-raids',
@@ -772,93 +805,349 @@ export const games: Game[] = [
         name: 'Mounts',
         services: [
           {
-            id: 'ffxiv-wings-of-nihility',
-            name: 'Wings of Nihility',
-            tag2: 'Patch 7.5 wings without wipes',
+            id: 'ffxiv-wings-of-legacy',
+            name: 'Wings of Legacy (Mount)',
+            tag2: 'Dawntrail Extreme Trials',
             price: 0,
-            tag1: '785 ilvl upgrades included',
-            image: scBlank,
+            tag1: 'Guaranteed (any number of runs)',
+            tag3: 'Piloted or AFK Carry',
+            longDescription:
+              'Collect every Dawntrail wing in one package — from Worqor Lar Dor to The Unmaking — and unlock the Wings of Legacy quest mount on top of all seven Extreme Trial wings.',
+            image: scWingsOfLegacy,
+            tag: 'Best Value',
+          },
+
+          {
+            id: 'ffxiv-wings-of-nihility',
+            name: 'Wings of Nihility (Mount)',
+            tag2: 'The Unmaking (Extreme)',
+            price: 0,
+            tag1: 'Guaranteed (any number of runs)',
+            tag3: 'Piloted or AFK Carry',
+            longDescription:
+              'The newest Dawntrail wings, dropped by The Unmaking on Extreme — a guaranteed farm until the Wings of Nihility are yours, Totems of Naught included.',
+            image: scWingsOfNihility,
             tag: 'Hot',
           },
-          {
-            id: 'ffxiv-apocryphal-bahamut',
-            name: 'Apocryphal Bahamut',
-            tag2: 'Extremely difficult to unlock',
-            price: 0,
-            tag1: '7 extra Lynx mounts + title',
-            image: scBlank,
-          },
-          {
-            id: 'ffxiv-wings-of-ruin',
-            name: 'Wings of Ruin',
-            tag2: '~5% drop chance skip',
-            price: 0,
-            tag1: 'Tomestones & Skyruin Totems',
-            image: scBlank,
-          },
-          {
-            id: 'ffxiv-wings-of-resolve',
-            name: 'Wings of Resolve',
-            tag2: 'Extreme trial mount',
-            price: 0,
-            tag1: 'Guaranteed farm until drop',
-            image: scBlank,
-          },
-          {
-            id: 'ffxiv-wings-of-eternity',
-            name: 'Wings of Eternity',
-            tag2: 'Extreme trial mount',
-            price: 0,
-            tag1: 'Guaranteed farm until drop',
-            image: scBlank,
-          },
-          {
-            id: 'ffxiv-wings-of-knighthood',
-            name: 'Wings of the Knighthood',
-            tag2: '7.2 mount in 5 days',
-            price: 0,
-            tag1: 'Currency for high ilvl gear',
-            image: scBlank,
-          },
-          {
-            id: 'ffxiv-wings-of-death',
-            name: 'Wings of Death',
-            tag2: 'Extreme trial mount',
-            price: 0,
-            tag1: 'Guaranteed farm until drop',
-            image: scBlank,
-          },
+
           {
             id: 'ffxiv-wings-of-mist',
-            name: 'Wings of Mist',
-            tag2: 'Patch 7.4 Extreme trial mount',
+            name: 'Wings of Mist (Mount)',
+            tag2: 'Hell on Rails (Extreme)',
             price: 0,
-            tag1: 'Guaranteed farm until drop',
-            image: scBlank,
+            tag1: 'Guaranteed (any number of runs)',
+            tag3: 'Piloted or AFK Carry',
+            longDescription:
+              'All aboard the Doomtrain: Hell on Rails on Extreme drops the Wings of Mist — we run it until the mount is guaranteed, with Runaway Totems to spare.',
+            image: scWingsOfMist,
             tag: 'Hot',
+          },
+
+          {
+            id: 'ffxiv-wings-of-death',
+            name: 'Wings of Death (Mount)',
+            tag2: "Necron's Embrace mount",
+            price: 0,
+            tag1: 'Guaranteed (any number of runs)',
+            tag3: 'Piloted or AFK Carry',
+            longDescription:
+              'Face the Minstrel’s Ballad: Necron’s Embrace on Extreme and take the Wings of Death — guaranteed, however many clears it takes.',
+            image: scWingsOfDeath,
+          },
+
+          {
+            id: 'ffxiv-wings-of-knighthood',
+            name: 'Wings of the Knighthood (Mount)',
+            tag2: 'Recollection (Extreme)',
+            price: 0,
+            tag1: 'Guaranteed (any number of runs)',
+            tag3: 'Piloted or AFK Carry',
+            longDescription:
+              'Recollection on Extreme guards the Wings of the Knighthood — a guaranteed farm until they drop, with Knight Totems piling up along the way.',
+            image: scWingsOfKnighthood,
+          },
+
+          {
+            id: 'ffxiv-wings-of-eternity',
+            name: 'Wings of Eternity (Mount)',
+            tag2: "Sphene's Burden mount",
+            price: 0,
+            tag1: 'Guaranteed (any number of runs)',
+            tag3: 'Piloted or AFK Carry',
+            longDescription:
+              'The Minstrel’s Ballad: Sphene’s Burden holds the Wings of Eternity — our raiders run it on Extreme until the mount is guaranteed on your account.',
+            image: scWingsOfEternity,
+          },
+
+          {
+            id: 'ffxiv-wings-of-resolve',
+            name: 'Wings of Resolve (Mount)',
+            tag2: 'Everkeep (Extreme)',
+            price: 0,
+            tag1: 'Guaranteed (any number of runs)',
+            tag3: 'Piloted or AFK Carry',
+            longDescription:
+              'Zoraal Ja’s wings from Everkeep on Extreme. Guaranteed farm until the Wings of Resolve drop — or until enough Resilient Totems stack to claim them outright.',
+            image: scWingsOfResolve,
+          },
+
+          {
+            id: 'ffxiv-wings-of-ruin',
+            name: 'Wings of Ruin (Mount)',
+            tag2: 'Worqor Lar Dor (Extreme)',
+            price: 0,
+            tag1: 'Guaranteed (any number of runs)',
+            tag3: 'Piloted or AFK Carry',
+            longDescription:
+              'Valigarmanda’s wings, dropped by Worqor Lar Dor on Extreme. We farm the trial until the Wings of Ruin are yours — guaranteed, no matter how many runs it takes.',
+            image: scWingsOfRuin,
+          },
+
+          {
+            id: 'ffxiv-apocryphal-bahamut',
+            name: 'Apocryphal Bahamut (Mount)',
+            tag2: 'Endwalker Extreme Trials',
+            price: 0,
+            tag1: 'Guaranteed (any number of runs)',
+            tag3: 'Piloted or AFK Carry',
+            longDescription:
+              'The Wings of Hope quest mount, earned only after collecting all seven Endwalker Lynxes — our raiders farm every trial from Zodiark’s Fall to the Abyssal Fracture until the set is complete.',
+            image: scApocryphalBahamut,
+          },
+
+          {
+            id: 'ffxiv-landerwaffe',
+            name: 'Landerwaffe (Mount)',
+            tag2: 'Shadowbringers Extreme Trials',
+            price: 0,
+            tag1: 'Guaranteed (any number of runs)',
+            tag3: 'Piloted or AFK Carry',
+            longDescription:
+              'Shadowbringers’ ultimate collector’s prize: Landerwaffe unlocks once all seven Gwibers are yours — we clear every Extreme from the Dancing Plague to the Cloud Deck until they are.',
+            image: scLanderwaffe,
+          },
+
+          {
+            id: 'ffxiv-kamuy-nine-tails',
+            name: 'Kamuy of the Nine Tails (Mount)',
+            tag2: 'Stormblood Extreme Trials',
+            price: 0,
+            tag1: 'Guaranteed (any number of runs)',
+            tag3: 'Piloted or AFK Carry',
+            longDescription:
+              'Complete the full Stormblood Kamuy set — from the Pool of Tribute to the Wreath of Snakes — and claim the Fabled Kamuy Fife for the majestic Kamuy of the Nine Tails.',
+            image: scKamuy,
+          },
+
+          {
+            id: 'ffxiv-firebird-mount',
+            name: 'Firebird (Mount)',
+            tag2: 'Heavensward Extreme Trials',
+            price: 0,
+            tag1: 'Guaranteed (any number of runs)',
+            tag3: 'Piloted or AFK Carry',
+            longDescription:
+              'Every Heavensward Lanner in one package — White, Rose, Round, Warring, Dark, Sophic and Demonic — with the Firebird waiting at the end of the collection.',
+            image: scFirebird,
+          },
+
+          {
+            id: 'ffxiv-kirin-mount',
+            name: 'Kirin (Mount)',
+            tag2: 'A Realm Reborn Extreme Trials',
+            price: 0,
+            tag1: 'Guaranteed (any number of runs)',
+            tag3: 'Piloted or AFK Carry',
+            longDescription:
+              'The original collector’s mount: gather Aithon, Xanthos, Gullfaxi, Markab, Boreas and Enbarr from the A Realm Reborn Extremes and answer the call of A Legend for a Legend.',
+            image: scKirin,
+          },
+
+          {
+            id: 'ffxiv-monowheel-s1',
+            name: 'Monowheel S1 (Mount)',
+            tag2: 'AAC Light-heavyweight M4 (Savage)',
+            price: 0,
+            tag1: 'Guaranteed mount drop',
+            tag3: 'Piloted or AFK Carry',
+            longDescription:
+              'Wicked Thunder’s single-wheeled speed machine from AAC Light-heavyweight M4 on Savage — farmed until the Monowheel S1 is guaranteed yours.',
+            image: scMonowheelS1,
+          },
+          {
+            id: 'ffxiv-air-wheeler-c9',
+            name: 'Air-wheeler C9 (Mount)',
+            tag2: 'AAC Cruiserweight M4 (Savage)',
+            price: 0,
+            tag1: 'Guaranteed mount drop',
+            tag3: 'Piloted or AFK Carry',
+            longDescription:
+              'The Howling Blade’s air-wheeler from AAC Cruiserweight M4 on Savage — a guaranteed farm until the identification key drops.',
+            image: scAirWheelerC9,
+          },
+          {
+            id: 'ffxiv-lowrider-t1rant',
+            name: 'Lowrider T1RANT (Mount)',
+            tag2: 'AAC Heavyweight M4 (Savage)',
+            price: 0,
+            tag1: 'Guaranteed mount drop',
+            tag3: 'Piloted or AFK Carry',
+            longDescription:
+              'Lindwurm’s muscle-car lowrider from AAC Heavyweight M4 on Savage, complete with a feline passenger — guaranteed, no matter the runs.',
+            image: scLowriderT1rant,
+          },
+          {
+            id: 'ffxiv-demi-phoinix',
+            name: 'Demi-Phoinix (Mount)',
+            tag2: 'Asphodelos: The Fourth Circle (Savage)',
+            price: 0,
+            tag1: 'Guaranteed mount drop',
+            tag3: 'Piloted or AFK Carry',
+            longDescription:
+              'A miniature phoenix born of Asphodelos: The Fourth Circle on Savage — we run P4S until the Demi-Phoinix is yours.',
+            image: scDemiPhoinix,
+          },
+          {
+            id: 'ffxiv-sunforged',
+            name: 'Sunforged (Mount)',
+            tag2: 'Abyssos: The Eighth Circle (Savage)',
+            price: 0,
+            tag1: 'Guaranteed mount drop',
+            tag3: 'Piloted or AFK Carry',
+            longDescription:
+              'Forged in the fires of Abyssos: The Eighth Circle — a guaranteed Savage farm until the Sunforged mount drops.',
+            image: scSunforged,
+          },
+          {
+            id: 'ffxiv-megaloambystoma',
+            name: 'Megaloambystoma (Mount)',
+            tag2: 'Anabaseios: The Twelfth Circle (Savage)',
+            price: 0,
+            tag1: 'Guaranteed mount drop',
+            tag3: 'Piloted or AFK Carry',
+            longDescription:
+              'Anabaseios: The Twelfth Circle’s rarest prize — guaranteed clears until the Megaloambystoma is on your account.',
+            image: scMegaloambystoma,
+          },
+          {
+            id: 'ffxiv-skyslipper',
+            name: 'Skyslipper (Mount)',
+            tag2: 'Eden’s Gate: Sepulture (Savage)',
+            price: 0,
+            tag1: 'Guaranteed mount drop',
+            tag3: 'Piloted or AFK Carry',
+            longDescription:
+              'Eden’s Gate: Sepulture on Savage drops the Skyslipper — guaranteed, with a veteran party clearing on demand.',
+            image: scSkyslipper,
+          },
+          {
+            id: 'ffxiv-ramuh',
+            name: 'Ramuh (Mount)',
+            tag2: 'Eden’s Verse: Refulgence (Savage)',
+            price: 0,
+            tag1: 'Guaranteed mount drop',
+            tag3: 'Piloted or AFK Carry',
+            longDescription:
+              'Eden’s Verse: Refulgence on Savage — we farm until the Ramuh mount is guaranteed yours.',
+            image: scRamuh,
+          },
+          {
+            id: 'ffxiv-eden-mount',
+            name: 'Eden (Mount)',
+            tag2: 'Eden’s Promise: Eternity (Savage)',
+            price: 0,
+            tag1: 'Guaranteed mount drop',
+            tag3: 'Piloted or AFK Carry',
+            longDescription:
+              'Eden’s Promise: Eternity on Savage rewards the Eden mount itself — guaranteed, no matter the runs.',
+            image: scEdenMount,
+          },
+          {
+            id: 'ffxiv-alte-roite',
+            name: 'Alte Roite (Mount)',
+            tag2: 'Deltascape V4.0 (Savage)',
+            price: 0,
+            tag1: 'Guaranteed mount drop',
+            tag3: 'Piloted or AFK Carry',
+            longDescription:
+              'A Stormblood classic from Deltascape V4.0 on Savage — Alte Roite, guaranteed with veteran unsynced clears.',
+            image: scAlteRoite,
+          },
+          {
+            id: 'ffxiv-air-force',
+            name: 'Air Force (Mount)',
+            tag2: 'Sigmascape V4.0 (Savage)',
+            price: 0,
+            tag1: 'Guaranteed mount drop',
+            tag3: 'Piloted or AFK Carry',
+            longDescription:
+              'Sigmascape V4.0 on Savage drops the Air Force mount — a guaranteed farm until it is yours.',
+            image: scAirForce,
+          },
+          {
+            id: 'ffxiv-model-o',
+            name: 'Model O (Mount)',
+            tag2: 'Alphascape V4.0 (Savage)',
+            price: 0,
+            tag1: 'Guaranteed mount drop',
+            tag3: 'Piloted or AFK Carry',
+            longDescription:
+              'Alphascape V4.0 on Savage — Omega itself, in mount form. Guaranteed, no matter how many runs.',
+            image: scModelO,
+          },
+          {
+            id: 'ffxiv-gobwalker',
+            name: 'Gobwalker (Mount)',
+            tag2: 'Alexander - The Burden of the Father (Savage)',
+            price: 0,
+            tag1: 'Guaranteed mount drop',
+            tag3: 'Piloted or AFK Carry',
+            longDescription:
+              'Alexander: The Burden of the Father on Savage drops the Gobwalker — a guaranteed unsynced farm.',
+            image: scGobwalker,
+          },
+          {
+            id: 'ffxiv-arrhidaeus',
+            name: 'Arrhidaeus (Mount)',
+            tag2: 'Alexander - The Soul of the Creator (Savage)',
+            price: 0,
+            tag1: 'Guaranteed mount drop',
+            tag3: 'Piloted or AFK Carry',
+            longDescription:
+              'The Soul of the Creator on Savage — we clear A12S until the Arrhidaeus mount is guaranteed yours.',
+            image: scArrhidaeus,
           },
           {
             id: 'ffxiv-cerberus-mount',
-            name: 'Cerberus',
-            tag2: 'Delubrum Reginae (Savage) mount',
+            name: 'Cerberus (Mount)',
+            tag2: 'Delubrum Reginae (Savage)',
             price: 0,
-            tag1: 'Guaranteed farm until drop',
+            tag1: 'Guaranteed mount drop',
+            tag3: 'Piloted or AFK Carry',
+            longDescription:
+              'The three-headed hound of Delubrum Reginae (Savage) — guaranteed via the Savage Queen of Swords achievement on completion.',
             image: scBlank,
           },
           {
             id: 'ffxiv-demi-ozma',
-            name: 'Demi-Ozma',
-            tag2: 'The Baldesion Arsenal mount',
+            name: 'Demi-Ozma (Mount)',
+            tag2: 'The Baldesion Arsenal',
             price: 0,
-            tag1: 'Guaranteed farm until drop',
+            tag1: 'Guaranteed mount drop',
+            tag3: 'Piloted or AFK Carry',
+            longDescription:
+              'A fragment of Ozma itself from the depths of The Baldesion Arsenal — guaranteed completion with a veteran group.',
             image: scBlank,
           },
           {
             id: 'ffxiv-demon-haul',
-            name: 'Demon Haul',
-            tag2: 'Rare savage mount',
+            name: 'Demon Haul (Mount)',
+            tag2: 'The Forked Tower: Blood',
             price: 0,
-            tag1: 'Guaranteed farm until drop',
+            tag1: 'Guaranteed mount drop',
+            tag3: 'Piloted or AFK Carry',
+            longDescription:
+              'A demonic palanquin earned in The Forked Tower: Blood — hauled by demons, guaranteed for your collection.',
             image: scBlank,
           },
         ],
@@ -930,62 +1219,37 @@ export const games: Game[] = [
         name: 'PvP',
         services: [
           {
-            id: 'ffxiv-cc-rank',
-            name: 'Crystalline Conflict',
-            tag2: 'Reach the chosen PvP tier',
+            id: 'ffxiv-cc-rank-boost',
+            name: 'Crystalline Conflict Rank Boost',
+            tag2: 'Adventurer Plate & PvP Currency',
             price: 0,
-            tag1: "PvP glamour & Framer's Kit",
-            image: scBlank,
+            tag1: 'Bronze to Ultima (or Rank 1)',
+            tag3: 'Piloted Service',
+            longDescription:
+              'PvP Ranked Boost ranging from Bronze to Crystal — grab a boost to your desired rank and acquire Adventurer Plate designs and more. Each PvP season resets with a major patch, and your end-of-season rank determines the loot you get.',
+            image: scCcRank,
           },
           {
-            id: 'ffxiv-series-malmstones',
-            name: 'Series Malmstones',
-            tag2: 'Up to 30 Series levels',
+            id: 'ffxiv-pvp-series-boost',
+            name: 'Series Malmstones Boost (PvP)',
+            tag2: 'Mounts, glamour & minions',
             price: 0,
-            tag1: 'Wanyudo mount at rank 25',
-            image: scBlank,
-            tag: 'Hot',
+            tag1: 'Up to Series level 30',
+            tag3: 'Piloted Service',
+            longDescription:
+              'The Series Malmstones system provides unique rewards to players who participate in PvP during a given series. Leveling up lets you acquire Trophy Crystals, Minions, Mounts and Sets of Glamour!',
+            image: scPvpSeries,
           },
           {
-            id: 'ffxiv-frontline-wins',
-            name: 'Frontline Wins',
-            tag2: 'Any desired number of wins',
+            id: 'ffxiv-wolf-marks',
+            name: 'Wolf Marks (PvP)',
+            tag2: 'Emotes, hairstyles & PvP gear',
             price: 0,
-            tag1: 'Plenty of Wolf Marks',
-            image: scBlank,
-            tag: 'Hot',
-          },
-          {
-            id: 'ffxiv-cc-wins',
-            name: 'Crystalline Conflict Wins',
-            tag2: 'Preferred number of victories',
-            price: 0,
-            tag1: 'Series Malmstones progress',
-            image: scBlank,
-          },
-          {
-            id: 'ffxiv-cc-top-300',
-            name: 'Crystalline Conflict Top 300',
-            tag2: 'Join the Top 300 PvP players',
-            price: 0,
-            tag1: "Conflict Framer's Kits & crystals",
-            image: scBlank,
-          },
-          {
-            id: 'ffxiv-wolfs-mark-farm',
-            name: "Wolf's Mark Farm",
-            tag2: 'Any amount of Wolf Marks',
-            price: 0,
-            tag1: 'Glamour, mounts & emotes in reach',
-            image: scBlank,
-          },
-          {
-            id: 'ffxiv-pvp-gear',
-            name: 'PvP Gear',
-            tag2: 'Rare PvP armor for any job',
-            price: 0,
-            tag1: 'Top gear from 3 expansions',
-            image: scBlank,
+            tag1: 'Crystalline Conflict farm',
+            tag3: 'Piloted Service',
+            longDescription:
+              "Wolf Marks are the PvP currency earned in Crystalline Conflict, Frontline, and Rival Wings. Players earn Wolf Marks by participating in matches, with additional marks for winning. They can be exchanged for PvP gear and other exclusive items such as emotes and hairstyles at the Mark Quartermaster in the Wolves' Den Pier.",
+            image: scWolfMarks,
           },
         ],
       },

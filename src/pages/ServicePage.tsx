@@ -10,10 +10,15 @@ import GilPurchaseBox from '@/components/GilPurchaseBox';
 import SavageSeriesPurchaseBox from '@/components/SavageSeriesPurchaseBox';
 import LevelingPurchaseBox from '@/components/LevelingPurchaseBox';
 import MsqPurchaseBox from '@/components/MsqPurchaseBox';
+import CCRankPurchaseBox from '@/components/CCRankPurchaseBox';
+import WolfMarksPurchaseBox from '@/components/WolfMarksPurchaseBox';
+import MountSeriesPurchaseBox from '@/components/MountSeriesPurchaseBox';
+import WingPurchaseBox from '@/components/WingPurchaseBox';
+import SavageMountPurchaseBox from '@/components/SavageMountPurchaseBox';
 import Reveal from '@/components/Reveal';
 import ServiceCard from '@/components/ServiceCard';
-import { getGame } from '@/data/games';
-import { getServicePage } from '@/data/servicePages';
+import { getGame, serviceLink } from '@/data/games';
+import { getServicePage, MOUNT_LINKS } from '@/data/servicePages';
 import { usePricing } from '@/context/PricingContext';
 import { SERVICE_TAG_ICONS as POINT_ICONS } from '@/data/serviceIcons';
 import ffxivBg from '@/assets/images/backgrounds/ffxiv-bg.webp';
@@ -158,15 +163,39 @@ export default function ServicePage() {
                 <p className="text-sm font-bold text-white max-sm:text-xs">{r.title}</p>
                 {r.items ? (
                   <div className="mt-2 flex flex-wrap gap-2">
-                    {r.items.map((m) => (
-                      <button
-                        key={m}
-                        type="button"
-                        className="rounded-[5px] border border-navy-700/70 bg-navy-800 px-2.5 py-1 text-xs font-medium text-slate-300 transition-colors hover:border-cyan-600/30 hover:text-cyan-400"
-                      >
-                        {m}
-                      </button>
-                    ))}
+                    {r.items.map((m) => {
+                      const linked = MOUNT_LINKS[m];
+                      const cls =
+                        'inline-flex items-center gap-1.5 rounded-[5px] border border-navy-700/70 bg-navy-800 px-2.5 py-1 text-xs font-medium text-slate-300 transition-colors hover:border-cyan-600/30 hover:text-cyan-400';
+                      const inner = (
+                        <>
+                          {m}
+                          <ArrowRight className="h-3 w-3 text-cyan-500" />
+                        </>
+                      );
+                      return linked ? (
+                        <Link key={m} to={serviceLink(linked)} className={cls}>
+                          {inner}
+                        </Link>
+                      ) : (
+                        <button key={m} type="button" className={cls}>
+                          {inner}
+                        </button>
+                      );
+                    })}
+                  </div>
+                ) : r.dutyButton ? (
+                  <div className="mt-2 flex flex-wrap items-center gap-2">
+                    <Link
+                      to={r.dutyButton.to}
+                      className="inline-flex items-center gap-1.5 rounded-[5px] border border-navy-700/70 bg-navy-800 px-2.5 py-1 text-xs font-medium text-slate-300 transition-colors hover:border-cyan-600/30 hover:text-cyan-400"
+                    >
+                      {r.dutyButton.label}
+                      <ArrowRight className="h-3 w-3 text-cyan-500" />
+                    </Link>
+                    {r.text && (
+                      <span className="text-sm leading-relaxed text-slate-400 max-sm:text-xs">{r.text}</span>
+                    )}
                   </div>
                 ) : (
                   <p className="mt-1 text-sm leading-relaxed text-slate-400 max-sm:text-xs">{r.text}</p>
@@ -251,7 +280,9 @@ export default function ServicePage() {
   );
 
   return (
-    <div>
+    // Keyed by service: navigating between subpages (e.g. via the mount
+    // buttons) remounts the page so every reveal animation replays
+    <div key={service.id}>
       <PageMeta
         title={`${service.name} Carry — FFXIV Boosting`}
         description={`${service.tag2} — secure, hand-played FFXIV boosting service by Grand Dice (GD Carry).`}
@@ -331,10 +362,33 @@ export default function ServicePage() {
             <LevelingPurchaseBox
               service={service}
               gameShort={game.short}
-              config={{ ...db.bluLeveling, showJob: false, addon: db.bluLeveling.spellsAddon, inlineAddon: true }}
+              config={{
+                ...db.bluLeveling,
+                showJob: false,
+                addon: db.bluLeveling.spellsAddon,
+                addonLocksToMax: true,
+                addons: db.bluLeveling.carnivaleAddon ? [db.bluLeveling.carnivaleAddon] : [],
+                stream: db.bluLeveling.streamPrice,
+              }}
             />
           ) : service.id === db.msqBoost?.serviceId ? (
             <MsqPurchaseBox service={service} gameShort={game.short} />
+          ) : service.id === db.pvpSeries?.serviceId ? (
+            <LevelingPurchaseBox
+              service={service}
+              gameShort={game.short}
+              config={{ ...db.pvpSeries, showJob: false, addon: db.pvpSeries.streamAddon }}
+            />
+          ) : service.id === db.ccRank?.serviceId ? (
+            <CCRankPurchaseBox service={service} gameShort={game.short} />
+          ) : service.id === db.wolfMarks?.serviceId ? (
+            <WolfMarksPurchaseBox service={service} gameShort={game.short} />
+          ) : db.mounts?.series?.[service.id] ? (
+            <MountSeriesPurchaseBox key={service.id} service={service} gameShort={game.short} />
+          ) : db.mounts?.wings?.[service.id] ? (
+            <WingPurchaseBox key={service.id} service={service} gameShort={game.short} />
+          ) : db.mounts?.savageMounts?.[service.id] ? (
+            <SavageMountPurchaseBox key={service.id} service={service} gameShort={game.short} />
           ) : (
             <PurchaseBox service={service} gameShort={game.short} />
           )}

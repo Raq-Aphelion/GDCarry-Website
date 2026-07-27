@@ -111,7 +111,82 @@ export interface PricingDb {
     defaultEnd: number;
     priceTiers: { min: number; max: number; pricePerLevel: number }[];
     spellsAddon: PricingAddon;
+    /** Masked Carnivale add-on (Blue Mage) */
+    carnivaleAddon?: PricingAddon;
+    /** Private Stream add-on price (Blue Mage) */
+    streamPrice?: number;
     completion: string;
+  };
+  /** PvP Series boost pricing (from ffxiv-PvP): series levels 1-30, flat per
+      level, with the Stream add-on */
+  pvpSeries?: {
+    serviceId: string;
+    /** Card "From" price */
+    fromPrice?: number;
+    levelMin: number;
+    levelMax: number;
+    defaultStart: number;
+    defaultEnd: number;
+    priceTiers: { min: number; max: number; pricePerLevel: number }[];
+    streamAddon: PricingAddon;
+    completion: string;
+  };
+  /** Crystalline Conflict rank boost pricing (from ffxiv-PvP): cumulative
+      per-rank prices — an order costs (target rank − current rank) */
+  ccRank?: {
+    serviceId: string;
+    /** Card "From" price */
+    fromPrice?: number;
+    ranks: { id: string; label: string; price: number; image: string }[];
+    streamAddon: PricingAddon;
+    completion: string;
+  };
+  /** Wolf Marks farm pricing (from ffxiv-PvP): per-mark rate with amount
+      input + slider, stream add-on and priority multiplier */
+  wolfMarks?: {
+    serviceId: string;
+    /** Card "From" price */
+    fromPrice?: number;
+    amountMin: number;
+    amountMax: number;
+    amountStep: number;
+    defaultAmount: number;
+    pricePerMark: number;
+    streamPrice: number;
+    completion: { normal: string; priority: string };
+  };
+  /** Mount pricing (from ffxiv-Mounts): guaranteed Dawntrail wings at fixed
+      prices, and extreme-trial mount series whose combined mount unlocks
+      once every mount in the series is owned */
+  mounts?: {
+    /** AFK Carry price multiplier applied to every mount service (10% more) */
+    afkMultiplier?: number;
+    wings?: Record<string, { price: number; trial: string; totem: string; completion: string }>;
+    series?: Record<
+      string,
+      {
+        bundlePrice: number;
+        bundleLabel: string;
+        mounts: PricingAddon[];
+        addon?: PricingAddon;
+        /** Card "From" price (the full-series bundle) */
+        fromPrice?: number;
+        completion: string;
+      }
+    >;
+    savageMounts?: Record<
+      string,
+      {
+        /** Piloted price — matches the duty's fight price in ffxiv-SavageRaids */
+        price: number;
+        /** AFK price — matches the duty's AFK fight price; afkMultiplier applies when omitted */
+        afkPrice?: number;
+        /** AFK not offered for this duty (e.g. Arcadion Heavyweight) */
+        afkDisabled?: boolean;
+        trial: string;
+        completion: string;
+      }
+    >;
   };
   /** Service id -> addon id -> per-service addon price override */
   addonPrices?: Record<string, Record<string, number>>;
@@ -171,6 +246,10 @@ export async function loadPricing(): Promise<PricingDb> {
     let leveling: PricingDb['leveling'];
     let msqBoost: PricingDb['msqBoost'];
     let bluLeveling: PricingDb['bluLeveling'];
+    let pvpSeries: PricingDb['pvpSeries'];
+    let ccRank: PricingDb['ccRank'];
+    let wolfMarks: PricingDb['wolfMarks'];
+    let mounts: PricingDb['mounts'];
     let unlockAddon: PricingDb['unlockAddon'];
     await Promise.all(
       (db.categories ?? []).map(async (file) => {
@@ -179,7 +258,7 @@ export async function loadPricing(): Promise<PricingDb> {
           if (!r.ok) return;
           const cat = (await r.json()) as Pick<
             PricingDb,
-            'methodPrices' | 'addonPrices' | 'serviceAddons' | 'gil' | 'savageSeries' | 'leveling' | 'msqBoost' | 'bluLeveling' | 'unlockAddon'
+            'methodPrices' | 'addonPrices' | 'serviceAddons' | 'gil' | 'savageSeries' | 'leveling' | 'msqBoost' | 'bluLeveling' | 'pvpSeries' | 'ccRank' | 'wolfMarks' | 'mounts' | 'unlockAddon'
           >;
           Object.assign(methodPrices, cat.methodPrices);
           Object.assign(addonPrices, cat.addonPrices);
@@ -189,6 +268,10 @@ export async function loadPricing(): Promise<PricingDb> {
           if (cat.leveling) leveling = cat.leveling;
           if (cat.msqBoost) msqBoost = cat.msqBoost;
           if (cat.bluLeveling) bluLeveling = cat.bluLeveling;
+          if (cat.pvpSeries) pvpSeries = cat.pvpSeries;
+          if (cat.ccRank) ccRank = cat.ccRank;
+          if (cat.wolfMarks) wolfMarks = cat.wolfMarks;
+          if (cat.mounts) mounts = { ...mounts, ...cat.mounts };
           if (cat.unlockAddon) unlockAddon = cat.unlockAddon;
         } catch {
           /* broken category file — skip it */
@@ -211,6 +294,10 @@ export async function loadPricing(): Promise<PricingDb> {
       leveling,
       msqBoost,
       bluLeveling,
+      pvpSeries,
+      ccRank,
+      wolfMarks,
+      mounts,
       servicePrices: db.servicePrices ?? {},
     };
   } catch {

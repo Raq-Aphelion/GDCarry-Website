@@ -4,14 +4,27 @@
   },
   "currentPatch": {
     "name": "Patch 7.55",
-    "proxies": ["ffxiv-dmu", "ffxiv-arcadion-savage", "ffxiv-msq-skip"]
+    "proxies": [
+      "ffxiv-dmu",
+      "ffxiv-arcadion-savage",
+      "ffxiv-wings-of-legacy",
+      "ffxiv-wings-of-nihility",
+      "ffxiv-lowrider-t1rant"
+    ]
   },
-  "popularPicks": ["ffxiv-gil-pack", "ffxiv-arcadion-savage", "ffxiv-uwu", "ffxiv-potd-solo", "ffxiv-cc-rank"],
+  "popularPicks": [
+    "ffxiv-gil-pack",
+    "ffxiv-arcadion-savage",
+    "ffxiv-uwu",
+    "ffxiv-potd-solo"
+  ],
   "categories": [
     "ffxiv-UltimateRaids",
     "ffxiv-Gil",
     "ffxiv-SavageRaids",
-    "ffxiv-Leveling"
+    "ffxiv-Leveling",
+    "ffxiv-PvP",
+    "ffxiv-Mounts"
   ],
   "purchaseBox": {
     "runsMin": 1,
@@ -63,7 +76,7 @@
       {
         "id": "stream",
         "label": "Private Stream",
-        "price": 10.0
+        "price": 10
       },
       {
         "id": "priority",

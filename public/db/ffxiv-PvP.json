@@ -1,0 +1,193 @@
+{
+  "pvpSeries": {
+    "serviceId": "ffxiv-pvp-series-boost",
+    "fromPrice": 10,
+    "levelMin": 1,
+    "levelMax": 30,
+    "defaultStart": 1,
+    "defaultEnd": 25,
+    "priceTiers": [
+      {
+        "min": 1,
+        "max": 30,
+        "pricePerLevel": 10
+      }
+    ],
+    "streamAddon": {
+      "id": "stream",
+      "label": "Stream",
+      "price": 10
+    },
+    "completion": "3 Days"
+  },
+  "ccRank": {
+    "serviceId": "ffxiv-cc-rank-boost",
+    "fromPrice": 15,
+    "ranks": [
+      {
+        "id": "bronze-3",
+        "label": "Bronze III",
+        "price": 0,
+        "image": "/images/ranks/cc-bronze.webp"
+      },
+      {
+        "id": "bronze-2",
+        "label": "Bronze II",
+        "price": 5,
+        "image": "/images/ranks/cc-bronze.webp"
+      },
+      {
+        "id": "bronze-1",
+        "label": "Bronze I",
+        "price": 15,
+        "image": "/images/ranks/cc-bronze.webp"
+      },
+      {
+        "id": "silver-3",
+        "label": "Silver III",
+        "price": 30,
+        "image": "/images/ranks/cc-silver.webp"
+      },
+      {
+        "id": "silver-2",
+        "label": "Silver II",
+        "price": 45,
+        "image": "/images/ranks/cc-silver.webp"
+      },
+      {
+        "id": "silver-1",
+        "label": "Silver I",
+        "price": 60,
+        "image": "/images/ranks/cc-silver.webp"
+      },
+      {
+        "id": "gold-4",
+        "label": "Gold IV",
+        "price": 70,
+        "image": "/images/ranks/cc-gold.webp"
+      },
+      {
+        "id": "gold-3",
+        "label": "Gold III",
+        "price": 80,
+        "image": "/images/ranks/cc-gold.webp"
+      },
+      {
+        "id": "gold-2",
+        "label": "Gold II",
+        "price": 100,
+        "image": "/images/ranks/cc-gold.webp"
+      },
+      {
+        "id": "gold-1",
+        "label": "Gold I",
+        "price": 120,
+        "image": "/images/ranks/cc-gold.webp"
+      },
+      {
+        "id": "platinum-4",
+        "label": "Platinum IV",
+        "price": 135,
+        "image": "/images/ranks/cc-platinum.webp"
+      },
+      {
+        "id": "platinum-3",
+        "label": "Platinum III",
+        "price": 145,
+        "image": "/images/ranks/cc-platinum.webp"
+      },
+      {
+        "id": "platinum-2",
+        "label": "Platinum II",
+        "price": 170,
+        "image": "/images/ranks/cc-platinum.webp"
+      },
+      {
+        "id": "platinum-1",
+        "label": "Platinum I",
+        "price": 195,
+        "image": "/images/ranks/cc-platinum.webp"
+      },
+      {
+        "id": "diamond-5",
+        "label": "Diamond V",
+        "price": 205,
+        "image": "/images/ranks/cc-diamond.webp"
+      },
+      {
+        "id": "diamond-4",
+        "label": "Diamond IV",
+        "price": 215,
+        "image": "/images/ranks/cc-diamond.webp"
+      },
+      {
+        "id": "diamond-3",
+        "label": "Diamond III",
+        "price": 225,
+        "image": "/images/ranks/cc-diamond.webp"
+      },
+      {
+        "id": "diamond-2",
+        "label": "Diamond II",
+        "price": 255,
+        "image": "/images/ranks/cc-diamond.webp"
+      },
+      {
+        "id": "diamond-1",
+        "label": "Diamond I",
+        "price": 285,
+        "image": "/images/ranks/cc-diamond.webp"
+      },
+      {
+        "id": "crystal",
+        "label": "Crystal",
+        "price": 320,
+        "image": "/images/ranks/cc-crystal.webp"
+      },
+      {
+        "id": "omega",
+        "label": "Omega",
+        "price": 800,
+        "image": "/images/ranks/cc-omega.png"
+      },
+      {
+        "id": "ultima",
+        "label": "Ultima",
+        "price": 1500,
+        "image": "/images/ranks/cc-ultima.png"
+      },
+      {
+        "id": "rank-30-2",
+        "label": "Rank 30-2",
+        "price": 2200,
+        "image": "/images/ranks/cc-ultima.png"
+      },
+      {
+        "id": "rank-1",
+        "label": "Rank 1",
+        "price": 6200,
+        "image": "/images/ranks/cc-ultima.png"
+      }
+    ],
+    "streamAddon": {
+      "id": "stream",
+      "label": "Stream",
+      "price": 10
+    },
+    "completion": "3 Days"
+  },
+  "wolfMarks": {
+    "serviceId": "ffxiv-wolf-marks",
+    "fromPrice": 45,
+    "amountMin": 5000,
+    "amountMax": 20000,
+    "amountStep": 1000,
+    "defaultAmount": 5000,
+    "pricePerMark": 0.009,
+    "streamPrice": 10,
+    "completion": {
+      "normal": "24 Hours",
+      "priority": "4 Hours"
+    }
+  }
+}

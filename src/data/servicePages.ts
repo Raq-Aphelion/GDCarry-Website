@@ -1,4 +1,4 @@
-import { ArrowUp, BadgeCheck, Coins, Gem, Medal, ShieldCheck, Swords, Timer, Trophy, Undo2, type LucideIcon } from 'lucide-react';
+import { ArrowUp, BadgeCheck, Coins, Gem, Medal, Package, ShieldCheck, Swords, Timer, Trophy, Undo2, type LucideIcon } from 'lucide-react';
 
 export interface ServicePageReward {
   icon: LucideIcon;
@@ -6,6 +6,8 @@ export interface ServicePageReward {
   text?: string;
   /** Replaces `text`: mount names rendered as buttons (future mount links) */
   items?: string[];
+  /** Duty name rendered as a linked button under the title (mount drop sources) */
+  dutyButton?: { label: string; to: string };
 }
 
 export interface ServicePageAccordionSection {
@@ -314,8 +316,8 @@ SERVICE_PAGES['ffxiv-pandaemonium-savage'] = {
     },
     {
       icon: Trophy,
-      title: 'Encounter Specific Mounts (Not guaranteed)',
-      items: ['Demi-Phoinix', 'Sunforged', 'Megaloambystoma'],
+      title: 'Encounter-Specific Mount Drops',
+      items: ['(P4S) Demi-Phoinix', '(P8S) Sunforged', '(P12S) Megaloambystoma'],
     },
     {
       icon: Gem,
@@ -352,8 +354,8 @@ SERVICE_PAGES['ffxiv-arcadion-savage'] = {
     },
     {
       icon: Trophy,
-      title: 'Encounter Specific Mounts (Not guaranteed)',
-      items: ['Monowheel S1', 'Air-wheeler C9', 'Lowrider T1RANT'],
+      title: 'Encounter-Specific Mount Drops',
+      items: ['(M4S) Monowheel S1', '(M8S) Air-wheeler C9', '(M12S) Lowrider T1RANT'],
     },
     {
       icon: Gem,
@@ -381,7 +383,7 @@ SERVICE_PAGES['ffxiv-arcadion-savage'] = {
 };
 
 SERVICE_PAGES['ffxiv-eden-savage'] = {
-  short: 'Eden',
+  short: '(E12S) Eden',
   rewards: [
     {
       icon: Swords,
@@ -390,8 +392,8 @@ SERVICE_PAGES['ffxiv-eden-savage'] = {
     },
     {
       icon: Trophy,
-      title: 'Encounter Specific Mounts (Not guaranteed)',
-      items: ['Skyslipper', 'Ramuh', 'Eden'],
+      title: 'Encounter-Specific Mount Drops',
+      items: ['(E4S) Skyslipper', '(E8S) Ramuh', '(E12S) Eden'],
     },
     {
       icon: Gem,
@@ -427,8 +429,8 @@ SERVICE_PAGES['ffxiv-omega-savage'] = {
     },
     {
       icon: Trophy,
-      title: 'Encounter Specific Mounts (Not guaranteed)',
-      items: ['Alte Roite', 'Air Force', 'Model O'],
+      title: 'Encounter-Specific Mount Drops',
+      items: ['(O4S) Alte Roite', '(O8S) Air Force', '(O12S) Model O'],
     },
     {
       icon: Gem,
@@ -464,8 +466,8 @@ SERVICE_PAGES['ffxiv-alexander-savage'] = {
     },
     {
       icon: Trophy,
-      title: 'Encounter Specific Mounts (Not guaranteed)',
-      items: ['Gobwalker', 'Arrhidaeus'],
+      title: 'Encounter-Specific Mount Drops',
+      items: ['(A4S) Gobwalker', '(A12S) Arrhidaeus'],
     },
     {
       icon: Gem,
@@ -586,7 +588,7 @@ SERVICE_PAGES['ffxiv-blu-leveling-boost'] = {
     {
       icon: BadgeCheck,
       title: 'Masked Carnivale Access',
-      text: 'Job quests and the Masked Carnivale unlocked along the way.',
+      text: 'Job quests and the Masked Carnivale unlocked along the way (available as an add-on).',
     },
     {
       icon: Timer,
@@ -605,6 +607,280 @@ SERVICE_PAGES['ffxiv-blu-leveling-boost'] = {
     HOW_IT_WORKS,
     PILOTED_BOOST,
   ],
+};
+
+SERVICE_PAGES['ffxiv-pvp-series-boost'] = {
+  short: 'PvP Series',
+  rewardsHeading: 'What you get',
+  rewards: [
+    {
+      icon: ArrowUp,
+      title: 'PvP Series Levels',
+      text: 'Multiple levels in the PvP series granting you the current series loot.',
+    },
+    {
+      icon: Gem,
+      title: 'Trophy Crystals',
+      text: 'Thousands of Trophy Crystals to exchange for glamour.',
+    },
+    {
+      icon: BadgeCheck,
+      title: 'PvP Experience',
+      text: 'Exclusive exp only acquired from playing in PvP game modes.',
+    },
+    {
+      icon: Trophy,
+      title: 'Mount OR Gearset',
+      text: 'Unique Mount or Gearset depending on the current PvP series at level 25.',
+    },
+  ],
+  accordion: [
+    {
+      title: 'Requirements',
+      items: ['Have a level 30 Job', 'Crystal Conflict unlocked'],
+    },
+    HOW_IT_WORKS,
+    PILOTED_BOOST,
+  ],
+};
+
+SERVICE_PAGES['ffxiv-cc-rank-boost'] = {
+  short: 'CC Rank',
+  rewardsHeading: 'What you get',
+  rewards: [
+    {
+      icon: ArrowUp,
+      title: 'PvP Rank Boost',
+      text: 'Acquire a rank boost to your desired rank and get exclusive loot based on it.',
+    },
+    {
+      icon: BadgeCheck,
+      title: 'Adventurer Plate Designs',
+      text: 'Exclusive Adventurer Plate Designs from PvP ranks.',
+    },
+    {
+      icon: Gem,
+      title: 'PvP Currency',
+      text: 'Wolf Marks and Trophy Crystals to exchange for your favourite weapons and glamour.',
+    },
+    {
+      icon: Trophy,
+      title: 'Be on the leaderboard!',
+      text: 'High ranks put you on the official FFXIV leaderboard, up to Top 300.',
+    },
+  ],
+  accordion: [
+    {
+      title: 'Requirements',
+      items: ['Have a level 30 Job', 'Crystalline Conflict unlocked'],
+    },
+    HOW_IT_WORKS,
+    PILOTED_BOOST,
+  ],
+};
+
+SERVICE_PAGES['ffxiv-wolf-marks'] = {
+  short: 'Wolf Marks',
+  rewardsHeading: 'What you get',
+  rewards: [
+    {
+      icon: Coins,
+      title: 'Wolf Marks',
+      text: 'Exclusive currency used to trade in for glamour and weapons.',
+    },
+    {
+      icon: ArrowUp,
+      title: 'PvP Series EXP',
+      text: 'Gain series experience as you purchase more Wolf Marks.',
+    },
+    {
+      icon: Gem,
+      title: 'Allagan Tomestones',
+      text: 'Tomes acquired from participating in Wolf Mark farm.',
+    },
+    {
+      icon: Medal,
+      title: 'Achievement Progress',
+      text: 'Progress toward PvP achievements along the way.',
+    },
+  ],
+  accordion: [
+    {
+      title: 'Requirements',
+      items: ['Have a level 30 Job', 'Crystalline Conflict unlocked'],
+    },
+    HOW_IT_WORKS,
+    PILOTED_BOOST,
+  ],
+};
+
+/** Shared content shapes for the extreme-trial mount pages. */
+const mountSeriesPage = (
+  short: string,
+  mountCount: number,
+  requirement: string,
+  trialsLabel: string,
+): ServicePageContent => ({
+  short,
+  rewardsHeading: 'What you get',
+  rewards: [
+    {
+      icon: Trophy,
+      title: 'Guaranteed Mount Drop From',
+      dutyButton: { label: trialsLabel, to: '/boosting/ffxiv?cat=trials' },
+      text: '— guaranteed, no matter how many runs it takes.',
+    },
+    {
+      icon: Package,
+      title: `All ${mountCount} Series Mounts`,
+      text: 'Every required mount farmed until it drops — or only the ones you are missing.',
+    },
+    {
+      icon: Gem,
+      title: 'Totems & Trial Loot',
+      text: 'Guaranteed totems, orchestrion rolls and gear from every clear.',
+    },
+    {
+      icon: Medal,
+      title: 'Achievement Progress',
+      text: 'Extreme trial achievements unlocked along the way.',
+    },
+  ],
+  accordion: [
+    {
+      title: 'Requirements',
+      items: [requirement, 'Extreme trials unlocked (available as additional services)'],
+    },
+    HOW_IT_WORKS,
+    PILOTED_BOOST,
+  ],
+});
+
+const wingPage = (short: string, trial: string, totem: string): ServicePageContent => ({
+  short,
+  rewardsHeading: 'What you get',
+  rewards: [
+    {
+      icon: Trophy,
+      title: 'Guaranteed Mount Drop From',
+      dutyButton: { label: trial, to: '/boosting/ffxiv?cat=trials' },
+      text: '— guaranteed, no matter how many runs it takes.',
+    },
+    {
+      icon: Gem,
+      title: totem,
+      text: 'Trial totems from every clear, exchangeable for mounts and gear.',
+    },
+    {
+      icon: Swords,
+      title: 'Extreme Trial Clears',
+      text: 'Every run completed by a veteran raider on your behalf.',
+    },
+    {
+      icon: Medal,
+      title: 'Achievement Unlocked',
+      text: 'The Extreme trial achievement on completion.',
+    },
+  ],
+  accordion: [
+    {
+      title: 'Requirements',
+      items: [
+        'Have a level 100 Job',
+        'Own the Dawntrail Expansion',
+        'Trial unlocked (available as an additional service)',
+      ],
+    },
+    HOW_IT_WORKS,
+    PILOTED_BOOST,
+  ],
+});
+
+SERVICE_PAGES['ffxiv-kirin-mount'] = mountSeriesPage('Kirin', 6, 'Have a level 50 Job', 'A Realm Reborn Extreme Trials');
+SERVICE_PAGES['ffxiv-firebird-mount'] = mountSeriesPage('Firebird', 7, 'Have a level 60 Job', 'Heavensward Extreme Trials');
+SERVICE_PAGES['ffxiv-kamuy-nine-tails'] = mountSeriesPage('Nine Tails', 7, 'Have a level 70 Job', 'Stormblood Extreme Trials');
+SERVICE_PAGES['ffxiv-landerwaffe'] = mountSeriesPage('Landerwaffe', 7, 'Have a level 80 Job', 'Shadowbringers Extreme Trials');
+SERVICE_PAGES['ffxiv-apocryphal-bahamut'] = mountSeriesPage('Bahamut', 7, 'Have a level 90 Job', 'Endwalker Extreme Trials');
+SERVICE_PAGES['ffxiv-wings-of-legacy'] = mountSeriesPage('Legacy', 7, 'Have a level 100 Job', 'Dawntrail Extreme Trials');
+
+SERVICE_PAGES['ffxiv-wings-of-ruin'] = wingPage('Wings of Ruin', 'Worqor Lar Dor (Extreme)', 'Skyruin Totems');
+SERVICE_PAGES['ffxiv-wings-of-resolve'] = wingPage('Wings of Resolve', 'Everkeep (Extreme)', 'Resilient Totems');
+SERVICE_PAGES['ffxiv-wings-of-eternity'] = wingPage('Wings of Eternity', "The Minstrel's Ballad: Sphene's Burden", 'Totems Eternal');
+SERVICE_PAGES['ffxiv-wings-of-knighthood'] = wingPage('Wings of the Knighthood', 'Recollection (Extreme)', 'Knight Totems');
+SERVICE_PAGES['ffxiv-wings-of-death'] = wingPage('Wings of Death', "The Minstrel's Ballad: Necron's Embrace", 'Grave Totems');
+SERVICE_PAGES['ffxiv-wings-of-mist'] = wingPage('Wings of Mist', 'Hell on Rails (Extreme)', 'Runaway Totems');
+SERVICE_PAGES['ffxiv-wings-of-nihility'] = wingPage('Wings of Nihility', 'The Unmaking (Extreme)', 'Totems of Naught');
+
+/** Savage raid mount pages share one shape; level varies by expansion. */
+const savageMountPage = (short: string, duty: string, level: number, dutyTo: string): ServicePageContent => ({
+  short,
+  rewardsHeading: 'What you get',
+  rewards: [
+    {
+      icon: Trophy,
+      title: 'Guaranteed Mount Drop From',
+      dutyButton: { label: duty, to: dutyTo },
+    },
+    {
+      icon: Swords,
+      title: 'Piloted or AFK Carry',
+      text: 'Cleared by a veteran raider on your account, or alongside you in the party.',
+    },
+    {
+      icon: Gem,
+      title: 'Savage Loot Along the Way',
+      text: 'Gear coffers, totems and glamours from every clear.',
+    },
+    {
+      icon: Medal,
+      title: 'Achievement Unlocked',
+      text: 'The Savage achievement on completion.',
+    },
+  ],
+  accordion: [
+    {
+      title: 'Requirements',
+      items: [`Have a level ${level} Job`, 'Duty unlocked (available as an additional service)'],
+    },
+    HOW_IT_WORKS,
+    PILOTED_VS_AFK,
+  ],
+});
+
+SERVICE_PAGES['ffxiv-monowheel-s1'] = savageMountPage('Monowheel S1', 'AAC Light-heavyweight M4 (Savage)', 100, '/boosting/ffxiv/ffxiv-arcadion-savage');
+SERVICE_PAGES['ffxiv-air-wheeler-c9'] = savageMountPage('Air-wheeler C9', 'AAC Cruiserweight M4 (Savage)', 100, '/boosting/ffxiv/ffxiv-arcadion-savage');
+SERVICE_PAGES['ffxiv-lowrider-t1rant'] = savageMountPage('Lowrider T1RANT', 'AAC Heavyweight M4 (Savage)', 100, '/boosting/ffxiv/ffxiv-arcadion-savage');
+SERVICE_PAGES['ffxiv-demi-phoinix'] = savageMountPage('Demi-Phoinix', 'Asphodelos: The Fourth Circle (Savage)', 90, '/boosting/ffxiv/ffxiv-pandaemonium-savage');
+SERVICE_PAGES['ffxiv-sunforged'] = savageMountPage('Sunforged', 'Abyssos: The Eighth Circle (Savage)', 90, '/boosting/ffxiv/ffxiv-pandaemonium-savage');
+SERVICE_PAGES['ffxiv-megaloambystoma'] = savageMountPage('Megaloambystoma', 'Anabaseios: The Twelfth Circle (Savage)', 90, '/boosting/ffxiv/ffxiv-pandaemonium-savage');
+SERVICE_PAGES['ffxiv-skyslipper'] = savageMountPage('Skyslipper', "Eden's Gate: Sepulture (Savage)", 80, '/boosting/ffxiv/ffxiv-eden-savage');
+SERVICE_PAGES['ffxiv-ramuh'] = savageMountPage('Ramuh', "Eden's Verse: Refulgence (Savage)", 80, '/boosting/ffxiv/ffxiv-eden-savage');
+SERVICE_PAGES['ffxiv-eden-mount'] = savageMountPage('Eden', "Eden's Promise: Eternity (Savage)", 80, '/boosting/ffxiv/ffxiv-eden-savage');
+SERVICE_PAGES['ffxiv-alte-roite'] = savageMountPage('Alte Roite', 'Deltascape V4.0 (Savage)', 70, '/boosting/ffxiv/ffxiv-omega-savage');
+SERVICE_PAGES['ffxiv-air-force'] = savageMountPage('Air Force', 'Sigmascape V4.0 (Savage)', 70, '/boosting/ffxiv/ffxiv-omega-savage');
+SERVICE_PAGES['ffxiv-model-o'] = savageMountPage('Model O', 'Alphascape V4.0 (Savage)', 70, '/boosting/ffxiv/ffxiv-omega-savage');
+SERVICE_PAGES['ffxiv-gobwalker'] = savageMountPage('Gobwalker', 'Alexander - The Burden of the Father (Savage)', 60, '/boosting/ffxiv/ffxiv-alexander-savage');
+SERVICE_PAGES['ffxiv-arrhidaeus'] = savageMountPage('Arrhidaeus', 'Alexander - The Soul of the Creator (Savage)', 60, '/boosting/ffxiv/ffxiv-alexander-savage');
+SERVICE_PAGES['ffxiv-cerberus-mount'] = savageMountPage('Cerberus', 'Delubrum Reginae (Savage)', 80, '/boosting/ffxiv?cat=alliance-raids');
+SERVICE_PAGES['ffxiv-demi-ozma'] = savageMountPage('Demi-Ozma', 'The Baldesion Arsenal', 70, '/boosting/ffxiv?cat=alliance-raids');
+SERVICE_PAGES['ffxiv-demon-haul'] = savageMountPage('Demon Haul', 'The Forked Tower: Blood', 100, '/boosting/ffxiv?cat=alliance-raids');
+
+/** Mount buttons in the savage subpage reward blocks → their mount services. */
+export const MOUNT_LINKS: Record<string, string> = {
+  '(M4S) Monowheel S1': 'ffxiv-monowheel-s1',
+  '(M8S) Air-wheeler C9': 'ffxiv-air-wheeler-c9',
+  '(M12S) Lowrider T1RANT': 'ffxiv-lowrider-t1rant',
+  '(P4S) Demi-Phoinix': 'ffxiv-demi-phoinix',
+  '(P8S) Sunforged': 'ffxiv-sunforged',
+  '(P12S) Megaloambystoma': 'ffxiv-megaloambystoma',
+  '(E4S) Skyslipper': 'ffxiv-skyslipper',
+  '(E8S) Ramuh': 'ffxiv-ramuh',
+  '(E12S) Eden': 'ffxiv-eden-mount',
+  '(O4S) Alte Roite': 'ffxiv-alte-roite',
+  '(O8S) Air Force': 'ffxiv-air-force',
+  '(O12S) Model O': 'ffxiv-model-o',
+  '(A4S) Gobwalker': 'ffxiv-gobwalker',
+  '(A12S) Arrhidaeus': 'ffxiv-arrhidaeus',
 };
 
 export function getServicePage(id?: string) {

@@ -1,0 +1,410 @@
+{
+  "mounts": {
+    "wings": {
+      "ffxiv-wings-of-ruin": {
+        "price": 490,
+        "trial": "Worqor Lar Dor (Extreme)",
+        "totem": "Skyruin Totems",
+        "completion": "24 Hours"
+      },
+      "ffxiv-wings-of-resolve": {
+        "price": 490,
+        "trial": "Everkeep (Extreme)",
+        "totem": "Resilient Totems",
+        "completion": "24 Hours"
+      },
+      "ffxiv-wings-of-eternity": {
+        "price": 735,
+        "trial": "The Minstrel's Ballad: Sphene's Burden",
+        "totem": "Totems Eternal",
+        "completion": "24 Hours"
+      },
+      "ffxiv-wings-of-knighthood": {
+        "price": 735,
+        "trial": "Recollection (Extreme)",
+        "totem": "Knight Totems",
+        "completion": "24 Hours"
+      },
+      "ffxiv-wings-of-death": {
+        "price": 980,
+        "trial": "The Minstrel's Ballad: Necron's Embrace",
+        "totem": "Grave Totems",
+        "completion": "24 Hours"
+      },
+      "ffxiv-wings-of-mist": {
+        "price": 980,
+        "trial": "Hell on Rails (Extreme)",
+        "totem": "Runaway Totems",
+        "completion": "24 Hours"
+      },
+      "ffxiv-wings-of-nihility": {
+        "price": 980,
+        "trial": "The Unmaking (Extreme)",
+        "totem": "Totems of Naught",
+        "completion": "24 Hours"
+      }
+    },
+    "series": {
+      "ffxiv-kirin-mount": {
+        "bundlePrice": 50,
+        "bundleLabel": "All 6 Nightmare mounts",
+        "mounts": [
+          {
+            "id": "xanthos",
+            "label": "Xanthos",
+            "price": 30
+          },
+          {
+            "id": "gullfaxi",
+            "label": "Gullfaxi",
+            "price": 30
+          },
+          {
+            "id": "aithon",
+            "label": "Aithon",
+            "price": 30
+          },
+          {
+            "id": "enbarr",
+            "label": "Enbarr",
+            "price": 30
+          },
+          {
+            "id": "markab",
+            "label": "Markab",
+            "price": 30
+          },
+          {
+            "id": "boreas",
+            "label": "Boreas",
+            "price": 30
+          }
+        ],
+        "addon": {
+          "id": "nightmare",
+          "label": "Nightmare",
+          "price": 30
+        },
+        "completion": "24 Hours",
+        "fromPrice": 50
+      },
+      "ffxiv-firebird-mount": {
+        "bundlePrice": 160,
+        "bundleLabel": "All 7 Lanner mounts",
+        "mounts": [
+          {
+            "id": "white-lanner",
+            "label": "White Lanner",
+            "price": 30
+          },
+          {
+            "id": "rose-lanner",
+            "label": "Rose Lanner",
+            "price": 30
+          },
+          {
+            "id": "round-lanner",
+            "label": "Round Lanner",
+            "price": 30
+          },
+          {
+            "id": "warring-lanner",
+            "label": "Warring Lanner",
+            "price": 30
+          },
+          {
+            "id": "dark-lanner",
+            "label": "Dark Lanner",
+            "price": 30
+          },
+          {
+            "id": "sophic-lanner",
+            "label": "Sophic Lanner",
+            "price": 30
+          },
+          {
+            "id": "demonic-lanner",
+            "label": "Demonic Lanner",
+            "price": 30
+          }
+        ],
+        "completion": "24 Hours",
+        "fromPrice": 160
+      },
+      "ffxiv-kamuy-nine-tails": {
+        "bundlePrice": 160,
+        "bundleLabel": "All 7 Kamuy mounts",
+        "mounts": [
+          {
+            "id": "reveling-kamuy",
+            "label": "Reveling Kamuy",
+            "price": 30
+          },
+          {
+            "id": "blissful-kamuy",
+            "label": "Blissful Kamuy",
+            "price": 30
+          },
+          {
+            "id": "legendary-kamuy",
+            "label": "Legendary Kamuy",
+            "price": 30
+          },
+          {
+            "id": "auspicious-kamuy",
+            "label": "Auspicious Kamuy",
+            "price": 30
+          },
+          {
+            "id": "lunar-kamuy",
+            "label": "Lunar Kamuy",
+            "price": 30
+          },
+          {
+            "id": "euphonious-kamuy",
+            "label": "Euphonious Kamuy",
+            "price": 30
+          },
+          {
+            "id": "hallowed-kamuy",
+            "label": "Hallowed Kamuy",
+            "price": 30
+          }
+        ],
+        "completion": "24 Hours",
+        "fromPrice": 160
+      },
+      "ffxiv-landerwaffe": {
+        "bundlePrice": 280,
+        "bundleLabel": "All 7 Gwiber mounts",
+        "mounts": [
+          {
+            "id": "fae-gwiber",
+            "label": "Fae Gwiber",
+            "price": 45
+          },
+          {
+            "id": "innocent-gwiber",
+            "label": "Innocent Gwiber",
+            "price": 45
+          },
+          {
+            "id": "shadow-gwiber",
+            "label": "Shadow Gwiber",
+            "price": 45
+          },
+          {
+            "id": "ruby-gwiber",
+            "label": "Ruby Gwiber",
+            "price": 45
+          },
+          {
+            "id": "gwiber-of-light",
+            "label": "Gwiber of Light",
+            "price": 45
+          },
+          {
+            "id": "emerald-gwiber",
+            "label": "Emerald Gwiber",
+            "price": 45
+          },
+          {
+            "id": "diamond-gwiber",
+            "label": "Diamond Gwiber",
+            "price": 45
+          }
+        ],
+        "completion": "24 Hours",
+        "fromPrice": 280
+      },
+      "ffxiv-apocryphal-bahamut": {
+        "bundlePrice": 675,
+        "bundleLabel": "All 7 Lynx mounts",
+        "mounts": [
+          {
+            "id": "lynx-eternal-darkness",
+            "label": "Lynx of Eternal Darkness",
+            "price": 100
+          },
+          {
+            "id": "lynx-divine-light",
+            "label": "Lynx of Divine Light",
+            "price": 100
+          },
+          {
+            "id": "bluefeather-lynx",
+            "label": "Bluefeather Lynx",
+            "price": 100
+          },
+          {
+            "id": "lynx-imperious-wind",
+            "label": "Lynx of Imperious Wind",
+            "price": 100
+          },
+          {
+            "id": "lynx-righteous-fire",
+            "label": "Lynx of Righteous Fire",
+            "price": 100
+          },
+          {
+            "id": "lynx-fallen-shadow",
+            "label": "Lynx of Fallen Shadow",
+            "price": 100
+          },
+          {
+            "id": "lynx-abyssal-grief",
+            "label": "Lynx of Abyssal Grief",
+            "price": 100
+          }
+        ],
+        "completion": "24 Hours",
+        "fromPrice": 675
+      },
+      "ffxiv-wings-of-legacy": {
+        "bundlePrice": 2200,
+        "bundleLabel": "All 7 Wing mounts",
+        "mounts": [
+          {
+            "id": "wings-of-ruin",
+            "label": "Wings of Ruin",
+            "price": 490
+          },
+          {
+            "id": "wings-of-resolve",
+            "label": "Wings of Resolve",
+            "price": 490
+          },
+          {
+            "id": "wings-of-eternity",
+            "label": "Wings of Eternity",
+            "price": 735
+          },
+          {
+            "id": "wings-of-knighthood",
+            "label": "Wings of the Knighthood",
+            "price": 735
+          },
+          {
+            "id": "wings-of-death",
+            "label": "Wings of Death",
+            "price": 980
+          },
+          {
+            "id": "wings-of-mist",
+            "label": "Wings of Mist",
+            "price": 980
+          },
+          {
+            "id": "wings-of-nihility",
+            "label": "Wings of Nihility",
+            "price": 980
+          }
+        ],
+        "completion": "5-7 Days",
+        "fromPrice": 2200
+      }
+    },
+    "afkMultiplier": 1.1,
+    "savageMounts": {
+      "ffxiv-monowheel-s1": {
+        "price": 70,
+        "trial": "AAC Light-heavyweight M4 (Savage)",
+        "completion": "24 Hours",
+        "afkPrice": 70
+      },
+      "ffxiv-air-wheeler-c9": {
+        "price": 105,
+        "trial": "AAC Cruiserweight M4 (Savage)",
+        "completion": "24 Hours",
+        "afkPrice": 105
+      },
+      "ffxiv-lowrider-t1rant": {
+        "price": 178,
+        "trial": "AAC Heavyweight M4 (Savage)",
+        "completion": "24 Hours",
+        "afkDisabled": true
+      },
+      "ffxiv-demi-phoinix": {
+        "price": 44,
+        "trial": "Asphodelos: The Fourth Circle (Savage)",
+        "completion": "24 Hours",
+        "afkPrice": 55
+      },
+      "ffxiv-sunforged": {
+        "price": 55,
+        "trial": "Abyssos: The Eighth Circle (Savage)",
+        "completion": "24 Hours",
+        "afkPrice": 70
+      },
+      "ffxiv-megaloambystoma": {
+        "price": 70,
+        "trial": "Anabaseios: The Twelfth Circle (Savage)",
+        "completion": "24 Hours",
+        "afkPrice": 105
+      },
+      "ffxiv-skyslipper": {
+        "price": 44,
+        "trial": "Eden's Gate: Sepulture (Savage)",
+        "completion": "24 Hours",
+        "afkPrice": 55
+      },
+      "ffxiv-ramuh": {
+        "price": 55,
+        "trial": "Eden's Verse: Refulgence (Savage)",
+        "completion": "24 Hours",
+        "afkPrice": 70
+      },
+      "ffxiv-eden-mount": {
+        "price": 70,
+        "trial": "Eden's Promise: Eternity (Savage)",
+        "completion": "24 Hours",
+        "afkPrice": 105
+      },
+      "ffxiv-alte-roite": {
+        "price": 44,
+        "trial": "Deltascape V4.0 (Savage)",
+        "completion": "24 Hours",
+        "afkPrice": 55
+      },
+      "ffxiv-air-force": {
+        "price": 55,
+        "trial": "Sigmascape V4.0 (Savage)",
+        "completion": "24 Hours",
+        "afkPrice": 70
+      },
+      "ffxiv-model-o": {
+        "price": 70,
+        "trial": "Alphascape V4.0 (Savage)",
+        "completion": "24 Hours",
+        "afkPrice": 105
+      },
+      "ffxiv-gobwalker": {
+        "price": 44,
+        "trial": "Alexander - The Burden of the Father (Savage)",
+        "completion": "24 Hours",
+        "afkPrice": 55
+      },
+      "ffxiv-arrhidaeus": {
+        "price": 70,
+        "trial": "Alexander - The Soul of the Creator (Savage)",
+        "completion": "24 Hours",
+        "afkPrice": 105
+      },
+      "ffxiv-cerberus-mount": {
+        "price": 50,
+        "trial": "Delubrum Reginae (Savage)",
+        "completion": "24 Hours"
+      },
+      "ffxiv-demi-ozma": {
+        "price": 50,
+        "trial": "The Baldesion Arsenal",
+        "completion": "24 Hours"
+      },
+      "ffxiv-demon-haul": {
+        "price": 50,
+        "trial": "The Forked Tower: Blood",
+        "completion": "24 Hours"
+      }
+    }
+  }
+}

@@ -1,0 +1,93 @@
+import { useEffect, useState } from 'react';
+import { Check, Minus, Plus, Settings2 } from 'lucide-react';
+import { useCurrency } from '@/context/CurrencyContext';
+import { usePricing } from '@/context/PricingContext';
+
+/** Shared Additional Options block for mount purchase boxes: Private Stream
+    (flat, from the mount service) and Priority (× priorityMultiplier). */
+export default function MountAddonsBlock({
+  stream,
+  setStream,
+  priority,
+  setPriority,
+  streamPrice,
+  onToggle,
+}: {
+  stream: boolean;
+  setStream: (v: boolean) => void;
+  priority: boolean;
+  setPriority: (v: boolean) => void;
+  streamPrice: number;
+  onToggle?: () => void;
+}) {
+  const { format } = useCurrency();
+  const { db } = usePricing();
+  const priorityMultiplier = db.purchaseBox.priorityMultiplier;
+  const [optionsOpen, setOptionsOpen] = useState(false);
+  const [optionsExpanded, setOptionsExpanded] = useState(false);
+  useEffect(() => {
+    if (!optionsOpen) return;
+    const t = setTimeout(() => setOptionsExpanded(true), 500);
+    return () => clearTimeout(t);
+  }, [optionsOpen]);
+
+  const row = (
+    label: string,
+    hint: string,
+    checked: boolean,
+    onClick: () => void,
+  ) => (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-pressed={checked}
+      className="flex w-full items-center gap-3 rounded-[5px] bg-navy-850 px-2.5 py-1.5 text-left transition-colors hover:bg-navy-800"
+    >
+      <span
+        className={`flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-[3px] border transition-colors ${
+          checked ? 'border-cyan-500 bg-cyan-600 text-navy-900' : 'border-navy-600 text-transparent'
+        }`}
+      >
+        <Check className="h-3 w-3" strokeWidth={3.5} />
+      </span>
+      <span className="min-w-0 flex-1 truncate text-sm text-slate-300">{label}</span>
+      <span className="text-xs font-bold text-cyan-400">{hint}</span>
+    </button>
+  );
+
+  return (
+    <div className={`aob rounded-[5px] border border-navy-700/70 bg-navy-850 ${optionsOpen ? 'expanded' : ''}`}>
+      <button
+        onClick={() => {
+          setOptionsOpen((o) => !o);
+          setOptionsExpanded(false);
+          onToggle?.();
+        }}
+        aria-expanded={optionsOpen}
+        className="aob-toggle flex h-[38px] w-full items-center justify-between pl-4 pr-3.5 text-left"
+      >
+        <span className="flex items-center gap-2 pl-px text-sm font-normal text-slate-300">
+          <Settings2 className="h-4 w-4 text-slate-400" />
+          Additional Options
+        </span>
+        {optionsOpen ? (
+          <Minus className="h-4 w-4 text-slate-500" />
+        ) : (
+          <Plus className="h-4 w-4 text-cyan-400" />
+        )}
+      </button>
+      <div
+        className={`grid transition-all duration-500 ease-soft ${
+          optionsOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
+        }`}
+      >
+        <div className={`min-w-0 ${optionsExpanded ? 'overflow-visible' : 'overflow-hidden'}`}>
+          <div className="space-y-1.5 px-4 pb-3 pt-1">
+            {row('Private Stream', `+${format(streamPrice)}`, stream, () => setStream(!stream))}
+            {row('Priority', `+${Math.round((priorityMultiplier - 1) * 100)}%`, priority, () => setPriority(!priority))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

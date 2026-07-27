@@ -7,12 +7,32 @@
     "defaultStart": 90,
     "defaultEnd": 100,
     "priceTiers": [
-      { "min": 1, "max": 50, "pricePerLevel": 1.5 },
-      { "min": 51, "max": 80, "pricePerLevel": 3 },
-      { "min": 81, "max": 90, "pricePerLevel": 4 },
-      { "min": 91, "max": 100, "pricePerLevel": 5 }
+      {
+        "min": 1,
+        "max": 50,
+        "pricePerLevel": 1.5
+      },
+      {
+        "min": 51,
+        "max": 80,
+        "pricePerLevel": 3
+      },
+      {
+        "min": 81,
+        "max": 90,
+        "pricePerLevel": 4
+      },
+      {
+        "min": 91,
+        "max": 100,
+        "pricePerLevel": 5
+      }
     ],
-    "msqAddon": { "id": "msq", "label": "Dawntrail MSQ Completion", "price": 30 },
+    "msqAddon": {
+      "id": "msq",
+      "label": "Dawntrail MSQ Completion",
+      "price": 30
+    },
     "completion": "24 Hours"
   },
   "bluLeveling": {
@@ -23,25 +43,85 @@
     "defaultStart": 70,
     "defaultEnd": 80,
     "priceTiers": [
-      { "min": 1, "max": 50, "pricePerLevel": 1.5 },
-      { "min": 51, "max": 70, "pricePerLevel": 2 },
-      { "min": 71, "max": 80, "pricePerLevel": 2.5 }
+      {
+        "min": 1,
+        "max": 50,
+        "pricePerLevel": 1.5
+      },
+      {
+        "min": 51,
+        "max": 70,
+        "pricePerLevel": 2
+      },
+      {
+        "min": 71,
+        "max": 80,
+        "pricePerLevel": 2.5
+      }
     ],
-    "spellsAddon": { "id": "all-spells", "label": "All spells unlock", "price": 400 },
-    "completion": "24 Hours"
+    "spellsAddon": {
+      "id": "all-spells",
+      "label": "All spells unlock",
+      "price": 400
+    },
+    "completion": "24 Hours",
+    "carnivaleAddon": {
+      "id": "carnivale",
+      "label": "Masked Carnivale Completion (1-32)",
+      "price": 405
+    },
+    "streamPrice": 10
   },
   "msqBoost": {
     "serviceId": "ffxiv-msq-skip",
     "expansions": [
-      { "id": "arr", "label": "2.5 - A Realm Reborn", "price": 30 },
-      { "id": "hw", "label": "3.5 - Heavensward", "price": 40 },
-      { "id": "stb", "label": "4.5 - Stormblood", "price": 40 },
-      { "id": "shb", "label": "5.5 - Shadowbringers", "price": 40 },
-      { "id": "ew", "label": "6.5 - Endwalker", "price": 40 },
-      { "id": "dt", "label": "7.0 - Dawntrail", "price": 60 },
-      { "id": "cp", "label": "7.5 - Trail to the Heavens", "price": 95 }
+      {
+        "id": "arr",
+        "label": "2.5 - A Realm Reborn",
+        "price": 30
+      },
+      {
+        "id": "hw",
+        "label": "3.5 - Heavensward",
+        "price": 40
+      },
+      {
+        "id": "stb",
+        "label": "4.5 - Stormblood",
+        "price": 40
+      },
+      {
+        "id": "shb",
+        "label": "5.5 - Shadowbringers",
+        "price": 40
+      },
+      {
+        "id": "ew",
+        "label": "6.5 - Endwalker",
+        "price": 40
+      },
+      {
+        "id": "dt",
+        "label": "7.0 - Dawntrail",
+        "price": 60
+      },
+      {
+        "id": "cp",
+        "label": "7.5 - Trail to the Heavens",
+        "price": 95
+      }
     ],
-    "aetherCurrents": { "label": "Aether Currents unlock", "pricePerExpansion": 5, "expansions": ["hw", "stb", "shb", "ew", "dt"] },
+    "aetherCurrents": {
+      "label": "Aether Currents unlock",
+      "pricePerExpansion": 5,
+      "expansions": [
+        "hw",
+        "stb",
+        "shb",
+        "ew",
+        "dt"
+      ]
+    },
     "completion": "4-6 Days"
   }
 }

@@ -49,6 +49,15 @@ export function PricingProvider({ children }: { children: ReactNode }) {
     if (ss) return ss.piloted?.bundles?.[0]?.price ?? fallback;
     if (serviceId === db.leveling?.serviceId && db.leveling.fromPrice != null) return db.leveling.fromPrice;
     if (serviceId === db.bluLeveling?.serviceId && db.bluLeveling.fromPrice != null) return db.bluLeveling.fromPrice;
+    if (serviceId === db.pvpSeries?.serviceId && db.pvpSeries.fromPrice != null) return db.pvpSeries.fromPrice;
+    if (serviceId === db.ccRank?.serviceId && db.ccRank.fromPrice != null) return db.ccRank.fromPrice;
+    if (serviceId === db.wolfMarks?.serviceId && db.wolfMarks.fromPrice != null) return db.wolfMarks.fromPrice;
+    const wing = db.mounts?.wings?.[serviceId];
+    if (wing) return wing.price;
+    const savageMount = db.mounts?.savageMounts?.[serviceId];
+    if (savageMount) return savageMount.price;
+    const mountSeries = db.mounts?.series?.[serviceId];
+    if (mountSeries) return mountSeries.fromPrice ?? mountSeries.mounts[0]?.price ?? fallback;
     if (serviceId === db.msqBoost?.serviceId && db.msqBoost.expansions?.[0] != null)
       return db.msqBoost.expansions[0].price;
     const mp = db.methodPrices?.[serviceId];

@@ -58,10 +58,14 @@ export interface LevelBoxConfig {
   priceTiers: { min: number; max: number; pricePerLevel: number }[];
   completion: string;
   showJob: boolean;
+  /** Main add-on in Additional Options (MSQ completion / All spells unlock) */
   addon?: PricingAddon;
-  /** Render the add-on inline above Data Center instead of inside an
-      Additional Options block (used by Blue Mage) */
-  inlineAddon?: boolean;
+  /** Lock the main add-on unless the desired level is the cap (Blue Mage) */
+  addonLocksToMax?: boolean;
+  /** Extra add-on rows in Additional Options (Masked Carnivale) */
+  addons?: PricingAddon[];
+  /** Private Stream add-on price, shown in Additional Options when set */
+  stream?: number;
 }
 
 /** Leveling purchase box: level range (inputs + dual slider), data center
@@ -85,6 +89,8 @@ export default function LevelingPurchaseBox({
   const [job, setJob] = useState('');
   const [dc, setDc] = useState('');
   const [addonChecked, setAddonChecked] = useState(false);
+  const [addonsChecked, setAddonsChecked] = useState<string[]>([]);
+  const [stream, setStream] = useState(false);
   const [jobError, setJobError] = useState(false);
   const [dcError, setDcError] = useState(false);
   const [optionsOpen, setOptionsOpen] = useState(false);
@@ -123,13 +129,22 @@ export default function LevelingPurchaseBox({
     return sum;
   })();
   // Blue Mage: All spells unlock requires the desired level to be the cap —
-  // greyed out, unchecked and excluded from the price at any lower target
-  const addonEnabled = cfg.inlineAddon ? end === cfg.levelMax : true;
-  useEffect(() => {
+  // greyed out, unchecked and excluded from the price at any lower target.
+  // (Render-phase state adjustment — the sanctioned alternative to setState
+  // inside an effect.)
+  const addonEnabled = cfg.addonLocksToMax ? end === cfg.levelMax : true;
+  const [prevAddonEnabled, setPrevAddonEnabled] = useState(addonEnabled);
+  if (prevAddonEnabled !== addonEnabled) {
+    setPrevAddonEnabled(addonEnabled);
     if (!addonEnabled) setAddonChecked(false);
-  }, [addonEnabled]);
+  }
   const addonPrice = addonChecked && addonEnabled ? cfg.addon?.price ?? 0 : 0;
-  const total = levelPrice + addonPrice;
+  const extrasPrice = addonsChecked.reduce(
+    (s, id) => s + (cfg.addons?.find((a) => a.id === id)?.price ?? 0),
+    0,
+  );
+  const streamPrice = stream ? cfg.stream ?? 0 : 0;
+  const total = levelPrice + addonPrice + extrasPrice + streamPrice;
 
   const addToCart = () => {
     let ok = true;
@@ -156,6 +171,8 @@ export default function LevelingPurchaseBox({
         `Level ${start} → ${end}`,
         `Data Center: ${dc}`,
         ...(addonChecked && addonEnabled && cfg.addon ? [cfg.addon.label] : []),
+        ...addonsChecked.map((id) => cfg.addons!.find((a) => a.id === id)!.label),
+        ...(stream ? ['Private Stream'] : []),
       ],
       1,
     );
@@ -265,9 +282,6 @@ export default function LevelingPurchaseBox({
             </div>
           )}
 
-          {/* Add-on inline above Data Center (Blue Mage layout) */}
-          {cfg.inlineAddon && addonRow && <div>{addonRow}</div>}
-
           {/* Data center */}
           <div>
             <p className="pl-px text-sm font-semibold text-white">
@@ -289,8 +303,8 @@ export default function LevelingPurchaseBox({
             </div>
           </div>
 
-          {/* Additional options — only when the add-on lives inside the block */}
-          {!cfg.inlineAddon && cfg.addon && (
+          {/* Additional options */}
+          {(cfg.addon || cfg.addons?.length || cfg.stream != null) && (
           <div className={`aob rounded-[5px] border border-navy-700/70 bg-navy-850 ${optionsOpen ? 'expanded' : ''}`}>
             <button
               onClick={() => {
@@ -319,7 +333,53 @@ export default function LevelingPurchaseBox({
                 <div className="space-y-4 px-4 pb-3 pt-1">
                   <div>
                     <p className="mb-2 pl-px text-xs font-semibold text-slate-300">Add-ons</p>
-                    <div className="space-y-1.5">{addonRow}</div>
+                    <div className="space-y-1.5">
+                      {addonRow}
+                      {cfg.addons?.map((a) => {
+                        const checked = addonsChecked.includes(a.id);
+                        return (
+                          <button
+                            key={a.id}
+                            type="button"
+                            onClick={() =>
+                              setAddonsChecked((prev) =>
+                                prev.includes(a.id) ? prev.filter((x) => x !== a.id) : [...prev, a.id],
+                              )
+                            }
+                            aria-pressed={checked}
+                            className="flex w-full items-center gap-3 rounded-[5px] bg-navy-850 px-2.5 py-1.5 text-left transition-colors hover:bg-navy-800"
+                          >
+                            <span
+                              className={`flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-[3px] border transition-colors ${
+                                checked ? 'border-cyan-500 bg-cyan-600 text-navy-900' : 'border-navy-600 text-transparent'
+                              }`}
+                            >
+                              <Check className="h-3 w-3" strokeWidth={3.5} />
+                            </span>
+                            <span className="min-w-0 flex-1 truncate text-sm text-slate-300">{a.label}</span>
+                            <span className="text-xs font-bold text-cyan-400">+{format(a.price)}</span>
+                          </button>
+                        );
+                      })}
+                      {cfg.stream != null && (
+                        <button
+                          type="button"
+                          onClick={() => setStream((s) => !s)}
+                          aria-pressed={stream}
+                          className="flex w-full items-center gap-3 rounded-[5px] bg-navy-850 px-2.5 py-1.5 text-left transition-colors hover:bg-navy-800"
+                        >
+                          <span
+                            className={`flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-[3px] border transition-colors ${
+                              stream ? 'border-cyan-500 bg-cyan-600 text-navy-900' : 'border-navy-600 text-transparent'
+                            }`}
+                          >
+                            <Check className="h-3 w-3" strokeWidth={3.5} />
+                          </span>
+                          <span className="min-w-0 flex-1 truncate text-sm text-slate-300">Private Stream</span>
+                          <span className="text-xs font-bold text-cyan-400">+{format(cfg.stream)}</span>
+                        </button>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
