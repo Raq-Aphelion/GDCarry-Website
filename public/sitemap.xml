@@ -185,6 +185,10 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-juedi-mount</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-cerberus-mount</loc>
     <priority>0.8</priority>
   </url>
@@ -197,87 +201,7 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-limitless-blue</loc>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-thok-ast-thok</loc>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-thordans-reign</loc>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-containment-bay-s1t7</loc>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-nidhoggs-rage</loc>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-containment-bay-p1t6</loc>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-containment-bay-z1t9</loc>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-pool-of-tribute</loc>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-emanation</loc>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-shinryus-domain</loc>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-jade-stoa</loc>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-tsukuyomis-pain</loc>
-    <priority>0.8</priority>
-  </url>
-  <url>
     <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-great-hunt</loc>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-hells-kier</loc>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-dancing-plague</loc>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-crown-of-the-immaculate</loc>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-cinder-drift</loc>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-castrum-marinum</loc>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-cloud-deck</loc>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-hadess-elegy</loc>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-seat-of-sacrifice</loc>
     <priority>0.8</priority>
   </url>
   <url>
@@ -285,35 +209,27 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-zodiarks-fall</loc>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-hydaelyns-call</loc>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-endsingers-aria</loc>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-storms-crown</loc>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-mount-ordeals</loc>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-voidcast-dais</loc>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-abyssal-fracture</loc>
-    <priority>0.8</priority>
-  </url>
-  <url>
     <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-worqor-lar-dor</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-dawntrail-trials-bundle</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-endwalker-trials-bundle</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-shadowbringers-trials-bundle</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-stormblood-trials-bundle</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-heavensward-trials-bundle</loc>
     <priority>0.8</priority>
   </url>
   <url>

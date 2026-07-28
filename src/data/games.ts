@@ -83,6 +83,10 @@ import scAirForce from '@/assets/images/service-cards/ffxiv/mounts/savage-raid-m
 import scModelO from '@/assets/images/service-cards/ffxiv/mounts/savage-raid-mounts/ffxiv-model-o.webp';
 import scGobwalker from '@/assets/images/service-cards/ffxiv/mounts/savage-raid-mounts/ffxiv-gobwalker.webp';
 import scArrhidaeus from '@/assets/images/service-cards/ffxiv/mounts/savage-raid-mounts/ffxiv-arrhidaeus.webp';
+import scJuedi from '@/assets/images/service-cards/ffxiv/mounts/ffxiv-juedi.webp';
+import scCerberus from '@/assets/images/service-cards/ffxiv/mounts/ffxiv-cerberus.webp';
+import scDemiOzma from '@/assets/images/service-cards/ffxiv/mounts/ffxiv-demi-ozma.webp';
+import scDemonHaul from '@/assets/images/service-cards/ffxiv/mounts/ffxiv-demon-haul.webp';
 import scWingsOfRuin from '@/assets/images/service-cards/ffxiv/mounts/extreme-trial-mounts/ffxiv-wings-of-ruin.webp';
 import scWingsOfResolve from '@/assets/images/service-cards/ffxiv/mounts/extreme-trial-mounts/ffxiv-wings-of-resolve.webp';
 import scWingsOfEternity from '@/assets/images/service-cards/ffxiv/mounts/extreme-trial-mounts/ffxiv-wings-of-eternity.webp';
@@ -95,6 +99,21 @@ import scHeavenOnHigh from '@/assets/images/service-cards/ffxiv/deep-dungeons/ff
 import scEurekaOrthos from '@/assets/images/service-cards/ffxiv/deep-dungeons/ffxiv-eureka-orthos.webp';
 import scPalaceOfTheDead from '@/assets/images/service-cards/ffxiv/deep-dungeons/ffxiv-palace-of-the-dead.webp';
 import scDdBundle from '@/assets/images/service-cards/ffxiv/deep-dungeons/ffxiv-dd-bundle.webp';
+import scWorqorLarDor from '@/assets/images/service-cards/ffxiv/extreme-trials/dawntrail-extreme-trials/ffxiv-worqor-lar-dor.webp';
+import scEverkeep from '@/assets/images/service-cards/ffxiv/extreme-trials/dawntrail-extreme-trials/ffxiv-everkeep.webp';
+import scSphenesBurden from '@/assets/images/service-cards/ffxiv/extreme-trials/dawntrail-extreme-trials/ffxiv-sphenes-burden.webp';
+import scRecollection from '@/assets/images/service-cards/ffxiv/extreme-trials/dawntrail-extreme-trials/ffxiv-recollection.webp';
+import scNecronsEmbrace from '@/assets/images/service-cards/ffxiv/extreme-trials/dawntrail-extreme-trials/ffxiv-necrons-embrace.webp';
+import scWindwardWilds from '@/assets/images/service-cards/ffxiv/extreme-trials/ffxiv-the-windward-wilds.webp';
+import scHellOnRails from '@/assets/images/service-cards/ffxiv/extreme-trials/dawntrail-extreme-trials/ffxiv-hell-on-rails.webp';
+import scTheUnmaking from '@/assets/images/service-cards/ffxiv/extreme-trials/dawntrail-extreme-trials/ffxiv-the-unmaking.webp';
+import scDawntrailTrialsBundle from '@/assets/images/service-cards/ffxiv/extreme-trials/dawntrail-extreme-trials/ffxiv-dawntrail-extreme-bundle.webp';
+import scEndwalkerTrialsBundle from '@/assets/images/service-cards/ffxiv/extreme-trials/ffxiv-endwalker-extreme-bundle.webp';
+import scShadowbringersTrialsBundle from '@/assets/images/service-cards/ffxiv/extreme-trials/ffxiv-shadowbringers-extreme-bundle.webp';
+import scStormbloodTrialsBundle from '@/assets/images/service-cards/ffxiv/extreme-trials/dawntrail-extreme-trials/ffxiv-stormblood-extreme-bundle.webp';
+import scHeavenswardTrialsBundle from '@/assets/images/service-cards/ffxiv/extreme-trials/ffxiv-heavensward-extreme-bundle.webp';
+import scMemoriaMisera from '@/assets/images/service-cards/ffxiv/extreme-trials/ffxiv-memoria-misera.webp';
+import scGreatHunt from '@/assets/images/service-cards/ffxiv/extreme-trials/ffxiv-the-great-hunt.webp';
 import { SERVICE_PAGES } from '@/data/servicePages';
 import type { CatalogConfig } from '@/data/pricing';
 
@@ -138,7 +157,7 @@ export const games: Game[] = [
         // share the original service's id, so serviceCount dedupes them and
         // they never inflate the totals. Both the name and the proxy list are
         // overridden by the category entry in public/db/ffxiv-Catalog.json.
-        proxies: ['ffxiv-dmu', 'ffxiv-arcadion-savage', 'ffxiv-wings-of-legacy', 'ffxiv-wings-of-nihility', 'ffxiv-lowrider-t1rant'],
+        proxies: ['ffxiv-dmu', 'ffxiv-arcadion-savage', 'ffxiv-wings-of-legacy', 'ffxiv-wings-of-nihility', 'ffxiv-lowrider-t1rant', 'ffxiv-dawntrail-trials-bundle', 'ffxiv-the-unmaking', 'ffxiv-leveling-boost', 'ffxiv-msq-skip', 'ffxiv-cc-rank-boost', 'ffxiv-pvp-series-boost'],
       },
       {
         id: 'ultimate-raids',
@@ -365,14 +384,70 @@ export const games: Game[] = [
         name: 'Extreme Trials',
         services: [
           {
+            id: 'ffxiv-dawntrail-trials-bundle',
+            name: 'Dawntrail Extreme Trials Bundle',
+            tag2: 'All 7 Dawntrail Extreme trials',
+            price: 0,
+            tag1: 'Mount guaranteed option',
+            tag3: 'Piloted or AFK Carry',
+            longDescription:
+              'Every Dawntrail Extreme trial in one package — from Worqor Lar Dor to The Unmaking — with a mount guaranteed option for the Wings of Legacy.',
+            image: scDawntrailTrialsBundle,
+          },
+          {
+            id: 'ffxiv-endwalker-trials-bundle',
+            name: 'Endwalker Extreme Trials Bundle',
+            tag2: 'All 7 Endwalker Extreme trials',
+            price: 0,
+            tag1: 'Mount guaranteed option',
+            tag3: 'Piloted or AFK Carry',
+            longDescription:
+              'Every Endwalker Extreme trial in one package — from Zodiark’s Fall to the Abyssal Fracture — with a mount guaranteed option for the Apocryphal Bahamut.',
+            image: scEndwalkerTrialsBundle,
+          },
+          {
+            id: 'ffxiv-shadowbringers-trials-bundle',
+            name: 'Shadowbringers Extreme Trials Bundle',
+            tag2: 'All 7 Shadowbringers Extreme trials',
+            price: 0,
+            tag1: 'Mount guaranteed option',
+            tag3: 'Piloted or AFK Carry',
+            longDescription:
+              'Every Shadowbringers Extreme trial in one package — from the Dancing Plague to the Cloud Deck — with a mount guaranteed option for the Landerwaffe.',
+            image: scShadowbringersTrialsBundle,
+          },
+          {
+            id: 'ffxiv-stormblood-trials-bundle',
+            name: 'Stormblood Extreme Trials Bundle',
+            tag2: 'All 7 Stormblood Extreme trials',
+            price: 0,
+            tag1: 'Mount guaranteed option',
+            tag3: 'Piloted or AFK Carry',
+            longDescription:
+              'Every Stormblood Extreme trial in one package — from the Pool of Tribute to the Wreath of Snakes — with a mount guaranteed option for the Kamuy of the Nine Tails.',
+            image: scStormbloodTrialsBundle,
+          },
+          {
+            id: 'ffxiv-heavensward-trials-bundle',
+            name: 'Heavensward Extreme Trials Bundle',
+            tag2: 'All 7 Heavensward Extreme trials',
+            price: 0,
+            tag1: 'Mount guaranteed option',
+            tag3: 'Piloted or AFK Carry',
+            longDescription:
+              'Every Heavensward Extreme trial in one package — from the Limitless Blue to Containment Bay Z1T9 — with a mount guaranteed option for the Firebird.',
+            image: scHeavenswardTrialsBundle,
+          },
+          {
             id: 'ffxiv-the-unmaking',
             name: 'The Unmaking (Extreme)',
             tag2: 'Dawntrail Extreme trial clear',
             price: 0,
             tag1: 'Totems & all loot included',
+            tag3: 'Piloted or AFK Carry',
             longDescription:
               'Enuo, the undoing of all things — our raiders clear it on Extreme for you, Piloted or AFK.',
-            image: scBlank,
+            image: scTheUnmaking,
             tag: 'New',
           },
 
@@ -382,9 +457,10 @@ export const games: Game[] = [
             tag2: 'Dawntrail Extreme trial clear',
             price: 0,
             tag1: 'Totems & all loot included',
+            tag3: 'Piloted or AFK Carry',
             longDescription:
               'The Doomtrain, harbinger of souls — our raiders clear it on Extreme for you, Piloted or AFK.',
-            image: scBlank,
+            image: scHellOnRails,
             tag: 'Hot',
           },
 
@@ -394,9 +470,10 @@ export const games: Game[] = [
             tag2: 'Dawntrail Extreme trial clear',
             price: 0,
             tag1: 'Totems & all loot included',
+            tag3: 'Piloted or AFK Carry',
             longDescription:
               'Arkveld, the White Wraith from the forbidden lands — our raiders clear it on Extreme for you, Piloted or AFK.',
-            image: scBlank,
+            image: scWindwardWilds,
           },
 
           {
@@ -405,9 +482,10 @@ export const games: Game[] = [
             tag2: 'Dawntrail Extreme trial clear',
             price: 0,
             tag1: 'Totems & all loot included',
+            tag3: 'Piloted or AFK Carry',
             longDescription:
               'Necron, the embodiment of death itself — our raiders clear it on Extreme for you, Piloted or AFK.',
-            image: scBlank,
+            image: scNecronsEmbrace,
           },
 
           {
@@ -416,9 +494,10 @@ export const games: Game[] = [
             tag2: 'Dawntrail Extreme trial clear',
             price: 0,
             tag1: 'Totems & all loot included',
+            tag3: 'Piloted or AFK Carry',
             longDescription:
               'A treasured memory given terrible form — our raiders clear it on Extreme for you, Piloted or AFK.',
-            image: scBlank,
+            image: scRecollection,
           },
 
           {
@@ -427,9 +506,10 @@ export const games: Game[] = [
             tag2: 'Dawntrail Extreme trial clear',
             price: 0,
             tag1: 'Totems & all loot included',
+            tag3: 'Piloted or AFK Carry',
             longDescription:
               'Queen Sphene, eternal sovereign of Alexandria — our raiders clear it on Extreme for you, Piloted or AFK.',
-            image: scBlank,
+            image: scSphenesBurden,
           },
 
           {
@@ -438,9 +518,10 @@ export const games: Game[] = [
             tag2: 'Dawntrail Extreme trial clear',
             price: 0,
             tag1: 'Totems & all loot included',
+            tag3: 'Piloted or AFK Carry',
             longDescription:
               'Zoraal Ja, the Resilient King — our raiders clear it on Extreme for you, Piloted or AFK.',
-            image: scBlank,
+            image: scEverkeep,
           },
 
           {
@@ -449,87 +530,25 @@ export const games: Game[] = [
             tag2: 'Dawntrail Extreme trial clear',
             price: 0,
             tag1: 'Totems & all loot included',
+            tag3: 'Piloted or AFK Carry',
             longDescription:
               'Valigarmanda, the Skyruin — our raiders clear it on Extreme for you, Piloted or AFK.',
-            image: scBlank,
+            image: scWorqorLarDor,
           },
 
-          {
-            id: 'ffxiv-abyssal-fracture',
-            name: 'The Abyssal Fracture (Extreme)',
-            tag2: 'Endwalker Extreme trial clear',
-            price: 0,
-            tag1: 'Totems & all loot included',
-            longDescription:
-              'Zeromus, the Void\'s greatest scourge — our raiders clear it on Extreme for you, Piloted or AFK.',
-            image: scBlank,
-          },
 
-          {
-            id: 'ffxiv-voidcast-dais',
-            name: 'The Voidcast Dais (Extreme)',
-            tag2: 'Endwalker Extreme trial clear',
-            price: 0,
-            tag1: 'Totems & all loot included',
-            longDescription:
-              'Golbez, knight of the Thirteenth — our raiders clear it on Extreme for you, Piloted or AFK.',
-            image: scBlank,
-          },
 
-          {
-            id: 'ffxiv-mount-ordeals',
-            name: 'Mount Ordeals (Extreme)',
-            tag2: 'Endwalker Extreme trial clear',
-            price: 0,
-            tag1: 'Totems & all loot included',
-            longDescription:
-              'Rubicante, Archfiend of Fire — our raiders clear it on Extreme for you, Piloted or AFK.',
-            image: scBlank,
-          },
 
-          {
-            id: 'ffxiv-storms-crown',
-            name: "Storm's Crown (Extreme)",
-            tag2: 'Endwalker Extreme trial clear',
-            price: 0,
-            tag1: 'Totems & all loot included',
-            longDescription:
-              'Barbariccia, Empress of the winds — our raiders clear it on Extreme for you, Piloted or AFK.',
-            image: scBlank,
-          },
 
-          {
-            id: 'ffxiv-endsingers-aria',
-            name: "The Minstrel's Ballad: Endsinger's Aria",
-            tag2: 'Endwalker Extreme trial clear',
-            price: 0,
-            tag1: 'Totems & all loot included',
-            longDescription:
-              'The Endsinger, herald of the Final Days — our raiders clear it on Extreme for you, Piloted or AFK.',
-            image: scBlank,
-          },
 
-          {
-            id: 'ffxiv-hydaelyns-call',
-            name: "The Minstrel's Ballad: Hydaelyn's Call",
-            tag2: 'Endwalker Extreme trial clear',
-            price: 0,
-            tag1: 'Totems & all loot included',
-            longDescription:
-              'Hydaelyn, the will of the star — our raiders clear it on Extreme for you, Piloted or AFK.',
-            image: scBlank,
-          },
 
-          {
-            id: 'ffxiv-zodiarks-fall',
-            name: "The Minstrel's Ballad: Zodiark's Fall",
-            tag2: 'Endwalker Extreme trial clear',
-            price: 0,
-            tag1: 'Totems & all loot included',
-            longDescription:
-              'Zodiark, the eldest of the primals — our raiders clear it on Extreme for you, Piloted or AFK.',
-            image: scBlank,
-          },
+
+
+
+
+
+
+
 
           {
             id: 'ffxiv-memoria-misera',
@@ -537,98 +556,27 @@ export const games: Game[] = [
             tag2: 'Shadowbringers Extreme trial clear',
             price: 0,
             tag1: 'Totems & all loot included',
+            tag3: 'Piloted or AFK Carry',
             longDescription:
               'Varis yae Galvus, relived through memory — our raiders clear it on Extreme for you, Piloted or AFK.',
-            image: scBlank,
+            image: scMemoriaMisera,
           },
 
-          {
-            id: 'ffxiv-seat-of-sacrifice',
-            name: 'The Seat of Sacrifice (Extreme)',
-            tag2: 'Shadowbringers Extreme trial clear',
-            price: 0,
-            tag1: 'Totems & all loot included',
-            longDescription:
-              'Elidibus, bearing the face of the first Warrior of Light — our raiders clear it on Extreme for you, Piloted or AFK.',
-            image: scBlank,
-          },
 
-          {
-            id: 'ffxiv-hadess-elegy',
-            name: "The Minstrel's Ballad: Hades's Elegy",
-            tag2: 'Shadowbringers Extreme trial clear',
-            price: 0,
-            tag1: 'Totems & all loot included',
-            longDescription:
-              'Hades, the architect of the Ascian design — our raiders clear it on Extreme for you, Piloted or AFK.',
-            image: scBlank,
-          },
 
-          {
-            id: 'ffxiv-cloud-deck',
-            name: 'The Cloud Deck (Extreme)',
-            tag2: 'Shadowbringers Extreme trial clear',
-            price: 0,
-            tag1: 'Totems & all loot included',
-            longDescription:
-              'The Diamond Weapon, apex of the Weapon project — our raiders clear it on Extreme for you, Piloted or AFK.',
-            image: scBlank,
-          },
 
-          {
-            id: 'ffxiv-castrum-marinum',
-            name: 'Castrum Marinum (Extreme)',
-            tag2: 'Shadowbringers Extreme trial clear',
-            price: 0,
-            tag1: 'Totems & all loot included',
-            longDescription:
-              'The Emerald Weapon, master of thermal suppression — our raiders clear it on Extreme for you, Piloted or AFK.',
-            image: scBlank,
-          },
 
-          {
-            id: 'ffxiv-cinder-drift',
-            name: 'Cinder Drift (Extreme)',
-            tag2: 'Shadowbringers Extreme trial clear',
-            price: 0,
-            tag1: 'Totems & all loot included',
-            longDescription:
-              'The Ruby Weapon, resurrected warmachina — our raiders clear it on Extreme for you, Piloted or AFK.',
-            image: scBlank,
-          },
 
-          {
-            id: 'ffxiv-crown-of-the-immaculate',
-            name: 'Crown of the Immaculate (Extreme)',
-            tag2: 'Shadowbringers Extreme trial clear',
-            price: 0,
-            tag1: 'Totems & all loot included',
-            longDescription:
-              'Innocence, the self-styled god of light — our raiders clear it on Extreme for you, Piloted or AFK.',
-            image: scBlank,
-          },
 
-          {
-            id: 'ffxiv-dancing-plague',
-            name: 'Dancing Plague (Extreme)',
-            tag2: 'Shadowbringers Extreme trial clear',
-            price: 0,
-            tag1: 'Totems & all loot included',
-            longDescription:
-              'Titania, the faerie king of Il Mheg — our raiders clear it on Extreme for you, Piloted or AFK.',
-            image: scBlank,
-          },
 
-          {
-            id: 'ffxiv-hells-kier',
-            name: "Hells' Kier (Extreme)",
-            tag2: 'Stormblood Extreme trial clear',
-            price: 0,
-            tag1: 'Totems & all loot included',
-            longDescription:
-              'Suzaku, the scarlet phoenix of the Four Lords — our raiders clear it on Extreme for you, Piloted or AFK.',
-            image: scBlank,
-          },
+
+
+
+
+
+
+
+
 
           {
             id: 'ffxiv-great-hunt',
@@ -636,142 +584,35 @@ export const games: Game[] = [
             tag2: 'Stormblood Extreme trial clear',
             price: 0,
             tag1: 'Totems & all loot included',
+            tag3: 'Piloted or AFK Carry',
             longDescription:
               'Rathalos, the King of the Skies from another world — our raiders clear it on Extreme for you, Piloted or AFK.',
-            image: scBlank,
+            image: scGreatHunt,
           },
 
-          {
-            id: 'ffxiv-tsukuyomis-pain',
-            name: "The Minstrel's Ballad: Tsukuyomi's Pain",
-            tag2: 'Stormblood Extreme trial clear',
-            price: 0,
-            tag1: 'Totems & all loot included',
-            longDescription:
-              'Tsukuyomi, the moonlit goddess — our raiders clear it on Extreme for you, Piloted or AFK.',
-            image: scBlank,
-          },
 
-          {
-            id: 'ffxiv-jade-stoa',
-            name: 'The Jade Stoa (Extreme)',
-            tag2: 'Stormblood Extreme trial clear',
-            price: 0,
-            tag1: 'Totems & all loot included',
-            longDescription:
-              'Byakko, the white tiger of the Four Lords — our raiders clear it on Extreme for you, Piloted or AFK.',
-            image: scBlank,
-          },
 
-          {
-            id: 'ffxiv-shinryus-domain',
-            name: "The Minstrel's Ballad: Shinryu's Domain",
-            tag2: 'Stormblood Extreme trial clear',
-            price: 0,
-            tag1: 'Totems & all loot included',
-            longDescription:
-              'Shinryu, the Dragon King — our raiders clear it on Extreme for you, Piloted or AFK.',
-            image: scBlank,
-          },
 
-          {
-            id: 'ffxiv-emanation',
-            name: 'Emanation (Extreme)',
-            tag2: 'Stormblood Extreme trial clear',
-            price: 0,
-            tag1: 'Totems & all loot included',
-            longDescription:
-              'Lakshmi, the Lady of Bliss — our raiders clear it on Extreme for you, Piloted or AFK.',
-            image: scBlank,
-          },
 
-          {
-            id: 'ffxiv-pool-of-tribute',
-            name: 'The Pool of Tribute (Extreme)',
-            tag2: 'Stormblood Extreme trial clear',
-            price: 0,
-            tag1: 'Totems & all loot included',
-            longDescription:
-              'Susano, the Lord of the Revel — our raiders clear it on Extreme for you, Piloted or AFK.',
-            image: scBlank,
-          },
 
-          {
-            id: 'ffxiv-containment-bay-z1t9',
-            name: 'Containment Bay Z1T9 (Extreme)',
-            tag2: 'Heavensward Extreme trial clear',
-            price: 0,
-            tag1: 'Totems & all loot included',
-            longDescription:
-              'Zurvan, the Demon of the Warring Triad — our raiders clear it on Extreme for you, Piloted or AFK.',
-            image: scBlank,
-          },
 
-          {
-            id: 'ffxiv-containment-bay-p1t6',
-            name: 'Containment Bay P1T6 (Extreme)',
-            tag2: 'Heavensward Extreme trial clear',
-            price: 0,
-            tag1: 'Totems & all loot included',
-            longDescription:
-              'Sophia, the Goddess of the Warring Triad — our raiders clear it on Extreme for you, Piloted or AFK.',
-            image: scBlank,
-          },
 
-          {
-            id: 'ffxiv-nidhoggs-rage',
-            name: "The Minstrel's Ballad: Nidhogg's Rage",
-            tag2: 'Heavensward Extreme trial clear',
-            price: 0,
-            tag1: 'Totems & all loot included',
-            longDescription:
-              'Nidhogg, the wyrmking of the Dragonsong War — our raiders clear it on Extreme for you, Piloted or AFK.',
-            image: scBlank,
-          },
 
-          {
-            id: 'ffxiv-containment-bay-s1t7',
-            name: 'Containment Bay S1T7 (Extreme)',
-            tag2: 'Heavensward Extreme trial clear',
-            price: 0,
-            tag1: 'Totems & all loot included',
-            longDescription:
-              'Sephirot, the Fiend of the Warring Triad — our raiders clear it on Extreme for you, Piloted or AFK.',
-            image: scBlank,
-          },
 
-          {
-            id: 'ffxiv-thordans-reign',
-            name: "The Minstrel's Ballad: Thordan's Reign",
-            tag2: 'Heavensward Extreme trial clear',
-            price: 0,
-            tag1: 'Totems & all loot included',
-            longDescription:
-              'King Thordan and the Knights of the Round — our raiders clear it on Extreme for you, Piloted or AFK.',
-            image: scBlank,
-          },
 
-          {
-            id: 'ffxiv-thok-ast-thok',
-            name: 'Thok ast Thok (Extreme)',
-            tag2: 'Heavensward Extreme trial clear',
-            price: 0,
-            tag1: 'Totems & all loot included',
-            longDescription:
-              'Ravana, the blood-maddened god of the Gnath — our raiders clear it on Extreme for you, Piloted or AFK.',
-            image: scBlank,
-          },
 
-          {
-            id: 'ffxiv-limitless-blue',
-            name: 'The Limitless Blue (Extreme)',
-            tag2: 'Heavensward Extreme trial clear',
-            price: 0,
-            tag1: 'Totems & all loot included',
-            longDescription:
-              'Bismarck, the white whale of the Sea of Clouds — our raiders clear it on Extreme for you, Piloted or AFK.',
-            image: scBlank,
-          },
+
+
+
+
+
+
+
+
+
+
+
+
         ],
       },
       {
@@ -1278,10 +1119,10 @@ export const games: Game[] = [
             tag2: 'Delubrum Reginae (Savage)',
             price: 0,
             tag1: 'Guaranteed mount drop',
-            tag3: 'Piloted or AFK Carry',
+            tag3: 'Piloted Service',
             longDescription:
               'The three-headed hound of Delubrum Reginae (Savage) — guaranteed via the Savage Queen of Swords achievement on completion.',
-            image: scBlank,
+            image: scCerberus,
           },
           {
             id: 'ffxiv-demi-ozma',
@@ -1289,10 +1130,10 @@ export const games: Game[] = [
             tag2: 'The Baldesion Arsenal',
             price: 0,
             tag1: 'Guaranteed mount drop',
-            tag3: 'Piloted or AFK Carry',
+            tag3: 'Piloted Service',
             longDescription:
               'A fragment of Ozma itself from the depths of The Baldesion Arsenal — guaranteed completion with a veteran group.',
-            image: scBlank,
+            image: scDemiOzma,
           },
           {
             id: 'ffxiv-demon-haul',
@@ -1300,10 +1141,21 @@ export const games: Game[] = [
             tag2: 'The Forked Tower: Blood',
             price: 0,
             tag1: 'Guaranteed mount drop',
-            tag3: 'Piloted or AFK Carry',
+            tag3: 'Piloted Service',
             longDescription:
               'A demonic palanquin earned in The Forked Tower: Blood — hauled by demons, guaranteed for your collection.',
-            image: scBlank,
+            image: scDemonHaul,
+          },
+          {
+            id: 'ffxiv-juedi-mount',
+            name: 'Juedi (Mount)',
+            tag2: 'Heaven-on-High (Deep Dungeon)',
+            price: 0,
+            tag1: 'Guaranteed mount drop',
+            tag3: 'Piloted or Group Play',
+            longDescription:
+              'The qirin steed of the Empyrean stair — Juedi descends only for those who conquer Heaven-on-High. Guaranteed with four full clears, piloted or alongside our raiders in group play.',
+            image: scJuedi,
           },
         ],
       },

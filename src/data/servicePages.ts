@@ -714,12 +714,17 @@ SERVICE_PAGES['ffxiv-wolf-marks'] = {
   ],
 };
 
-/** Shared content shapes for the extreme-trial mount pages. */
+/** Shared content shapes for the extreme-trial mount pages. The 'Guaranteed
+    Mount Drop From' duty button links to the expansion's Extreme Trials
+    Bundle service page; with `linkTrials: false` the trials label renders as
+    plain text instead (used for A Realm Reborn, whose extremes aren't listed
+    on the site). */
 const mountSeriesPage = (
   short: string,
   mountCount: number,
   requirement: string,
   trialsLabel: string,
+  linkTrials = true,
 ): ServicePageContent => ({
   short,
   rewardsHeading: 'What you get',
@@ -727,8 +732,17 @@ const mountSeriesPage = (
     {
       icon: Trophy,
       title: 'Guaranteed Mount Drop From',
-      dutyButton: { label: trialsLabel, to: '/boosting/ffxiv?cat=trials' },
-      text: '— guaranteed, no matter how many runs it takes.',
+      ...(linkTrials
+        ? {
+            dutyButton: {
+              label: trialsLabel,
+              to: `/boosting/ffxiv/ffxiv-${trialsLabel.replace(' Extreme Trials', '').toLowerCase()}-trials-bundle`,
+            },
+            text: '— guaranteed, no matter how many runs it takes.',
+          }
+        : {
+            text: `${trialsLabel} — guaranteed, no matter how many runs it takes.`,
+          }),
     },
     {
       icon: Package,
@@ -796,7 +810,7 @@ const wingPage = (short: string, trial: string, totem: string, to: string): Serv
   ],
 });
 
-SERVICE_PAGES['ffxiv-kirin-mount'] = mountSeriesPage('Kirin', 6, 'Have a level 50 Job', 'A Realm Reborn Extreme Trials');
+SERVICE_PAGES['ffxiv-kirin-mount'] = mountSeriesPage('Kirin', 6, 'Have a level 50 Job', 'A Realm Reborn Extreme Trials', false);
 SERVICE_PAGES['ffxiv-firebird-mount'] = mountSeriesPage('Firebird', 7, 'Have a level 60 Job', 'Heavensward Extreme Trials');
 SERVICE_PAGES['ffxiv-kamuy-nine-tails'] = mountSeriesPage('Nine Tails', 7, 'Have a level 70 Job', 'Stormblood Extreme Trials');
 SERVICE_PAGES['ffxiv-landerwaffe'] = mountSeriesPage('Landerwaffe', 7, 'Have a level 80 Job', 'Shadowbringers Extreme Trials');
@@ -811,8 +825,9 @@ SERVICE_PAGES['ffxiv-wings-of-death'] = wingPage('Wings of Death', "The Minstrel
 SERVICE_PAGES['ffxiv-wings-of-mist'] = wingPage('Wings of Mist', 'Hell on Rails (Extreme)', 'Runaway Totems', '/boosting/ffxiv/ffxiv-hell-on-rails');
 SERVICE_PAGES['ffxiv-wings-of-nihility'] = wingPage('Wings of Nihility', 'The Unmaking (Extreme)', 'Totems of Naught', '/boosting/ffxiv/ffxiv-the-unmaking');
 
-/** Savage raid mount pages share one shape; level varies by expansion. */
-const savageMountPage = (short: string, duty: string, level: number, dutyTo: string): ServicePageContent => ({
+/** Savage raid mount pages share one shape; level varies by expansion.
+    `note` appends plain text next to the duty button (e.g. clears required). */
+const savageMountPage = (short: string, duty: string, level: number, dutyTo: string, note?: string): ServicePageContent => ({
   short,
   rewardsHeading: 'What you get',
   rewards: [
@@ -820,6 +835,7 @@ const savageMountPage = (short: string, duty: string, level: number, dutyTo: str
       icon: Trophy,
       title: 'Guaranteed Mount Drop From',
       dutyButton: { label: duty, to: dutyTo },
+      ...(note ? { text: note } : {}),
     },
     {
       icon: Swords,
@@ -861,6 +877,7 @@ SERVICE_PAGES['ffxiv-air-force'] = savageMountPage('Air Force', 'Sigmascape V4.0
 SERVICE_PAGES['ffxiv-model-o'] = savageMountPage('Model O', 'Alphascape V4.0 (Savage)', 70, '/boosting/ffxiv/ffxiv-omega-savage');
 SERVICE_PAGES['ffxiv-gobwalker'] = savageMountPage('Gobwalker', 'Alexander - The Burden of the Father (Savage)', 60, '/boosting/ffxiv/ffxiv-alexander-savage');
 SERVICE_PAGES['ffxiv-arrhidaeus'] = savageMountPage('Arrhidaeus', 'Alexander - The Soul of the Creator (Savage)', 60, '/boosting/ffxiv/ffxiv-alexander-savage');
+SERVICE_PAGES['ffxiv-juedi-mount'] = savageMountPage('Juedi', 'Heaven-on-High (Deep Dungeon)', 100, '/boosting/ffxiv/ffxiv-hoh', '— 4 full clears required.');
 SERVICE_PAGES['ffxiv-cerberus-mount'] = savageMountPage('Cerberus', 'Delubrum Reginae (Savage)', 80, '/boosting/ffxiv?cat=alliance-raids');
 SERVICE_PAGES['ffxiv-demi-ozma'] = savageMountPage('Demi-Ozma', 'The Baldesion Arsenal', 70, '/boosting/ffxiv?cat=alliance-raids');
 SERVICE_PAGES['ffxiv-demon-haul'] = savageMountPage('Demon Haul', 'The Forked Tower: Blood', 100, '/boosting/ffxiv?cat=alliance-raids');
@@ -893,9 +910,9 @@ const trialPage = (short: string, level: number, mount?: { label: string; to: st
       ? [
           {
             icon: Trophy,
-            title: 'Mount Drop',
+            title: 'Mount Drop (Not Guaranteed)',
             dutyButton: { label: mount.label, to: mount.to },
-            text: '— can drop from this trial.',
+            text: '— Rare drop, can drop from this trial.',
           } as const,
         ]
       : [
@@ -931,35 +948,63 @@ const trialPage = (short: string, level: number, mount?: { label: string; to: st
   ],
 });
 
-SERVICE_PAGES['ffxiv-limitless-blue'] = trialPage('Limitless Blue', 60, { label: 'White Lanner', to: '/boosting/ffxiv/ffxiv-firebird-mount' });
-SERVICE_PAGES['ffxiv-thok-ast-thok'] = trialPage('Thok ast Thok', 60, { label: 'Rose Lanner', to: '/boosting/ffxiv/ffxiv-firebird-mount' });
-SERVICE_PAGES['ffxiv-thordans-reign'] = trialPage('Thordan\'s Reign', 60, { label: 'Round Lanner', to: '/boosting/ffxiv/ffxiv-firebird-mount' });
-SERVICE_PAGES['ffxiv-containment-bay-s1t7'] = trialPage('Containment Bay S1T7', 60, { label: 'Warring Lanner', to: '/boosting/ffxiv/ffxiv-firebird-mount' });
-SERVICE_PAGES['ffxiv-nidhoggs-rage'] = trialPage('Nidhogg\'s Rage', 60, { label: 'Dark Lanner', to: '/boosting/ffxiv/ffxiv-firebird-mount' });
-SERVICE_PAGES['ffxiv-containment-bay-p1t6'] = trialPage('Containment Bay P1T6', 60, { label: 'Sophic Lanner', to: '/boosting/ffxiv/ffxiv-firebird-mount' });
-SERVICE_PAGES['ffxiv-containment-bay-z1t9'] = trialPage('Containment Bay Z1T9', 60, { label: 'Demonic Lanner', to: '/boosting/ffxiv/ffxiv-firebird-mount' });
-SERVICE_PAGES['ffxiv-pool-of-tribute'] = trialPage('Pool of Tribute', 70, { label: 'Reveling Kamuy', to: '/boosting/ffxiv/ffxiv-kamuy-nine-tails' });
-SERVICE_PAGES['ffxiv-emanation'] = trialPage('Emanation', 70, { label: 'Blissful Kamuy', to: '/boosting/ffxiv/ffxiv-kamuy-nine-tails' });
-SERVICE_PAGES['ffxiv-shinryus-domain'] = trialPage('Shinryu\'s Domain', 70, { label: 'Legendary Kamuy', to: '/boosting/ffxiv/ffxiv-kamuy-nine-tails' });
-SERVICE_PAGES['ffxiv-jade-stoa'] = trialPage('The Jade Stoa', 70, { label: 'Auspicious Kamuy', to: '/boosting/ffxiv/ffxiv-kamuy-nine-tails' });
-SERVICE_PAGES['ffxiv-tsukuyomis-pain'] = trialPage('Tsukuyomi\'s Pain', 70, { label: 'Lunar Kamuy', to: '/boosting/ffxiv/ffxiv-kamuy-nine-tails' });
+/** Extreme trial bundle pages share one shape; duties are listed by name. */
+const trialBundlePage = (
+  short: string,
+  level: number,
+  duties: string[],
+  mount: string,
+): ServicePageContent => ({
+  short,
+  rewardsHeading: 'What you get',
+  rewards: [
+    {
+      icon: Package,
+      title: `All ${duties.length} Extreme Trials`,
+      text: 'Every trial cleared in one package — pick the ones you need or take them all.',
+    },
+    { icon: Gem, title: 'Trial Totems', text: 'Totems from every clear, exchangeable for mounts and gear.' },
+    { icon: Trophy, title: 'Mount Guaranteed Option', text: `One run with every trial checked guarantees the ${mount} at its own price.` },
+    { icon: Medal, title: 'Achievements Unlocked', text: 'Every Extreme trial achievement on completion.' },
+  ],
+  accordion: [
+    {
+      title: 'Requirements',
+      items: [`Have a level ${level} Job`, 'Trials unlocked (available as an additional service)'],
+    },
+    HOW_IT_WORKS,
+    PILOTED_VS_AFK,
+  ],
+});
+
+SERVICE_PAGES['ffxiv-dawntrail-trials-bundle'] = trialBundlePage('Dawntrail Trials', 100, [
+  'Worqor Lar Dor (Extreme)', 'Everkeep (Extreme)', "The Minstrel's Ballad: Sphene's Burden",
+  'Recollection (Extreme)', "The Minstrel's Ballad: Necron's Embrace", 'Hell on Rails (Extreme)',
+  'The Unmaking (Extreme)',
+], 'Wings of Legacy');
+SERVICE_PAGES['ffxiv-endwalker-trials-bundle'] = trialBundlePage('Endwalker Trials', 90, [
+  "The Minstrel's Ballad: Zodiark's Fall", "The Minstrel's Ballad: Hydaelyn's Call",
+  "The Minstrel's Ballad: Endsinger's Aria", "Storm's Crown (Extreme)", 'Mount Ordeals (Extreme)',
+  'The Voidcast Dais (Extreme)', 'The Abyssal Fracture (Extreme)',
+], 'Apocryphal Bahamut');
+SERVICE_PAGES['ffxiv-shadowbringers-trials-bundle'] = trialBundlePage('Shadowbringers Trials', 80, [
+  'The Dancing Plague (Extreme)', 'The Crown of the Immaculate (Extreme)', 'Cinder Drift (Extreme)',
+  'Castrum Marinum (Extreme)', 'The Cloud Deck (Extreme)', "The Minstrel's Ballad: Hades's Elegy",
+  'The Seat of Sacrifice (Extreme)',
+], 'Landerwaffe');
+SERVICE_PAGES['ffxiv-stormblood-trials-bundle'] = trialBundlePage('Stormblood Trials', 70, [
+  'The Pool of Tribute (Extreme)', 'Emanation (Extreme)', "Shinryu's Domain (Extreme)",
+  'The Jade Stoa (Extreme)', "Tsukuyomi's Pain (Extreme)", "Hells' Kier (Extreme)",
+  'The Wreath of Snakes (Extreme)',
+], 'Kamuy of the Nine Tails');
+SERVICE_PAGES['ffxiv-heavensward-trials-bundle'] = trialBundlePage('Heavensward Trials', 60, [
+  'Limitless Blue (Extreme)', 'Thok ast Thok (Extreme)', "Thordan's Reign (Extreme)",
+  'Containment Bay S1T7 (Extreme)', "Nidhogg's Rage (Extreme)", 'Containment Bay P1T6 (Extreme)',
+  'Containment Bay Z1T9 (Extreme)',
+], 'Firebird');
+
 SERVICE_PAGES['ffxiv-great-hunt'] = trialPage('The Great Hunt', 70, { label: 'Rathalos', to: '/boosting/ffxiv/ffxiv-rathalos-mount' });
-SERVICE_PAGES['ffxiv-hells-kier'] = trialPage('Hells\' Kier', 70, { label: 'Euphonious Kamuy', to: '/boosting/ffxiv/ffxiv-kamuy-nine-tails' });
-SERVICE_PAGES['ffxiv-dancing-plague'] = trialPage('Dancing Plague', 80, { label: 'Fae Gwiber', to: '/boosting/ffxiv/ffxiv-landerwaffe' });
-SERVICE_PAGES['ffxiv-crown-of-the-immaculate'] = trialPage('Crown of the Immaculate', 80, { label: 'Innocent Gwiber', to: '/boosting/ffxiv/ffxiv-landerwaffe' });
-SERVICE_PAGES['ffxiv-cinder-drift'] = trialPage('Cinder Drift', 80, { label: 'Ruby Gwiber', to: '/boosting/ffxiv/ffxiv-landerwaffe' });
-SERVICE_PAGES['ffxiv-castrum-marinum'] = trialPage('Castrum Marinum', 80, { label: 'Emerald Gwiber', to: '/boosting/ffxiv/ffxiv-landerwaffe' });
-SERVICE_PAGES['ffxiv-cloud-deck'] = trialPage('The Cloud Deck', 80, { label: 'Diamond Gwiber', to: '/boosting/ffxiv/ffxiv-landerwaffe' });
-SERVICE_PAGES['ffxiv-hadess-elegy'] = trialPage('Hades\'s Elegy', 80, { label: 'Shadow Gwiber', to: '/boosting/ffxiv/ffxiv-landerwaffe' });
-SERVICE_PAGES['ffxiv-seat-of-sacrifice'] = trialPage('The Seat of Sacrifice', 80, { label: 'Gwiber of Light', to: '/boosting/ffxiv/ffxiv-landerwaffe' });
 SERVICE_PAGES['ffxiv-memoria-misera'] = trialPage('Memoria Misera', 80);
-SERVICE_PAGES['ffxiv-zodiarks-fall'] = trialPage('Zodiark\'s Fall', 90, { label: 'Lynx of Eternal Darkness', to: '/boosting/ffxiv/ffxiv-apocryphal-bahamut' });
-SERVICE_PAGES['ffxiv-hydaelyns-call'] = trialPage('Hydaelyn\'s Call', 90, { label: 'Lynx of Divine Light', to: '/boosting/ffxiv/ffxiv-apocryphal-bahamut' });
-SERVICE_PAGES['ffxiv-endsingers-aria'] = trialPage('Endsinger\'s Aria', 90, { label: 'Bluefeather Lynx', to: '/boosting/ffxiv/ffxiv-apocryphal-bahamut' });
-SERVICE_PAGES['ffxiv-storms-crown'] = trialPage('Storm\'s Crown', 90, { label: 'Lynx of Imperious Wind', to: '/boosting/ffxiv/ffxiv-apocryphal-bahamut' });
-SERVICE_PAGES['ffxiv-mount-ordeals'] = trialPage('Mount Ordeals', 90, { label: 'Lynx of Righteous Fire', to: '/boosting/ffxiv/ffxiv-apocryphal-bahamut' });
-SERVICE_PAGES['ffxiv-voidcast-dais'] = trialPage('The Voidcast Dais', 90, { label: 'Lynx of Fallen Shadow', to: '/boosting/ffxiv/ffxiv-apocryphal-bahamut' });
-SERVICE_PAGES['ffxiv-abyssal-fracture'] = trialPage('The Abyssal Fracture', 90, { label: 'Lynx of Abyssal Grief', to: '/boosting/ffxiv/ffxiv-apocryphal-bahamut' });
 SERVICE_PAGES['ffxiv-worqor-lar-dor'] = trialPage('Worqor Lar Dor', 100, { label: 'Wings of Ruin', to: '/boosting/ffxiv/ffxiv-wings-of-ruin' });
 SERVICE_PAGES['ffxiv-everkeep'] = trialPage('Everkeep', 100, { label: 'Wings of Resolve', to: '/boosting/ffxiv/ffxiv-wings-of-resolve' });
 SERVICE_PAGES['ffxiv-sphenes-burden'] = trialPage('Sphene\'s Burden', 100, { label: 'Wings of Eternity', to: '/boosting/ffxiv/ffxiv-wings-of-eternity' });

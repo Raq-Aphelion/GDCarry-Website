@@ -33,8 +33,8 @@ const METHODS: { id: MethodId; label: string; icon: typeof Gamepad2 }[] = [
 ];
 
 const BOOST_OPTIONS: { id: BoostOption; label: string; icon: typeof Gamepad2 }[] = [
-  { id: 'tier', label: 'Tiers', icon: Layers },
   { id: 'fights', label: 'Fights', icon: Swords },
+  { id: 'tier', label: 'Tiers', icon: Layers },
 ];
 
 /** Savage raid series purchase box (Pandaemonium, Arcadion, Eden, Omega,
@@ -60,11 +60,11 @@ export default function SavageSeriesPurchaseBox({ service, gameShort }: { servic
     const first = cfg ? Object.values(cfg.fights).flat()[0] : undefined;
     return first ? [first.id] : [];
   });
-  const [boostOption, setBoostOption] = useState<BoostOption>('tier');
+  const [boostOption, setBoostOption] = useState<BoostOption>('fights');
   // The block cross-fades sequentially: the current options fade out, the new
   // ones swap in while invisible, then fade in. `shown` is the side currently
   // rendered (and counted); `boostOption` is the selected toggle target.
-  const [shown, setShown] = useState<BoostOption>('tier');
+  const [shown, setShown] = useState<BoostOption>('fights');
   const [fadeIn, setFadeIn] = useState(true);
   const [unlocks, setUnlocks] = useState<string[]>([]);
   const [stream, setStream] = useState(false);

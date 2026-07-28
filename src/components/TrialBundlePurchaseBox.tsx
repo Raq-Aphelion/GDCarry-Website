@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Armchair, Clock, Gamepad2 } from 'lucide-react';
+import { Armchair, Check, Clock, Gamepad2 } from 'lucide-react';
 import FadeImage from './FadeImage';
 import FieldPopup from './FieldPopup';
 import MountAddonsBlock from './MountAddonsBlock';
@@ -30,16 +30,23 @@ const METHODS = [
   { id: 'afk', label: 'AFK Carry', icon: Gamepad2 },
 ] as const;
 
-/** Extreme trial purchase box: boost method with per-method prices from the
-    ffxiv-Trials database, runs, data center, and stream/priority add-ons. */
-export default function TrialPurchaseBox({ service, gameShort }: { service: Service; gameShort: string }) {
+/** Extreme trial bundle purchase box: boost method toggle with per-trial
+    prices for both methods. A checklist of the expansion's trials — all
+    checked applies the bundle price, a partial selection sums the individual
+    prices — multiplied by the number of runs. The Mount Guaranteed option
+    forces 1 run and every trial checked, and reprices to the tied series
+    mount's cost for the selected method (bundlePrice, ×afkMultiplier AFK). */
+export default function TrialBundlePurchaseBox({ service, gameShort }: { service: Service; gameShort: string }) {
   const { addItem, openCart } = useCart();
   const { format } = useCurrency();
   const { db } = usePricing();
-  const cfg = db.trials?.[service.id];
+  const cfg = db.trialBundles?.[service.id];
+  const afkMultiplier = db.mounts?.afkMultiplier ?? 1.1;
   const priorityMultiplier = db.purchaseBox.priorityMultiplier;
 
   const [method, setMethod] = useState<(typeof METHODS)[number]['id']>('piloted');
+  const [guaranteed, setGuaranteed] = useState(false);
+  const [checked, setChecked] = useState<string[]>(() => (cfg ? cfg.trials.map((t) => t.id) : []));
   const [runs, setRuns] = useState(1);
   const [dc, setDc] = useState('');
   const [stream, setStream] = useState(false);
@@ -47,39 +54,107 @@ export default function TrialPurchaseBox({ service, gameShort }: { service: Serv
   const [dcError, setDcError] = useState(false);
 
   const { rootRef, wrapRef, stick, overflowTop, fixedStyle, blockHpx } = usePurchaseFloat(
-    `${method}|${dc}|${stream}|${priority}|${runs}`,
+    `${method}|${guaranteed}|${dc}|${checked.length}|${stream}|${priority}|${runs}`,
   );
 
+  const toggle = (id: string) =>
+    setChecked((prev) => (prev.includes(id) ? prev.filter((c) => c !== id) : [...prev, id]));
+
+  // Mount Guaranteed: force every trial checked and pin runs to 1
+  const toggleGuaranteed = () =>
+    setGuaranteed((g) => {
+      if (!g && cfg) {
+        setChecked(cfg.trials.map((t) => t.id));
+        setRuns(1);
+      }
+      return !g;
+    });
+
+  const priceOf = (t: { price: number; afkPrice?: number }) =>
+    method === 'afk' ? (t.afkPrice ?? t.price) : t.price;
+  // Mount Guaranteed price = the combined mount's cost for this method
+  const mountBase = cfg ? (db.mounts?.series?.[cfg.mountServiceId]?.bundlePrice ?? 0) : 0;
+  const mountPrice = Number((mountBase * (method === 'afk' ? afkMultiplier : 1)).toFixed(2));
+
+  const allChecked = cfg ? checked.length === cfg.trials.length : false;
+  const afkBundleTotal = cfg?.trials.reduce((s, t) => s + (t.afkPrice ?? t.price), 0) ?? 0;
+  const selectionTotal = allChecked
+    ? method === 'afk'
+      ? afkBundleTotal
+      : (cfg?.bundlePrice ?? 0)
+    : checked.reduce((s, id) => {
+        const t = cfg?.trials.find((x) => x.id === id);
+        return s + (t ? priceOf(t) : 0);
+      }, 0);
   const streamPrice = 10;
-  const methodBase = method === 'afk' ? (cfg?.afkPrice ?? cfg?.price ?? 0) : (cfg?.price ?? 0);
-  const total = methodBase * runs * (priority ? priorityMultiplier : 1) + (stream ? streamPrice : 0);
+  const total = guaranteed
+    ? mountPrice + (stream ? streamPrice : 0)
+    : selectionTotal * runs * (priority ? priorityMultiplier : 1) + (stream ? streamPrice : 0);
 
   const addToCart = () => {
+    if (total <= 0) return;
     if (!dc) {
       setDcError(true);
       return;
     }
     const methodLabel = METHODS.find((m) => m.id === method)?.label ?? method;
-    // Runs are excluded from the id — identical configs merge into one cart
-    // line whose amount controls adjust the run count (cap 999)
+    const selected = cfg!.trials.filter((t) => checked.includes(t.id)).map((t) => t.label);
     addItem(
       {
         ...service,
-        id: `${service.id}::${method}|${dc}`,
-        price: methodBase * (priority ? priorityMultiplier : 1),
+        id: `${service.id}::${method}|${dc}|${guaranteed ? 'guaranteed' : [...checked].sort().join(',')}`,
+        price: guaranteed
+          ? mountPrice
+          : selectionTotal * (priority ? priorityMultiplier : 1),
         method: methodLabel,
         flat: stream ? streamPrice : undefined,
+        ...(guaranteed ? { qtyLocked: true } : {}),
       },
       gameShort,
       [
+        ...(guaranteed
+          ? [`${cfg!.mountLabel} Guaranteed`]
+          : allChecked
+            ? [cfg!.bundleLabel]
+            : selected),
         `Data Center: ${dc}`,
         ...(stream ? ['Private Stream'] : []),
-        ...(priority ? [`Priority (+${Math.round((priorityMultiplier - 1) * 100)}%)`] : []),
+        ...(!guaranteed && priority
+          ? [`Priority (+${Math.round((priorityMultiplier - 1) * 100)}%)`]
+          : []),
       ],
-      runs,
+      guaranteed ? 1 : runs,
     );
     openCart();
   };
+
+  const row = (
+    id: string,
+    label: string,
+    right: string,
+    isChecked: boolean,
+    onClick: () => void,
+    disabled = false,
+  ) => (
+    <button
+      key={id}
+      type="button"
+      onClick={onClick}
+      aria-pressed={isChecked}
+      disabled={disabled}
+      className="flex w-full items-center gap-3 rounded-[5px] bg-navy-850 px-2.5 py-1.5 text-left transition-colors hover:bg-navy-800 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-navy-850"
+    >
+      <span
+        className={`flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-[3px] border transition-colors ${
+          isChecked ? 'border-cyan-600 bg-cyan-600 text-navy-900' : 'border-navy-600 text-transparent'
+        }`}
+      >
+        <Check className="h-3 w-3" strokeWidth={3.5} />
+      </span>
+      <span className="min-w-0 flex-1 truncate text-sm text-slate-300">{label}</span>
+      <span className="text-xs font-bold text-cyan-400">{right}</span>
+    </button>
+  );
 
   return (
     <div
@@ -126,14 +201,16 @@ export default function TrialPurchaseBox({ service, gameShort }: { service: Serv
             </div>
           </div>
 
-          {/* Runs */}
-          <div>
+          {/* Runs — right under the method pill; pinned to 1 while Mount
+              Guaranteed is on */}
+          <div className={guaranteed ? 'pointer-events-none opacity-50' : ''}>
             <p className="pl-px text-sm font-semibold text-white">Runs</p>
             <input
               type="text"
               inputMode="numeric"
               value={String(runs)}
               aria-label="Runs"
+              disabled={guaranteed}
               onChange={(e) => {
                 const v = parseInt(e.target.value.replace(/[^0-9]/g, ''), 10);
                 if (!Number.isNaN(v)) setRuns(Math.min(Math.max(v, 1), 99));
@@ -150,6 +227,35 @@ export default function TrialPurchaseBox({ service, gameShort }: { service: Serv
               aria-label="Runs slider"
             />
           </div>
+
+          {/* Trial checklist */}
+          <div>
+            <p className="pl-px text-sm font-semibold text-white [text-shadow:0_1px_4px_rgb(0_0_0/0.7)]">
+              Trials{' '}
+              <span className="text-xs font-normal text-slate-300 [text-shadow:0_1px_4px_rgb(0_0_0/0.7)]">
+                (all {cfg?.trials.length} = {format(method === 'afk' ? afkBundleTotal : (cfg?.bundlePrice ?? 0))} bundle)
+              </span>
+            </p>
+            <div className="mt-2.5 space-y-1.5">
+              {cfg?.trials.map((t) =>
+                row(t.id, t.label, `+${format(priceOf(t))}`, checked.includes(t.id), () => toggle(t.id), guaranteed),
+              )}
+            </div>
+          </div>
+
+          {/* Mount guaranteed — forces all trials + 1 run at the mount's price */}
+          {cfg && (
+            <div>
+              <p className="mb-2 pl-px text-xs font-semibold text-slate-300">Mount Guaranteed</p>
+              {row(
+                'mount-guaranteed',
+                `${cfg.mountLabel} Guaranteed`,
+                format(mountPrice),
+                guaranteed,
+                toggleGuaranteed,
+              )}
+            </div>
+          )}
 
           {/* Data center */}
           <div>
@@ -198,7 +304,8 @@ export default function TrialPurchaseBox({ service, gameShort }: { service: Serv
           </p>
           <button
             onClick={addToCart}
-            className="purchase-cta mt-3.5 w-full rounded-[5px] bg-gradient-to-r from-cyan-500 to-cyan-700 py-2.5 font-display text-sm font-bold text-navy-900 transition-all hover:brightness-110"
+            disabled={total <= 0}
+            className="purchase-cta mt-3.5 w-full rounded-[5px] bg-gradient-to-r from-cyan-500 to-cyan-700 py-2.5 font-display text-sm font-bold text-navy-900 transition-all hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:brightness-100"
           >
             Add to cart
           </button>

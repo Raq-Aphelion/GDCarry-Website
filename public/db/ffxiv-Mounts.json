@@ -375,67 +375,69 @@
         "afkPrice": 105
       },
       "ffxiv-skyslipper": {
-        "price": 44,
+        "price": 14,
         "trial": "Eden's Gate: Sepulture (Savage)",
-        "completion": "24 Hours",
-        "afkPrice": 55
+        "completion": "24 Hours"
       },
       "ffxiv-ramuh": {
-        "price": 55,
+        "price": 14,
         "trial": "Eden's Verse: Refulgence (Savage)",
-        "completion": "24 Hours",
-        "afkPrice": 70
+        "completion": "24 Hours"
       },
       "ffxiv-eden-mount": {
-        "price": 70,
+        "price": 14,
         "trial": "Eden's Promise: Eternity (Savage)",
-        "completion": "24 Hours",
-        "afkPrice": 105
+        "completion": "24 Hours"
       },
       "ffxiv-alte-roite": {
-        "price": 44,
+        "price": 14,
         "trial": "Deltascape V4.0 (Savage)",
-        "completion": "24 Hours",
-        "afkPrice": 55
+        "completion": "24 Hours"
       },
       "ffxiv-air-force": {
-        "price": 55,
+        "price": 14,
         "trial": "Sigmascape V4.0 (Savage)",
-        "completion": "24 Hours",
-        "afkPrice": 70
+        "completion": "24 Hours"
       },
       "ffxiv-model-o": {
-        "price": 70,
+        "price": 14,
         "trial": "Alphascape V4.0 (Savage)",
-        "completion": "24 Hours",
-        "afkPrice": 105
+        "completion": "24 Hours"
       },
       "ffxiv-gobwalker": {
-        "price": 44,
+        "price": 10,
         "trial": "Alexander - The Burden of the Father (Savage)",
-        "completion": "24 Hours",
-        "afkPrice": 55
+        "completion": "24 Hours"
       },
       "ffxiv-arrhidaeus": {
-        "price": 70,
+        "price": 10,
         "trial": "Alexander - The Soul of the Creator (Savage)",
-        "completion": "24 Hours",
-        "afkPrice": 105
+        "completion": "24 Hours"
+      },
+      "ffxiv-juedi-mount": {
+        "price": 380,
+        "afkPrice": 320,
+        "afkLabel": "Group Play",
+        "trial": "Heaven-on-High (Deep Dungeon)",
+        "completion": "24 Hours"
       },
       "ffxiv-cerberus-mount": {
         "price": 50,
         "trial": "Delubrum Reginae (Savage)",
-        "completion": "24 Hours"
+        "completion": "24 Hours",
+        "afkDisabled": true
       },
       "ffxiv-demi-ozma": {
         "price": 50,
         "trial": "The Baldesion Arsenal",
-        "completion": "24 Hours"
+        "completion": "24 Hours",
+        "afkDisabled": true
       },
       "ffxiv-demon-haul": {
         "price": 50,
         "trial": "The Forked Tower: Blood",
-        "completion": "24 Hours"
+        "completion": "24 Hours",
+        "afkDisabled": true
       },
       "ffxiv-rathalos-mount": {
         "price": 50,

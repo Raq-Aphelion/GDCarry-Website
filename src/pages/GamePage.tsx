@@ -1,6 +1,6 @@
 import { Fragment, useEffect, useRef, useState } from 'react';
 import { Link, Navigate, useParams, useSearchParams } from 'react-router';
-import { ChevronRight, Layers, Package } from 'lucide-react';
+import { ChevronDown, ChevronRight, Layers, Package } from 'lucide-react';
 import CustomOrderCta from '@/components/CustomOrderCta';
 import FadeImage from '@/components/FadeImage';
 import MobileCategoryBar from '@/components/MobileCategoryBar';
@@ -46,6 +46,15 @@ export default function GamePage() {
   // The services grid section — smooth-scroll target on category change
   const gridRef = useRef<HTMLDivElement>(null);
   const prevActive = useRef(active);
+  // Collapsed mount/trial sections, keyed by section title
+  const [collapsedSections, setCollapsedSections] = useState<ReadonlySet<string>>(new Set());
+  const toggleSection = (title: string) =>
+    setCollapsedSections((prev) => {
+      const next = new Set(prev);
+      if (next.has(title)) next.delete(title);
+      else next.add(title);
+      return next;
+    });
 
   // Follow ?cat= changes (e.g. navbar search) and reset when switching games
   useEffect(() => {
@@ -108,24 +117,45 @@ export default function GamePage() {
       .filter((sv): sv is NonNullable<typeof sv> => sv !== undefined),
   ];
 
-  // Mount duty-type sections (database `catalog.mountDutyGroups`): the Mounts
-  // category is split by the duty each mount drops from; mounts in neither
-  // list trail under 'Other Mounts'
-  const dutyGroups = activeSub.id === 'mounts' ? db.catalog?.mountDutyGroups : undefined;
-  const mountSections = (() => {
-    if (!dutyGroups?.extreme?.length && !dutyGroups?.savage?.length) return null;
-    const pick = (ids: string[] | undefined) => {
-      const set = new Set(ids ?? []);
-      return activeServices.filter((sv) => set.has(sv.id));
-    };
-    const grouped = new Set([...(dutyGroups?.extreme ?? []), ...(dutyGroups?.savage ?? [])]);
-    const sections: { title: string; services: Service[] }[] = [];
-    const extreme = pick(dutyGroups?.extreme);
-    const savage = pick(dutyGroups?.savage);
+  // Category sub-sections from the database catalog: the Mounts category is
+  // split by the duty each mount drops from (`mountDutyGroups`; leftovers
+  // trail under 'Other Mounts'), Extreme Trials by expansion
+  // (`trialExpansionGroups` — section order and per-trial order come from the
+  // DB; leftovers trail under 'Other Trials')
+  const groupSections = (() => {
+    const defs: { title: string; ids: string[] }[] =
+      activeSub.id === 'mounts'
+        ? [
+            { title: 'Extreme Trial Mounts', ids: db.catalog?.mountDutyGroups?.extreme ?? [] },
+            { title: 'Savage Raid Mounts', ids: db.catalog?.mountDutyGroups?.savage ?? [] },
+          ].filter((d) => d.ids.length)
+        : activeSub.id === 'trials'
+          ? Object.entries(db.catalog?.trialExpansionGroups ?? {}).map(([title, ids]) => ({
+              title,
+              ids,
+            }))
+          : [];
+    if (!defs.length) return null;
+    const grouped = new Set(defs.flatMap((d) => d.ids));
+    const sections = defs
+      .map((d) => {
+        const order = new Map(d.ids.map((id, i) => [id, i]));
+        return {
+          title: d.title,
+          // Section cards follow the DB list order, not the catalog order
+          services: activeServices
+            .filter((sv) => order.has(sv.id))
+            .sort((a, b) => (order.get(a.id) ?? 0) - (order.get(b.id) ?? 0)),
+        };
+      })
+      .filter((s) => s.services.length);
     const other = activeServices.filter((sv) => !grouped.has(sv.id));
-    if (extreme.length) sections.push({ title: 'Extreme Trial Mounts', services: extreme });
-    if (savage.length) sections.push({ title: 'Savage Raid Mounts', services: savage });
-    if (other.length) sections.push({ title: 'Other Mounts', services: other });
+    if (other.length) {
+      sections.push({
+        title: activeSub.id === 'mounts' ? 'Other Mounts' : 'Other Trials',
+        services: other,
+      });
+    }
     return sections.length ? sections : null;
   })();
 
@@ -291,22 +321,48 @@ export default function GamePage() {
             <div className="mt-5 flex h-[380px] items-center justify-center rounded-[5px] bg-navy-850 text-sm text-slate-500">
               No boosts in this category yet
             </div>
-          ) : mountSections ? (
+          ) : groupSections ? (
             <div className="mt-5 space-y-10">
-              {mountSections.map((section, si) => (
-                <div key={section.title}>
-                  <div className="flex items-center gap-3 max-sm:justify-center">
-                    <h3 className="font-display text-lg font-bold text-white">{section.title}</h3>
-                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-navy-800 text-xs font-bold text-slate-400">
-                      {section.services.length}
-                    </span>
-                    <div className="h-px flex-1 bg-gradient-to-r from-navy-700/70 to-transparent max-sm:hidden" />
-                  </div>
-                  {/* CTAs only in the first section; thresholds use the full
-                      category count, same as an ungrouped category */}
-                  {renderServiceGrid(section.services, si === 0)}
-                </div>
-              ))}
+              {groupSections.map((section, si) => {
+                const collapsed = collapsedSections.has(section.title);
+                return (
+                  /* Staggered fade + slide-in on page/category open */
+                  <Reveal key={section.title} immediate delay={si * 120}>
+                    <div>
+                      <h3 className="font-display text-lg font-bold text-white">
+                      <button
+                        type="button"
+                        onClick={() => toggleSection(section.title)}
+                        aria-expanded={!collapsed}
+                        className="group flex w-full items-center gap-3 text-left max-sm:justify-center"
+                      >
+                        {section.title}
+                        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-navy-800 text-xs font-bold text-slate-400">
+                          {section.services.length}
+                        </span>
+                        <span className="h-px flex-1 bg-gradient-to-r from-navy-700/70 to-transparent max-sm:hidden" />
+                        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-navy-800 text-slate-400 transition-colors group-hover:text-cyan-400">
+                          <ChevronDown
+                            className={`h-3.5 w-3.5 transition-transform duration-300 ${collapsed ? '-rotate-90' : ''}`}
+                          />
+                        </span>
+                      </button>
+                    </h3>
+                    {/* CTAs only in the first section; thresholds use the full
+                        category count, same as an ungrouped category */}
+                    <div
+                      className={`grid transition-all ease-soft ${
+                        collapsed ? 'grid-rows-[0fr] duration-500' : 'grid-rows-[1fr] duration-200'
+                      }`}
+                    >
+                      <div className="min-h-0 overflow-hidden">
+                        {renderServiceGrid(section.services, si === 0)}
+                      </div>
+                    </div>
+                    </div>
+                  </Reveal>
+                );
+              })}
             </div>
           ) : (
             renderServiceGrid(activeServices, true)

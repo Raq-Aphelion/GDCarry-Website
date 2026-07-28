@@ -10,7 +10,9 @@
       {
         "id": "gil",
         "name": "Currency",
-        "proxies": ["ffxiv-wolf-marks"]
+        "proxies": [
+          "ffxiv-wolf-marks"
+        ]
       },
       {
         "id": "current-patch",
@@ -20,21 +22,63 @@
           "ffxiv-arcadion-savage",
           "ffxiv-wings-of-legacy",
           "ffxiv-wings-of-nihility",
-          "ffxiv-lowrider-t1rant"
+          "ffxiv-lowrider-t1rant",
+          "ffxiv-dawntrail-trials-bundle",
+          "ffxiv-the-unmaking",
+          "ffxiv-leveling-boost",
+          "ffxiv-msq-skip",
+          "ffxiv-cc-rank-boost",
+          "ffxiv-pvp-series-boost"
         ]
       },
-      { "id": "ultimate-raids", "name": "Ultimate Raids" },
-      { "id": "raids", "name": "Savage Raids" },
-      { "id": "alliance-raids", "name": "24 Player Raids" },
-      { "id": "trials", "name": "Extreme Trials" },
-      { "id": "deep-dungeon", "name": "Deep Dungeons" },
-      { "id": "criterion-dungeons", "name": "Criterion Dungeons" },
-      { "id": "mounts", "name": "Mounts" },
-      { "id": "reputation", "name": "Reputation" },
-      { "id": "leveling", "name": "Leveling" },
-      { "id": "field-explorations", "name": "Field Explorations & Misc" },
-      { "id": "pvp", "name": "PvP" },
-      { "id": "coaching", "name": "Coaching" }
+      {
+        "id": "ultimate-raids",
+        "name": "Ultimate Raids"
+      },
+      {
+        "id": "raids",
+        "name": "Savage Raids"
+      },
+      {
+        "id": "alliance-raids",
+        "name": "24 Player Raids"
+      },
+      {
+        "id": "trials",
+        "name": "Extreme Trials"
+      },
+      {
+        "id": "deep-dungeon",
+        "name": "Deep Dungeons"
+      },
+      {
+        "id": "criterion-dungeons",
+        "name": "Criterion Dungeons"
+      },
+      {
+        "id": "mounts",
+        "name": "Mounts"
+      },
+      {
+        "id": "reputation",
+        "name": "Reputation"
+      },
+      {
+        "id": "leveling",
+        "name": "Leveling"
+      },
+      {
+        "id": "field-explorations",
+        "name": "Field Explorations & Misc"
+      },
+      {
+        "id": "pvp",
+        "name": "PvP"
+      },
+      {
+        "id": "coaching",
+        "name": "Coaching"
+      }
     ],
     "mountDutyGroups": {
       "extreme": [
@@ -72,6 +116,27 @@
         "ffxiv-cerberus-mount"
       ]
     },
+    "trialExpansionGroups": {
+      "Dawntrail Extreme Trials": [
+        "ffxiv-dawntrail-trials-bundle",
+        "ffxiv-the-unmaking",
+        "ffxiv-hell-on-rails",
+        "ffxiv-necrons-embrace",
+        "ffxiv-recollection",
+        "ffxiv-sphenes-burden",
+        "ffxiv-everkeep",
+        "ffxiv-worqor-lar-dor"
+      ],
+      "Other Extreme Trials": [
+        "ffxiv-windward-wilds",
+        "ffxiv-endwalker-trials-bundle",
+        "ffxiv-memoria-misera",
+        "ffxiv-shadowbringers-trials-bundle",
+        "ffxiv-great-hunt",
+        "ffxiv-stormblood-trials-bundle",
+        "ffxiv-heavensward-trials-bundle"
+      ]
+    },
     "services": {
       "ffxiv-gil-pack": 1,
       "ffxiv-dmu": 1,
@@ -102,35 +167,8 @@
       "ffxiv-sphenes-burden": 1,
       "ffxiv-everkeep": 1,
       "ffxiv-worqor-lar-dor": 1,
-      "ffxiv-abyssal-fracture": 1,
-      "ffxiv-voidcast-dais": 1,
-      "ffxiv-mount-ordeals": 1,
-      "ffxiv-storms-crown": 1,
-      "ffxiv-endsingers-aria": 1,
-      "ffxiv-hydaelyns-call": 1,
-      "ffxiv-zodiarks-fall": 1,
       "ffxiv-memoria-misera": 1,
-      "ffxiv-seat-of-sacrifice": 1,
-      "ffxiv-hadess-elegy": 1,
-      "ffxiv-cloud-deck": 1,
-      "ffxiv-castrum-marinum": 1,
-      "ffxiv-cinder-drift": 1,
-      "ffxiv-crown-of-the-immaculate": 1,
-      "ffxiv-dancing-plague": 1,
-      "ffxiv-hells-kier": 1,
       "ffxiv-great-hunt": 1,
-      "ffxiv-tsukuyomis-pain": 1,
-      "ffxiv-jade-stoa": 1,
-      "ffxiv-shinryus-domain": 1,
-      "ffxiv-emanation": 1,
-      "ffxiv-pool-of-tribute": 1,
-      "ffxiv-containment-bay-z1t9": 1,
-      "ffxiv-containment-bay-p1t6": 1,
-      "ffxiv-nidhoggs-rage": 1,
-      "ffxiv-containment-bay-s1t7": 1,
-      "ffxiv-thordans-reign": 1,
-      "ffxiv-thok-ast-thok": 1,
-      "ffxiv-limitless-blue": 1,
       "ffxiv-potd-solo": 1,
       "ffxiv-hoh": 1,
       "ffxiv-orthos": 1,
@@ -191,8 +229,14 @@
       "ffxiv-cc-rank-boost": 1,
       "ffxiv-pvp-series-boost": 1,
       "ffxiv-wolf-marks": 1,
-      "ffxiv-raid-coaching": 1,
-      "ffxiv-pvp-coaching": 1
+      "ffxiv-raid-coaching": 0,
+      "ffxiv-pvp-coaching": 0,
+      "ffxiv-dawntrail-trials-bundle": 1,
+      "ffxiv-endwalker-trials-bundle": 1,
+      "ffxiv-shadowbringers-trials-bundle": 1,
+      "ffxiv-stormblood-trials-bundle": 1,
+      "ffxiv-heavensward-trials-bundle": 1,
+      "ffxiv-juedi-mount": 1
     }
   }
 }

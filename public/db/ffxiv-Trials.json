@@ -1,300 +1,341 @@
 {
   "trials": {
-    "ffxiv-limitless-blue": {
-      "price": 4,
-      "afkPrice": 4,
-      "level": 60,
-      "mount": "ffxiv-firebird-mount",
-      "lore": "Bismarck, the white whale of the Sea of Clouds",
-      "completion": "24 Hours"
-    },
-    "ffxiv-thok-ast-thok": {
-      "price": 4,
-      "afkPrice": 4,
-      "level": 60,
-      "mount": "ffxiv-firebird-mount",
-      "lore": "Ravana, the blood-maddened god of the Gnath",
-      "completion": "24 Hours"
-    },
-    "ffxiv-thordans-reign": {
-      "price": 4,
-      "afkPrice": 4,
-      "level": 60,
-      "mount": "ffxiv-firebird-mount",
-      "lore": "King Thordan and the Knights of the Round",
-      "completion": "24 Hours"
-    },
-    "ffxiv-containment-bay-s1t7": {
-      "price": 4,
-      "afkPrice": 4,
-      "level": 60,
-      "mount": "ffxiv-firebird-mount",
-      "lore": "Sephirot, the Fiend of the Warring Triad",
-      "completion": "24 Hours"
-    },
-    "ffxiv-nidhoggs-rage": {
-      "price": 4,
-      "afkPrice": 4,
-      "level": 60,
-      "mount": "ffxiv-firebird-mount",
-      "lore": "Nidhogg, the wyrmking of the Dragonsong War",
-      "completion": "24 Hours"
-    },
-    "ffxiv-containment-bay-p1t6": {
-      "price": 4,
-      "afkPrice": 4,
-      "level": 60,
-      "mount": "ffxiv-firebird-mount",
-      "lore": "Sophia, the Goddess of the Warring Triad",
-      "completion": "24 Hours"
-    },
-    "ffxiv-containment-bay-z1t9": {
-      "price": 4,
-      "afkPrice": 4,
-      "level": 60,
-      "mount": "ffxiv-firebird-mount",
-      "lore": "Zurvan, the Demon of the Warring Triad",
-      "completion": "24 Hours"
-    },
-    "ffxiv-pool-of-tribute": {
-      "price": 4,
-      "afkPrice": 4,
-      "level": 70,
-      "mount": "ffxiv-kamuy-nine-tails",
-      "lore": "Susano, the Lord of the Revel",
-      "completion": "24 Hours"
-    },
-    "ffxiv-emanation": {
-      "price": 4,
-      "afkPrice": 4,
-      "level": 70,
-      "mount": "ffxiv-kamuy-nine-tails",
-      "lore": "Lakshmi, the Lady of Bliss",
-      "completion": "24 Hours"
-    },
-    "ffxiv-shinryus-domain": {
-      "price": 4,
-      "afkPrice": 4,
-      "level": 70,
-      "mount": "ffxiv-kamuy-nine-tails",
-      "lore": "Shinryu, the Dragon King",
-      "completion": "24 Hours"
-    },
-    "ffxiv-jade-stoa": {
-      "price": 4,
-      "afkPrice": 4,
-      "level": 70,
-      "mount": "ffxiv-kamuy-nine-tails",
-      "lore": "Byakko, the white tiger of the Four Lords",
-      "completion": "24 Hours"
-    },
-    "ffxiv-tsukuyomis-pain": {
-      "price": 4,
-      "afkPrice": 4,
-      "level": 70,
-      "mount": "ffxiv-kamuy-nine-tails",
-      "lore": "Tsukuyomi, the moonlit goddess",
-      "completion": "24 Hours"
-    },
     "ffxiv-great-hunt": {
       "price": 4,
-      "afkPrice": 4,
       "level": 70,
       "mount": "ffxiv-rathalos-mount",
       "lore": "Rathalos, the King of the Skies from another world",
-      "completion": "24 Hours"
-    },
-    "ffxiv-hells-kier": {
-      "price": 4,
-      "afkPrice": 4,
-      "level": 70,
-      "mount": "ffxiv-kamuy-nine-tails",
-      "lore": "Suzaku, the scarlet phoenix of the Four Lords",
-      "completion": "24 Hours"
-    },
-    "ffxiv-dancing-plague": {
-      "price": 7,
-      "afkPrice": 7,
-      "level": 80,
-      "mount": "ffxiv-landerwaffe",
-      "lore": "Titania, the faerie king of Il Mheg",
-      "completion": "24 Hours"
-    },
-    "ffxiv-crown-of-the-immaculate": {
-      "price": 7,
-      "afkPrice": 7,
-      "level": 80,
-      "mount": "ffxiv-landerwaffe",
-      "lore": "Innocence, the self-styled god of light",
-      "completion": "24 Hours"
-    },
-    "ffxiv-cinder-drift": {
-      "price": 7,
-      "afkPrice": 7,
-      "level": 80,
-      "mount": "ffxiv-landerwaffe",
-      "lore": "The Ruby Weapon, resurrected warmachina",
-      "completion": "24 Hours"
-    },
-    "ffxiv-castrum-marinum": {
-      "price": 7,
-      "afkPrice": 7,
-      "level": 80,
-      "mount": "ffxiv-landerwaffe",
-      "lore": "The Emerald Weapon, master of thermal suppression",
-      "completion": "24 Hours"
-    },
-    "ffxiv-cloud-deck": {
-      "price": 7,
-      "afkPrice": 7,
-      "level": 80,
-      "mount": "ffxiv-landerwaffe",
-      "lore": "The Diamond Weapon, apex of the Weapon project",
-      "completion": "24 Hours"
-    },
-    "ffxiv-hadess-elegy": {
-      "price": 7,
-      "afkPrice": 7,
-      "level": 80,
-      "mount": "ffxiv-landerwaffe",
-      "lore": "Hades, the architect of the Ascian design",
-      "completion": "24 Hours"
-    },
-    "ffxiv-seat-of-sacrifice": {
-      "price": 7,
-      "afkPrice": 7,
-      "level": 80,
-      "mount": "ffxiv-landerwaffe",
-      "lore": "Elidibus, bearing the face of the first Warrior of Light",
-      "completion": "24 Hours"
+      "completion": "24 Hours",
+      "afkPrice": 4.6
     },
     "ffxiv-memoria-misera": {
       "price": 7,
-      "afkPrice": 7,
       "level": 80,
       "mount": null,
       "lore": "Varis yae Galvus, relived through memory",
-      "completion": "24 Hours"
-    },
-    "ffxiv-zodiarks-fall": {
-      "price": 7,
-      "afkPrice": 7,
-      "level": 90,
-      "mount": "ffxiv-apocryphal-bahamut",
-      "lore": "Zodiark, the eldest of the primals",
-      "completion": "24 Hours"
-    },
-    "ffxiv-hydaelyns-call": {
-      "price": 7,
-      "afkPrice": 7,
-      "level": 90,
-      "mount": "ffxiv-apocryphal-bahamut",
-      "lore": "Hydaelyn, the will of the star",
-      "completion": "24 Hours"
-    },
-    "ffxiv-endsingers-aria": {
-      "price": 7,
-      "afkPrice": 7,
-      "level": 90,
-      "mount": "ffxiv-apocryphal-bahamut",
-      "lore": "The Endsinger, herald of the Final Days",
-      "completion": "24 Hours"
-    },
-    "ffxiv-storms-crown": {
-      "price": 7,
-      "afkPrice": 7,
-      "level": 90,
-      "mount": "ffxiv-apocryphal-bahamut",
-      "lore": "Barbariccia, Empress of the winds",
-      "completion": "24 Hours"
-    },
-    "ffxiv-mount-ordeals": {
-      "price": 7,
-      "afkPrice": 7,
-      "level": 90,
-      "mount": "ffxiv-apocryphal-bahamut",
-      "lore": "Rubicante, Archfiend of Fire",
-      "completion": "24 Hours"
-    },
-    "ffxiv-voidcast-dais": {
-      "price": 14,
-      "afkPrice": 14,
-      "level": 90,
-      "mount": "ffxiv-apocryphal-bahamut",
-      "lore": "Golbez, knight of the Thirteenth",
-      "completion": "24 Hours"
-    },
-    "ffxiv-abyssal-fracture": {
-      "price": 14,
-      "afkPrice": 14,
-      "level": 90,
-      "mount": "ffxiv-apocryphal-bahamut",
-      "lore": "Zeromus, the Void's greatest scourge",
-      "completion": "24 Hours"
+      "completion": "24 Hours",
+      "afkPrice": 8.05
     },
     "ffxiv-worqor-lar-dor": {
       "price": 14,
-      "afkPrice": 14,
       "level": 100,
       "mount": "ffxiv-wings-of-ruin",
       "lore": "Valigarmanda, the Skyruin",
-      "completion": "24 Hours"
+      "completion": "24 Hours",
+      "afkPrice": 16.1
     },
     "ffxiv-everkeep": {
       "price": 14,
-      "afkPrice": 14,
       "level": 100,
       "mount": "ffxiv-wings-of-resolve",
       "lore": "Zoraal Ja, the Resilient King",
-      "completion": "24 Hours"
+      "completion": "24 Hours",
+      "afkPrice": 16.1
     },
     "ffxiv-sphenes-burden": {
       "price": 14,
-      "afkPrice": 14,
       "level": 100,
       "mount": "ffxiv-wings-of-eternity",
       "lore": "Queen Sphene, eternal sovereign of Alexandria",
-      "completion": "24 Hours"
+      "completion": "24 Hours",
+      "afkPrice": 16.1
     },
     "ffxiv-recollection": {
       "price": 21,
-      "afkPrice": 21,
       "level": 100,
       "mount": "ffxiv-wings-of-knighthood",
       "lore": "A treasured memory given terrible form",
-      "completion": "24 Hours"
+      "completion": "24 Hours",
+      "afkPrice": 24.15
     },
     "ffxiv-necrons-embrace": {
       "price": 28,
-      "afkPrice": 28,
       "level": 100,
       "mount": "ffxiv-wings-of-death",
       "lore": "Necron, the embodiment of death itself",
-      "completion": "24 Hours"
+      "completion": "24 Hours",
+      "afkPrice": 32.2
     },
     "ffxiv-windward-wilds": {
       "price": 14,
-      "afkPrice": 14,
       "level": 100,
       "mount": "ffxiv-felyne-cart",
       "lore": "Arkveld, the White Wraith from the forbidden lands",
-      "completion": "24 Hours"
+      "completion": "24 Hours",
+      "afkPrice": 16.1
     },
     "ffxiv-hell-on-rails": {
       "price": 28,
-      "afkPrice": 28,
       "level": 100,
       "mount": "ffxiv-wings-of-mist",
       "lore": "The Doomtrain, harbinger of souls",
-      "completion": "24 Hours"
+      "completion": "24 Hours",
+      "afkPrice": 32.2
     },
     "ffxiv-the-unmaking": {
       "price": 28,
-      "afkPrice": 28,
       "level": 100,
       "mount": "ffxiv-wings-of-nihility",
       "lore": "Enuo, the undoing of all things",
-      "completion": "24 Hours"
+      "completion": "24 Hours",
+      "afkPrice": 32.2
+    }
+  },
+  "trialBundles": {
+    "ffxiv-dawntrail-trials-bundle": {
+      "completion": "24 Hours",
+      "bundlePrice": 147,
+      "bundleLabel": "All 7 Dawntrail Trials",
+      "mountServiceId": "ffxiv-wings-of-legacy",
+      "mountLabel": "Wings of Legacy",
+      "trials": [
+        {
+          "id": "worqor-lar-dor",
+          "label": "Worqor Lar Dor (Extreme)",
+          "price": 14,
+          "afkPrice": 16.1
+        },
+        {
+          "id": "everkeep",
+          "label": "Everkeep (Extreme)",
+          "price": 14,
+          "afkPrice": 16.1
+        },
+        {
+          "id": "sphenes-burden",
+          "label": "The Minstrel's Ballad: Sphene's Burden",
+          "price": 14,
+          "afkPrice": 16.1
+        },
+        {
+          "id": "recollection",
+          "label": "Recollection (Extreme)",
+          "price": 21,
+          "afkPrice": 24.15
+        },
+        {
+          "id": "necrons-embrace",
+          "label": "The Minstrel's Ballad: Necron's Embrace",
+          "price": 28,
+          "afkPrice": 32.2
+        },
+        {
+          "id": "hell-on-rails",
+          "label": "Hell on Rails (Extreme)",
+          "price": 28,
+          "afkPrice": 32.2
+        },
+        {
+          "id": "the-unmaking",
+          "label": "The Unmaking (Extreme)",
+          "price": 28,
+          "afkPrice": 32.2
+        }
+      ]
+    },
+    "ffxiv-endwalker-trials-bundle": {
+      "completion": "24 Hours",
+      "bundlePrice": 63,
+      "bundleLabel": "All 7 Endwalker Trials",
+      "mountServiceId": "ffxiv-apocryphal-bahamut",
+      "mountLabel": "Apocryphal Bahamut",
+      "trials": [
+        {
+          "id": "zodiarks-fall",
+          "label": "The Minstrel's Ballad: Zodiark's Fall",
+          "price": 7,
+          "afkPrice": 8.05
+        },
+        {
+          "id": "hydaelyns-call",
+          "label": "The Minstrel's Ballad: Hydaelyn's Call",
+          "price": 7,
+          "afkPrice": 8.05
+        },
+        {
+          "id": "endsingers-aria",
+          "label": "The Minstrel's Ballad: Endsinger's Aria",
+          "price": 7,
+          "afkPrice": 8.05
+        },
+        {
+          "id": "storms-crown",
+          "label": "Storm's Crown (Extreme)",
+          "price": 7,
+          "afkPrice": 8.05
+        },
+        {
+          "id": "mount-ordeals",
+          "label": "Mount Ordeals (Extreme)",
+          "price": 7,
+          "afkPrice": 8.05
+        },
+        {
+          "id": "voidcast-dais",
+          "label": "The Voidcast Dais (Extreme)",
+          "price": 14,
+          "afkPrice": 16.1
+        },
+        {
+          "id": "abyssal-fracture",
+          "label": "The Abyssal Fracture (Extreme)",
+          "price": 14,
+          "afkPrice": 16.1
+        }
+      ]
+    },
+    "ffxiv-shadowbringers-trials-bundle": {
+      "completion": "24 Hours",
+      "bundlePrice": 37,
+      "bundleLabel": "All 7 Shadowbringers Trials",
+      "mountServiceId": "ffxiv-landerwaffe",
+      "mountLabel": "Landerwaffe",
+      "trials": [
+        {
+          "id": "dancing-plague",
+          "label": "The Dancing Plague (Extreme)",
+          "price": 4,
+          "afkPrice": 4.6
+        },
+        {
+          "id": "crown-of-the-immaculate",
+          "label": "The Crown of the Immaculate (Extreme)",
+          "price": 4,
+          "afkPrice": 4.6
+        },
+        {
+          "id": "cinder-drift",
+          "label": "Cinder Drift (Extreme)",
+          "price": 4,
+          "afkPrice": 4.6
+        },
+        {
+          "id": "castrum-marinum",
+          "label": "Castrum Marinum (Extreme)",
+          "price": 4,
+          "afkPrice": 4.6
+        },
+        {
+          "id": "cloud-deck",
+          "label": "The Cloud Deck (Extreme)",
+          "price": 7,
+          "afkPrice": 8.05
+        },
+        {
+          "id": "hadess-elegy",
+          "label": "The Minstrel's Ballad: Hades's Elegy",
+          "price": 7,
+          "afkPrice": 8.05
+        },
+        {
+          "id": "seat-of-sacrifice",
+          "label": "The Seat of Sacrifice (Extreme)",
+          "price": 7,
+          "afkPrice": 8.05
+        }
+      ]
+    },
+    "ffxiv-stormblood-trials-bundle": {
+      "completion": "24 Hours",
+      "bundlePrice": 28,
+      "bundleLabel": "All 7 Stormblood Trials",
+      "mountServiceId": "ffxiv-kamuy-nine-tails",
+      "mountLabel": "Kamuy of the Nine Tails",
+      "trials": [
+        {
+          "id": "pool-of-tribute",
+          "label": "The Pool of Tribute (Extreme)",
+          "price": 4,
+          "afkPrice": 4.6
+        },
+        {
+          "id": "emanation",
+          "label": "Emanation (Extreme)",
+          "price": 4,
+          "afkPrice": 4.6
+        },
+        {
+          "id": "shinryus-domain",
+          "label": "Shinryu's Domain (Extreme)",
+          "price": 4,
+          "afkPrice": 4.6
+        },
+        {
+          "id": "jade-stoa",
+          "label": "The Jade Stoa (Extreme)",
+          "price": 4,
+          "afkPrice": 4.6
+        },
+        {
+          "id": "tsukuyomis-pain",
+          "label": "Tsukuyomi's Pain (Extreme)",
+          "price": 4,
+          "afkPrice": 4.6
+        },
+        {
+          "id": "hells-kier",
+          "label": "Hells' Kier (Extreme)",
+          "price": 4,
+          "afkPrice": 4.6
+        },
+        {
+          "id": "wreath-of-snakes",
+          "label": "The Wreath of Snakes (Extreme)",
+          "price": 4,
+          "afkPrice": 4.6
+        }
+      ]
+    },
+    "ffxiv-heavensward-trials-bundle": {
+      "completion": "24 Hours",
+      "bundlePrice": 28,
+      "bundleLabel": "All 7 Heavensward Trials",
+      "mountServiceId": "ffxiv-firebird-mount",
+      "mountLabel": "Firebird",
+      "trials": [
+        {
+          "id": "limitless-blue",
+          "label": "Limitless Blue (Extreme)",
+          "price": 4,
+          "afkPrice": 4.6
+        },
+        {
+          "id": "thok-ast-thok",
+          "label": "Thok ast Thok (Extreme)",
+          "price": 4,
+          "afkPrice": 4.6
+        },
+        {
+          "id": "thordans-reign",
+          "label": "Thordan's Reign (Extreme)",
+          "price": 4,
+          "afkPrice": 4.6
+        },
+        {
+          "id": "containment-bay-s1t7",
+          "label": "Containment Bay S1T7 (Extreme)",
+          "price": 4,
+          "afkPrice": 4.6
+        },
+        {
+          "id": "nidhoggs-rage",
+          "label": "Nidhogg's Rage (Extreme)",
+          "price": 4,
+          "afkPrice": 4.6
+        },
+        {
+          "id": "containment-bay-p1t6",
+          "label": "Containment Bay P1T6 (Extreme)",
+          "price": 4,
+          "afkPrice": 4.6
+        },
+        {
+          "id": "containment-bay-z1t9",
+          "label": "Containment Bay Z1T9 (Extreme)",
+          "price": 4,
+          "afkPrice": 4.6
+        }
+      ]
     }
   }
 }

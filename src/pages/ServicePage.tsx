@@ -16,6 +16,7 @@ import MountSeriesPurchaseBox from '@/components/MountSeriesPurchaseBox';
 import WingPurchaseBox from '@/components/WingPurchaseBox';
 import SavageMountPurchaseBox from '@/components/SavageMountPurchaseBox';
 import TrialPurchaseBox from '@/components/TrialPurchaseBox';
+import TrialBundlePurchaseBox from '@/components/TrialBundlePurchaseBox';
 import DeepDungeonPurchaseBox from '@/components/DeepDungeonPurchaseBox';
 import Reveal from '@/components/Reveal';
 import ServiceCard from '@/components/ServiceCard';
@@ -391,6 +392,8 @@ export default function ServicePage() {
             <WingPurchaseBox key={service.id} service={service} gameShort={game.short} />
           ) : db.mounts?.savageMounts?.[service.id] ? (
             <SavageMountPurchaseBox key={service.id} service={service} gameShort={game.short} />
+          ) : db.trialBundles?.[service.id] ? (
+            <TrialBundlePurchaseBox key={service.id} service={service} gameShort={game.short} />
           ) : db.trials?.[service.id] ? (
             <TrialPurchaseBox key={service.id} service={service} gameShort={game.short} />
           ) : db.deepDungeons?.[service.id] ? (

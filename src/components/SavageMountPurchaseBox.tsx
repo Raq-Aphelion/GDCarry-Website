@@ -61,7 +61,10 @@ export default function SavageMountPurchaseBox({ service, gameShort }: { service
       setDcError(true);
       return;
     }
-    const methodLabel = METHODS.find((m) => m.id === method)?.label ?? method;
+    const methodLabel =
+      method === 'afk'
+        ? (cfg?.afkLabel ?? 'AFK Carry')
+        : (METHODS.find((m) => m.id === method)?.label ?? method);
     addItem(
       {
         ...service,
@@ -105,6 +108,7 @@ export default function SavageMountPurchaseBox({ service, gameShort }: { service
             <div className="mt-2.5 grid grid-cols-2 gap-3">
               {METHODS.map((m) => {
                 const disabled = m.id === 'afk' && cfg?.afkDisabled;
+                const label = m.id === 'afk' ? (cfg?.afkLabel ?? m.label) : m.label;
                 return (
                   <button
                     key={m.id}
@@ -123,7 +127,7 @@ export default function SavageMountPurchaseBox({ service, gameShort }: { service
                         method === m.id ? 'text-cyan-400' : 'opacity-70'
                       }`}
                     >
-                      {m.label}
+                      {label}
                     </span>
                   </button>
                 );

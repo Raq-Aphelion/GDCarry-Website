@@ -37,11 +37,12 @@ export function PricingProvider({ children }: { children: ReactNode }) {
   if (!db) return null;
 
   // Services with per-method DB pricing display the lower of the two method
-  // prices on their card ("From …"); savage raid series use the first piloted
-  // tier bundle; everything else uses the flat override or bundled fallback.
+  // prices on their card ("From …"); savage raid series use the first fight
+  // in the Fights list; everything else uses the flat override or bundled
+  // fallback.
   const priceOf = (serviceId: string, fallback: number) => {
     const ss = db.savageSeries?.[serviceId];
-    if (ss) return ss.piloted?.bundles?.[0]?.price ?? fallback;
+    if (ss) return Object.values(ss.piloted?.fights ?? {}).flat()[0]?.price ?? fallback;
     if (serviceId === db.leveling?.serviceId && db.leveling.fromPrice != null) return db.leveling.fromPrice;
     if (serviceId === db.bluLeveling?.serviceId && db.bluLeveling.fromPrice != null) return db.bluLeveling.fromPrice;
     if (serviceId === db.pvpSeries?.serviceId && db.pvpSeries.fromPrice != null) return db.pvpSeries.fromPrice;
@@ -50,9 +51,11 @@ export function PricingProvider({ children }: { children: ReactNode }) {
     const wing = db.mounts?.wings?.[serviceId];
     if (wing) return wing.price;
     const savageMount = db.mounts?.savageMounts?.[serviceId];
-    if (savageMount) return savageMount.price;
+    if (savageMount) return Math.min(savageMount.price, savageMount.afkPrice ?? Infinity);
     const trial = db.trials?.[serviceId];
     if (trial) return trial.price;
+    const tb = db.trialBundles?.[serviceId];
+    if (tb) return tb.bundlePrice;
     const dd = db.deepDungeons?.[serviceId];
     if (dd) return Math.min(dd.solo.price, ...(dd.group?.options.map((o) => o.price) ?? []));
     const fl = db.fieldLeveling?.[serviceId];

@@ -43,6 +43,11 @@ export interface CatalogConfig {
   /** Mounts split by the duty type they drop from — service ids per group;
       unlisted mounts trail under 'Other Mounts' */
   mountDutyGroups?: { extreme?: string[]; savage?: string[] };
+  /** Extreme trials grouped into sections — key = section title (object order
+      = display order), ids = trials newest to oldest; series bundles are
+      proxies from the Mounts category; unlisted trials trail under 'Other
+      Trials' */
+  trialExpansionGroups?: Record<string, string[]>;
   /** Service id -> 1 enabled / 0 disabled (unlisted = enabled) */
   services?: Record<string, 0 | 1>;
 }
@@ -61,6 +66,8 @@ export interface PricingAddon {
   /** Multiplies the method's base price when checked (shown as a percentage);
       other add-ons stay additive on top of the multiplied price */
   timesBase?: number;
+  /** Second-method (AFK Carry) price when it differs from `price` */
+  afkPrice?: number;
 }
 
 /** Pandaemonium per-method pricing (bundles, per-tier fights, unlocks, completion times) */
@@ -212,6 +219,8 @@ export interface PricingDb {
         price: number;
         /** AFK price — matches the duty's AFK fight price; afkMultiplier applies when omitted */
         afkPrice?: number;
+        /** Label for the second method instead of 'AFK Carry' (e.g. 'Group Play') */
+        afkLabel?: string;
         /** AFK not offered for this duty (e.g. Arcadion Heavyweight) */
         afkDisabled?: boolean;
         trial: string;
@@ -219,7 +228,7 @@ export interface PricingDb {
       }
     >;
   };
-  /** Extreme trial pricing (from ffxiv-Trials): per-trial piloted/AFK prices,
+  /** Extreme trial pricing (from ffxiv-Trials): per-trial AFK Carry prices,
       level, lore and the mount service that drops there (for two-way links) */
   trials?: Record<
     string,
@@ -230,6 +239,23 @@ export interface PricingDb {
       mount: string | null;
       lore: string;
       completion: string;
+    }
+  >;
+  /** Extreme trial bundle pricing (from ffxiv-Trials): a checklist of the
+      expansion's trials with per-trial AFK prices and a bundle price when
+      all are checked. The Mount Guaranteed option forces 1 run + all trials
+      and charges the tied series mount's cost (bundlePrice × afkMultiplier
+      from ffxiv-Mounts, looked up via mountServiceId). */
+  trialBundles?: Record<
+    string,
+    {
+      completion: string;
+      bundlePrice: number;
+      bundleLabel: string;
+      mountServiceId: string;
+      /** Series mount name shown on the Mount Guaranteed option */
+      mountLabel: string;
+      trials: PricingAddon[];
     }
   >;
   /** Deep dungeon pricing (from ffxiv-DeepDungeons): per-completion prices for
@@ -341,6 +367,7 @@ export async function loadPricing(): Promise<PricingDb> {
     let wolfMarks: PricingDb['wolfMarks'];
     let mounts: PricingDb['mounts'];
     let trials: PricingDb['trials'];
+    let trialBundles: PricingDb['trialBundles'];
     let deepDungeons: PricingDb['deepDungeons'];
     let fieldLeveling: PricingDb['fieldLeveling'];
     let unlockAddon: PricingDb['unlockAddon'];
@@ -352,7 +379,7 @@ export async function loadPricing(): Promise<PricingDb> {
           if (!r.ok) return;
           const cat = (await r.json()) as Pick<
             PricingDb,
-            'methodPrices' | 'addonPrices' | 'serviceAddons' | 'purchaseBox' | 'gil' | 'savageSeries' | 'leveling' | 'msqBoost' | 'bluLeveling' | 'pvpSeries' | 'ccRank' | 'wolfMarks' | 'mounts' | 'trials' | 'deepDungeons' | 'fieldLeveling' | 'unlockAddon' | 'catalog'
+            'methodPrices' | 'addonPrices' | 'serviceAddons' | 'purchaseBox' | 'gil' | 'savageSeries' | 'leveling' | 'msqBoost' | 'bluLeveling' | 'pvpSeries' | 'ccRank' | 'wolfMarks' | 'mounts' | 'trials' | 'trialBundles' | 'deepDungeons' | 'fieldLeveling' | 'unlockAddon' | 'catalog'
           >;
           Object.assign(methodPrices, cat.methodPrices);
           Object.assign(addonPrices, cat.addonPrices);
@@ -368,6 +395,7 @@ export async function loadPricing(): Promise<PricingDb> {
           if (cat.wolfMarks) wolfMarks = cat.wolfMarks;
           if (cat.mounts) mounts = { ...mounts, ...cat.mounts };
           if (cat.trials) trials = { ...trials, ...cat.trials };
+          if (cat.trialBundles) trialBundles = { ...trialBundles, ...cat.trialBundles };
           if (cat.deepDungeons) deepDungeons = { ...deepDungeons, ...cat.deepDungeons };
           if (cat.fieldLeveling) fieldLeveling = { ...fieldLeveling, ...cat.fieldLeveling };
           if (cat.unlockAddon) unlockAddon = cat.unlockAddon;
@@ -397,6 +425,7 @@ export async function loadPricing(): Promise<PricingDb> {
       wolfMarks,
       mounts,
       trials,
+      trialBundles,
       deepDungeons,
       fieldLeveling,
       servicePrices: db.servicePrices ?? {},
