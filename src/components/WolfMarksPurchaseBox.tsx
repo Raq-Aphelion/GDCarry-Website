@@ -154,7 +154,7 @@ export default function WolfMarksPurchaseBox({ service, gameShort }: { service: 
                 >
                   <span
                     className={`flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-[3px] border transition-colors ${
-                      stream ? 'border-cyan-500 bg-cyan-600 text-navy-900' : 'border-navy-600 text-transparent'
+                      stream ? 'border-cyan-600 bg-cyan-600 text-navy-900' : 'border-navy-600 text-transparent'
                     }`}
                   >
                     <Check className="h-3 w-3" strokeWidth={3.5} />
@@ -170,7 +170,7 @@ export default function WolfMarksPurchaseBox({ service, gameShort }: { service: 
                 >
                   <span
                     className={`flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-[3px] border transition-colors ${
-                      priority ? 'border-cyan-500 bg-cyan-600 text-navy-900' : 'border-navy-600 text-transparent'
+                      priority ? 'border-cyan-600 bg-cyan-600 text-navy-900' : 'border-navy-600 text-transparent'
                     }`}
                   >
                     <Check className="h-3 w-3" strokeWidth={3.5} />

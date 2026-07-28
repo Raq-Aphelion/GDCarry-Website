@@ -28,10 +28,10 @@ export interface ServicePageContent {
 const HOW_IT_WORKS: ServicePageAccordionSection = {
   title: 'How does it work?',
   items: [
-    'Contact The Live Chat',
+    'Place your desired order and contact us via the Live Chat or Discord',
     'Pay the required amount with your selected payment method',
-    "It's scheduled based on our availability and times you'll be logged in",
-    "You'll be notified of completion via discord or email",
+    "The service is scheduled based on our availability and times you'll be logged in",
+    "You'll be notified of the order's completion via Discord or E-mail",
   ],
 };
 
@@ -756,14 +756,14 @@ const mountSeriesPage = (
   ],
 });
 
-const wingPage = (short: string, trial: string, totem: string): ServicePageContent => ({
+const wingPage = (short: string, trial: string, totem: string, to: string): ServicePageContent => ({
   short,
   rewardsHeading: 'What you get',
   rewards: [
     {
       icon: Trophy,
       title: 'Guaranteed Mount Drop From',
-      dutyButton: { label: trial, to: '/boosting/ffxiv?cat=trials' },
+      dutyButton: { label: trial, to },
       text: '— guaranteed, no matter how many runs it takes.',
     },
     {
@@ -803,13 +803,13 @@ SERVICE_PAGES['ffxiv-landerwaffe'] = mountSeriesPage('Landerwaffe', 7, 'Have a l
 SERVICE_PAGES['ffxiv-apocryphal-bahamut'] = mountSeriesPage('Bahamut', 7, 'Have a level 90 Job', 'Endwalker Extreme Trials');
 SERVICE_PAGES['ffxiv-wings-of-legacy'] = mountSeriesPage('Legacy', 7, 'Have a level 100 Job', 'Dawntrail Extreme Trials');
 
-SERVICE_PAGES['ffxiv-wings-of-ruin'] = wingPage('Wings of Ruin', 'Worqor Lar Dor (Extreme)', 'Skyruin Totems');
-SERVICE_PAGES['ffxiv-wings-of-resolve'] = wingPage('Wings of Resolve', 'Everkeep (Extreme)', 'Resilient Totems');
-SERVICE_PAGES['ffxiv-wings-of-eternity'] = wingPage('Wings of Eternity', "The Minstrel's Ballad: Sphene's Burden", 'Totems Eternal');
-SERVICE_PAGES['ffxiv-wings-of-knighthood'] = wingPage('Wings of the Knighthood', 'Recollection (Extreme)', 'Knight Totems');
-SERVICE_PAGES['ffxiv-wings-of-death'] = wingPage('Wings of Death', "The Minstrel's Ballad: Necron's Embrace", 'Grave Totems');
-SERVICE_PAGES['ffxiv-wings-of-mist'] = wingPage('Wings of Mist', 'Hell on Rails (Extreme)', 'Runaway Totems');
-SERVICE_PAGES['ffxiv-wings-of-nihility'] = wingPage('Wings of Nihility', 'The Unmaking (Extreme)', 'Totems of Naught');
+SERVICE_PAGES['ffxiv-wings-of-ruin'] = wingPage('Wings of Ruin', 'Worqor Lar Dor (Extreme)', 'Skyruin Totems', '/boosting/ffxiv/ffxiv-worqor-lar-dor');
+SERVICE_PAGES['ffxiv-wings-of-resolve'] = wingPage('Wings of Resolve', 'Everkeep (Extreme)', 'Resilient Totems', '/boosting/ffxiv/ffxiv-everkeep');
+SERVICE_PAGES['ffxiv-wings-of-eternity'] = wingPage('Wings of Eternity', "The Minstrel's Ballad: Sphene's Burden", 'Totems Eternal', '/boosting/ffxiv/ffxiv-sphenes-burden');
+SERVICE_PAGES['ffxiv-wings-of-knighthood'] = wingPage('Wings of the Knighthood', 'Recollection (Extreme)', 'Knight Totems', '/boosting/ffxiv/ffxiv-recollection');
+SERVICE_PAGES['ffxiv-wings-of-death'] = wingPage('Wings of Death', "The Minstrel's Ballad: Necron's Embrace", 'Grave Totems', '/boosting/ffxiv/ffxiv-necrons-embrace');
+SERVICE_PAGES['ffxiv-wings-of-mist'] = wingPage('Wings of Mist', 'Hell on Rails (Extreme)', 'Runaway Totems', '/boosting/ffxiv/ffxiv-hell-on-rails');
+SERVICE_PAGES['ffxiv-wings-of-nihility'] = wingPage('Wings of Nihility', 'The Unmaking (Extreme)', 'Totems of Naught', '/boosting/ffxiv/ffxiv-the-unmaking');
 
 /** Savage raid mount pages share one shape; level varies by expansion. */
 const savageMountPage = (short: string, duty: string, level: number, dutyTo: string): ServicePageContent => ({
@@ -882,6 +882,200 @@ export const MOUNT_LINKS: Record<string, string> = {
   '(A4S) Gobwalker': 'ffxiv-gobwalker',
   '(A12S) Arrhidaeus': 'ffxiv-arrhidaeus',
 };
+
+
+/** Extreme trial pages share one shape; trials that drop a mount link to it. */
+const trialPage = (short: string, level: number, mount?: { label: string; to: string }): ServicePageContent => ({
+  short,
+  rewardsHeading: 'What you get',
+  rewards: [
+    ...(mount
+      ? [
+          {
+            icon: Trophy,
+            title: 'Mount Drop',
+            dutyButton: { label: mount.label, to: mount.to },
+            text: '— can drop from this trial.',
+          } as const,
+        ]
+      : [
+          {
+            icon: Trophy,
+            title: 'Totems & Loot',
+            text: 'Trial totems, orchestrion rolls and materials from every clear.',
+          } as const,
+        ]),
+    {
+      icon: Gem,
+      title: 'Trial Totems',
+      text: 'Exchangeable for mounts, weapons and glamour.',
+    },
+    {
+      icon: Swords,
+      title: 'Piloted or AFK Carry',
+      text: 'Cleared by a veteran raider on your account, or alongside you in the party.',
+    },
+    {
+      icon: Medal,
+      title: 'Achievement Unlocked',
+      text: 'The Extreme trial achievement on completion.',
+    },
+  ],
+  accordion: [
+    {
+      title: 'Requirements',
+      items: [`Have a level ${level} Job`, 'Trial unlocked (available as an additional service)'],
+    },
+    HOW_IT_WORKS,
+    PILOTED_VS_AFK,
+  ],
+});
+
+SERVICE_PAGES['ffxiv-limitless-blue'] = trialPage('Limitless Blue', 60, { label: 'White Lanner', to: '/boosting/ffxiv/ffxiv-firebird-mount' });
+SERVICE_PAGES['ffxiv-thok-ast-thok'] = trialPage('Thok ast Thok', 60, { label: 'Rose Lanner', to: '/boosting/ffxiv/ffxiv-firebird-mount' });
+SERVICE_PAGES['ffxiv-thordans-reign'] = trialPage('Thordan\'s Reign', 60, { label: 'Round Lanner', to: '/boosting/ffxiv/ffxiv-firebird-mount' });
+SERVICE_PAGES['ffxiv-containment-bay-s1t7'] = trialPage('Containment Bay S1T7', 60, { label: 'Warring Lanner', to: '/boosting/ffxiv/ffxiv-firebird-mount' });
+SERVICE_PAGES['ffxiv-nidhoggs-rage'] = trialPage('Nidhogg\'s Rage', 60, { label: 'Dark Lanner', to: '/boosting/ffxiv/ffxiv-firebird-mount' });
+SERVICE_PAGES['ffxiv-containment-bay-p1t6'] = trialPage('Containment Bay P1T6', 60, { label: 'Sophic Lanner', to: '/boosting/ffxiv/ffxiv-firebird-mount' });
+SERVICE_PAGES['ffxiv-containment-bay-z1t9'] = trialPage('Containment Bay Z1T9', 60, { label: 'Demonic Lanner', to: '/boosting/ffxiv/ffxiv-firebird-mount' });
+SERVICE_PAGES['ffxiv-pool-of-tribute'] = trialPage('Pool of Tribute', 70, { label: 'Reveling Kamuy', to: '/boosting/ffxiv/ffxiv-kamuy-nine-tails' });
+SERVICE_PAGES['ffxiv-emanation'] = trialPage('Emanation', 70, { label: 'Blissful Kamuy', to: '/boosting/ffxiv/ffxiv-kamuy-nine-tails' });
+SERVICE_PAGES['ffxiv-shinryus-domain'] = trialPage('Shinryu\'s Domain', 70, { label: 'Legendary Kamuy', to: '/boosting/ffxiv/ffxiv-kamuy-nine-tails' });
+SERVICE_PAGES['ffxiv-jade-stoa'] = trialPage('The Jade Stoa', 70, { label: 'Auspicious Kamuy', to: '/boosting/ffxiv/ffxiv-kamuy-nine-tails' });
+SERVICE_PAGES['ffxiv-tsukuyomis-pain'] = trialPage('Tsukuyomi\'s Pain', 70, { label: 'Lunar Kamuy', to: '/boosting/ffxiv/ffxiv-kamuy-nine-tails' });
+SERVICE_PAGES['ffxiv-great-hunt'] = trialPage('The Great Hunt', 70, { label: 'Rathalos', to: '/boosting/ffxiv/ffxiv-rathalos-mount' });
+SERVICE_PAGES['ffxiv-hells-kier'] = trialPage('Hells\' Kier', 70, { label: 'Euphonious Kamuy', to: '/boosting/ffxiv/ffxiv-kamuy-nine-tails' });
+SERVICE_PAGES['ffxiv-dancing-plague'] = trialPage('Dancing Plague', 80, { label: 'Fae Gwiber', to: '/boosting/ffxiv/ffxiv-landerwaffe' });
+SERVICE_PAGES['ffxiv-crown-of-the-immaculate'] = trialPage('Crown of the Immaculate', 80, { label: 'Innocent Gwiber', to: '/boosting/ffxiv/ffxiv-landerwaffe' });
+SERVICE_PAGES['ffxiv-cinder-drift'] = trialPage('Cinder Drift', 80, { label: 'Ruby Gwiber', to: '/boosting/ffxiv/ffxiv-landerwaffe' });
+SERVICE_PAGES['ffxiv-castrum-marinum'] = trialPage('Castrum Marinum', 80, { label: 'Emerald Gwiber', to: '/boosting/ffxiv/ffxiv-landerwaffe' });
+SERVICE_PAGES['ffxiv-cloud-deck'] = trialPage('The Cloud Deck', 80, { label: 'Diamond Gwiber', to: '/boosting/ffxiv/ffxiv-landerwaffe' });
+SERVICE_PAGES['ffxiv-hadess-elegy'] = trialPage('Hades\'s Elegy', 80, { label: 'Shadow Gwiber', to: '/boosting/ffxiv/ffxiv-landerwaffe' });
+SERVICE_PAGES['ffxiv-seat-of-sacrifice'] = trialPage('The Seat of Sacrifice', 80, { label: 'Gwiber of Light', to: '/boosting/ffxiv/ffxiv-landerwaffe' });
+SERVICE_PAGES['ffxiv-memoria-misera'] = trialPage('Memoria Misera', 80);
+SERVICE_PAGES['ffxiv-zodiarks-fall'] = trialPage('Zodiark\'s Fall', 90, { label: 'Lynx of Eternal Darkness', to: '/boosting/ffxiv/ffxiv-apocryphal-bahamut' });
+SERVICE_PAGES['ffxiv-hydaelyns-call'] = trialPage('Hydaelyn\'s Call', 90, { label: 'Lynx of Divine Light', to: '/boosting/ffxiv/ffxiv-apocryphal-bahamut' });
+SERVICE_PAGES['ffxiv-endsingers-aria'] = trialPage('Endsinger\'s Aria', 90, { label: 'Bluefeather Lynx', to: '/boosting/ffxiv/ffxiv-apocryphal-bahamut' });
+SERVICE_PAGES['ffxiv-storms-crown'] = trialPage('Storm\'s Crown', 90, { label: 'Lynx of Imperious Wind', to: '/boosting/ffxiv/ffxiv-apocryphal-bahamut' });
+SERVICE_PAGES['ffxiv-mount-ordeals'] = trialPage('Mount Ordeals', 90, { label: 'Lynx of Righteous Fire', to: '/boosting/ffxiv/ffxiv-apocryphal-bahamut' });
+SERVICE_PAGES['ffxiv-voidcast-dais'] = trialPage('The Voidcast Dais', 90, { label: 'Lynx of Fallen Shadow', to: '/boosting/ffxiv/ffxiv-apocryphal-bahamut' });
+SERVICE_PAGES['ffxiv-abyssal-fracture'] = trialPage('The Abyssal Fracture', 90, { label: 'Lynx of Abyssal Grief', to: '/boosting/ffxiv/ffxiv-apocryphal-bahamut' });
+SERVICE_PAGES['ffxiv-worqor-lar-dor'] = trialPage('Worqor Lar Dor', 100, { label: 'Wings of Ruin', to: '/boosting/ffxiv/ffxiv-wings-of-ruin' });
+SERVICE_PAGES['ffxiv-everkeep'] = trialPage('Everkeep', 100, { label: 'Wings of Resolve', to: '/boosting/ffxiv/ffxiv-wings-of-resolve' });
+SERVICE_PAGES['ffxiv-sphenes-burden'] = trialPage('Sphene\'s Burden', 100, { label: 'Wings of Eternity', to: '/boosting/ffxiv/ffxiv-wings-of-eternity' });
+SERVICE_PAGES['ffxiv-recollection'] = trialPage('Recollection', 100, { label: 'Wings of the Knighthood', to: '/boosting/ffxiv/ffxiv-wings-of-knighthood' });
+SERVICE_PAGES['ffxiv-necrons-embrace'] = trialPage('Necron\'s Embrace', 100, { label: 'Wings of Death', to: '/boosting/ffxiv/ffxiv-wings-of-death' });
+SERVICE_PAGES['ffxiv-windward-wilds'] = trialPage('The Windward Wilds', 100, { label: 'Felyne Support Team Cart', to: '/boosting/ffxiv/ffxiv-felyne-cart' });
+SERVICE_PAGES['ffxiv-hell-on-rails'] = trialPage('Hell on Rails', 100, { label: 'Wings of Mist', to: '/boosting/ffxiv/ffxiv-wings-of-mist' });
+SERVICE_PAGES['ffxiv-the-unmaking'] = trialPage('The Unmaking', 100, { label: 'Wings of Nihility', to: '/boosting/ffxiv/ffxiv-wings-of-nihility' });
+
+SERVICE_PAGES['ffxiv-rathalos-mount'] = savageMountPage('Rathalos', 'The Great Hunt (Extreme)', 70, '/boosting/ffxiv/ffxiv-great-hunt');
+SERVICE_PAGES['ffxiv-felyne-cart'] = savageMountPage('Felyne Cart', 'The Windward Wilds (Extreme)', 100, '/boosting/ffxiv/ffxiv-windward-wilds');
+
+
+/** Deep dungeon pages share one shape. */
+const deepDungeonPage = (
+  short: string,
+  rewards: ServicePageContent['rewards'],
+  requirements: string[],
+  methodAccordion: ServicePageContent['accordion'][number] = PILOTED_BOOST,
+): ServicePageContent => ({
+  short,
+  rewardsHeading: 'What you get',
+  rewards,
+  accordion: [
+    { title: 'Requirements', items: requirements },
+    HOW_IT_WORKS,
+    methodAccordion,
+  ],
+});
+
+/** Method accordion for the four deep dungeons that offer group play —
+    same grouped layout as the ultimate-raid method accordions. */
+const GROUP_PLAY_VS_PILOTED: ServicePageContent['accordion'][number] = {
+  title: 'Group Play vs Piloted Boost',
+  groups: [
+    {
+      heading: 'Group Play',
+      items: [
+        "You'll be following 3 other raiders as they guide you through the deep dungeon until you complete it.",
+        "Speedrun — you'll be ignoring all loot to maximise efficiency and clear the run as fast as possible",
+        "Farm — you'll be collecting chests throughout the run to increase aetherpool and collect rewards",
+      ],
+    },
+    {
+      heading: 'Piloted Boost',
+      items: ['A Professional Booster will be logged onto your account and complete the content on your behalf'],
+    },
+  ],
+};
+
+const ddRewards = (title: string, achievement: { title: string; text: string }): ServicePageContent['rewards'] => [
+  { icon: Swords, title: 'Aetherpool Levels & Armour', text: 'Upgrades on your Aetherpool Level & Armour.' },
+  { icon: Gem, title: 'Tomestones & Loot', text: 'Various loot from acquiring and clearing the floors of the deep dungeon.' },
+  { icon: BadgeCheck, title, text: 'Exclusive title achieved by completing the deep dungeon solo.' },
+  { icon: Medal, title: achievement.title, text: achievement.text },
+];
+
+/** Field exploration pages share one shape. */
+const fieldPage = (short: string, goal: string, loot: string): ServicePageContent => ({
+  short,
+  rewardsHeading: 'What you get',
+  rewards: [
+    { icon: ArrowUp, title: goal, text: 'Target rank or level reached — no grinding on your end.' },
+    { icon: Gem, title: loot, text: 'All currencies, loot and unlocks gathered along the way.' },
+    { icon: Timer, title: 'Time Saver', text: 'Weeks of repetitive field content skipped entirely.' },
+    { icon: Medal, title: 'Achievement Progress', text: 'Field exploration achievements unlocked en route.' },
+  ],
+  accordion: [
+    { title: 'Requirements', items: ['Own the relevant expansion', 'Content unlocked (available as an additional service)'] },
+    HOW_IT_WORKS,
+    PILOTED_BOOST,
+  ],
+});
+
+
+SERVICE_PAGES['ffxiv-potd-solo'] = deepDungeonPage(
+  'Palace of the Dead',
+  ddRewards('Necromancer Title', { title: 'Achievement: “Pal-less Palace III”', text: 'Achievement unlocked upon clearing Palace of the Dead Floor 200 Solo.' }),
+  ['Have a level 100 Job', '95+ Aetherpool Weapon & Armour (available as an add-on)', 'ilvl 740 or higher gear'],
+  GROUP_PLAY_VS_PILOTED,
+);
+SERVICE_PAGES['ffxiv-hoh'] = deepDungeonPage(
+  'Heaven-on-High',
+  ddRewards('Lone Hero Title', { title: 'Achievement: “Heaven Is a Lonely Place II”', text: 'Achievement unlocked upon clearing Heaven-on-High Floor 100 Solo.' }),
+  ['Have a level 100 Job', '95+ Aetherpool Weapon & Armour (available as an add-on)', 'ilvl 740 or higher gear'],
+  GROUP_PLAY_VS_PILOTED,
+);
+SERVICE_PAGES['ffxiv-orthos'] = deepDungeonPage(
+  'Eureka Orthos',
+  ddRewards('Once and Future King/Queen Title', { title: 'Achievement: “All by Eurekaself II”', text: 'Achievement unlocked upon clearing Eureka Orthos Floor 100 Solo.' }),
+  ['Have a level 100 Job', '95+ Aetherpool Weapon & Armour (available as an add-on)', 'ilvl 740 or higher gear'],
+  GROUP_PLAY_VS_PILOTED,
+);
+SERVICE_PAGES['ffxiv-pilgrims-traverse'] = deepDungeonPage(
+  "Pilgrim's Traverse",
+  ddRewards('The Enlightened Title', { title: 'Achievement: “Solo Traveler II”', text: "Achievement unlocked upon clearing Pilgrim's Traverse Floor 99 Solo." }),
+  ['Have a level 100 Job', '95+ Aetherpool Weapon & Armour (available as an add-on)', 'ilvl 740 or higher gear'],
+  GROUP_PLAY_VS_PILOTED,
+);
+SERVICE_PAGES['ffxiv-deep-dungeon-bundle'] = deepDungeonPage(
+  'DD Bundle',
+  [
+    { icon: Swords, title: "POTD, HOH, EO and Pilgrim's Traverse Completion", text: 'Completion of 4 Deep Dungeons Solo.' },
+    { icon: Gem, title: 'Exclusive Loot', text: 'Exclusive loot from all 4 Deep Dungeons.' },
+    { icon: BadgeCheck, title: 'Deep Dungeon Solo Titles', text: 'Necromancer, Lone Hero, Once and Future King/Queen and The Enlightened titles.' },
+    { icon: Medal, title: 'Deep Dungeon Specific Achievements', text: 'All solo achievements from clearing 4 Deep Dungeons.' },
+  ],
+  ['Have a level 100 Job', '90+ Aetherpool & Armour (available as an add-on)', 'ilvl 740 or higher gear'],
+  GROUP_PLAY_VS_PILOTED,
+);
+
+SERVICE_PAGES['ffxiv-resistance-rank'] = fieldPage('Resistance Rank', 'Resistance Rank 1–25', 'Bozjan field notes & story unlocks');
+SERVICE_PAGES['ffxiv-eureka-leveling'] = fieldPage('Eureka', 'Elemental Level 1–60', 'Logograms, kettles & Eureka loot');
+SERVICE_PAGES['ffxiv-occult-phantom-level'] = fieldPage('Phantom Job', 'Phantom Job Level 1–10', 'Full phantom job mastery set');
+SERVICE_PAGES['ffxiv-occult-job-unlocks'] = fieldPage('Job Unlocks', 'Phantom Jobs Unlocked', 'Every unlock quest handled for you');
+SERVICE_PAGES['ffxiv-island-sanctuary'] = fieldPage('Island Sanctuary', 'Sanctuary Rank 1–20', 'Landmarks, rare animals & workshop automation');
 
 export function getServicePage(id?: string) {
   return id ? SERVICE_PAGES[id] : undefined;

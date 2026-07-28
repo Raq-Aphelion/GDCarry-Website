@@ -4,6 +4,65 @@
     "label": "Duty unlock",
     "price": 0
   },
+  "purchaseBox": {
+    "runsMin": 1,
+    "runsMax": 10,
+    "priorityMultiplier": 2,
+    "gearOptions": [
+      {
+        "label": "I don't need extra gear",
+        "price": 0
+      },
+      {
+        "label": "Pentamelded Crafted Set",
+        "price": 40
+      }
+    ],
+    "logOptions": [
+      {
+        "label": "I don't want a parse",
+        "price": 0,
+        "percent": 0
+      },
+      {
+        "label": "White / Green Parse (0-49% Logs)",
+        "price": 0,
+        "percent": 10
+      },
+      {
+        "label": "Blue Parse (50-74% Logs)",
+        "price": 0,
+        "percent": 50
+      },
+      {
+        "label": "Purple Parse (74-94% Logs)",
+        "price": 0,
+        "percent": 100
+      },
+      {
+        "label": "Orange Parse (95-98% Logs)",
+        "price": 0,
+        "percent": 400
+      },
+      {
+        "label": "Pink Parse (99% Logs)",
+        "price": 0,
+        "percent": 600
+      }
+    ],
+    "addons": [
+      {
+        "id": "stream",
+        "label": "Private Stream",
+        "price": 10
+      },
+      {
+        "id": "priority",
+        "label": "Priority",
+        "price": 0
+      }
+    ]
+  },
   "methodPrices": {
     "ffxiv-dsr": {
       "piloted": 140,

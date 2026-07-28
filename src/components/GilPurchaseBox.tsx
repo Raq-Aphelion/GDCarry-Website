@@ -148,7 +148,7 @@ export default function GilPurchaseBox({ service, gameShort }: { service: Servic
               value={inputValue}
               onChange={(e) => onInputChange(e.target.value)}
               onBlur={onInputBlur}
-              className="mt-2.5 h-10 w-full rounded-[5px] border border-navy-700/70 bg-navy-850 px-3.5 py-2 text-sm leading-none text-white outline-none transition-colors hover:border-navy-600 focus:border-navy-600"
+              className="mt-2.5 h-10 w-full rounded-[5px] border border-navy-700/70 bg-navy-850 px-3.5 py-2 text-center text-sm leading-none text-white outline-none transition-colors hover:border-navy-600 focus:border-navy-600"
               aria-label="Currency amount"
             />
             <div className="px-1 py-4">

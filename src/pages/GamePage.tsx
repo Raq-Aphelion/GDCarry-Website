@@ -8,7 +8,8 @@ import Reveal from '@/components/Reveal';
 import { OverlayScrollbar } from '@/components/Scrollbar';
 import PageMeta from '@/components/PageMeta';
 import ServiceCard from '@/components/ServiceCard';
-import { getGame, serviceCount } from '@/data/games';
+import { getGame, serviceCount, type Service } from '@/data/games';
+import { usePricing } from '@/context/PricingContext';
 import ffxivBg from '@/assets/images/backgrounds/ffxiv-bg-1.webp';
 import wowBg from '@/assets/images/backgrounds/wow-bg.jpg';
 import lostArkBg from '@/assets/images/backgrounds/lostark-bg.webp';
@@ -27,6 +28,7 @@ const GAME_BG: Record<string, string> = {
 export default function GamePage() {
   const { gameId } = useParams<{ gameId: string }>();
   const [searchParams] = useSearchParams();
+  const { db } = usePricing();
   const game = gameId ? getGame(gameId) : undefined;
   const catParam = searchParams.get('cat');
 
@@ -105,6 +107,61 @@ export default function GamePage() {
       })
       .filter((sv): sv is NonNullable<typeof sv> => sv !== undefined),
   ];
+
+  // Mount duty-type sections (database `catalog.mountDutyGroups`): the Mounts
+  // category is split by the duty each mount drops from; mounts in neither
+  // list trail under 'Other Mounts'
+  const dutyGroups = activeSub.id === 'mounts' ? db.catalog?.mountDutyGroups : undefined;
+  const mountSections = (() => {
+    if (!dutyGroups?.extreme?.length && !dutyGroups?.savage?.length) return null;
+    const pick = (ids: string[] | undefined) => {
+      const set = new Set(ids ?? []);
+      return activeServices.filter((sv) => set.has(sv.id));
+    };
+    const grouped = new Set([...(dutyGroups?.extreme ?? []), ...(dutyGroups?.savage ?? [])]);
+    const sections: { title: string; services: Service[] }[] = [];
+    const extreme = pick(dutyGroups?.extreme);
+    const savage = pick(dutyGroups?.savage);
+    const other = activeServices.filter((sv) => !grouped.has(sv.id));
+    if (extreme.length) sections.push({ title: 'Extreme Trial Mounts', services: extreme });
+    if (savage.length) sections.push({ title: 'Savage Raid Mounts', services: savage });
+    if (other.length) sections.push({ title: 'Other Mounts', services: other });
+    return sections.length ? sections : null;
+  })();
+
+  const renderServiceGrid = (services: Service[], withCtas: boolean) => (
+    /* sm 2 per row; md 3 — below lg the sidebar becomes the carousel, so the
+       full row fits 3 cards; lg keeps 3 (sidebar takes 240px, 4 would squeeze
+       cards to ~155px); xl 4 — cards cap at 280px and never drop below ~213px */
+    <div className="mt-5 grid justify-items-center gap-5 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
+      {services.map((service, i) => (
+        <Fragment key={service.id}>
+          {/* Cards cap at 280px (ServiceCard max-w) — centered in their
+              cells like the home page's popular picks, so extra row width
+              becomes even outer margins */}
+          <Reveal className="w-full max-w-[280px]" immediate>
+            <ServiceCard service={service} />
+          </Reveal>
+          {/* Inline custom-order CTA on mobile: only in categories with
+              more than 7 card rows (7+ services at 1 col), pinned after
+              the 2nd card so 2 rows sit above it */}
+          {withCtas && activeServices.length > 7 && i === 1 && (
+            <div className="mx-auto w-full max-w-[280px] sm:hidden">
+              <CustomOrderCta compact />
+            </div>
+          )}
+        </Fragment>
+      ))}
+      {/* Desktop grid-breaker: only in categories with more than 3 card
+          rows (12+ services at 4 cols), pinned to row 3 so exactly 2
+          rows of cards sit above it */}
+      {withCtas && activeServices.length > 12 && (
+        <div className="hidden w-full sm:col-span-2 sm:row-start-3 sm:block md:col-span-3 xl:col-span-4">
+          <CustomOrderCta lateTextBreak />
+        </div>
+      )}
+    </div>
+  );
 
   return (
     <div>
@@ -229,43 +286,30 @@ export default function GamePage() {
               <div className="h-px flex-1 bg-gradient-to-r from-navy-700/70 to-transparent max-sm:hidden" />
             </div>
           </Reveal>
-          {/* sm 2 per row; md 3 — below lg the sidebar becomes the carousel, so the
-              full row fits 3 cards; lg keeps 3 (sidebar takes 240px, 4 would squeeze
-              cards to ~155px); xl 4 — cards cap at 280px and never drop below ~213px */}
           {activeServices.length === 0 ? (
             // Matches the service card height (ServiceCard min-h)
             <div className="mt-5 flex h-[380px] items-center justify-center rounded-[5px] bg-navy-850 text-sm text-slate-500">
               No boosts in this category yet
             </div>
-          ) : (
-          <div className="mt-5 grid justify-items-center gap-5 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
-            {activeServices.map((service, i) => (
-              <Fragment key={service.id}>
-                {/* Cards cap at 280px (ServiceCard max-w) — centered in their
-                    cells like the home page's popular picks, so extra row width
-                    becomes even outer margins */}
-                <Reveal className="w-full max-w-[280px]" immediate>
-                  <ServiceCard service={service} />
-                </Reveal>
-                {/* Inline custom-order CTA on mobile: only in categories with
-                    more than 7 card rows (7+ services at 1 col), pinned after
-                    the 2nd card so 2 rows sit above it */}
-                {activeServices.length > 7 && i === 1 && (
-                  <div className="mx-auto w-full max-w-[280px] sm:hidden">
-                    <CustomOrderCta compact />
+          ) : mountSections ? (
+            <div className="mt-5 space-y-10">
+              {mountSections.map((section, si) => (
+                <div key={section.title}>
+                  <div className="flex items-center gap-3 max-sm:justify-center">
+                    <h3 className="font-display text-lg font-bold text-white">{section.title}</h3>
+                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-navy-800 text-xs font-bold text-slate-400">
+                      {section.services.length}
+                    </span>
+                    <div className="h-px flex-1 bg-gradient-to-r from-navy-700/70 to-transparent max-sm:hidden" />
                   </div>
-                )}
-              </Fragment>
-            ))}
-            {/* Desktop grid-breaker: only in categories with more than 3 card
-                rows (12+ services at 4 cols), pinned to row 3 so exactly 2
-                rows of cards sit above it */}
-            {activeServices.length > 12 && (
-              <div className="hidden w-full sm:col-span-2 sm:row-start-3 sm:block md:col-span-3 xl:col-span-4">
-                <CustomOrderCta lateTextBreak />
-              </div>
-            )}
-          </div>
+                  {/* CTAs only in the first section; thresholds use the full
+                      category count, same as an ungrouped category */}
+                  {renderServiceGrid(section.services, si === 0)}
+                </div>
+              ))}
+            </div>
+          ) : (
+            renderServiceGrid(activeServices, true)
           )}
         </div>
       </div>

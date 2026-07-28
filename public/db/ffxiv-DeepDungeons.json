@@ -1,0 +1,189 @@
+{
+  "deepDungeons": {
+    "ffxiv-potd-solo": {
+      "completion": "5-7 Days",
+      "solo": {
+        "price": 350,
+        "addons": [
+          {
+            "id": "aetherpool",
+            "label": "95+ Aetherpool Farmed",
+            "price": 100
+          },
+          {
+            "id": "weapon",
+            "label": "Kinna Weapon",
+            "price": 150
+          }
+        ]
+      },
+      "group": {
+        "options": [
+          {
+            "id": "speedrun",
+            "label": "Speedrun",
+            "price": 135,
+            "note": "All chests skipped"
+          },
+          {
+            "id": "farm",
+            "label": "Farm",
+            "price": 225,
+            "note": "All chests collected"
+          }
+        ]
+      }
+    },
+    "ffxiv-hoh": {
+      "completion": "5-7 Days",
+      "solo": {
+        "price": 275,
+        "addons": [
+          {
+            "id": "aetherpool",
+            "label": "95+ Aetherpool Farmed",
+            "price": 100
+          },
+          {
+            "id": "juedi",
+            "label": "Juedi (4 Clears)",
+            "price": 0,
+            "timesBase": 4
+          },
+          {
+            "id": "weapon",
+            "label": "Empyrean Weapon",
+            "price": 150
+          }
+        ]
+      },
+      "group": {
+        "options": [
+          {
+            "id": "speedrun",
+            "label": "Speedrun",
+            "price": 80,
+            "note": "All chests skipped"
+          },
+          {
+            "id": "farm",
+            "label": "Farm",
+            "price": 113,
+            "note": "All chests collected"
+          }
+        ],
+        "multiplier": {
+          "heading": "Mount",
+          "label": "Juedi (4 Clears)",
+          "times": 4
+        }
+      }
+    },
+    "ffxiv-orthos": {
+      "completion": "5-7 Days",
+      "solo": {
+        "price": 300,
+        "addons": [
+          {
+            "id": "aetherpool",
+            "label": "95+ Aetherpool Farmed",
+            "price": 100
+          },
+          {
+            "id": "weapon",
+            "label": "Enaretos Weapon",
+            "price": 175
+          }
+        ]
+      },
+      "group": {
+        "options": [
+          {
+            "id": "speedrun",
+            "label": "Speedrun",
+            "price": 90,
+            "note": "All chests skipped"
+          },
+          {
+            "id": "farm",
+            "label": "Farm",
+            "price": 135,
+            "note": "All chests collected"
+          }
+        ]
+      }
+    },
+    "ffxiv-pilgrims-traverse": {
+      "completion": "5-7 Days",
+      "solo": {
+        "price": 500,
+        "addons": [
+          {
+            "id": "aetherpool",
+            "label": "95+ Aetherpool Farmed",
+            "price": 175
+          }
+        ]
+      },
+      "group": {
+        "options": [
+          {
+            "id": "speedrun",
+            "label": "Speedrun",
+            "price": 160,
+            "note": "All chests skipped"
+          },
+          {
+            "id": "farm",
+            "label": "Farm",
+            "price": 225,
+            "note": "All chests collected"
+          }
+        ],
+        "addons": [
+          {
+            "id": "book-farm",
+            "label": "Book Farm (Floors 71-100)",
+            "price": 70,
+            "note": "Requires floors 1-100 cleared",
+            "requiresOption": "farm"
+          }
+        ]
+      }
+    },
+    "ffxiv-deep-dungeon-bundle": {
+      "completion": "14 Days",
+      "solo": {
+        "price": 1700,
+        "addons": [
+          {
+            "id": "aetherpool",
+            "label": "99/99 Aetherpool Farmed",
+            "price": 400
+          },
+          {
+            "id": "unlock",
+            "label": "Deep Dungeon Unlocks",
+            "price": 40
+          }
+        ]
+      },
+      "group": {
+        "options": [
+          {
+            "id": "speedrun",
+            "label": "Speedrun",
+            "price": 400,
+            "note": "All chests skipped"
+          },
+          {
+            "id": "farm",
+            "label": "Farm",
+            "price": 580,
+            "note": "All chests collected"
+          }
+        ]
+      }
+    }
+  }
+}

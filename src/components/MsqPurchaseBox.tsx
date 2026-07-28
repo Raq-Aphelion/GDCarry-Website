@@ -197,7 +197,7 @@ export default function MsqPurchaseBox({ service, gameShort }: { service: Servic
                   >
                     <span
                       className={`flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-[3px] border transition-colors ${
-                        checked ? 'border-cyan-500 bg-cyan-600 text-navy-900' : 'border-navy-600 text-transparent'
+                        checked ? 'border-cyan-600 bg-cyan-600 text-navy-900' : 'border-navy-600 text-transparent'
                       }`}
                     >
                       <Check className="h-3 w-3" strokeWidth={3.5} />
@@ -271,7 +271,7 @@ export default function MsqPurchaseBox({ service, gameShort }: { service: Servic
                         >
                           <span
                             className={`flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-[3px] border transition-colors ${
-                              aether ? 'border-cyan-500 bg-cyan-600 text-navy-900' : 'border-navy-600 text-transparent'
+                              aether ? 'border-cyan-600 bg-cyan-600 text-navy-900' : 'border-navy-600 text-transparent'
                             }`}
                           >
                             <Check className="h-3 w-3" strokeWidth={3.5} />

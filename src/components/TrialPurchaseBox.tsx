@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { Armchair, Check, Clock, Gamepad2 } from 'lucide-react';
+import { Armchair, Clock, Gamepad2 } from 'lucide-react';
 import FadeImage from './FadeImage';
 import FieldPopup from './FieldPopup';
 import MountAddonsBlock from './MountAddonsBlock';
 import { CustomSelect } from './PurchaseBox';
+import { Slider } from '@/components/ui/slider';
 import { useCart } from '@/context/CartContext';
 import { useCurrency } from '@/context/CurrencyContext';
 import { usePricing } from '@/context/PricingContext';
@@ -29,97 +30,56 @@ const METHODS = [
   { id: 'afk', label: 'AFK Carry', icon: Gamepad2 },
 ] as const;
 
-/** Mount series purchase box (Kirin, Firebird, Nine Tails, Landerwaffe,
-    Apocryphal Bahamut, Wings of Legacy): checklist of the mounts required
-    for the series' combined mount — all checked applies the bundle price,
-    a partial selection sums the individual prices. */
-export default function MountSeriesPurchaseBox({ service, gameShort }: { service: Service; gameShort: string }) {
+/** Extreme trial purchase box: boost method with per-method prices from the
+    ffxiv-Trials database, data center, and stream/priority add-ons. */
+export default function TrialPurchaseBox({ service, gameShort }: { service: Service; gameShort: string }) {
   const { addItem, openCart } = useCart();
   const { format } = useCurrency();
   const { db } = usePricing();
-  const cfg = db.mounts?.series?.[service.id];
-  const afkMultiplier = db.mounts?.afkMultiplier ?? 1.1;
+  const cfg = db.trials?.[service.id];
   const priorityMultiplier = db.purchaseBox.priorityMultiplier;
 
   const [method, setMethod] = useState<(typeof METHODS)[number]['id']>('piloted');
-  const [checked, setChecked] = useState<string[]>(() => (cfg ? cfg.mounts.map((m) => m.id) : []));
-  const [addonChecked, setAddonChecked] = useState(false);
+  const [runs, setRuns] = useState(1);
+  const [dc, setDc] = useState('');
   const [stream, setStream] = useState(false);
   const [priority, setPriority] = useState(false);
-  const [dc, setDc] = useState('');
   const [dcError, setDcError] = useState(false);
 
   const { rootRef, wrapRef, stick, overflowTop, fixedStyle, blockHpx } = usePurchaseFloat(
-    `${method}|${dc}|${checked.length}|${addonChecked}|${stream}|${priority}`,
+    `${method}|${dc}|${stream}|${priority}|${runs}`,
   );
 
-  const toggle = (id: string) =>
-    setChecked((prev) => (prev.includes(id) ? prev.filter((c) => c !== id) : [...prev, id]));
-
-  const allChecked = cfg ? checked.length === cfg.mounts.length : false;
-  const mountsTotal = allChecked
-    ? cfg!.bundlePrice
-    : checked.reduce((s, id) => s + (cfg?.mounts.find((m) => m.id === id)?.price ?? 0), 0);
-  const addonPrice = addonChecked ? cfg?.addon?.price ?? 0 : 0;
   const streamPrice = 10;
-  const total =
-    (mountsTotal + addonPrice) * (method === 'afk' ? afkMultiplier : 1) * (priority ? priorityMultiplier : 1) +
-    (stream ? streamPrice : 0);
+  const methodBase = method === 'afk' ? (cfg?.afkPrice ?? cfg?.price ?? 0) : (cfg?.price ?? 0);
+  const total = methodBase * runs * (priority ? priorityMultiplier : 1) + (stream ? streamPrice : 0);
 
   const addToCart = () => {
-    if (total <= 0) return;
     if (!dc) {
       setDcError(true);
       return;
     }
     const methodLabel = METHODS.find((m) => m.id === method)?.label ?? method;
-    const selected = cfg!.mounts.filter((m) => checked.includes(m.id)).map((m) => m.label);
+    // Runs are excluded from the id — identical configs merge into one cart
+    // line whose amount controls adjust the run count (cap 999)
     addItem(
       {
         ...service,
-        id: `${service.id}::${method}|${dc}|${[...checked].sort().join(',')}|${addonChecked ? 'addon' : ''}`,
-        price: total,
+        id: `${service.id}::${method}|${dc}`,
+        price: methodBase * (priority ? priorityMultiplier : 1),
         method: methodLabel,
-        qtyLocked: true,
+        flat: stream ? streamPrice : undefined,
       },
       gameShort,
       [
-        ...(allChecked ? [cfg!.bundleLabel] : selected),
         `Data Center: ${dc}`,
-        ...(addonChecked && cfg?.addon ? [cfg.addon.label] : []),
         ...(stream ? ['Private Stream'] : []),
         ...(priority ? [`Priority (+${Math.round((priorityMultiplier - 1) * 100)}%)`] : []),
       ],
-      1,
+      runs,
     );
     openCart();
   };
-
-  const row = (
-    id: string,
-    label: string,
-    price: number,
-    isChecked: boolean,
-    onClick: () => void,
-  ) => (
-    <button
-      key={id}
-      type="button"
-      onClick={onClick}
-      aria-pressed={isChecked}
-      className="flex w-full items-center gap-3 rounded-[5px] bg-navy-850 px-2.5 py-1.5 text-left transition-colors hover:bg-navy-800"
-    >
-      <span
-        className={`flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-[3px] border transition-colors ${
-          isChecked ? 'border-cyan-600 bg-cyan-600 text-navy-900' : 'border-navy-600 text-transparent'
-        }`}
-      >
-        <Check className="h-3 w-3" strokeWidth={3.5} />
-      </span>
-      <span className="min-w-0 flex-1 truncate text-sm text-slate-300">{label}</span>
-      <span className="text-xs font-bold text-cyan-400">+{format(price)}</span>
-    </button>
-  );
 
   return (
     <div
@@ -166,17 +126,29 @@ export default function MountSeriesPurchaseBox({ service, gameShort }: { service
             </div>
           </div>
 
-          {/* Mount checklist */}
+          {/* Runs */}
           <div>
-            <p className="pl-px text-sm font-semibold text-white [text-shadow:0_1px_4px_rgb(0_0_0/0.7)]">
-              Missing Mounts{' '}
-              <span className="text-xs font-normal text-slate-300 [text-shadow:0_1px_4px_rgb(0_0_0/0.7)]">
-                (all {cfg?.mounts.length} = {format(cfg?.bundlePrice ?? 0)} bundle)
-              </span>
-            </p>
-            <div className="mt-2.5 space-y-1.5">
-              {cfg?.mounts.map((m) => row(m.id, m.label, m.price, checked.includes(m.id), () => toggle(m.id)))}
-            </div>
+            <p className="pl-px text-sm font-semibold text-white">Runs</p>
+            <input
+              type="text"
+              inputMode="numeric"
+              value={String(runs)}
+              aria-label="Runs"
+              onChange={(e) => {
+                const v = parseInt(e.target.value.replace(/[^0-9]/g, ''), 10);
+                if (!Number.isNaN(v)) setRuns(Math.min(Math.max(v, 1), 99));
+              }}
+              className="mt-2.5 h-10 w-full rounded-[5px] border border-navy-700/70 bg-navy-850 px-3.5 text-center text-sm text-slate-300 outline-none transition-colors focus:border-navy-600"
+            />
+            <Slider
+              className="mt-4"
+              min={1}
+              max={99}
+              step={1}
+              value={[runs]}
+              onValueChange={([v]) => setRuns(v)}
+              aria-label="Runs slider"
+            />
           </div>
 
           {/* Data center */}
@@ -199,14 +171,6 @@ export default function MountSeriesPurchaseBox({ service, gameShort }: { service
               />
             </div>
           </div>
-
-          {/* Optional add-on (Nightmare for the ARR series) */}
-          {cfg?.addon && (
-            <div>
-              <p className="mb-2 pl-px text-xs font-semibold text-slate-300">Add-ons</p>
-              {row(cfg.addon.id, cfg.addon.label, cfg.addon.price, addonChecked, () => setAddonChecked((a) => !a))}
-            </div>
-          )}
 
           {/* Additional options */}
           <MountAddonsBlock
@@ -234,8 +198,7 @@ export default function MountSeriesPurchaseBox({ service, gameShort }: { service
           </p>
           <button
             onClick={addToCart}
-            disabled={total <= 0}
-            className="purchase-cta mt-3.5 w-full rounded-[5px] bg-gradient-to-r from-cyan-500 to-cyan-700 py-2.5 font-display text-sm font-bold text-navy-900 transition-all hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:brightness-100"
+            className="purchase-cta mt-3.5 w-full rounded-[5px] bg-gradient-to-r from-cyan-500 to-cyan-700 py-2.5 font-display text-sm font-bold text-navy-900 transition-all hover:brightness-110"
           >
             Add to cart
           </button>

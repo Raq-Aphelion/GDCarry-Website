@@ -329,7 +329,7 @@ export default function PurchaseBox({ service, gameShort }: { service: Service; 
               onChange={(e) =>
                 setRuns(Math.min(999, Math.max(cfg.runsMin, Number(e.target.value.replace(/\D/g, '')) || cfg.runsMin)))
               }
-              className="mt-2.5 h-10 w-full rounded-[5px] border border-navy-700/70 bg-navy-850 px-3.5 py-2 text-sm leading-none text-white outline-none transition-colors hover:border-navy-600 focus:border-navy-600"
+              className="mt-2.5 h-10 w-full rounded-[5px] border border-navy-700/70 bg-navy-850 px-3.5 py-2 text-center text-sm leading-none text-white outline-none transition-colors hover:border-navy-600 focus:border-navy-600"
               aria-label="Number of runs"
             />
             <div className="px-1 pb-2 pt-4">
@@ -428,7 +428,7 @@ export default function PurchaseBox({ service, gameShort }: { service: Service; 
                             <span
                               className={`flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-[3px] border transition-colors ${
                                 checked
-                                  ? 'border-cyan-500 bg-cyan-600 text-navy-900'
+                                  ? 'border-cyan-600 bg-cyan-600 text-navy-900'
                                   : 'border-navy-600 text-transparent'
                               }`}
                             >

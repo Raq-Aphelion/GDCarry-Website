@@ -1,0 +1,300 @@
+{
+  "trials": {
+    "ffxiv-limitless-blue": {
+      "price": 4,
+      "afkPrice": 4,
+      "level": 60,
+      "mount": "ffxiv-firebird-mount",
+      "lore": "Bismarck, the white whale of the Sea of Clouds",
+      "completion": "24 Hours"
+    },
+    "ffxiv-thok-ast-thok": {
+      "price": 4,
+      "afkPrice": 4,
+      "level": 60,
+      "mount": "ffxiv-firebird-mount",
+      "lore": "Ravana, the blood-maddened god of the Gnath",
+      "completion": "24 Hours"
+    },
+    "ffxiv-thordans-reign": {
+      "price": 4,
+      "afkPrice": 4,
+      "level": 60,
+      "mount": "ffxiv-firebird-mount",
+      "lore": "King Thordan and the Knights of the Round",
+      "completion": "24 Hours"
+    },
+    "ffxiv-containment-bay-s1t7": {
+      "price": 4,
+      "afkPrice": 4,
+      "level": 60,
+      "mount": "ffxiv-firebird-mount",
+      "lore": "Sephirot, the Fiend of the Warring Triad",
+      "completion": "24 Hours"
+    },
+    "ffxiv-nidhoggs-rage": {
+      "price": 4,
+      "afkPrice": 4,
+      "level": 60,
+      "mount": "ffxiv-firebird-mount",
+      "lore": "Nidhogg, the wyrmking of the Dragonsong War",
+      "completion": "24 Hours"
+    },
+    "ffxiv-containment-bay-p1t6": {
+      "price": 4,
+      "afkPrice": 4,
+      "level": 60,
+      "mount": "ffxiv-firebird-mount",
+      "lore": "Sophia, the Goddess of the Warring Triad",
+      "completion": "24 Hours"
+    },
+    "ffxiv-containment-bay-z1t9": {
+      "price": 4,
+      "afkPrice": 4,
+      "level": 60,
+      "mount": "ffxiv-firebird-mount",
+      "lore": "Zurvan, the Demon of the Warring Triad",
+      "completion": "24 Hours"
+    },
+    "ffxiv-pool-of-tribute": {
+      "price": 4,
+      "afkPrice": 4,
+      "level": 70,
+      "mount": "ffxiv-kamuy-nine-tails",
+      "lore": "Susano, the Lord of the Revel",
+      "completion": "24 Hours"
+    },
+    "ffxiv-emanation": {
+      "price": 4,
+      "afkPrice": 4,
+      "level": 70,
+      "mount": "ffxiv-kamuy-nine-tails",
+      "lore": "Lakshmi, the Lady of Bliss",
+      "completion": "24 Hours"
+    },
+    "ffxiv-shinryus-domain": {
+      "price": 4,
+      "afkPrice": 4,
+      "level": 70,
+      "mount": "ffxiv-kamuy-nine-tails",
+      "lore": "Shinryu, the Dragon King",
+      "completion": "24 Hours"
+    },
+    "ffxiv-jade-stoa": {
+      "price": 4,
+      "afkPrice": 4,
+      "level": 70,
+      "mount": "ffxiv-kamuy-nine-tails",
+      "lore": "Byakko, the white tiger of the Four Lords",
+      "completion": "24 Hours"
+    },
+    "ffxiv-tsukuyomis-pain": {
+      "price": 4,
+      "afkPrice": 4,
+      "level": 70,
+      "mount": "ffxiv-kamuy-nine-tails",
+      "lore": "Tsukuyomi, the moonlit goddess",
+      "completion": "24 Hours"
+    },
+    "ffxiv-great-hunt": {
+      "price": 4,
+      "afkPrice": 4,
+      "level": 70,
+      "mount": "ffxiv-rathalos-mount",
+      "lore": "Rathalos, the King of the Skies from another world",
+      "completion": "24 Hours"
+    },
+    "ffxiv-hells-kier": {
+      "price": 4,
+      "afkPrice": 4,
+      "level": 70,
+      "mount": "ffxiv-kamuy-nine-tails",
+      "lore": "Suzaku, the scarlet phoenix of the Four Lords",
+      "completion": "24 Hours"
+    },
+    "ffxiv-dancing-plague": {
+      "price": 7,
+      "afkPrice": 7,
+      "level": 80,
+      "mount": "ffxiv-landerwaffe",
+      "lore": "Titania, the faerie king of Il Mheg",
+      "completion": "24 Hours"
+    },
+    "ffxiv-crown-of-the-immaculate": {
+      "price": 7,
+      "afkPrice": 7,
+      "level": 80,
+      "mount": "ffxiv-landerwaffe",
+      "lore": "Innocence, the self-styled god of light",
+      "completion": "24 Hours"
+    },
+    "ffxiv-cinder-drift": {
+      "price": 7,
+      "afkPrice": 7,
+      "level": 80,
+      "mount": "ffxiv-landerwaffe",
+      "lore": "The Ruby Weapon, resurrected warmachina",
+      "completion": "24 Hours"
+    },
+    "ffxiv-castrum-marinum": {
+      "price": 7,
+      "afkPrice": 7,
+      "level": 80,
+      "mount": "ffxiv-landerwaffe",
+      "lore": "The Emerald Weapon, master of thermal suppression",
+      "completion": "24 Hours"
+    },
+    "ffxiv-cloud-deck": {
+      "price": 7,
+      "afkPrice": 7,
+      "level": 80,
+      "mount": "ffxiv-landerwaffe",
+      "lore": "The Diamond Weapon, apex of the Weapon project",
+      "completion": "24 Hours"
+    },
+    "ffxiv-hadess-elegy": {
+      "price": 7,
+      "afkPrice": 7,
+      "level": 80,
+      "mount": "ffxiv-landerwaffe",
+      "lore": "Hades, the architect of the Ascian design",
+      "completion": "24 Hours"
+    },
+    "ffxiv-seat-of-sacrifice": {
+      "price": 7,
+      "afkPrice": 7,
+      "level": 80,
+      "mount": "ffxiv-landerwaffe",
+      "lore": "Elidibus, bearing the face of the first Warrior of Light",
+      "completion": "24 Hours"
+    },
+    "ffxiv-memoria-misera": {
+      "price": 7,
+      "afkPrice": 7,
+      "level": 80,
+      "mount": null,
+      "lore": "Varis yae Galvus, relived through memory",
+      "completion": "24 Hours"
+    },
+    "ffxiv-zodiarks-fall": {
+      "price": 7,
+      "afkPrice": 7,
+      "level": 90,
+      "mount": "ffxiv-apocryphal-bahamut",
+      "lore": "Zodiark, the eldest of the primals",
+      "completion": "24 Hours"
+    },
+    "ffxiv-hydaelyns-call": {
+      "price": 7,
+      "afkPrice": 7,
+      "level": 90,
+      "mount": "ffxiv-apocryphal-bahamut",
+      "lore": "Hydaelyn, the will of the star",
+      "completion": "24 Hours"
+    },
+    "ffxiv-endsingers-aria": {
+      "price": 7,
+      "afkPrice": 7,
+      "level": 90,
+      "mount": "ffxiv-apocryphal-bahamut",
+      "lore": "The Endsinger, herald of the Final Days",
+      "completion": "24 Hours"
+    },
+    "ffxiv-storms-crown": {
+      "price": 7,
+      "afkPrice": 7,
+      "level": 90,
+      "mount": "ffxiv-apocryphal-bahamut",
+      "lore": "Barbariccia, Empress of the winds",
+      "completion": "24 Hours"
+    },
+    "ffxiv-mount-ordeals": {
+      "price": 7,
+      "afkPrice": 7,
+      "level": 90,
+      "mount": "ffxiv-apocryphal-bahamut",
+      "lore": "Rubicante, Archfiend of Fire",
+      "completion": "24 Hours"
+    },
+    "ffxiv-voidcast-dais": {
+      "price": 14,
+      "afkPrice": 14,
+      "level": 90,
+      "mount": "ffxiv-apocryphal-bahamut",
+      "lore": "Golbez, knight of the Thirteenth",
+      "completion": "24 Hours"
+    },
+    "ffxiv-abyssal-fracture": {
+      "price": 14,
+      "afkPrice": 14,
+      "level": 90,
+      "mount": "ffxiv-apocryphal-bahamut",
+      "lore": "Zeromus, the Void's greatest scourge",
+      "completion": "24 Hours"
+    },
+    "ffxiv-worqor-lar-dor": {
+      "price": 14,
+      "afkPrice": 14,
+      "level": 100,
+      "mount": "ffxiv-wings-of-ruin",
+      "lore": "Valigarmanda, the Skyruin",
+      "completion": "24 Hours"
+    },
+    "ffxiv-everkeep": {
+      "price": 14,
+      "afkPrice": 14,
+      "level": 100,
+      "mount": "ffxiv-wings-of-resolve",
+      "lore": "Zoraal Ja, the Resilient King",
+      "completion": "24 Hours"
+    },
+    "ffxiv-sphenes-burden": {
+      "price": 14,
+      "afkPrice": 14,
+      "level": 100,
+      "mount": "ffxiv-wings-of-eternity",
+      "lore": "Queen Sphene, eternal sovereign of Alexandria",
+      "completion": "24 Hours"
+    },
+    "ffxiv-recollection": {
+      "price": 21,
+      "afkPrice": 21,
+      "level": 100,
+      "mount": "ffxiv-wings-of-knighthood",
+      "lore": "A treasured memory given terrible form",
+      "completion": "24 Hours"
+    },
+    "ffxiv-necrons-embrace": {
+      "price": 28,
+      "afkPrice": 28,
+      "level": 100,
+      "mount": "ffxiv-wings-of-death",
+      "lore": "Necron, the embodiment of death itself",
+      "completion": "24 Hours"
+    },
+    "ffxiv-windward-wilds": {
+      "price": 14,
+      "afkPrice": 14,
+      "level": 100,
+      "mount": "ffxiv-felyne-cart",
+      "lore": "Arkveld, the White Wraith from the forbidden lands",
+      "completion": "24 Hours"
+    },
+    "ffxiv-hell-on-rails": {
+      "price": 28,
+      "afkPrice": 28,
+      "level": 100,
+      "mount": "ffxiv-wings-of-mist",
+      "lore": "The Doomtrain, harbinger of souls",
+      "completion": "24 Hours"
+    },
+    "ffxiv-the-unmaking": {
+      "price": 28,
+      "afkPrice": 28,
+      "level": 100,
+      "mount": "ffxiv-wings-of-nihility",
+      "lore": "Enuo, the undoing of all things",
+      "completion": "24 Hours"
+    }
+  }
+}

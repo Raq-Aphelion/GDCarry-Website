@@ -302,6 +302,38 @@
         ],
         "completion": "5-7 Days",
         "fromPrice": 2200
+      },
+      "ffxiv-occult-job-unlocks": {
+        "bundlePrice": 150,
+        "bundleLabel": "All 5 Phantom Jobs",
+        "mounts": [
+          {
+            "id": "freeloader",
+            "label": "Freeloader",
+            "price": 30
+          },
+          {
+            "id": "time-mage",
+            "label": "Time Mage",
+            "price": 30
+          },
+          {
+            "id": "cannoneer",
+            "label": "Cannoneer",
+            "price": 30
+          },
+          {
+            "id": "berserker",
+            "label": "Berserker",
+            "price": 30
+          },
+          {
+            "id": "astrologian",
+            "label": "Astrologian",
+            "price": 30
+          }
+        ],
+        "completion": "24 Hours"
       }
     },
     "afkMultiplier": 1.1,
@@ -403,6 +435,18 @@
       "ffxiv-demon-haul": {
         "price": 50,
         "trial": "The Forked Tower: Blood",
+        "completion": "24 Hours"
+      },
+      "ffxiv-rathalos-mount": {
+        "price": 50,
+        "afkPrice": 55,
+        "trial": "The Great Hunt (Extreme)",
+        "completion": "24 Hours"
+      },
+      "ffxiv-felyne-cart": {
+        "price": 60,
+        "afkPrice": 66,
+        "trial": "The Windward Wilds (Extreme)",
         "completion": "24 Hours"
       }
     }

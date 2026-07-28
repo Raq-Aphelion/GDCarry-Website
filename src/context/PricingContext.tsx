@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 import { loadPricing, type PricingDb } from '@/data/pricing';
-import { getGame } from '@/data/games';
+import { applyCatalog } from '@/data/games';
 
 interface PricingContextValue {
   db: PricingDb;
@@ -22,15 +22,10 @@ export function PricingProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     let alive = true;
     loadPricing().then((d) => {
-      // Apply the database-driven Current Patch category (name + proxy cards)
-      // before first render — consumers read it straight from the games data.
-      if (d.currentPatch) {
-        const cp = getGame('ffxiv')?.subcategories.find((s) => s.id === 'current-patch');
-        if (cp) {
-          if (d.currentPatch.name) cp.name = d.currentPatch.name;
-          if (d.currentPatch.proxies) cp.proxies = d.currentPatch.proxies;
-        }
-      }
+      // Apply the database-driven catalog (category names/order/proxies,
+      // per-service visibility) before first render — consumers read it
+      // straight from the games data.
+      applyCatalog(d.catalog);
       if (alive) setDb(d);
     });
     return () => {
@@ -56,6 +51,12 @@ export function PricingProvider({ children }: { children: ReactNode }) {
     if (wing) return wing.price;
     const savageMount = db.mounts?.savageMounts?.[serviceId];
     if (savageMount) return savageMount.price;
+    const trial = db.trials?.[serviceId];
+    if (trial) return trial.price;
+    const dd = db.deepDungeons?.[serviceId];
+    if (dd) return Math.min(dd.solo.price, ...(dd.group?.options.map((o) => o.price) ?? []));
+    const fl = db.fieldLeveling?.[serviceId];
+    if (fl) return (fl.defaultEnd - fl.defaultStart) * (fl.priceTiers[0]?.pricePerLevel ?? 0);
     const mountSeries = db.mounts?.series?.[serviceId];
     if (mountSeries) return mountSeries.fromPrice ?? mountSeries.mounts[0]?.price ?? fallback;
     if (serviceId === db.msqBoost?.serviceId && db.msqBoost.expansions?.[0] != null)

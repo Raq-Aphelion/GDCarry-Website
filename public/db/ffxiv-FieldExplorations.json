@@ -1,0 +1,60 @@
+{
+  "fieldLeveling": {
+    "ffxiv-resistance-rank": {
+      "levelMin": 1,
+      "levelMax": 25,
+      "defaultStart": 1,
+      "defaultEnd": 25,
+      "priceTiers": [
+        {
+          "min": 1,
+          "max": 25,
+          "pricePerLevel": 4.5834
+        }
+      ],
+      "completion": "1-2 Weeks"
+    },
+    "ffxiv-eureka-leveling": {
+      "levelMin": 1,
+      "levelMax": 60,
+      "defaultStart": 1,
+      "defaultEnd": 60,
+      "priceTiers": [
+        {
+          "min": 1,
+          "max": 60,
+          "pricePerLevel": 4.2373
+        }
+      ],
+      "completion": "1-2 Weeks"
+    },
+    "ffxiv-occult-phantom-level": {
+      "levelMin": 1,
+      "levelMax": 10,
+      "defaultStart": 1,
+      "defaultEnd": 10,
+      "priceTiers": [
+        {
+          "min": 1,
+          "max": 10,
+          "pricePerLevel": 11.1112
+        }
+      ],
+      "completion": "2-3 Days"
+    },
+    "ffxiv-island-sanctuary": {
+      "levelMin": 1,
+      "levelMax": 20,
+      "defaultStart": 1,
+      "defaultEnd": 20,
+      "priceTiers": [
+        {
+          "min": 1,
+          "max": 20,
+          "pricePerLevel": 34.2106
+        }
+      ],
+      "completion": "1 Week"
+    }
+  }
+}

@@ -301,7 +301,7 @@ export default function SavageSeriesPurchaseBox({ service, gameShort }: { servic
                         >
                           <span
                             className={`flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-[3px] border transition-colors ${
-                              checked ? 'border-cyan-500 bg-cyan-600 text-navy-900' : 'border-navy-600 text-transparent'
+                              checked ? 'border-cyan-600 bg-cyan-600 text-navy-900' : 'border-navy-600 text-transparent'
                             }`}
                           >
                             <Check className="h-3 w-3" strokeWidth={3.5} />
@@ -342,7 +342,7 @@ export default function SavageSeriesPurchaseBox({ service, gameShort }: { servic
                             <span
                               className={`flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-[3px] border transition-colors ${
                                 checked
-                                  ? 'border-cyan-500 bg-cyan-600 text-navy-900'
+                                  ? 'border-cyan-600 bg-cyan-600 text-navy-900'
                                   : 'border-navy-600 text-transparent'
                               }`}
                             >
@@ -462,7 +462,7 @@ export default function SavageSeriesPurchaseBox({ service, gameShort }: { servic
                             <span
                               className={`flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-[3px] border transition-colors ${
                                 checked
-                                  ? 'border-cyan-500 bg-cyan-600 text-navy-900'
+                                  ? 'border-cyan-600 bg-cyan-600 text-navy-900'
                                   : 'border-navy-600 text-transparent'
                               }`}
                             >
@@ -483,7 +483,7 @@ export default function SavageSeriesPurchaseBox({ service, gameShort }: { servic
                           <span
                             className={`flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-[3px] border transition-colors ${
                               stream
-                                ? 'border-cyan-500 bg-cyan-600 text-navy-900'
+                                ? 'border-cyan-600 bg-cyan-600 text-navy-900'
                                 : 'border-navy-600 text-transparent'
                             }`}
                           >
@@ -502,7 +502,7 @@ export default function SavageSeriesPurchaseBox({ service, gameShort }: { servic
                         <span
                           className={`flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-[3px] border transition-colors ${
                             priority
-                              ? 'border-cyan-500 bg-cyan-600 text-navy-900'
+                              ? 'border-cyan-600 bg-cyan-600 text-navy-900'
                               : 'border-navy-600 text-transparent'
                           }`}
                         >

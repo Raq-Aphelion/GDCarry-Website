@@ -67,6 +67,8 @@ import scLanderwaffe from '@/assets/images/service-cards/ffxiv/mounts/extreme-tr
 import scKamuy from '@/assets/images/service-cards/ffxiv/mounts/extreme-trial-mounts/ffxiv-kamuy.webp';
 import scFirebird from '@/assets/images/service-cards/ffxiv/mounts/extreme-trial-mounts/ffxiv-firebird.webp';
 import scKirin from '@/assets/images/service-cards/ffxiv/mounts/extreme-trial-mounts/ffxiv-kirin.webp';
+import scRathalos from '@/assets/images/service-cards/ffxiv/mounts/extreme-trial-mounts/ffxiv-rathalos.webp';
+import scFelyne from '@/assets/images/service-cards/ffxiv/mounts/extreme-trial-mounts/ffxiv-felyne-support-team-cart.webp';
 import scMonowheelS1 from '@/assets/images/service-cards/ffxiv/mounts/savage-raid-mounts/ffxiv-monowheel-s1.webp';
 import scAirWheelerC9 from '@/assets/images/service-cards/ffxiv/mounts/savage-raid-mounts/ffxiv-air-wheeler-c9.webp';
 import scLowriderT1rant from '@/assets/images/service-cards/ffxiv/mounts/savage-raid-mounts/ffxiv-lowrider-t1rant.webp';
@@ -88,7 +90,13 @@ import scWingsOfKnighthood from '@/assets/images/service-cards/ffxiv/mounts/extr
 import scWingsOfDeath from '@/assets/images/service-cards/ffxiv/mounts/extreme-trial-mounts/ffxiv-wings-of-death.webp';
 import scWingsOfMist from '@/assets/images/service-cards/ffxiv/mounts/extreme-trial-mounts/ffxiv-wings-of-mist.webp';
 import scWingsOfNihility from '@/assets/images/service-cards/ffxiv/mounts/extreme-trial-mounts/ffxiv-wings-of-nihility.webp';
+import scPilgrimsTraverse from '@/assets/images/service-cards/ffxiv/deep-dungeons/ffxiv-pilgrims-traverse.webp';
+import scHeavenOnHigh from '@/assets/images/service-cards/ffxiv/deep-dungeons/ffxiv-heaven-on-high.webp';
+import scEurekaOrthos from '@/assets/images/service-cards/ffxiv/deep-dungeons/ffxiv-eureka-orthos.webp';
+import scPalaceOfTheDead from '@/assets/images/service-cards/ffxiv/deep-dungeons/ffxiv-palace-of-the-dead.webp';
+import scDdBundle from '@/assets/images/service-cards/ffxiv/deep-dungeons/ffxiv-dd-bundle.webp';
 import { SERVICE_PAGES } from '@/data/servicePages';
+import type { CatalogConfig } from '@/data/pricing';
 
 export const games: Game[] = [
   {
@@ -129,7 +137,7 @@ export const games: Game[] = [
         // Proxy cards from other categories, shown here as duplicates — they
         // share the original service's id, so serviceCount dedupes them and
         // they never inflate the totals. Both the name and the proxy list are
-        // overridden by the `currentPatch` entry in public/db/pricing.json.
+        // overridden by the category entry in public/db/ffxiv-Catalog.json.
         proxies: ['ffxiv-dmu', 'ffxiv-arcadion-savage', 'ffxiv-wings-of-legacy', 'ffxiv-wings-of-nihility', 'ffxiv-lowrider-t1rant'],
       },
       {
@@ -357,302 +365,412 @@ export const games: Game[] = [
         name: 'Extreme Trials',
         services: [
           {
-            id: 'ffxiv-limitless-blue',
-            name: 'The Limitless Blue (Extreme)',
-            tag2: 'Heavensward Extreme trial clear',
-            price: 0,
-            tag1: 'Totems & all loot included',
-            image: scBlank,
-          },
-          {
-            id: 'ffxiv-thok-ast-thok',
-            name: 'Thok ast Thok (Extreme)',
-            tag2: 'Heavensward Extreme trial clear',
-            price: 0,
-            tag1: 'Totems & all loot included',
-            image: scBlank,
-          },
-          {
-            id: 'ffxiv-thordans-reign',
-            name: "The Minstrel's Ballad: Thordan's Reign",
-            tag2: 'Heavensward Extreme trial clear',
-            price: 0,
-            tag1: 'Totems & all loot included',
-            image: scBlank,
-          },
-          {
-            id: 'ffxiv-containment-bay-s1t7',
-            name: 'Containment Bay S1T7 (Extreme)',
-            tag2: 'Heavensward Extreme trial clear',
-            price: 0,
-            tag1: 'Totems & all loot included',
-            image: scBlank,
-          },
-          {
-            id: 'ffxiv-nidhoggs-rage',
-            name: "The Minstrel's Ballad: Nidhogg's Rage",
-            tag2: 'Heavensward Extreme trial clear',
-            price: 0,
-            tag1: 'Totems & all loot included',
-            image: scBlank,
-          },
-          {
-            id: 'ffxiv-containment-bay-p1t6',
-            name: 'Containment Bay P1T6 (Extreme)',
-            tag2: 'Heavensward Extreme trial clear',
-            price: 0,
-            tag1: 'Totems & all loot included',
-            image: scBlank,
-          },
-          {
-            id: 'ffxiv-containment-bay-z1t9',
-            name: 'Containment Bay Z1T9 (Extreme)',
-            tag2: 'Heavensward Extreme trial clear',
-            price: 0,
-            tag1: 'Totems & all loot included',
-            image: scBlank,
-          },
-          {
-            id: 'ffxiv-pool-of-tribute',
-            name: 'The Pool of Tribute (Extreme)',
-            tag2: 'Stormblood Extreme trial clear',
-            price: 0,
-            tag1: 'Totems & all loot included',
-            image: scBlank,
-          },
-          {
-            id: 'ffxiv-emanation',
-            name: 'Emanation (Extreme)',
-            tag2: 'Stormblood Extreme trial clear',
-            price: 0,
-            tag1: 'Totems & all loot included',
-            image: scBlank,
-          },
-          {
-            id: 'ffxiv-shinryus-domain',
-            name: "The Minstrel's Ballad: Shinryu's Domain",
-            tag2: 'Stormblood Extreme trial clear',
-            price: 0,
-            tag1: 'Totems & all loot included',
-            image: scBlank,
-          },
-          {
-            id: 'ffxiv-jade-stoa',
-            name: 'The Jade Stoa (Extreme)',
-            tag2: 'Stormblood Extreme trial clear',
-            price: 0,
-            tag1: 'Totems & all loot included',
-            image: scBlank,
-          },
-          {
-            id: 'ffxiv-tsukuyomis-pain',
-            name: "The Minstrel's Ballad: Tsukuyomi's Pain",
-            tag2: 'Stormblood Extreme trial clear',
-            price: 0,
-            tag1: 'Totems & all loot included',
-            image: scBlank,
-          },
-          {
-            id: 'ffxiv-great-hunt',
-            name: 'The Great Hunt (Extreme)',
-            tag2: 'Stormblood Extreme trial clear',
-            price: 0,
-            tag1: 'Totems & all loot included',
-            image: scBlank,
-          },
-          {
-            id: 'ffxiv-hells-kier',
-            name: "Hells' Kier (Extreme)",
-            tag2: 'Stormblood Extreme trial clear',
-            price: 0,
-            tag1: 'Totems & all loot included',
-            image: scBlank,
-          },
-          {
-            id: 'ffxiv-dancing-plague',
-            name: 'Dancing Plague (Extreme)',
-            tag2: 'Shadowbringers Extreme trial clear',
-            price: 0,
-            tag1: 'Totems & all loot included',
-            image: scBlank,
-          },
-          {
-            id: 'ffxiv-crown-of-the-immaculate',
-            name: 'Crown of the Immaculate (Extreme)',
-            tag2: 'Shadowbringers Extreme trial clear',
-            price: 0,
-            tag1: 'Totems & all loot included',
-            image: scBlank,
-          },
-          {
-            id: 'ffxiv-cinder-drift',
-            name: 'Cinder Drift (Extreme)',
-            tag2: 'Shadowbringers Extreme trial clear',
-            price: 0,
-            tag1: 'Totems & all loot included',
-            image: scBlank,
-          },
-          {
-            id: 'ffxiv-castrum-marinum',
-            name: 'Castrum Marinum (Extreme)',
-            tag2: 'Shadowbringers Extreme trial clear',
-            price: 0,
-            tag1: 'Totems & all loot included',
-            image: scBlank,
-          },
-          {
-            id: 'ffxiv-cloud-deck',
-            name: 'The Cloud Deck (Extreme)',
-            tag2: 'Shadowbringers Extreme trial clear',
-            price: 0,
-            tag1: 'Totems & all loot included',
-            image: scBlank,
-          },
-          {
-            id: 'ffxiv-hadess-elegy',
-            name: "The Minstrel's Ballad: Hades's Elegy",
-            tag2: 'Shadowbringers Extreme trial clear',
-            price: 0,
-            tag1: 'Totems & all loot included',
-            image: scBlank,
-          },
-          {
-            id: 'ffxiv-seat-of-sacrifice',
-            name: 'The Seat of Sacrifice (Extreme)',
-            tag2: 'Shadowbringers Extreme trial clear',
-            price: 0,
-            tag1: 'Totems & all loot included',
-            image: scBlank,
-          },
-          {
-            id: 'ffxiv-memoria-misera',
-            name: 'Memoria Misera',
-            tag2: 'Shadowbringers Extreme trial clear',
-            price: 0,
-            tag1: 'Totems & all loot included',
-            image: scBlank,
-          },
-          {
-            id: 'ffxiv-zodiarks-fall',
-            name: "The Minstrel's Ballad: Zodiark's Fall",
-            tag2: 'Endwalker Extreme trial clear',
-            price: 0,
-            tag1: 'Totems & all loot included',
-            image: scBlank,
-          },
-          {
-            id: 'ffxiv-hydaelyns-call',
-            name: "The Minstrel's Ballad: Hydaelyn's Call",
-            tag2: 'Endwalker Extreme trial clear',
-            price: 0,
-            tag1: 'Totems & all loot included',
-            image: scBlank,
-          },
-          {
-            id: 'ffxiv-endsingers-aria',
-            name: "The Minstrel's Ballad: Endsinger's Aria",
-            tag2: 'Endwalker Extreme trial clear',
-            price: 0,
-            tag1: 'Totems & all loot included',
-            image: scBlank,
-          },
-          {
-            id: 'ffxiv-storms-crown',
-            name: "Storm's Crown (Extreme)",
-            tag2: 'Endwalker Extreme trial clear',
-            price: 0,
-            tag1: 'Totems & all loot included',
-            image: scBlank,
-          },
-          {
-            id: 'ffxiv-mount-ordeals',
-            name: 'Mount Ordeals (Extreme)',
-            tag2: 'Endwalker Extreme trial clear',
-            price: 0,
-            tag1: 'Totems & all loot included',
-            image: scBlank,
-          },
-          {
-            id: 'ffxiv-voidcast-dais',
-            name: 'The Voidcast Dais (Extreme)',
-            tag2: 'Endwalker Extreme trial clear',
-            price: 0,
-            tag1: 'Totems & all loot included',
-            image: scBlank,
-          },
-          {
-            id: 'ffxiv-abyssal-fracture',
-            name: 'The Abyssal Fracture (Extreme)',
-            tag2: 'Endwalker Extreme trial clear',
-            price: 0,
-            tag1: 'Totems & all loot included',
-            image: scBlank,
-          },
-          {
-            id: 'ffxiv-worqor-lar-dor',
-            name: 'Worqor Lar Dor (Extreme)',
+            id: 'ffxiv-the-unmaking',
+            name: 'The Unmaking (Extreme)',
             tag2: 'Dawntrail Extreme trial clear',
             price: 0,
             tag1: 'Totems & all loot included',
+            longDescription:
+              'Enuo, the undoing of all things — our raiders clear it on Extreme for you, Piloted or AFK.',
             image: scBlank,
+            tag: 'New',
           },
-          {
-            id: 'ffxiv-everkeep',
-            name: 'Everkeep (Extreme)',
-            tag2: 'Dawntrail Extreme trial clear',
-            price: 0,
-            tag1: 'Totems & all loot included',
-            image: scBlank,
-          },
-          {
-            id: 'ffxiv-sphenes-burden',
-            name: "The Minstrel's Ballad: Sphene's Burden",
-            tag2: 'Dawntrail Extreme trial clear',
-            price: 0,
-            tag1: 'Totems & all loot included',
-            image: scBlank,
-          },
-          {
-            id: 'ffxiv-recollection',
-            name: 'Recollection (Extreme)',
-            tag2: 'Dawntrail Extreme trial clear',
-            price: 0,
-            tag1: 'Totems & all loot included',
-            image: scBlank,
-          },
-          {
-            id: 'ffxiv-necrons-embrace',
-            name: "The Minstrel's Ballad: Necron's Embrace",
-            tag2: 'Dawntrail Extreme trial clear',
-            price: 0,
-            tag1: 'Totems & all loot included',
-            image: scBlank,
-          },
-          {
-            id: 'ffxiv-windward-wilds',
-            name: 'The Windward Wilds (Extreme)',
-            tag2: 'Dawntrail Extreme trial clear',
-            price: 0,
-            tag1: 'Totems & all loot included',
-            image: scBlank,
-          },
+
           {
             id: 'ffxiv-hell-on-rails',
             name: 'Hell on Rails (Extreme)',
             tag2: 'Dawntrail Extreme trial clear',
             price: 0,
             tag1: 'Totems & all loot included',
+            longDescription:
+              'The Doomtrain, harbinger of souls — our raiders clear it on Extreme for you, Piloted or AFK.',
             image: scBlank,
             tag: 'Hot',
           },
+
           {
-            id: 'ffxiv-the-unmaking',
-            name: 'The Unmaking (Extreme)',
+            id: 'ffxiv-windward-wilds',
+            name: 'The Windward Wilds (Extreme)',
             tag2: 'Dawntrail Extreme trial clear',
             price: 0,
             tag1: 'Totems & all loot included',
+            longDescription:
+              'Arkveld, the White Wraith from the forbidden lands — our raiders clear it on Extreme for you, Piloted or AFK.',
             image: scBlank,
-            tag: 'New',
+          },
+
+          {
+            id: 'ffxiv-necrons-embrace',
+            name: "The Minstrel's Ballad: Necron's Embrace",
+            tag2: 'Dawntrail Extreme trial clear',
+            price: 0,
+            tag1: 'Totems & all loot included',
+            longDescription:
+              'Necron, the embodiment of death itself — our raiders clear it on Extreme for you, Piloted or AFK.',
+            image: scBlank,
+          },
+
+          {
+            id: 'ffxiv-recollection',
+            name: 'Recollection (Extreme)',
+            tag2: 'Dawntrail Extreme trial clear',
+            price: 0,
+            tag1: 'Totems & all loot included',
+            longDescription:
+              'A treasured memory given terrible form — our raiders clear it on Extreme for you, Piloted or AFK.',
+            image: scBlank,
+          },
+
+          {
+            id: 'ffxiv-sphenes-burden',
+            name: "The Minstrel's Ballad: Sphene's Burden",
+            tag2: 'Dawntrail Extreme trial clear',
+            price: 0,
+            tag1: 'Totems & all loot included',
+            longDescription:
+              'Queen Sphene, eternal sovereign of Alexandria — our raiders clear it on Extreme for you, Piloted or AFK.',
+            image: scBlank,
+          },
+
+          {
+            id: 'ffxiv-everkeep',
+            name: 'Everkeep (Extreme)',
+            tag2: 'Dawntrail Extreme trial clear',
+            price: 0,
+            tag1: 'Totems & all loot included',
+            longDescription:
+              'Zoraal Ja, the Resilient King — our raiders clear it on Extreme for you, Piloted or AFK.',
+            image: scBlank,
+          },
+
+          {
+            id: 'ffxiv-worqor-lar-dor',
+            name: 'Worqor Lar Dor (Extreme)',
+            tag2: 'Dawntrail Extreme trial clear',
+            price: 0,
+            tag1: 'Totems & all loot included',
+            longDescription:
+              'Valigarmanda, the Skyruin — our raiders clear it on Extreme for you, Piloted or AFK.',
+            image: scBlank,
+          },
+
+          {
+            id: 'ffxiv-abyssal-fracture',
+            name: 'The Abyssal Fracture (Extreme)',
+            tag2: 'Endwalker Extreme trial clear',
+            price: 0,
+            tag1: 'Totems & all loot included',
+            longDescription:
+              'Zeromus, the Void\'s greatest scourge — our raiders clear it on Extreme for you, Piloted or AFK.',
+            image: scBlank,
+          },
+
+          {
+            id: 'ffxiv-voidcast-dais',
+            name: 'The Voidcast Dais (Extreme)',
+            tag2: 'Endwalker Extreme trial clear',
+            price: 0,
+            tag1: 'Totems & all loot included',
+            longDescription:
+              'Golbez, knight of the Thirteenth — our raiders clear it on Extreme for you, Piloted or AFK.',
+            image: scBlank,
+          },
+
+          {
+            id: 'ffxiv-mount-ordeals',
+            name: 'Mount Ordeals (Extreme)',
+            tag2: 'Endwalker Extreme trial clear',
+            price: 0,
+            tag1: 'Totems & all loot included',
+            longDescription:
+              'Rubicante, Archfiend of Fire — our raiders clear it on Extreme for you, Piloted or AFK.',
+            image: scBlank,
+          },
+
+          {
+            id: 'ffxiv-storms-crown',
+            name: "Storm's Crown (Extreme)",
+            tag2: 'Endwalker Extreme trial clear',
+            price: 0,
+            tag1: 'Totems & all loot included',
+            longDescription:
+              'Barbariccia, Empress of the winds — our raiders clear it on Extreme for you, Piloted or AFK.',
+            image: scBlank,
+          },
+
+          {
+            id: 'ffxiv-endsingers-aria',
+            name: "The Minstrel's Ballad: Endsinger's Aria",
+            tag2: 'Endwalker Extreme trial clear',
+            price: 0,
+            tag1: 'Totems & all loot included',
+            longDescription:
+              'The Endsinger, herald of the Final Days — our raiders clear it on Extreme for you, Piloted or AFK.',
+            image: scBlank,
+          },
+
+          {
+            id: 'ffxiv-hydaelyns-call',
+            name: "The Minstrel's Ballad: Hydaelyn's Call",
+            tag2: 'Endwalker Extreme trial clear',
+            price: 0,
+            tag1: 'Totems & all loot included',
+            longDescription:
+              'Hydaelyn, the will of the star — our raiders clear it on Extreme for you, Piloted or AFK.',
+            image: scBlank,
+          },
+
+          {
+            id: 'ffxiv-zodiarks-fall',
+            name: "The Minstrel's Ballad: Zodiark's Fall",
+            tag2: 'Endwalker Extreme trial clear',
+            price: 0,
+            tag1: 'Totems & all loot included',
+            longDescription:
+              'Zodiark, the eldest of the primals — our raiders clear it on Extreme for you, Piloted or AFK.',
+            image: scBlank,
+          },
+
+          {
+            id: 'ffxiv-memoria-misera',
+            name: 'Memoria Misera (Extreme)',
+            tag2: 'Shadowbringers Extreme trial clear',
+            price: 0,
+            tag1: 'Totems & all loot included',
+            longDescription:
+              'Varis yae Galvus, relived through memory — our raiders clear it on Extreme for you, Piloted or AFK.',
+            image: scBlank,
+          },
+
+          {
+            id: 'ffxiv-seat-of-sacrifice',
+            name: 'The Seat of Sacrifice (Extreme)',
+            tag2: 'Shadowbringers Extreme trial clear',
+            price: 0,
+            tag1: 'Totems & all loot included',
+            longDescription:
+              'Elidibus, bearing the face of the first Warrior of Light — our raiders clear it on Extreme for you, Piloted or AFK.',
+            image: scBlank,
+          },
+
+          {
+            id: 'ffxiv-hadess-elegy',
+            name: "The Minstrel's Ballad: Hades's Elegy",
+            tag2: 'Shadowbringers Extreme trial clear',
+            price: 0,
+            tag1: 'Totems & all loot included',
+            longDescription:
+              'Hades, the architect of the Ascian design — our raiders clear it on Extreme for you, Piloted or AFK.',
+            image: scBlank,
+          },
+
+          {
+            id: 'ffxiv-cloud-deck',
+            name: 'The Cloud Deck (Extreme)',
+            tag2: 'Shadowbringers Extreme trial clear',
+            price: 0,
+            tag1: 'Totems & all loot included',
+            longDescription:
+              'The Diamond Weapon, apex of the Weapon project — our raiders clear it on Extreme for you, Piloted or AFK.',
+            image: scBlank,
+          },
+
+          {
+            id: 'ffxiv-castrum-marinum',
+            name: 'Castrum Marinum (Extreme)',
+            tag2: 'Shadowbringers Extreme trial clear',
+            price: 0,
+            tag1: 'Totems & all loot included',
+            longDescription:
+              'The Emerald Weapon, master of thermal suppression — our raiders clear it on Extreme for you, Piloted or AFK.',
+            image: scBlank,
+          },
+
+          {
+            id: 'ffxiv-cinder-drift',
+            name: 'Cinder Drift (Extreme)',
+            tag2: 'Shadowbringers Extreme trial clear',
+            price: 0,
+            tag1: 'Totems & all loot included',
+            longDescription:
+              'The Ruby Weapon, resurrected warmachina — our raiders clear it on Extreme for you, Piloted or AFK.',
+            image: scBlank,
+          },
+
+          {
+            id: 'ffxiv-crown-of-the-immaculate',
+            name: 'Crown of the Immaculate (Extreme)',
+            tag2: 'Shadowbringers Extreme trial clear',
+            price: 0,
+            tag1: 'Totems & all loot included',
+            longDescription:
+              'Innocence, the self-styled god of light — our raiders clear it on Extreme for you, Piloted or AFK.',
+            image: scBlank,
+          },
+
+          {
+            id: 'ffxiv-dancing-plague',
+            name: 'Dancing Plague (Extreme)',
+            tag2: 'Shadowbringers Extreme trial clear',
+            price: 0,
+            tag1: 'Totems & all loot included',
+            longDescription:
+              'Titania, the faerie king of Il Mheg — our raiders clear it on Extreme for you, Piloted or AFK.',
+            image: scBlank,
+          },
+
+          {
+            id: 'ffxiv-hells-kier',
+            name: "Hells' Kier (Extreme)",
+            tag2: 'Stormblood Extreme trial clear',
+            price: 0,
+            tag1: 'Totems & all loot included',
+            longDescription:
+              'Suzaku, the scarlet phoenix of the Four Lords — our raiders clear it on Extreme for you, Piloted or AFK.',
+            image: scBlank,
+          },
+
+          {
+            id: 'ffxiv-great-hunt',
+            name: 'The Great Hunt (Extreme)',
+            tag2: 'Stormblood Extreme trial clear',
+            price: 0,
+            tag1: 'Totems & all loot included',
+            longDescription:
+              'Rathalos, the King of the Skies from another world — our raiders clear it on Extreme for you, Piloted or AFK.',
+            image: scBlank,
+          },
+
+          {
+            id: 'ffxiv-tsukuyomis-pain',
+            name: "The Minstrel's Ballad: Tsukuyomi's Pain",
+            tag2: 'Stormblood Extreme trial clear',
+            price: 0,
+            tag1: 'Totems & all loot included',
+            longDescription:
+              'Tsukuyomi, the moonlit goddess — our raiders clear it on Extreme for you, Piloted or AFK.',
+            image: scBlank,
+          },
+
+          {
+            id: 'ffxiv-jade-stoa',
+            name: 'The Jade Stoa (Extreme)',
+            tag2: 'Stormblood Extreme trial clear',
+            price: 0,
+            tag1: 'Totems & all loot included',
+            longDescription:
+              'Byakko, the white tiger of the Four Lords — our raiders clear it on Extreme for you, Piloted or AFK.',
+            image: scBlank,
+          },
+
+          {
+            id: 'ffxiv-shinryus-domain',
+            name: "The Minstrel's Ballad: Shinryu's Domain",
+            tag2: 'Stormblood Extreme trial clear',
+            price: 0,
+            tag1: 'Totems & all loot included',
+            longDescription:
+              'Shinryu, the Dragon King — our raiders clear it on Extreme for you, Piloted or AFK.',
+            image: scBlank,
+          },
+
+          {
+            id: 'ffxiv-emanation',
+            name: 'Emanation (Extreme)',
+            tag2: 'Stormblood Extreme trial clear',
+            price: 0,
+            tag1: 'Totems & all loot included',
+            longDescription:
+              'Lakshmi, the Lady of Bliss — our raiders clear it on Extreme for you, Piloted or AFK.',
+            image: scBlank,
+          },
+
+          {
+            id: 'ffxiv-pool-of-tribute',
+            name: 'The Pool of Tribute (Extreme)',
+            tag2: 'Stormblood Extreme trial clear',
+            price: 0,
+            tag1: 'Totems & all loot included',
+            longDescription:
+              'Susano, the Lord of the Revel — our raiders clear it on Extreme for you, Piloted or AFK.',
+            image: scBlank,
+          },
+
+          {
+            id: 'ffxiv-containment-bay-z1t9',
+            name: 'Containment Bay Z1T9 (Extreme)',
+            tag2: 'Heavensward Extreme trial clear',
+            price: 0,
+            tag1: 'Totems & all loot included',
+            longDescription:
+              'Zurvan, the Demon of the Warring Triad — our raiders clear it on Extreme for you, Piloted or AFK.',
+            image: scBlank,
+          },
+
+          {
+            id: 'ffxiv-containment-bay-p1t6',
+            name: 'Containment Bay P1T6 (Extreme)',
+            tag2: 'Heavensward Extreme trial clear',
+            price: 0,
+            tag1: 'Totems & all loot included',
+            longDescription:
+              'Sophia, the Goddess of the Warring Triad — our raiders clear it on Extreme for you, Piloted or AFK.',
+            image: scBlank,
+          },
+
+          {
+            id: 'ffxiv-nidhoggs-rage',
+            name: "The Minstrel's Ballad: Nidhogg's Rage",
+            tag2: 'Heavensward Extreme trial clear',
+            price: 0,
+            tag1: 'Totems & all loot included',
+            longDescription:
+              'Nidhogg, the wyrmking of the Dragonsong War — our raiders clear it on Extreme for you, Piloted or AFK.',
+            image: scBlank,
+          },
+
+          {
+            id: 'ffxiv-containment-bay-s1t7',
+            name: 'Containment Bay S1T7 (Extreme)',
+            tag2: 'Heavensward Extreme trial clear',
+            price: 0,
+            tag1: 'Totems & all loot included',
+            longDescription:
+              'Sephirot, the Fiend of the Warring Triad — our raiders clear it on Extreme for you, Piloted or AFK.',
+            image: scBlank,
+          },
+
+          {
+            id: 'ffxiv-thordans-reign',
+            name: "The Minstrel's Ballad: Thordan's Reign",
+            tag2: 'Heavensward Extreme trial clear',
+            price: 0,
+            tag1: 'Totems & all loot included',
+            longDescription:
+              'King Thordan and the Knights of the Round — our raiders clear it on Extreme for you, Piloted or AFK.',
+            image: scBlank,
+          },
+
+          {
+            id: 'ffxiv-thok-ast-thok',
+            name: 'Thok ast Thok (Extreme)',
+            tag2: 'Heavensward Extreme trial clear',
+            price: 0,
+            tag1: 'Totems & all loot included',
+            longDescription:
+              'Ravana, the blood-maddened god of the Gnath — our raiders clear it on Extreme for you, Piloted or AFK.',
+            image: scBlank,
+          },
+
+          {
+            id: 'ffxiv-limitless-blue',
+            name: 'The Limitless Blue (Extreme)',
+            tag2: 'Heavensward Extreme trial clear',
+            price: 0,
+            tag1: 'Totems & all loot included',
+            longDescription:
+              'Bismarck, the white whale of the Sea of Clouds — our raiders clear it on Extreme for you, Piloted or AFK.',
+            image: scBlank,
           },
         ],
       },
@@ -662,44 +780,59 @@ export const games: Game[] = [
         services: [
           {
             id: 'ffxiv-potd-solo',
-            name: 'Palace of the Dead',
-            tag2: 'The Necromancer title run — solo floor 200 by one of the few who can do it.',
+            name: 'Palace of the Dead (Deep Dungeon)',
+            tag2: 'Necromancer title & achievements',
             price: 0,
-            tag1: '1–2 weeks',
-            image: scBlank,
+            tag1: '1 - 200 Floors',
+            tag3: 'Group Play or Solo Piloted',
+            longDescription:
+              'In the subterranean city of Gelmorra, deep within a forgotten corner of Issom-Har, stout-hearted explorers have uncovered the entrance to a labyrinthine dungeon. Those who set foot inside its maddening halls find their vigor drained by an irresistible fog of innervation, and repeated excursions have failed to map its seemingly inconstant architecture.',
+            image: scPalaceOfTheDead,
             tag: 'Hot',
           },
           {
             id: 'ffxiv-hoh',
-            name: 'Heaven on High',
-            tag2: 'Floors 1–100 cleared with Empyrean aetherpool progress and the title.',
+            name: 'Heaven-on-High (Deep Dungeon)',
+            tag2: 'Lone Hero title & achievements',
             price: 0,
-            tag1: '2–3 days',
-            image: scBlank,
+            tag1: '1 - 100 Floors',
+            tag3: 'Group Play or Solo Piloted',
+            longDescription:
+              'Rising high above the Ruby Sea from the island of Onokoro, Heaven-on-High is said to be the stairway traversed by kami descending from their empyrean home. Following the discovery of a secret entrance, the Confederate leader Rasho asks you to investigate the tower and brave the hordes of vile fiends that lurk within.',
+            image: scHeavenOnHigh,
           },
           {
             id: 'ffxiv-orthos',
-            name: 'Eureka Orthos',
-            tag2: 'Full Orthos clear with the weapon glow and all achievements along the climb.',
+            name: 'Eureka Orthos (Deep Dungeon)',
+            tag2: 'Once and Future King/Queen title',
             price: 0,
-            tag1: '2–4 days',
-            image: scBlank,
+            tag1: '1 - 100 Floors',
+            tag3: 'Group Play or Solo Piloted',
+            longDescription:
+              'Beneath the Crystal Tower in Mor Dhona, the Allagan Empire’s deepest secrets slumber. Eureka Orthos descends into a research facility abandoned for millennia — a hundred floors of Allagan horrors waiting beneath the syndicate’s watchful eye.',
+            image: scEurekaOrthos,
           },
           {
             id: 'ffxiv-pilgrims-traverse',
-            name: 'Pilgrims Traverse',
-            tag2: 'Dawntrail deep dungeon cleared with all achievements along the climb.',
+            name: 'Pilgrim\'s Traverse (Deep Dungeon)',
+            tag2: 'The Enlightened title & loot',
             price: 0,
-            tag1: '2–4 days',
-            image: scBlank,
+            tag1: '1 - 100 Floors',
+            tag3: 'Group Play or Solo Piloted',
+            longDescription:
+              'Beneath the verdant hills of Il Mheg, a holy road winds down into the dark. Pilgrim’s Traverse calls the faithful and the foolhardy alike to walk its ninety-nine floors, gathering offerings for the verse that waits at journey’s end.',
+            image: scPilgrimsTraverse,
           },
           {
             id: 'ffxiv-deep-dungeon-bundle',
             name: 'Deep Dungeons Bundle',
-            tag2: 'All four deep dungeons cleared at a bundle discount.',
+            tag2: 'Every solo title & all loot',
             price: 0,
-            tag1: '2–3 weeks',
-            image: scBlank,
+            tag1: '500 Floors — all four dungeons',
+            tag3: 'Group Play or Solo Piloted',
+            longDescription:
+              'Palace of the Dead to Pilgrim’s Traverse, this bundle contains all of FFXIV’s current deep dungeons — every floor, every title and every achievement in one package.',
+            image: scDdBundle,
             tag: 'Best Value',
           },
         ],
@@ -1118,6 +1251,28 @@ export const games: Game[] = [
             image: scArrhidaeus,
           },
           {
+            id: 'ffxiv-rathalos-mount',
+            name: 'Rathalos (Mount)',
+            tag2: 'The Great Hunt (Extreme)',
+            price: 0,
+            tag1: 'Guaranteed mount drop',
+            tag3: 'Piloted or AFK Carry',
+            longDescription:
+              'The King of the Skies descends upon Eorzea — the Monster Hunter crossover mount, dropped by Rathalos in The Great Hunt on Extreme. Guaranteed with 50 Rathalos Scales+ or a lucky drop.',
+            image: scRathalos,
+          },
+          {
+            id: 'ffxiv-felyne-cart',
+            name: 'Felyne Support Team Cart (Mount)',
+            tag2: 'The Windward Wilds (Extreme)',
+            price: 0,
+            tag1: 'Guaranteed mount drop',
+            tag3: 'Piloted or AFK Carry',
+            longDescription:
+              'The Felyne Support Team rolls in from the forbidden lands — the Monster Hunter Wilds crossover cart, dropped by Arkveld in The Windward Wilds on Extreme. Guaranteed, no matter the runs.',
+            image: scFelyne,
+          },
+          {
             id: 'ffxiv-cerberus-mount',
             name: 'Cerberus (Mount)',
             tag2: 'Delubrum Reginae (Savage)',
@@ -1164,14 +1319,6 @@ export const games: Game[] = [
             tag1: '1–2 weeks',
             image: scBlank,
           },
-          {
-            id: 'ffxiv-island-sanctuary',
-            name: 'Island Sanctuary Maxing',
-            tag2: 'Sanctuary rank 20, all landmarks, rare animals and workshop automation.',
-            price: 0,
-            tag1: '1 week',
-            image: scBlank,
-          },
         ],
       },
       {
@@ -1211,6 +1358,60 @@ export const games: Game[] = [
             longDescription:
               'The main scenario is the heart of Eorzea’s story — but not everyone has the time to live through every chapter. Our MSQ Completion boost carries your character through the Main Scenario up to your chosen expansion, unlocking duties, trials and endgame content along the way.',
             image: scMsq,
+          },
+        ],
+      },
+      {
+        id: 'field-explorations',
+        name: 'Field Explorations & Misc',
+        services: [
+          {
+            id: 'ffxiv-resistance-rank',
+            name: 'Resistance Rank 1–25',
+            tag2: 'Bozja & Zadnor field operations',
+            price: 0,
+            tag1: '1–2 weeks',
+            longDescription:
+              'The Bozjan southern front and the fields of Zadnor await. We grind your Resistance Rank from 1 to 25 through skirmishes, critical engagements and duels, unlocking every story beat and field note along the way.',
+            image: scBlank,
+          },
+          {
+            id: 'ffxiv-eureka-leveling',
+            name: 'Eureka Level 1–60',
+            tag2: 'Anemos to Hydatos — the full elemental climb',
+            price: 0,
+            tag1: '1–2 weeks',
+            longDescription:
+              'The Forbidden Land of Eureka swallows the unprepared. Our runners carry you from elemental level 1 to 60 through Anemos, Pagos, Pyros and Hydatos, with every logogram and kettle filled en route.',
+            image: scBlank,
+          },
+          {
+            id: 'ffxiv-occult-phantom-level',
+            name: 'Phantom Job Level 1–10',
+            tag2: 'Occult Crescent phantom job mastery',
+            price: 0,
+            tag1: '2–3 days',
+            longDescription:
+              'Phantom jobs define the Occult Crescent meta. We level any phantom job from 1 to 10, unlocking its full mastery set so you walk into every encounter with the strongest kit available.',
+            image: scBlank,
+          },
+          {
+            id: 'ffxiv-occult-job-unlocks',
+            name: 'Occult Job Unlocks',
+            tag2: 'Any phantom job unlocked on demand',
+            price: 0,
+            tag1: '24 hours',
+            longDescription:
+              'Unlock any Occult Crescent phantom job — Freeloader, Time Mage, Cannoneer, Berserker, Astrologian and more — without the questline grind. Pick exactly the jobs you need.',
+            image: scBlank,
+          },
+            {
+            id: 'ffxiv-island-sanctuary',
+            name: 'Island Sanctuary Rank 1–20',
+            tag2: 'Sanctuary rank 20, all landmarks, rare animals and workshop automation.',
+            price: 0,
+            tag1: '1 week',
+            image: scBlank,
           },
         ],
       },
@@ -1411,6 +1612,80 @@ for (const game of games) {
   game.subcategories.unshift({ id: 'all', name: 'All services', services: uniqueServices });
 }
 
+/** Flat index of every service, used by the navbar search. */
+export const allServices: ServiceSearchResult[] = [];
+
+function rebuildSearchIndex() {
+  allServices.length = 0;
+  allServices.push(
+    ...games.flatMap((game) =>
+      game.subcategories
+        .filter((sub) => sub.id !== 'all')
+        .flatMap((sub) =>
+          sub.services.map((service) => ({ game, subId: sub.id, subName: sub.name, service })),
+        ),
+    ),
+  );
+}
+rebuildSearchIndex();
+
+/**
+ * Apply the database `catalog` block (ffxiv-Catalog.json) to the static
+ * catalog before first render (called from PricingProvider once the DB loads
+ * — rendering is held until then, so every consumer sees the DB-driven
+ * state):
+ * - `categories`: display order (array order; 'all' stays first, unlisted
+ *   categories keep their relative order), display-name overrides, and proxy
+ *   card lists (e.g. Current Patch, Currency).
+ * - `services`: ids mapped to 0 are removed from every category, proxy list,
+ *   'All services', and the search index (direct subpage URLs stop
+ *   resolving). Unlisted ids stay enabled.
+ */
+export function applyCatalog(catalog?: CatalogConfig): void {
+  if (!catalog) return;
+  const byId = new Map((catalog.categories ?? []).map((c) => [c.id, c]));
+  const rank = new Map((catalog.categories ?? []).map((c, i) => [c.id, i]));
+  const disabled = new Set(
+    Object.entries(catalog.services ?? {})
+      .filter(([, v]) => v === 0)
+      .map(([id]) => id),
+  );
+  for (const game of games) {
+    if (byId.size) {
+      for (const sub of game.subcategories) {
+        const c = byId.get(sub.id);
+        if (!c) continue;
+        if (c.name) sub.name = c.name;
+        if (c.proxies) sub.proxies = c.proxies;
+      }
+      const rest = game.subcategories.filter((s) => s.id !== 'all');
+      rest.sort((a, b) => (rank.get(a.id) ?? byId.size) - (rank.get(b.id) ?? byId.size));
+      const all = game.subcategories.find((s) => s.id === 'all');
+      game.subcategories = all ? [all, ...rest] : rest;
+    }
+    if (disabled.size) {
+      for (const sub of game.subcategories) {
+        if (sub.id === 'all') continue;
+        sub.services = sub.services.filter((sv) => !disabled.has(sv.id));
+        if (sub.proxies) sub.proxies = sub.proxies.filter((id) => !disabled.has(id));
+      }
+      // Rebuild 'All services' from the remaining entries (dedup by id)
+      const all = game.subcategories.find((s) => s.id === 'all');
+      if (all) {
+        all.services = [
+          ...new Map(
+            game.subcategories
+              .filter((s) => s.id !== 'all')
+              .flatMap((s) => s.services)
+              .map((sv) => [sv.id, sv]),
+          ).values(),
+        ];
+      }
+    }
+  }
+  if (disabled.size) rebuildSearchIndex();
+}
+
 export const getGame = (id: string) => games.find((g) => g.id === id);
 
 export const serviceCount = (game: Game) =>
@@ -1424,15 +1699,6 @@ export interface ServiceSearchResult {
   subName: string;
   service: Service;
 }
-
-/** Flat index of every service, used by the navbar search. */
-export const allServices: ServiceSearchResult[] = games.flatMap((game) =>
-  game.subcategories
-    .filter((sub) => sub.id !== 'all')
-    .flatMap((sub) =>
-      sub.services.map((service) => ({ game, subId: sub.id, subName: sub.name, service })),
-    ),
-);
 
 /** Where a service card links: its dedicated subpage if it has one, else its category page. */
 export const serviceLink = (serviceId: string): string => {

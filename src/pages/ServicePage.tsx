@@ -15,6 +15,8 @@ import WolfMarksPurchaseBox from '@/components/WolfMarksPurchaseBox';
 import MountSeriesPurchaseBox from '@/components/MountSeriesPurchaseBox';
 import WingPurchaseBox from '@/components/WingPurchaseBox';
 import SavageMountPurchaseBox from '@/components/SavageMountPurchaseBox';
+import TrialPurchaseBox from '@/components/TrialPurchaseBox';
+import DeepDungeonPurchaseBox from '@/components/DeepDungeonPurchaseBox';
 import Reveal from '@/components/Reveal';
 import ServiceCard from '@/components/ServiceCard';
 import { getGame, serviceLink } from '@/data/games';
@@ -389,6 +391,17 @@ export default function ServicePage() {
             <WingPurchaseBox key={service.id} service={service} gameShort={game.short} />
           ) : db.mounts?.savageMounts?.[service.id] ? (
             <SavageMountPurchaseBox key={service.id} service={service} gameShort={game.short} />
+          ) : db.trials?.[service.id] ? (
+            <TrialPurchaseBox key={service.id} service={service} gameShort={game.short} />
+          ) : db.deepDungeons?.[service.id] ? (
+            <DeepDungeonPurchaseBox key={service.id} service={service} gameShort={game.short} />
+          ) : db.fieldLeveling?.[service.id] ? (
+            <LevelingPurchaseBox
+              key={service.id}
+              service={service}
+              gameShort={game.short}
+              config={{ ...db.fieldLeveling[service.id], showJob: false }}
+            />
           ) : (
             <PurchaseBox service={service} gameShort={game.short} />
           )}
