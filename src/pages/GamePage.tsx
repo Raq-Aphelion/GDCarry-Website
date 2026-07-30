@@ -160,10 +160,11 @@ export default function GamePage() {
   })();
 
   const renderServiceGrid = (services: Service[], withCtas: boolean) => (
-    /* sm 2 per row; md 3 — below lg the sidebar becomes the carousel, so the
-       full row fits 3 cards; lg keeps 3 (sidebar takes 240px, 4 would squeeze
-       cards to ~155px); xl 4 — cards cap at 280px and never drop below ~213px */
-    <div className="mt-5 grid justify-items-center gap-5 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
+    /* 2 per row from mobile up; md 3 — below lg the sidebar becomes the
+       carousel, so the full row fits 3 cards; lg keeps 3 (sidebar takes
+       240px, 4 would squeeze cards to ~155px); xl 4 — cards cap at 280px
+       and never drop below ~213px */
+    <div className="mt-5 grid grid-cols-1 justify-items-center gap-5 min-[400px]:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
       {services.map((service, i) => (
         <Fragment key={service.id}>
           {/* Cards cap at 280px (ServiceCard max-w) — centered in their

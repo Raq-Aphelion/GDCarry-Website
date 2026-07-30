@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { Check, Clock } from 'lucide-react';
+import { Armchair, Clock } from 'lucide-react';
 import FadeImage from './FadeImage';
 import FieldPopup from './FieldPopup';
+import MountAddonsBlock from './MountAddonsBlock';
 import { CustomSelect } from './PurchaseBox';
 import { Slider } from '@/components/ui/slider';
 import { useCart } from '@/context/CartContext';
@@ -92,9 +93,18 @@ export default function WolfMarksPurchaseBox({ service, gameShort }: { service: 
         <div className="h-28" />
 
         <div className="relative space-y-4 p-4">
+          {/* Boost method */}
+          <div>
+            <p className="pl-px text-sm font-semibold text-white [text-shadow:0_1px_4px_rgb(0_0_0/0.7)]">Boost Method</p>
+            <div className="mt-2.5 flex items-center justify-center gap-2 rounded-[5px] border border-navy-600 bg-navy-800 px-3 py-2.5 text-white cyan-glow">
+              <Armchair className="h-4 w-4 shrink-0 text-cyan-400" />
+              <span className="text-[11px] font-semibold uppercase tracking-wider text-cyan-400">Piloted</span>
+            </div>
+          </div>
+
           {/* Amount */}
           <div>
-            <p className="pl-px text-sm font-semibold text-white [text-shadow:0_1px_4px_rgb(0_0_0/0.7)]">Wolf Marks Amount</p>
+            <p className="pl-px text-sm font-semibold text-white">Amount of Wolf Marks</p>
             <input
               type="text"
               inputMode="numeric"
@@ -142,47 +152,13 @@ export default function WolfMarksPurchaseBox({ service, gameShort }: { service: 
           </div>
 
           {/* Add-ons */}
-          {cfg && (
-            <div>
-              <p className="mb-2 pl-px text-xs font-semibold text-slate-300">Add-ons</p>
-              <div className="space-y-1.5">
-                <button
-                  type="button"
-                  onClick={() => setStream((s) => !s)}
-                  aria-pressed={stream}
-                  className="flex w-full items-center gap-3 rounded-[5px] bg-navy-850 px-2.5 py-1.5 text-left transition-colors hover:bg-navy-800"
-                >
-                  <span
-                    className={`flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-[3px] border transition-colors ${
-                      stream ? 'border-cyan-600 bg-cyan-600 text-navy-900' : 'border-navy-600 text-transparent'
-                    }`}
-                  >
-                    <Check className="h-3 w-3" strokeWidth={3.5} />
-                  </span>
-                  <span className="min-w-0 flex-1 truncate text-sm text-slate-300">Private Stream</span>
-                  <span className="text-xs font-bold text-cyan-400">+{format(cfg.streamPrice)}</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setPriority((p) => !p)}
-                  aria-pressed={priority}
-                  className="flex w-full items-center gap-3 rounded-[5px] bg-navy-850 px-2.5 py-1.5 text-left transition-colors hover:bg-navy-800"
-                >
-                  <span
-                    className={`flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-[3px] border transition-colors ${
-                      priority ? 'border-cyan-600 bg-cyan-600 text-navy-900' : 'border-navy-600 text-transparent'
-                    }`}
-                  >
-                    <Check className="h-3 w-3" strokeWidth={3.5} />
-                  </span>
-                  <span className="min-w-0 flex-1 truncate text-sm text-slate-300">Priority</span>
-                  <span className="text-xs font-bold text-cyan-400">
-                    +{Math.round((priorityMultiplier - 1) * 100)}%
-                  </span>
-                </button>
-              </div>
-            </div>
-          )}
+          <MountAddonsBlock
+            stream={stream}
+            setStream={setStream}
+            priority={priority}
+            setPriority={setPriority}
+            streamPrice={cfg?.streamPrice ?? 10}
+          />
         </div>
       </div>
 

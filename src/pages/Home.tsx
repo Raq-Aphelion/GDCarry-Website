@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router';
 import { ArrowRight, Badge, ChevronDown, ChevronLeft, ChevronRight, ShieldCheck, Star, Timer, Users, Zap } from 'lucide-react';
 import CustomOrderCta from '@/components/CustomOrderCta';
@@ -115,6 +115,67 @@ export default function Home() {
   const [videoPlaying, setVideoPlaying] = useState(false);
   const [videoFailed, setVideoFailed] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
+
+  // Reviews marquee: JS-driven auto-scroll. Dragging halts it and drives the
+  // offset by hand; 1s after release the speed eases back up over ~0.75s.
+  const reviewsTrackRef = useRef<HTMLDivElement>(null);
+  const marqueeOffset = useRef(0);
+  const marqueeSpeed = useRef(0);
+  const marqueeHeld = useRef(false);
+  const dragStartOffset = useRef(0);
+  const marqueeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const reviewsRef = useDragScroll<HTMLDivElement>({
+    manual: true,
+    onDragStart: () => {
+      if (marqueeTimer.current) clearTimeout(marqueeTimer.current);
+      marqueeHeld.current = true;
+      marqueeSpeed.current = 0;
+      dragStartOffset.current = marqueeOffset.current;
+    },
+    onDragMove: (dx) => {
+      const track = reviewsTrackRef.current;
+      if (!track) return;
+      const half = track.scrollWidth / 2 || 1;
+      let next = (dragStartOffset.current - dx) % half;
+      if (next < 0) next += half;
+      marqueeOffset.current = next;
+    },
+    onDragEnd: () => {
+      if (marqueeTimer.current) clearTimeout(marqueeTimer.current);
+      // release after 1s, then the speed ramps back over ~0.75s
+      marqueeTimer.current = setTimeout(() => {
+        marqueeHeld.current = false;
+        marqueeSpeed.current = 0;
+      }, 1000);
+    },
+  });
+
+  // rAF loop: the speed target keeps the old 46s loop pace
+  useEffect(() => {
+    const track = reviewsTrackRef.current;
+    if (!track) return;
+    let last = performance.now();
+    let raf = 0;
+    const tick = (now: number) => {
+      const dt = Math.min((now - last) / 1000, 0.1);
+      last = now;
+      const half = track.scrollWidth / 2 || 1;
+      const target = marqueeHeld.current ? 0 : half / 46;
+      marqueeSpeed.current += (target - marqueeSpeed.current) * Math.min(1, dt / 0.75);
+      marqueeOffset.current = (marqueeOffset.current + marqueeSpeed.current * dt) % half;
+      track.style.transform = `translateX(${-marqueeOffset.current}px)`;
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, []);
+
+  useEffect(
+    () => () => {
+      if (marqueeTimer.current) clearTimeout(marqueeTimer.current);
+    },
+    [],
+  );
 
   const updateArrows = () => {
     const track = carouselRef.current;
@@ -362,16 +423,16 @@ export default function Home() {
               </Link>
             </div>
           </Reveal>
-          {/* One row only: mobile shows 3, sm 2, md 3, lg 4, 5 in a row from
-              720p (xl) up; cards that would wrap to a second row are removed.
+          {/* One row only: mobile shows 4 (2×2), md 3, lg 4, 5 in a row from
+              720p (xl) up; cards that would wrap to another row are removed.
               Cards cap at 280px (ServiceCard max-w) — center them in their
               cells so any extra row width becomes even outer margins. */}
-          <div className="mt-10 grid justify-items-center gap-5 sm:mt-6 sm:grid-cols-2 md:grid-cols-3 lg:mt-10 lg:grid-cols-4 xl:grid-cols-5">
+          <div className="mt-10 grid grid-cols-1 justify-items-center gap-5 min-[400px]:grid-cols-2 sm:mt-6 md:grid-cols-3 lg:mt-10 lg:grid-cols-4 xl:grid-cols-5">
             {featured.slice(0, 5).map((s, i) => (
               <Reveal
                 key={s.id}
                 delay={i * 90}
-                className={`w-full max-w-[280px] ${i === 2 ? 'sm:hidden md:block' : i === 3 ? 'hidden lg:block' : i === 4 ? 'hidden xl:block' : ''}`}
+                className={`w-full max-w-[280px] ${i === 3 ? 'hidden lg:block' : i === 4 ? 'hidden xl:block' : ''}`}
               >
                 <ServiceCard service={s} />
               </Reveal>
@@ -437,8 +498,11 @@ export default function Home() {
               </div>
             </div>
           </Reveal>
-          <div className="mt-8 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)] lg:mt-12">
-            <div className="marquee flex w-max gap-5">
+          <div
+            ref={reviewsRef}
+            className="mt-8 touch-pan-y overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)] lg:mt-12"
+          >
+            <div ref={reviewsTrackRef} className="flex w-max gap-5">
               {[...REVIEWS, ...REVIEWS].map((r, i) => (
                 <figure
                   key={`${r.name}-${i}`}
@@ -483,7 +547,7 @@ export default function Home() {
           {STEPS.map((s, i) => (
             <Reveal key={s.n} delay={i * 120}>
               <div className="relative h-full overflow-hidden rounded-[5px] bg-gradient-to-b from-navy-850 to-navy-900 p-7">
-                <span className="pointer-events-none absolute right-2 top-1 font-display text-7xl font-extrabold text-navy-700/50">
+                <span className="pointer-events-none absolute right-2 top-1 font-display text-7xl font-extrabold tabular-nums text-navy-700/50">
                   {s.n}
                 </span>
                 <span className="font-display text-sm font-extrabold text-gradient-blue">{s.n}</span>

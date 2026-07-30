@@ -302,38 +302,6 @@
         ],
         "completion": "5-7 Days",
         "fromPrice": 2200
-      },
-      "ffxiv-occult-job-unlocks": {
-        "bundlePrice": 150,
-        "bundleLabel": "All 5 Phantom Jobs",
-        "mounts": [
-          {
-            "id": "freeloader",
-            "label": "Freeloader",
-            "price": 30
-          },
-          {
-            "id": "time-mage",
-            "label": "Time Mage",
-            "price": 30
-          },
-          {
-            "id": "cannoneer",
-            "label": "Cannoneer",
-            "price": 30
-          },
-          {
-            "id": "berserker",
-            "label": "Berserker",
-            "price": 30
-          },
-          {
-            "id": "astrologian",
-            "label": "Astrologian",
-            "price": 30
-          }
-        ],
-        "completion": "24 Hours"
       }
     },
     "afkMultiplier": 1.1,
@@ -418,26 +386,51 @@
         "price": 380,
         "afkPrice": 320,
         "afkLabel": "Group Play",
+        "groupFirst": true,
         "trial": "Heaven-on-High (Deep Dungeon)",
         "completion": "24 Hours"
       },
+      "ffxiv-aeturna-mount": {
+        "price": 500,
+        "afkPrice": 360,
+        "afkLabel": "Group Play",
+        "groupFirst": true,
+        "trial": "Eureka Orthos (Deep Dungeon)",
+        "completion": "24 Hours"
+      },
       "ffxiv-cerberus-mount": {
-        "price": 50,
+        "price": 350,
         "trial": "Delubrum Reginae (Savage)",
         "completion": "24 Hours",
-        "afkDisabled": true
+        "pilotedOnly": true
       },
       "ffxiv-demi-ozma": {
-        "price": 50,
+        "price": 280,
         "trial": "The Baldesion Arsenal",
         "completion": "24 Hours",
-        "afkDisabled": true
+        "pilotedOnly": true
       },
       "ffxiv-demon-haul": {
-        "price": 50,
+        "price": 350,
         "trial": "The Forked Tower: Blood",
         "completion": "24 Hours",
-        "afkDisabled": true
+        "pilotedOnly": true
+      },
+      "ffxiv-dais-of-darkness-mount": {
+        "price": 850,
+        "afkPrice": 850,
+        "afkLabel": "Group Play",
+        "groupFirst": true,
+        "trial": "The Cloud of Darkness (Chaotic)",
+        "completion": "24 Hours"
+      },
+      "ffxiv-shroud-of-darkness-mount": {
+        "price": 1100,
+        "afkPrice": 1100,
+        "afkLabel": "Group Play",
+        "groupFirst": true,
+        "trial": "The Cloud of Darkness (Chaotic)",
+        "completion": "24 Hours"
       },
       "ffxiv-rathalos-mount": {
         "price": 50,

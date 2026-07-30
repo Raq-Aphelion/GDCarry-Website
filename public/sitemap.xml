@@ -269,6 +269,14 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-beast-tribes</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-custom-deliveries</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-potd-solo</loc>
     <priority>0.8</priority>
   </url>
@@ -297,11 +305,7 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-occult-phantom-level</loc>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-occult-job-unlocks</loc>
+    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-occult-crescent</loc>
     <priority>0.8</priority>
   </url>
   <url>

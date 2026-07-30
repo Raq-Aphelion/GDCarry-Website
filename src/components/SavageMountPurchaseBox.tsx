@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Armchair, Clock, Gamepad2 } from 'lucide-react';
+import { Armchair, Check, Clock, Gamepad2 } from 'lucide-react';
 import FadeImage from './FadeImage';
 import FieldPopup from './FieldPopup';
 import MountAddonsBlock from './MountAddonsBlock';
@@ -40,21 +40,27 @@ export default function SavageMountPurchaseBox({ service, gameShort }: { service
   const afkMultiplier = db.mounts?.afkMultiplier ?? 1.1;
   const priorityMultiplier = db.purchaseBox.priorityMultiplier;
 
-  const [method, setMethod] = useState<(typeof METHODS)[number]['id']>('piloted');
+  const [method, setMethod] = useState<(typeof METHODS)[number]['id']>(
+    cfg?.groupFirst ? 'afk' : 'piloted',
+  );
+  const [checked, setChecked] = useState<string[]>([]);
   const [dc, setDc] = useState('');
   const [stream, setStream] = useState(false);
   const [priority, setPriority] = useState(false);
   const [dcError, setDcError] = useState(false);
 
   const { rootRef, wrapRef, stick, overflowTop, fixedStyle, blockHpx } = usePurchaseFloat(
-    `${method}|${dc}|${stream}|${priority}`,
+    `${method}|${dc}|${stream}|${priority}|${checked.length}`,
   );
 
   const streamPrice = 10;
   // AFK uses the duty's AFK fight price when set, else the global multiplier
   const methodBase =
     method === 'afk' ? (cfg?.afkPrice ?? (cfg?.price ?? 0) * afkMultiplier) : (cfg?.price ?? 0);
-  const total = methodBase * (priority ? priorityMultiplier : 1) + (stream ? streamPrice : 0);
+  const addonsTotal = checked.reduce((s, id) => s + (cfg?.addons?.find((a) => a.id === id)?.price ?? 0), 0);
+  const total = methodBase * (priority ? priorityMultiplier : 1) + addonsTotal + (stream ? streamPrice : 0);
+  const toggle = (id: string) =>
+    setChecked((prev) => (prev.includes(id) ? prev.filter((c) => c !== id) : [...prev, id]));
 
   const addToCart = () => {
     if (!dc) {
@@ -68,7 +74,7 @@ export default function SavageMountPurchaseBox({ service, gameShort }: { service
     addItem(
       {
         ...service,
-        id: `${service.id}::${method}|${dc}`,
+        id: `${service.id}::${method}|${dc}|${[...checked].sort().join(',')}`,
         price: total,
         method: methodLabel,
         qtyLocked: true,
@@ -77,6 +83,7 @@ export default function SavageMountPurchaseBox({ service, gameShort }: { service
       [
         `Duty: ${cfg?.trial ?? ''}`,
         `Data Center: ${dc}`,
+        ...checked.map((id) => cfg!.addons!.find((a) => a.id === id)!.label),
         ...(stream ? ['Private Stream'] : []),
         ...(priority ? [`Priority (+${Math.round((priorityMultiplier - 1) * 100)}%)`] : []),
       ],
@@ -102,11 +109,17 @@ export default function SavageMountPurchaseBox({ service, gameShort }: { service
         <div className="h-28" />
 
         <div className="relative space-y-4 p-4">
-          {/* Boost method */}
+          {/* Boost method — static pill for piloted-only mounts */}
           <div>
             <p className="pl-px text-sm font-semibold text-white [text-shadow:0_1px_4px_rgb(0_0_0/0.7)]">Boost Method</p>
+            {cfg?.pilotedOnly ? (
+              <div className="mt-2.5 flex items-center justify-center gap-2 rounded-[5px] border border-navy-600 bg-navy-800 px-3 py-2.5 text-white cyan-glow">
+                <Armchair className="h-4 w-4 shrink-0 text-cyan-400" />
+                <span className="text-[11px] font-semibold uppercase tracking-wider text-cyan-400">Piloted</span>
+              </div>
+            ) : (
             <div className="mt-2.5 grid grid-cols-2 gap-3">
-              {METHODS.map((m) => {
+              {(cfg?.groupFirst ? [...METHODS].reverse() : METHODS).map((m) => {
                 const disabled = m.id === 'afk' && cfg?.afkDisabled;
                 const label = m.id === 'afk' ? (cfg?.afkLabel ?? m.label) : m.label;
                 return (
@@ -133,6 +146,7 @@ export default function SavageMountPurchaseBox({ service, gameShort }: { service
                 );
               })}
             </div>
+            )}
           </div>
 
           {/* Data center */}
@@ -155,6 +169,37 @@ export default function SavageMountPurchaseBox({ service, gameShort }: { service
               />
             </div>
           </div>
+
+          {/* Optional checkbox add-ons (e.g. Normal Mode) */}
+          {cfg?.addons && cfg.addons.length > 0 && (
+            <div>
+              <p className="pl-px text-sm font-semibold text-white">Add-ons</p>
+              <div className="mt-2.5 space-y-1.5">
+                {cfg.addons.map((a) => {
+                  const isChecked = checked.includes(a.id);
+                  return (
+                    <button
+                      key={a.id}
+                      type="button"
+                      onClick={() => toggle(a.id)}
+                      aria-pressed={isChecked}
+                      className="flex w-full items-center gap-3 rounded-[5px] bg-navy-850 px-2.5 py-1.5 text-left transition-colors hover:bg-navy-800"
+                    >
+                      <span
+                        className={`flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-[3px] border transition-colors ${
+                          isChecked ? 'border-cyan-600 bg-cyan-600 text-navy-900' : 'border-navy-600 text-transparent'
+                        }`}
+                      >
+                        <Check className="h-3 w-3" strokeWidth={3.5} />
+                      </span>
+                      <span className="min-w-0 flex-1 truncate text-sm text-slate-300">{a.label}</span>
+                      <span className="text-xs font-bold text-cyan-400">+{format(a.price)}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
 
           {/* Additional options */}
           <MountAddonsBlock

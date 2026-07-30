@@ -28,7 +28,13 @@
           "ffxiv-leveling-boost",
           "ffxiv-msq-skip",
           "ffxiv-cc-rank-boost",
-          "ffxiv-pvp-series-boost"
+          "ffxiv-pvp-series-boost",
+          "ffxiv-occult-crescent",
+          "ffxiv-windurst-third-walk",
+          "ffxiv-forked-tower-magic",
+          "ffxiv-demon-haul",
+          "ffxiv-crafter-gatherer-leveling",
+          "ffxiv-cosmic-exploration"
         ]
       },
       {
@@ -41,7 +47,7 @@
       },
       {
         "id": "alliance-raids",
-        "name": "24 Player Raids"
+        "name": "24+ Player Raids"
       },
       {
         "id": "trials",
@@ -177,14 +183,11 @@
       "ffxiv-variant-sildihn-subterrane": 1,
       "ffxiv-variant-mount-rokkon": 1,
       "ffxiv-variant-aloalo-island": 1,
-      "ffxiv-criterion-glamour-set": 1,
-      "ffxiv-criterion-mount-all-paths": 1,
+      "ffxiv-variant-merchants-tale": 1,
+      "ffxiv-another-merchants-tale": 1,
       "ffxiv-another-sildihn-subterrane": 1,
       "ffxiv-another-mount-rokkon": 1,
       "ffxiv-another-aloalo-island": 1,
-      "ffxiv-another-sildihn-savage": 1,
-      "ffxiv-another-rokkon-savage": 1,
-      "ffxiv-another-aloalo-savage": 1,
       "ffxiv-wings-of-legacy": 1,
       "ffxiv-wings-of-nihility": 1,
       "ffxiv-wings-of-mist": 1,
@@ -223,8 +226,6 @@
       "ffxiv-msq-skip": 1,
       "ffxiv-resistance-rank": 1,
       "ffxiv-eureka-leveling": 1,
-      "ffxiv-occult-phantom-level": 1,
-      "ffxiv-occult-job-unlocks": 1,
       "ffxiv-island-sanctuary": 1,
       "ffxiv-cc-rank-boost": 1,
       "ffxiv-pvp-series-boost": 1,
@@ -236,7 +237,15 @@
       "ffxiv-shadowbringers-trials-bundle": 1,
       "ffxiv-stormblood-trials-bundle": 1,
       "ffxiv-heavensward-trials-bundle": 1,
-      "ffxiv-juedi-mount": 1
+      "ffxiv-juedi-mount": 1,
+      "ffxiv-occult-crescent": 1,
+      "ffxiv-custom-deliveries": 1,
+      "ffxiv-cloud-of-darkness": 1,
+      "ffxiv-dais-of-darkness-mount": 1,
+      "ffxiv-shroud-of-darkness-mount": 1,
+      "ffxiv-aeturna-mount": 1,
+      "ffxiv-cosmic-exploration": 1,
+      "ffxiv-crafter-gatherer-leveling": 1
     }
   }
 }

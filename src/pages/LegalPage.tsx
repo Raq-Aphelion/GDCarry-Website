@@ -94,7 +94,7 @@ export default function LegalPage() {
       </section>
 
       {/* ============ MOBILE CATEGORY CHIPS ============ */}
-      <div className="sticky top-0 z-30 border-b border-navy-700/50 bg-navy-900/85 backdrop-blur-xl lg:hidden">
+      <div className="sticky top-0 z-30 bg-gradient-to-b from-navy-900/90 via-navy-900/60 to-navy-900/20 lg:hidden">
         <div className="relative">
           <div
             ref={chipsRef}

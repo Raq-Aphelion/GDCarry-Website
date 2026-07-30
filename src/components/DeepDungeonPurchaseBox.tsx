@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
-import { Armchair, Check, Clock, Gem, Users, Zap, type LucideIcon } from 'lucide-react';
+import { Armchair, Check, Clock, Dices, Gem, Users, Zap, type LucideIcon } from 'lucide-react';
 import FadeImage from './FadeImage';
 import FieldPopup from './FieldPopup';
+import MountAddonsBlock from './MountAddonsBlock';
 import { CustomSelect } from './PurchaseBox';
+import { Slider } from '@/components/ui/slider';
 import { useCart } from '@/context/CartContext';
 import { useCurrency } from '@/context/CurrencyContext';
 import { usePricing } from '@/context/PricingContext';
@@ -28,13 +30,16 @@ const DATA_CENTERS = [
 const OPTION_ICONS: Record<string, LucideIcon> = {
   speedrun: Zap,
   farm: Gem,
+  'rng-loot': Dices,
+  'full-loot': Gem,
 };
 
 /** Deep dungeon purchase box: two methods — Group Play (run-type pills:
     Speedrun / Farm, plus optional run-type add-ons and multipliers) and Solo
     Piloted (fixed price with additional options: aetherpool farm, mount/
-    weapon multipliers, private stream) — both priced per completion, plus a
-    required data center. Group Play is listed first and preselected. */
+    weapon multipliers) — both priced per completion. A shared Additional
+    Options block under the data center holds the dungeon unlock, private
+    stream and priority. Group Play is listed first and preselected. */
 export default function DeepDungeonPurchaseBox({ service, gameShort }: { service: Service; gameShort: string }) {
   const { addItem, openCart } = useCart();
   const { format } = useCurrency();
@@ -44,13 +49,17 @@ export default function DeepDungeonPurchaseBox({ service, gameShort }: { service
   const groupOptions = cfg?.group?.options ?? [];
   const groupAddons = cfg?.group?.addons ?? [];
   const groupMultiplier = cfg?.group?.multiplier;
+  const priorityMultiplier = db.purchaseBox.priorityMultiplier;
 
   const [method, setMethod] = useState<'solo' | 'group'>('group');
   const [option, setOption] = useState(groupOptions[0]?.id ?? '');
   const [groupChecked, setGroupChecked] = useState<string[]>([]);
   const [mountOn, setMountOn] = useState(false);
   const [checked, setChecked] = useState<string[]>([]);
+  const [runs, setRuns] = useState(1);
   const [stream, setStream] = useState(false);
+  const [priority, setPriority] = useState(false);
+  const [unlockChecked, setUnlockChecked] = useState(false);
   const [dc, setDc] = useState('');
   const [dcError, setDcError] = useState(false);
 
@@ -66,6 +75,8 @@ export default function DeepDungeonPurchaseBox({ service, gameShort }: { service
   const [fadeIn, setFadeIn] = useState(true);
   const switchMethod = (id: 'solo' | 'group') => {
     setMethod(id);
+    // streamInSolo / streamPilotedOnly configs don't offer stream in Group Play
+    if ((cfg?.streamInSolo || cfg?.streamPilotedOnly) && id === 'group') setStream(false);
     if (id !== shown) setFadeIn(false);
   };
   useEffect(() => {
@@ -79,7 +90,7 @@ export default function DeepDungeonPurchaseBox({ service, gameShort }: { service
   const pricedMethod: 'solo' | 'group' = hasGroup ? shown : 'solo';
 
   const { rootRef, wrapRef, stick, overflowTop, fixedStyle, blockHpx } = usePurchaseFloat(
-    `${dc}|${effMethod}|${option}|${groupChecked.length}|${mountOn}|${checked.length}|${stream}`,
+    `${dc}|${effMethod}|${option}|${groupChecked.length}|${mountOn}|${checked.length}|${stream}|${priority}|${unlockChecked}|${runs}`,
   );
 
   const toggle = (id: string) =>
@@ -99,7 +110,7 @@ export default function DeepDungeonPurchaseBox({ service, gameShort }: { service
     );
   };
 
-  const streamPrice = 10;
+  const streamPrice = stream ? 10 : 0;
   const addonsTotal = checked.reduce((s, id) => s + (soloAddons.find((a) => a.id === id)?.price ?? 0), 0);
   // Multiplier add-ons (e.g. Juedi 400%) apply to the solo base price only;
   // every other add-on stays additive on top of the multiplied price
@@ -112,11 +123,33 @@ export default function DeepDungeonPurchaseBox({ service, gameShort }: { service
     0,
   );
   const selectedOption = groupOptions.find((o) => o.id === option) ?? groupOptions[0];
-  const total =
+  // Amount of Runs multiplies the per-completion core only — upgrades/loot
+  // (add-ons) stay static additions. An active Mount Juedi (group multiplier
+  // or solo multiplier add-on) replaces the run count with its clear count
+  // instead of multiplying the core, so it never double-counts.
+  const core = pricedMethod === 'group' ? (selectedOption?.price ?? 0) : (cfg?.solo.price ?? 0);
+  const addonsPart = pricedMethod === 'group' ? groupAddonsTotal : addonsTotal;
+  const forcedRuns =
     pricedMethod === 'group'
-      ? (selectedOption?.price ?? 0) * (mountOn && groupMultiplier ? groupMultiplier.times : 1) +
-        groupAddonsTotal
-      : (cfg?.solo.price ?? 0) * soloTimes + addonsTotal + (stream ? streamPrice : 0);
+      ? mountOn && groupMultiplier
+        ? groupMultiplier.times
+        : cfg?.disableRunsOnAddons && groupChecked.length > 0
+          ? 1
+          : 0
+      : soloTimes > 1
+        ? soloTimes
+        : cfg?.disableRunsOnAddons && checked.length > 0
+          ? 1
+          : 0;
+  const effRuns = forcedRuns > 0 ? forcedRuns : runs;
+  // Priority multiplies the method total × runs; unlock and stream are flat.
+  // streamInSolo / streamPilotedOnly configs offer Private Stream only in Piloted.
+  const effStreamPrice =
+    (cfg?.streamInSolo || cfg?.streamPilotedOnly) && pricedMethod === 'group' ? 0 : streamPrice;
+  const total =
+    (core * effRuns + addonsPart) * (priority ? priorityMultiplier : 1) +
+    (unlockChecked ? (cfg?.unlock?.price ?? 0) : 0) +
+    effStreamPrice;
 
   const addToCart = () => {
     if (!dc) {
@@ -127,9 +160,9 @@ export default function DeepDungeonPurchaseBox({ service, gameShort }: { service
     addItem(
       {
         ...service,
-        id: `${service.id}::${dc}|${effMethod}|${isGroup ? `${option}~${[...groupChecked].sort().join(',')}` : [...checked].sort().join(',')}|${isGroup && mountOn ? 'm' : ''}${!isGroup && stream ? 's' : ''}`,
+        id: `${service.id}::${dc}|${effMethod}|${isGroup ? `${option}~${[...groupChecked].sort().join(',')}` : [...checked].sort().join(',')}|${effRuns > 1 ? `x${effRuns}` : ''}${isGroup && mountOn ? 'm' : ''}${stream ? 's' : ''}${priority ? 'p' : ''}${unlockChecked ? 'u' : ''}`,
         price: total,
-        method: isGroup ? 'Group Play' : 'Solo Piloted',
+        method: isGroup ? 'Group Play' : (cfg?.soloLabel ?? 'Solo Piloted'),
         qtyLocked: true,
       },
       gameShort,
@@ -139,14 +172,16 @@ export default function DeepDungeonPurchaseBox({ service, gameShort }: { service
         ...(isGroup ? groupChecked.map((id) => groupAddons.find((a) => a.id === id)!.label) : []),
         ...(isGroup && mountOn && groupMultiplier ? [groupMultiplier.label] : []),
         ...(!isGroup ? checked.map((id) => soloAddons.find((a) => a.id === id)!.label) : []),
-        ...(!isGroup && stream ? ['Private Stream'] : []),
+        ...(unlockChecked && cfg?.unlock ? [cfg.unlock.label] : []),
+        ...(stream ? ['Private Stream'] : []),
+        ...(priority ? [`Priority (+${Math.round((priorityMultiplier - 1) * 100)}%)`] : []),
       ],
       1,
     );
     openCart();
   };
 
-  const row = (id: string, label: string, right: string, isChecked: boolean, onClick: () => void) => (
+  const row = (id: string, label: string, right: string, isChecked: boolean, onClick: () => void, note?: string) => (
     <button
       key={id}
       type="button"
@@ -161,7 +196,10 @@ export default function DeepDungeonPurchaseBox({ service, gameShort }: { service
       >
         <Check className="h-3 w-3" strokeWidth={3.5} />
       </span>
-      <span className="min-w-0 flex-1 truncate text-sm text-slate-300">{label}</span>
+      <span className="min-w-0 flex-1">
+        <span className="block truncate text-sm text-slate-300">{label}</span>
+        {note && <span className="block text-[11px] leading-snug text-slate-500">{note}</span>}
+      </span>
       <span className="text-xs font-bold text-cyan-400">{right}</span>
     </button>
   );
@@ -243,7 +281,7 @@ export default function DeepDungeonPurchaseBox({ service, gameShort }: { service
             {hasGroup ? (
               <div className="mt-2.5 grid grid-cols-2 gap-2">
                 {methodPill('group', 'Group Play', Users)}
-                {methodPill('solo', 'Solo Piloted', Armchair)}
+                {methodPill('solo', cfg?.soloLabel ?? 'Solo Piloted', Armchair)}
               </div>
             ) : (
               <div className="mt-2.5 flex items-center justify-center gap-2 rounded-[5px] border border-navy-600 bg-navy-800 px-3 py-2.5 text-white cyan-glow">
@@ -253,25 +291,32 @@ export default function DeepDungeonPurchaseBox({ service, gameShort }: { service
             )}
           </div>
 
-          {/* Data center */}
-          <div>
-            <p className="pl-px text-sm font-semibold text-white">
-              Data Center <span className="text-xs font-normal text-slate-500">(required)</span>
-            </p>
-            <div className="relative mt-2.5">
-              <FieldPopup message={dcError ? 'Select a data center first.' : ''} />
-              <CustomSelect
-                value={dc}
-                placeholder="Select Data Center"
-                options={DATA_CENTERS.map((d) => ({ label: d }))}
-                onSelect={(i) => {
-                  setDc(DATA_CENTERS[i]);
-                  setDcError(false);
-                }}
-                ariaLabel="Select data center"
-                invalid={dcError}
-              />
-            </div>
+          {/* Amount of runs — multiplies the per-completion core; pinned to
+              the clear count while a mount multiplier is active */}
+          <div className={forcedRuns > 0 ? 'pointer-events-none opacity-50' : ''}>
+            <p className="pl-px text-sm font-semibold text-white">Amount of Runs</p>
+            <input
+              type="text"
+              inputMode="numeric"
+              value={String(effRuns)}
+              aria-label="Amount of runs"
+              disabled={forcedRuns > 0}
+              onChange={(e) => {
+                const v = parseInt(e.target.value.replace(/[^0-9]/g, ''), 10);
+                if (!Number.isNaN(v))
+                  setRuns(Math.min(Math.max(v, db.purchaseBox.runsMin), db.purchaseBox.runsMax));
+              }}
+              className="mt-2.5 h-10 w-full rounded-[5px] border border-navy-700/70 bg-navy-850 px-3.5 text-center text-sm text-slate-300 outline-none transition-colors focus:border-navy-600"
+            />
+            <Slider
+              className="mt-4"
+              min={db.purchaseBox.runsMin}
+              max={db.purchaseBox.runsMax}
+              step={1}
+              value={[effRuns]}
+              onValueChange={([v]) => setRuns(v)}
+              aria-label="Amount of runs slider"
+            />
           </div>
 
           {/* Group play (Run Type) / Solo piloted (Additional Options) —
@@ -301,14 +346,22 @@ export default function DeepDungeonPurchaseBox({ service, gameShort }: { service
                       )}
                     </div>
                     {groupAddons.length > 0 && (
-                      <div className="mt-2.5 space-y-1.5">{groupAddons.map(groupAddonRow)}</div>
+                      <div className={cfg?.group?.addonsHeading ? 'mt-4' : 'mt-2.5'}>
+                        {cfg?.group?.addonsHeading && (
+                          <p className="pl-px text-sm font-semibold text-white">
+                            {cfg.group.addonsHeading}
+                          </p>
+                        )}
+                        <div className="mt-2.5 space-y-1.5">{groupAddons.map(groupAddonRow)}</div>
+                      </div>
                     )}
                     {/* Optional multiplier (e.g. mount = 4 clears) below the run types */}
                     {groupMultiplier && (
                       <div className="mt-4">
-                        <p className="mb-2 pl-px text-xs font-semibold text-slate-300">
+                        <p className="pl-px text-sm font-semibold text-white">
                           {groupMultiplier.heading}
                         </p>
+                        <div className="mt-2.5">
                         <button
                           type="button"
                           onClick={() => setMountOn((m) => !m)}
@@ -336,6 +389,7 @@ export default function DeepDungeonPurchaseBox({ service, gameShort }: { service
                             {groupMultiplier.times * 100}%
                           </span>
                         </button>
+                        </div>
                       </div>
                     )}
                   </div>
@@ -352,7 +406,7 @@ export default function DeepDungeonPurchaseBox({ service, gameShort }: { service
                   <div
                     className={`transition-opacity duration-200 ${shown === 'solo' && fadeIn ? 'opacity-100' : 'opacity-0'}`}
                   >
-                    <p className="pl-px text-sm font-semibold text-white">Additional Options</p>
+                    <p className="pl-px text-sm font-semibold text-white">{cfg?.soloHeading ?? 'Additional Options'}</p>
                     <div className="mt-2.5 space-y-1.5">
                       {soloAddons.map((a) =>
                         row(
@@ -361,11 +415,11 @@ export default function DeepDungeonPurchaseBox({ service, gameShort }: { service
                           a.timesBase ? `${a.timesBase * 100}%` : `+${format(a.price)}`,
                           checked.includes(a.id),
                           () => toggle(a.id),
+                          a.note,
                         ),
                       )}
-                      {row('stream', 'Private Stream', `+${format(streamPrice)}`, stream, () =>
-                        setStream((s) => !s),
-                      )}
+                      {cfg?.streamInSolo &&
+                        row('stream', 'Private Stream', `+${format(10)}`, stream, () => setStream((s) => !s))}
                     </div>
                   </div>
                 </div>
@@ -374,7 +428,7 @@ export default function DeepDungeonPurchaseBox({ service, gameShort }: { service
           ) : (
             cfg && (
               <div>
-                <p className="pl-px text-sm font-semibold text-white">Additional Options</p>
+                <p className="pl-px text-sm font-semibold text-white">{cfg?.soloHeading ?? 'Additional Options'}</p>
                 <div className="mt-2.5 space-y-1.5">
                   {soloAddons.map((a) =>
                     row(
@@ -383,15 +437,56 @@ export default function DeepDungeonPurchaseBox({ service, gameShort }: { service
                       a.timesBase ? `${a.timesBase * 100}%` : `+${format(a.price)}`,
                       checked.includes(a.id),
                       () => toggle(a.id),
+                      a.note,
                     ),
                   )}
-                  {row('stream', 'Private Stream', `+${format(streamPrice)}`, stream, () =>
-                    setStream((s) => !s),
-                  )}
+                  {cfg?.streamInSolo &&
+                    row('stream', 'Private Stream', `+${format(10)}`, stream, () => setStream((s) => !s))}
                 </div>
               </div>
             )
           )}
+
+          {/* Data center */}
+          <div>
+            <p className="pl-px text-sm font-semibold text-white">
+              Data Center <span className="text-xs font-normal text-slate-500">(required)</span>
+            </p>
+            <div className="relative mt-2.5">
+              <FieldPopup message={dcError ? 'Select a data center first.' : ''} />
+              <CustomSelect
+                value={dc}
+                placeholder="Select Data Center"
+                options={DATA_CENTERS.map((d) => ({ label: d }))}
+                onSelect={(i) => {
+                  setDc(DATA_CENTERS[i]);
+                  setDcError(false);
+                }}
+                ariaLabel="Select data center"
+                invalid={dcError}
+              />
+            </div>
+          </div>
+
+          {/* Additional options — unlock (when offered), stream, priority */}
+          <MountAddonsBlock
+            stream={stream}
+            setStream={setStream}
+            priority={priority}
+            setPriority={setPriority}
+            streamPrice={10}
+            hideStream={cfg?.streamInSolo || (cfg?.streamPilotedOnly && effMethod === 'group')}
+            extraRow={
+              cfg?.unlock
+                ? {
+                    label: cfg.unlock.label,
+                    hint: `+${format(cfg.unlock.price)}`,
+                    checked: unlockChecked,
+                    onClick: () => setUnlockChecked((u) => !u),
+                  }
+                : undefined
+            }
+          />
         </div>
       </div>
 

@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { Check, ChevronRight, Clock } from 'lucide-react';
+import { ChevronRight, Clock } from 'lucide-react';
 import FadeImage from './FadeImage';
 import FieldPopup from './FieldPopup';
+import MountAddonsBlock from './MountAddonsBlock';
 import { CustomSelect } from './PurchaseBox';
 import { Slider } from '@/components/ui/slider';
 import { useCart } from '@/context/CartContext';
@@ -26,18 +27,21 @@ const DATA_CENTERS = [
 
 /** Crystalline Conflict rank purchase box: current → required rank with rank
     badges and a dual slider, priced as the difference of the two ranks'
-    cumulative prices (from the ffxiv-PvP database category). */
+    cumulative prices (from the ffxiv-PvP database category), plus Private
+    Stream and Priority add-ons in the Additional Options drawer. */
 export default function CCRankPurchaseBox({ service, gameShort }: { service: Service; gameShort: string }) {
   const { addItem, openCart } = useCart();
   const { format } = useCurrency();
   const { db } = usePricing();
   const cfg = db.ccRank;
+  const priorityMultiplier = db.purchaseBox.priorityMultiplier;
   const RANKS = cfg?.ranks ?? [];
 
   const [start, setStart] = useState(0);
   const [end, setEnd] = useState(1);
   const [dc, setDc] = useState('');
   const [stream, setStream] = useState(false);
+  const [priority, setPriority] = useState(false);
   const [dcError, setDcError] = useState(false);
 
   const { rootRef, wrapRef, stick, overflowTop, fixedStyle, blockHpx } = usePurchaseFloat(
@@ -56,7 +60,8 @@ export default function CCRankPurchaseBox({ service, gameShort }: { service: Ser
   const startRank = RANKS[start];
   const endRank = RANKS[end];
   const streamPrice = stream ? cfg?.streamAddon.price ?? 0 : 0;
-  const total = Math.max((endRank?.price ?? 0) - (startRank?.price ?? 0), 0) + streamPrice;
+  const base = Math.max((endRank?.price ?? 0) - (startRank?.price ?? 0), 0);
+  const total = base * (priority ? priorityMultiplier : 1) + streamPrice;
 
   const addToCart = () => {
     if (total <= 0) return;
@@ -77,6 +82,7 @@ export default function CCRankPurchaseBox({ service, gameShort }: { service: Ser
         `Rank: ${startRank.label} → ${endRank.label}`,
         `Data Center: ${dc}`,
         ...(stream ? [cfg!.streamAddon.label] : []),
+        ...(priority ? [`Priority (+${Math.round((priorityMultiplier - 1) * 100)}%)`] : []),
       ],
       1,
     );
@@ -155,27 +161,13 @@ export default function CCRankPurchaseBox({ service, gameShort }: { service: Ser
           </div>
 
           {/* Add-ons */}
-          {cfg && (
-            <div>
-              <p className="mb-2 pl-px text-xs font-semibold text-slate-300">Add-ons</p>
-              <button
-                type="button"
-                onClick={() => setStream((s) => !s)}
-                aria-pressed={stream}
-                className="flex w-full items-center gap-3 rounded-[5px] bg-navy-850 px-2.5 py-1.5 text-left transition-colors hover:bg-navy-800"
-              >
-                <span
-                  className={`flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-[3px] border transition-colors ${
-                    stream ? 'border-cyan-600 bg-cyan-600 text-navy-900' : 'border-navy-600 text-transparent'
-                  }`}
-                >
-                  <Check className="h-3 w-3" strokeWidth={3.5} />
-                </span>
-                <span className="min-w-0 flex-1 truncate text-sm text-slate-300">{cfg.streamAddon.label}</span>
-                <span className="text-xs font-bold text-cyan-400">+{format(cfg.streamAddon.price)}</span>
-              </button>
-            </div>
-          )}
+          <MountAddonsBlock
+            stream={stream}
+            setStream={setStream}
+            priority={priority}
+            setPriority={setPriority}
+            streamPrice={cfg?.streamAddon.price ?? 10}
+          />
         </div>
       </div>
 

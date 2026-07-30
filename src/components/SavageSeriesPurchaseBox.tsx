@@ -3,6 +3,7 @@ import { Armchair, Check, Clock, Gamepad2, Layers, Minus, Plus, Settings2, Sword
 import FadeImage from './FadeImage';
 import FieldPopup from './FieldPopup';
 import { CustomSelect } from './PurchaseBox';
+import { Slider } from '@/components/ui/slider';
 import { useCart } from '@/context/CartContext';
 import { useCurrency } from '@/context/CurrencyContext';
 import { usePricing } from '@/context/PricingContext';
@@ -67,6 +68,7 @@ export default function SavageSeriesPurchaseBox({ service, gameShort }: { servic
   const [shown, setShown] = useState<BoostOption>('fights');
   const [fadeIn, setFadeIn] = useState(true);
   const [unlocks, setUnlocks] = useState<string[]>([]);
+  const [runs, setRuns] = useState(1);
   const [stream, setStream] = useState(false);
   const [priority, setPriority] = useState(false);
   const [logIdx, setLogIdx] = useState(0);
@@ -95,7 +97,7 @@ export default function SavageSeriesPurchaseBox({ service, gameShort }: { servic
   }, [fadeIn, boostOption]);
 
   const { rootRef, wrapRef, stick, overflowTop, fixedStyle, blockHpx } = usePurchaseFloat(
-    `${method}|${optionsOpen}|${shown}`,
+    `${method}|${optionsOpen}|${shown}|${runs}`,
   );
 
   const onMethod = (m: MethodId) => {
@@ -132,6 +134,10 @@ export default function SavageSeriesPurchaseBox({ service, gameShort }: { servic
       : 0;
   const unlocksTotal = unlocks.reduce((s, id) => s + (cfg?.unlocks.find((u) => u.id === id)?.price ?? 0), 0);
   const hasSelection = bundlesTotal + fightsTotal > 0;
+  // Amount of Runs multiplies picked tiers and fights — with nothing picked
+  // (unlock-only order) the control greys out
+  const runsLocked = !hasSelection;
+  const effRuns = runsLocked ? 1 : runs;
   // AFK has no FFXIV Logs option; with nothing picked in the active Boost
   // Option the dropdown is disabled and falls back to "I don't want a parse".
   const effLogIdx = method === 'afk' || !hasSelection ? 0 : logIdx;
@@ -145,7 +151,7 @@ export default function SavageSeriesPurchaseBox({ service, gameShort }: { servic
   // added afterwards, unaffected. Priority multiplies the tier unlocks only
   // when nothing is picked in the active Boost Option. Private Stream only
   // counts when something else is priced — it never enables Add to cart alone.
-  const base = (bundlesTotal + fightsTotal) * (priority ? priorityMultiplier : 1);
+  const base = (bundlesTotal + fightsTotal) * effRuns * (priority ? priorityMultiplier : 1);
   const unlocksPart = hasSelection ? unlocksTotal : unlocksTotal * (priority ? priorityMultiplier : 1);
   const gearPrice = showGear ? GEAR_OPTIONS[effGearIdx]?.price ?? 0 : 0;
   const subtotal = base * (1 + logsPercent / 100) + logsPrice + unlocksPart + gearPrice;
@@ -170,7 +176,7 @@ export default function SavageSeriesPurchaseBox({ service, gameShort }: { servic
     const selectedUnlocks = unlocks.map((id) => cfg!.unlocks.find((u) => u.id === id)!.label);
     // Run count only makes sense for specific fights — tier bundles and
     // unlock-only orders are one-offs, so their cart qty controls are locked.
-    const qtyLocked = shown === 'tier' || fights.length === 0;
+    const qtyLocked = !hasSelection || effRuns > 1;
     addItem(
       {
         ...service,
@@ -240,9 +246,36 @@ export default function SavageSeriesPurchaseBox({ service, gameShort }: { servic
             </div>
           </div>
 
+          {/* Amount of runs — multiplies specific fights; greyed for tier
+              bundles and unlock-only orders (one-offs) */}
+          <div className={runsLocked ? 'pointer-events-none opacity-50' : ''}>
+            <p className="pl-px text-sm font-semibold text-white">Amount of Runs</p>
+            <input
+              type="text"
+              inputMode="numeric"
+              value={String(runs)}
+              aria-label="Amount of runs"
+              disabled={runsLocked}
+              onChange={(e) => {
+                const v = parseInt(e.target.value.replace(/[^0-9]/g, ''), 10);
+                if (!Number.isNaN(v)) setRuns(Math.min(Math.max(v, 1), db.purchaseBox.runsMax));
+              }}
+              className="mt-2.5 h-10 w-full rounded-[5px] border border-navy-700/70 bg-navy-850 px-3.5 text-center text-sm text-slate-300 outline-none transition-colors focus:border-navy-600"
+            />
+            <Slider
+              className="mt-4"
+              min={1}
+              max={db.purchaseBox.runsMax}
+              step={1}
+              value={[runs]}
+              onValueChange={([v]) => setRuns(v)}
+              aria-label="Amount of runs slider"
+            />
+          </div>
+
           {/* Boost option */}
           <div>
-            <p className="pl-px text-sm font-semibold text-white">Boost Option</p>
+            <p className="pl-px text-sm font-semibold text-white">Encounter Options</p>
             <div className="mt-2.5 grid grid-cols-2 gap-3">
               {BOOST_OPTIONS.map((o) => (
                 <button

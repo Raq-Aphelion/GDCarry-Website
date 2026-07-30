@@ -68,6 +68,9 @@ export interface PricingAddon {
   timesBase?: number;
   /** Second-method (AFK Carry) price when it differs from `price` */
   afkPrice?: number;
+  /** When the option is checked, show a dropdown of these choices
+      (e.g. job or armour set) */
+  selectOptions?: { label: string; options: string[] };
 }
 
 /** Pandaemonium per-method pricing (bundles, per-tier fights, unlocks, completion times) */
@@ -105,8 +108,10 @@ export interface PricingDb {
     addons: PricingAddon[];
   };
   /** Service id -> explicit per-method prices (overrides afkDiscount model).
-      Omit `afk` for piloted-only services — the AFK button is then hidden. */
-  methodPrices?: Record<string, { piloted: number; afk?: number }>;
+      Omit `afk` for piloted-only services — the AFK button is then hidden.
+      `afkLabel` renames the second method (e.g. 'Group Play'); `groupFirst`
+      lists it before Piloted and preselects it. */
+  methodPrices?: Record<string, { piloted: number; afk?: number; afkLabel?: string; groupFirst?: boolean }>;
   /** Gil currency pricing (from the ffxiv-Gil category file) */
   gil?: { pricePerMillion: number };
   /** Savage raid series pricing (from ffxiv-SavageRaids), keyed by service id
@@ -223,6 +228,12 @@ export interface PricingDb {
         afkLabel?: string;
         /** AFK not offered for this duty (e.g. Arcadion Heavyweight) */
         afkDisabled?: boolean;
+        /** Piloted-only mount — no method toggle, static Piloted pill */
+        pilotedOnly?: boolean;
+        /** Show the second method (e.g. Group Play) before Piloted */
+        groupFirst?: boolean;
+        /** Checkbox add-ons rendered below the data center (e.g. Normal Mode) */
+        addons?: PricingAddon[];
         trial: string;
         completion: string;
       }
@@ -266,14 +277,31 @@ export interface PricingDb {
     string,
     {
       completion: string;
+      /** Solo panel heading (default 'Additional Options') */
+      soloHeading?: string;
+      /** Solo method pill label (default 'Solo Piloted') */
+      soloLabel?: string;
+      /** Any picked solo add-on pins Amount of Runs to 1 and greys it out
+          (one-off rewards like mounts) */
+      disableRunsOnAddons?: boolean;
+      /** Move Private Stream into the solo panel instead of the drawer
+          (e.g. when Group Play shouldn't offer it) */
+      streamInSolo?: boolean;
+      /** Private Stream stays in the drawer but only for Piloted — hidden
+          and reset while Group Play is selected */
+      streamPilotedOnly?: boolean;
       solo: { price: number; addons: PricingAddon[] };
       group?: {
         options: PricingAddon[];
         addons?: PricingAddon[];
+        /** Heading shown above the group add-ons list */
+        addonsHeading?: string;
         /** Toggle shown under its own heading (e.g. a mount); multiplies the
             selected run-type price when active */
         multiplier?: { heading: string; label: string; times: number; note?: string };
       };
+      /** Deep Dungeon Unlock add-on in the Additional Options block */
+      unlock?: PricingAddon;
     }
   >;
   /** Field exploration rank/level ranges (from ffxiv-FieldExplorations) —
@@ -286,6 +314,24 @@ export interface PricingDb {
       defaultStart: number;
       defaultEnd: number;
       priceTiers: { min: number; max: number; pricePerLevel: number }[];
+      /** Start-input label instead of 'Your level' (e.g. 'Your rank') */
+      startLabel?: string;
+      /** Card "From" price override (defaults to the default range's cost) */
+      fromPrice?: number;
+      /** Main add-on in Additional Options */
+      addon?: PricingAddon;
+      /** Extra add-on rows in Additional Options */
+      addons?: PricingAddon[];
+      /** Labeled option groups between Data Center and Additional Options;
+          options may use `requiresOption` to stay greyed until picked */
+      optionGroups?: { heading: string; options: PricingAddon[] }[];
+      /** Phantom-job style select: per-job level caps drive the slider max;
+          optional per-job price tiers override the shared ones */
+      jobs?: { label: string; max: number; priceTiers?: { min: number; max: number; pricePerLevel: number }[] }[];
+      /** Preselected job label (no error state) */
+      defaultJob?: string;
+      /** Private Stream add-on price in Additional Options */
+      stream?: number;
       completion: string;
     }
   >;
@@ -297,6 +343,35 @@ export interface PricingDb {
   serviceAddons?: Record<string, { piloted?: PricingAddon[]; afk?: PricingAddon[] }>;
   /** Service id -> flat base price override (legacy; prefer methodPrices) */
   servicePrices: Record<string, number>;
+  /** Allied Society reputation boosting (from ffxiv-FieldExplorations):
+      per-rank price, faction select with per-faction rank caps */
+  reputation?: Record<
+    string,
+    {
+      completion: string;
+      fromPrice?: number;
+      rankMin: number;
+      rankMax: number;
+      defaultStart: number;
+      defaultEnd: number;
+      pricePerRank: number;
+      /** Rank names by rank number (1-based index into the array) */
+      rankNames?: string[];
+      /** Show rank names without the numeric prefix (e.g. 'Satisfaction 3') */
+      rankNameOnly?: boolean;
+      /** Select label instead of 'Allied Society' (e.g. 'Custom Delivery NPC') */
+      factionLabel?: string;
+      factions: { id: string; label: string; maxRank: number }[];
+      /** Full-expansion allied packages; picking any greys out the
+          faction/rank selection */
+      alliedPackages?: { id: string; label: string; price: number }[];
+      /** Section heading for alliedPackages (default 'Allied Societies Rank') */
+      packagesLabel?: string;
+      /** Society unlock add-on in the drawer; with any package picked, the
+          base price is replaced by arrPrice (ARR) or otherPrice per package */
+      unlock?: { label: string; price: number; arrPrice: number; otherPrice: number };
+    }
+  >;
 }
 
 /** Bundled fallback, used only if the JSON database cannot be loaded. */
@@ -340,6 +415,7 @@ const CATEGORY_FILES = [
   'ffxiv-Mounts',
   'ffxiv-Trials',
   'ffxiv-DeepDungeons',
+  'ffxiv-AllianceRaids',
   'ffxiv-FieldExplorations',
   'ffxiv-Catalog',
 ];
@@ -370,6 +446,7 @@ export async function loadPricing(): Promise<PricingDb> {
     let trialBundles: PricingDb['trialBundles'];
     let deepDungeons: PricingDb['deepDungeons'];
     let fieldLeveling: PricingDb['fieldLeveling'];
+    let reputation: PricingDb['reputation'];
     let unlockAddon: PricingDb['unlockAddon'];
     let catalog: PricingDb['catalog'];
     await Promise.all(
@@ -379,7 +456,7 @@ export async function loadPricing(): Promise<PricingDb> {
           if (!r.ok) return;
           const cat = (await r.json()) as Pick<
             PricingDb,
-            'methodPrices' | 'addonPrices' | 'serviceAddons' | 'purchaseBox' | 'gil' | 'savageSeries' | 'leveling' | 'msqBoost' | 'bluLeveling' | 'pvpSeries' | 'ccRank' | 'wolfMarks' | 'mounts' | 'trials' | 'trialBundles' | 'deepDungeons' | 'fieldLeveling' | 'unlockAddon' | 'catalog'
+            'methodPrices' | 'addonPrices' | 'serviceAddons' | 'purchaseBox' | 'gil' | 'savageSeries' | 'leveling' | 'msqBoost' | 'bluLeveling' | 'pvpSeries' | 'ccRank' | 'wolfMarks' | 'mounts' | 'trials' | 'trialBundles' | 'deepDungeons' | 'fieldLeveling' | 'reputation' | 'unlockAddon' | 'catalog'
           >;
           Object.assign(methodPrices, cat.methodPrices);
           Object.assign(addonPrices, cat.addonPrices);
@@ -398,6 +475,7 @@ export async function loadPricing(): Promise<PricingDb> {
           if (cat.trialBundles) trialBundles = { ...trialBundles, ...cat.trialBundles };
           if (cat.deepDungeons) deepDungeons = { ...deepDungeons, ...cat.deepDungeons };
           if (cat.fieldLeveling) fieldLeveling = { ...fieldLeveling, ...cat.fieldLeveling };
+          if (cat.reputation) reputation = { ...reputation, ...cat.reputation };
           if (cat.unlockAddon) unlockAddon = cat.unlockAddon;
           if (cat.catalog) catalog = cat.catalog;
         } catch {
@@ -428,6 +506,7 @@ export async function loadPricing(): Promise<PricingDb> {
       trialBundles,
       deepDungeons,
       fieldLeveling,
+      reputation,
       servicePrices: db.servicePrices ?? {},
     };
   } catch {

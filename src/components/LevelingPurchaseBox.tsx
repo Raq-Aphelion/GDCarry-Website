@@ -6,6 +6,7 @@ import { CustomSelect } from './PurchaseBox';
 import { Slider } from '@/components/ui/slider';
 import { useCart } from '@/context/CartContext';
 import { useCurrency } from '@/context/CurrencyContext';
+import { usePricing } from '@/context/PricingContext';
 import { usePurchaseFloat } from '@/hooks/usePurchaseFloat';
 import type { Service } from '@/data/games';
 import type { PricingAddon } from '@/data/pricing';
@@ -58,19 +59,86 @@ export interface LevelBoxConfig {
   priceTiers: { min: number; max: number; pricePerLevel: number }[];
   completion: string;
   showJob: boolean;
+  /** Start-input label instead of 'Your level' (e.g. 'Your rank') */
+  startLabel?: string;
   /** Main add-on in Additional Options (MSQ completion / All spells unlock) */
   addon?: PricingAddon;
   /** Lock the main add-on unless the desired level is the cap (Blue Mage) */
   addonLocksToMax?: boolean;
   /** Extra add-on rows in Additional Options (Masked Carnivale) */
   addons?: PricingAddon[];
+  /** Labeled option groups between Data Center and Additional Options (e.g.
+      Relic Weapon / Elemental Armor); options may use `requiresOption` to
+      stay greyed until another option is picked */
+  optionGroups?: { heading: string; options: PricingAddon[] }[];
+  /** Phantom-job style select: per-job level caps drive the slider max;
+      optional per-job price tiers override the shared ones */
+  jobs?: { label: string; max: number; priceTiers?: { min: number; max: number; pricePerLevel: number }[] }[];
+  /** Preselected job label (no error state) */
+  defaultJob?: string;
   /** Private Stream add-on price, shown in Additional Options when set */
   stream?: number;
 }
 
 /** Leveling purchase box: level range (inputs + dual slider), data center
+    select, optional job select and add-ons — priced per level from the
+    ffxiv-Leveling database category. The Additional Options drawer always
+    renders and carries Private Stream (when configured) and Priority
+    (× priorityMultiplier, applied to the level price only). */
+/** Animated expand/retract wrapper for the job/armour-set dropdown that
+    appears when a relic/armour option is picked. Overflow switches to visible
+    once the expand finishes so the open select isn't clipped. */
+function OptionSelect({
+  show,
+  label,
+  value,
+  options,
+  onSelect,
+}: {
+  show: boolean;
+  label: string;
+  value: string;
+  options: string[];
+  onSelect: (i: number) => void;
+}) {
+  const [expanded, setExpanded] = useState(false);
+  // Render-phase state adjustment — reset the overflow guard on retract
+  const [prevShow, setPrevShow] = useState(show);
+  if (prevShow !== show) {
+    setPrevShow(show);
+    if (!show) setExpanded(false);
+  }
+  useEffect(() => {
+    if (!show) return;
+    const t = setTimeout(() => setExpanded(true), 300);
+    return () => clearTimeout(t);
+  }, [show]);
+  return (
+    <div
+      className={`grid transition-all duration-300 ease-soft ${
+        show ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
+      }`}
+    >
+      <div className={`min-h-0 ${expanded ? 'overflow-visible' : 'overflow-hidden'}`}>
+        <div className="mt-1.5">
+          <CustomSelect
+            value={value}
+            placeholder={`Select ${label}`}
+            options={options.map((o) => ({ label: o }))}
+            onSelect={onSelect}
+            ariaLabel={`Select ${label}`}
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/** Leveling purchase box: level range (inputs + dual slider), data center
     select, optional job select and add-on — priced per level from the
-    ffxiv-Leveling database category. */
+    ffxiv-Leveling database category. The Additional Options drawer always
+    renders and carries Private Stream (when configured) and Priority
+    (× priorityMultiplier, applied to the level price only). */
 export default function LevelingPurchaseBox({
   service,
   gameShort,
@@ -82,15 +150,31 @@ export default function LevelingPurchaseBox({
 }) {
   const { addItem, openCart } = useCart();
   const { format } = useCurrency();
+  const { db } = usePricing();
+  const priorityMultiplier = db.purchaseBox.priorityMultiplier;
   const cfg = config;
 
   const [start, setStart] = useState(cfg.defaultStart);
   const [end, setEnd] = useState(cfg.defaultEnd);
-  const [job, setJob] = useState('');
+  const [job, setJob] = useState(cfg.defaultJob ?? '');
   const [dc, setDc] = useState('');
+
+  // Phantom-job variants: the selected job's cap drives the slider max
+  const levelMax = cfg.jobs?.length
+    ? (cfg.jobs.find((j) => j.label === job)?.max ?? cfg.levelMax)
+    : cfg.levelMax;
+  const selectJob = (label: string) => {
+    setJob(label);
+    setJobError(false);
+    const max = cfg.jobs?.find((j) => j.label === label)?.max;
+    if (max) setRange(start, Math.min(end, max));
+  };
   const [addonChecked, setAddonChecked] = useState(false);
   const [addonsChecked, setAddonsChecked] = useState<string[]>([]);
+  const [groupsChecked, setGroupsChecked] = useState<string[]>([]);
+  const [groupSelections, setGroupSelections] = useState<Record<string, string>>({});
   const [stream, setStream] = useState(false);
+  const [priority, setPriority] = useState(false);
   const [jobError, setJobError] = useState(false);
   const [dcError, setDcError] = useState(false);
   const [optionsOpen, setOptionsOpen] = useState(false);
@@ -102,12 +186,12 @@ export default function LevelingPurchaseBox({
   }, [optionsOpen]);
 
   const { rootRef, wrapRef, stick, overflowTop, fixedStyle, blockHpx } = usePurchaseFloat(
-    `${job}|${dc}|${optionsOpen}|${start}-${end}`,
+    `${job}|${dc}|${optionsOpen}|${start}-${end}|${groupsChecked.length}|${Object.keys(groupSelections).length}`,
   );
 
   const clampLevels = (s: number, e: number): [number, number] => {
     const min = cfg.levelMin;
-    const max = cfg.levelMax;
+    const max = levelMax;
     s = Math.min(Math.max(s, min), max - 1);
     e = Math.min(Math.max(e, min + 1), max);
     if (s >= e) s = e - 1;
@@ -120,10 +204,14 @@ export default function LevelingPurchaseBox({
   };
 
   // Per-level price tiers: sum the per-level price of every level gained
+  // (job-specific tiers when the config provides them, e.g. phantom jobs)
+  const activeTiers = cfg.jobs?.length
+    ? (cfg.jobs.find((j) => j.label === job)?.priceTiers ?? cfg.priceTiers)
+    : cfg.priceTiers;
   const levelPrice = (() => {
     let sum = 0;
     for (let l = start + 1; l <= end; l++) {
-      const tier = cfg.priceTiers.find((t) => l >= t.min && l <= t.max);
+      const tier = activeTiers.find((t) => l >= t.min && l <= t.max);
       sum += tier?.pricePerLevel ?? 0;
     }
     return sum;
@@ -143,12 +231,36 @@ export default function LevelingPurchaseBox({
     (s, id) => s + (cfg.addons?.find((a) => a.id === id)?.price ?? 0),
     0,
   );
-  const streamPrice = stream ? cfg.stream ?? 0 : 0;
-  const total = levelPrice + addonPrice + extrasPrice + streamPrice;
+  const groupOptions = cfg.optionGroups?.flatMap((g) => g.options) ?? [];
+  // Unchecking an option also drops any options that require it
+  const toggleGroupOption = (o: (typeof groupOptions)[number]) =>
+    setGroupsChecked((prev) => {
+      if (prev.includes(o.id)) {
+        setGroupSelections((sel) => {
+          const next = { ...sel };
+          delete next[o.id];
+          return next;
+        });
+        return prev.filter((x) => x !== o.id && groupOptions.find((a) => a.id === x)?.requiresOption !== o.id);
+      }
+      return [...prev, o.id];
+    });
+  const groupsPrice = groupsChecked.reduce(
+    (s, id) => s + (groupOptions.find((a) => a.id === id)?.price ?? 0),
+    0,
+  );
+  const streamPrice = stream ? (cfg.stream ?? 10) : 0;
+  // Priority multiplies the level price only; add-ons/groups/stream stay flat
+  const total =
+    levelPrice * (priority ? priorityMultiplier : 1) +
+    addonPrice +
+    extrasPrice +
+    groupsPrice +
+    streamPrice;
 
   const addToCart = () => {
     let ok = true;
-    if (cfg.showJob && !job) {
+    if ((cfg.showJob || cfg.jobs?.length) && !job) {
       setJobError(true);
       ok = false;
     }
@@ -160,19 +272,25 @@ export default function LevelingPurchaseBox({
     addItem(
       {
         ...service,
-        id: `${service.id}::${cfg.showJob ? job : 'blu'}|${dc}|${start}-${end}`,
+        id: `${service.id}::${cfg.showJob || cfg.jobs?.length ? job : 'blu'}|${dc}|${start}-${end}`,
         price: total,
         method: 'Piloted',
         qtyLocked: true,
       },
       gameShort,
       [
-        ...(cfg.showJob ? [`Job: ${job}`] : []),
+        ...(job ? [`Job: ${job}`] : []),
         `Level ${start} → ${end}`,
         `Data Center: ${dc}`,
         ...(addonChecked && addonEnabled && cfg.addon ? [cfg.addon.label] : []),
         ...addonsChecked.map((id) => cfg.addons!.find((a) => a.id === id)!.label),
+        ...groupsChecked.map((id) => {
+          const a = groupOptions.find((x) => x.id === id)!;
+          const sel = groupSelections[id];
+          return sel ? `${a.label} — ${sel}` : a.label;
+        }),
         ...(stream ? ['Private Stream'] : []),
+        ...(priority ? [`Priority (+${Math.round((priorityMultiplier - 1) * 100)}%)`] : []),
       ],
       1,
     );
@@ -217,6 +335,45 @@ export default function LevelingPurchaseBox({
     </button>
   );
 
+  const groupOptionRow = (a: (typeof groupOptions)[number]) => {
+    const locked = a.requiresOption != null && !groupsChecked.includes(a.requiresOption);
+    const checked = groupsChecked.includes(a.id);
+    return (
+      <div key={a.id}>
+        <button
+          type="button"
+          onClick={() => !locked && toggleGroupOption(a)}
+          aria-pressed={checked}
+          disabled={locked}
+          className="flex w-full items-center gap-3 rounded-[5px] bg-navy-850 px-2.5 py-1.5 text-left transition-colors hover:bg-navy-800 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-navy-850"
+        >
+          <span
+            className={`flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-[3px] border transition-colors ${
+              checked ? 'border-cyan-600 bg-cyan-600 text-navy-900' : 'border-navy-600 text-transparent'
+            }`}
+          >
+            <Check className="h-3 w-3" strokeWidth={3.5} />
+          </span>
+          <span className="min-w-0 flex-1 truncate text-sm text-slate-300">{a.label}</span>
+          <span className="text-xs font-bold text-cyan-400">+{format(a.price)}</span>
+        </button>
+        {/* Choice dropdown (job / armour set) once the option is picked —
+            expands and retracts with an animated height transition */}
+        {a.selectOptions && (
+          <OptionSelect
+            show={checked}
+            label={a.selectOptions.label}
+            value={groupSelections[a.id] ?? ''}
+            options={a.selectOptions.options}
+            onSelect={(i) =>
+              setGroupSelections((prev) => ({ ...prev, [a.id]: a.selectOptions!.options[i] }))
+            }
+          />
+        )}
+      </div>
+    );
+  };
+
   return (
     <div
       ref={rootRef}
@@ -238,8 +395,8 @@ export default function LevelingPurchaseBox({
           <div>
             <div className="flex items-end gap-2.5">
               <div className="flex-1">
-                <p className="pl-px text-sm font-semibold text-white [text-shadow:0_1px_4px_rgb(0_0_0/0.7)]">Your level</p>
-                <div className="mt-2.5">{levelInput(start, (v) => setRange(v, end), 'Your level')}</div>
+                <p className="pl-px text-sm font-semibold text-white [text-shadow:0_1px_4px_rgb(0_0_0/0.7)]">{cfg.startLabel ?? 'Your level'}</p>
+                <div className="mt-2.5">{levelInput(start, (v) => setRange(v, end), cfg.startLabel ?? 'Your level')}</div>
               </div>
               <ChevronRight className="mb-2.5 h-4 w-4 shrink-0 text-cyan-400" />
               <div className="flex-1">
@@ -250,7 +407,7 @@ export default function LevelingPurchaseBox({
             <Slider
               className="mt-4"
               min={cfg.levelMin}
-              max={cfg.levelMax}
+              max={levelMax}
               step={1}
               minStepsBetweenThumbs={1}
               value={[start, end]}
@@ -259,21 +416,29 @@ export default function LevelingPurchaseBox({
             />
           </div>
 
-          {/* Job — hidden for single-job variants (Blue Mage) */}
-          {cfg.showJob && (
+          {/* Job — hidden for single-job variants (Blue Mage); phantom-job
+              variants pick from config jobs with per-job level caps */}
+          {(cfg.showJob || cfg.jobs?.length) && (
             <div>
               <p className="pl-px text-sm font-semibold text-white">
-                Job <span className="text-xs font-normal text-slate-500">(required)</span>
+                {cfg.jobs?.length ? 'Phantom Job' : 'Job'} <span className="text-xs font-normal text-slate-500">(required)</span>
               </p>
               <div className="relative mt-2.5">
                 <FieldPopup message={jobError ? 'Select a job first.' : ''} />
                 <CustomSelect
                   value={job}
-                  placeholder="Select Job"
-                  options={JOBS.map((j) => ({ label: j }))}
+                  placeholder={cfg.jobs?.length ? 'Select Phantom Job' : 'Select Job'}
+                  options={
+                    cfg.jobs?.length
+                      ? cfg.jobs.map((j) => ({ label: j.label }))
+                      : JOBS.map((j) => ({ label: j }))
+                  }
                   onSelect={(i) => {
-                    setJob(JOBS[i]);
-                    setJobError(false);
+                    if (cfg.jobs?.length) selectJob(cfg.jobs[i].label);
+                    else {
+                      setJob(JOBS[i]);
+                      setJobError(false);
+                    }
                   }}
                   ariaLabel="Select job"
                   invalid={jobError}
@@ -281,6 +446,14 @@ export default function LevelingPurchaseBox({
               </div>
             </div>
           )}
+
+          {/* Labeled option groups (Relic Weapon / Eurekan Armour) */}
+          {cfg.optionGroups?.map((g) => (
+            <div key={g.heading}>
+              <p className="pl-px text-sm font-semibold text-white">{g.heading}</p>
+              <div className="mt-2.5 space-y-1.5">{g.options.map(groupOptionRow)}</div>
+            </div>
+          ))}
 
           {/* Data center */}
           <div>
@@ -303,8 +476,7 @@ export default function LevelingPurchaseBox({
             </div>
           </div>
 
-          {/* Additional options */}
-          {(cfg.addon || cfg.addons?.length || cfg.stream != null) && (
+          {/* Additional options — always rendered (Private Stream / Priority) */}
           <div className={`aob rounded-[5px] border border-navy-700/70 bg-navy-850 ${optionsOpen ? 'expanded' : ''}`}>
             <button
               onClick={() => {
@@ -361,31 +533,46 @@ export default function LevelingPurchaseBox({
                           </button>
                         );
                       })}
-                      {cfg.stream != null && (
-                        <button
-                          type="button"
-                          onClick={() => setStream((s) => !s)}
-                          aria-pressed={stream}
-                          className="flex w-full items-center gap-3 rounded-[5px] bg-navy-850 px-2.5 py-1.5 text-left transition-colors hover:bg-navy-800"
+                      <button
+                        type="button"
+                        onClick={() => setStream((s) => !s)}
+                        aria-pressed={stream}
+                        className="flex w-full items-center gap-3 rounded-[5px] bg-navy-850 px-2.5 py-1.5 text-left transition-colors hover:bg-navy-800"
+                      >
+                        <span
+                          className={`flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-[3px] border transition-colors ${
+                            stream ? 'border-cyan-600 bg-cyan-600 text-navy-900' : 'border-navy-600 text-transparent'
+                          }`}
                         >
-                          <span
-                            className={`flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-[3px] border transition-colors ${
-                              stream ? 'border-cyan-600 bg-cyan-600 text-navy-900' : 'border-navy-600 text-transparent'
-                            }`}
-                          >
-                            <Check className="h-3 w-3" strokeWidth={3.5} />
-                          </span>
-                          <span className="min-w-0 flex-1 truncate text-sm text-slate-300">Private Stream</span>
-                          <span className="text-xs font-bold text-cyan-400">+{format(cfg.stream)}</span>
-                        </button>
-                      )}
+                          <Check className="h-3 w-3" strokeWidth={3.5} />
+                        </span>
+                        <span className="min-w-0 flex-1 truncate text-sm text-slate-300">Private Stream</span>
+                        <span className="text-xs font-bold text-cyan-400">+{format(cfg.stream ?? 10)}</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setPriority((p) => !p)}
+                        aria-pressed={priority}
+                        className="flex w-full items-center gap-3 rounded-[5px] bg-navy-850 px-2.5 py-1.5 text-left transition-colors hover:bg-navy-800"
+                      >
+                        <span
+                          className={`flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-[3px] border transition-colors ${
+                            priority ? 'border-cyan-600 bg-cyan-600 text-navy-900' : 'border-navy-600 text-transparent'
+                          }`}
+                        >
+                          <Check className="h-3 w-3" strokeWidth={3.5} />
+                        </span>
+                        <span className="min-w-0 flex-1 truncate text-sm text-slate-300">Priority</span>
+                        <span className="text-xs font-bold text-cyan-400">
+                          +{Math.round((priorityMultiplier - 1) * 100)}%
+                        </span>
+                      </button>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          )}
         </div>
       </div>
 

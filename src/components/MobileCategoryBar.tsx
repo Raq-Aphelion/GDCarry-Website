@@ -51,10 +51,26 @@ export default function MobileCategoryBar({
         : 'border-navy-700/70 bg-navy-850/80 text-slate-300 hover:text-white'
     }`;
 
+  // Chips themselves fade to transparent at overflowing edges (same mask as
+  // the tags row on service pages)
+  const mask =
+    canLeft && canRight
+      ? 'linear-gradient(to right, transparent, black 24px, black calc(100% - 24px), transparent)'
+      : canLeft
+        ? 'linear-gradient(to right, transparent, black 24px)'
+        : canRight
+          ? 'linear-gradient(to left, transparent, black 24px)'
+          : undefined;
+
   return (
-    <div id="mobile-category-bar" className="sticky top-0 z-30 border-b border-navy-700/60 bg-navy-900/85 backdrop-blur-xl lg:hidden">
+    <div id="mobile-category-bar" className="sticky top-0 z-30 bg-gradient-to-b from-navy-900/90 via-navy-900/60 to-navy-900/0 lg:hidden">
       <div className="relative">
-        <div ref={dragRef} onScroll={updateFades} className="no-scrollbar flex touch-pan-y gap-2 overflow-x-auto px-[25px] py-3">
+        <div
+          ref={dragRef}
+          onScroll={updateFades}
+          style={{ maskImage: mask, WebkitMaskImage: mask }}
+          className="no-scrollbar flex touch-pan-y gap-2 overflow-x-auto px-[25px] py-3"
+        >
           {items.map((s) =>
             gameId ? (
               <Link key={s.id} to={`/boosting/${gameId}?cat=${s.id}`} className={chip(s.id)}>
@@ -67,16 +83,6 @@ export default function MobileCategoryBar({
             ),
           )}
         </div>
-        <div
-          className={`pointer-events-none absolute inset-y-0 left-0 w-8 bg-gradient-to-r from-navy-900 to-transparent transition-opacity duration-300 ${
-            canLeft ? 'opacity-100' : 'opacity-0'
-          }`}
-        />
-        <div
-          className={`pointer-events-none absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-navy-900 to-transparent transition-opacity duration-300 ${
-            canRight ? 'opacity-100' : 'opacity-0'
-          }`}
-        />
       </div>
     </div>
   );

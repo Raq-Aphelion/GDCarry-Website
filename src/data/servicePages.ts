@@ -294,11 +294,19 @@ SERVICE_PAGES['ffxiv-gil-pack'] = {
       title: 'How is the gil delivered?',
       groups: [
         {
-          heading: 'Secure trade',
+          heading: 'Manual Trade',
           items: [
             'A manager schedules the trade with you right after the order is confirmed',
-            'The gil is handed over in-game using only the safest trade methods',
+            'You meet our trader in-game and the gil is handed over face to face — the safest method, at no extra cost',
             'You confirm the received amount and the order is marked complete',
+          ],
+        },
+        {
+          heading: 'Piloted Trade',
+          items: [
+            'A professional trader logs onto your account and completes the delivery for you (+10% fee)',
+            'Delivery is scheduled around times you are not playing',
+            'You are notified once the full amount is on your account',
           ],
         },
       ],
@@ -826,8 +834,17 @@ SERVICE_PAGES['ffxiv-wings-of-mist'] = wingPage('Wings of Mist', 'Hell on Rails 
 SERVICE_PAGES['ffxiv-wings-of-nihility'] = wingPage('Wings of Nihility', 'The Unmaking (Extreme)', 'Totems of Naught', '/boosting/ffxiv/ffxiv-the-unmaking');
 
 /** Savage raid mount pages share one shape; level varies by expansion.
-    `note` appends plain text next to the duty button (e.g. clears required). */
-const savageMountPage = (short: string, duty: string, level: number, dutyTo: string, note?: string): ServicePageContent => ({
+    `note` appends plain text next to the duty button (e.g. clears required).
+    `pilotedOnly` removes every AFK mention (method reward row + accordion);
+    `rows` replaces the bottom two reward rows. */
+const savageMountPage = (
+  short: string,
+  duty: string,
+  level: number,
+  dutyTo: string,
+  note?: string,
+  opts?: { pilotedOnly?: boolean; rows?: ServicePageReward[] },
+): ServicePageContent => ({
   short,
   rewardsHeading: 'What you get',
   rewards: [
@@ -837,21 +854,29 @@ const savageMountPage = (short: string, duty: string, level: number, dutyTo: str
       dutyButton: { label: duty, to: dutyTo },
       ...(note ? { text: note } : {}),
     },
-    {
-      icon: Swords,
-      title: 'Piloted or AFK Carry',
-      text: 'Cleared by a veteran raider on your account, or alongside you in the party.',
-    },
-    {
-      icon: Gem,
-      title: 'Savage Loot Along the Way',
-      text: 'Gear coffers, totems and glamours from every clear.',
-    },
-    {
-      icon: Medal,
-      title: 'Achievement Unlocked',
-      text: 'The Savage achievement on completion.',
-    },
+    opts?.pilotedOnly
+      ? {
+          icon: Swords,
+          title: 'Piloted Service',
+          text: 'Cleared by a veteran raider on your account.',
+        }
+      : {
+          icon: Swords,
+          title: 'Piloted or AFK Carry',
+          text: 'Cleared by a veteran raider on your account, or alongside you in the party.',
+        },
+    ...(opts?.rows ?? [
+      {
+        icon: Gem,
+        title: 'Savage Loot Along the Way',
+        text: 'Gear coffers, totems and glamours from every clear.',
+      },
+      {
+        icon: Medal,
+        title: 'Achievement Unlocked',
+        text: 'The Savage achievement on completion.',
+      },
+    ]),
   ],
   accordion: [
     {
@@ -859,7 +884,7 @@ const savageMountPage = (short: string, duty: string, level: number, dutyTo: str
       items: [`Have a level ${level} Job`, 'Duty unlocked (available as an additional service)'],
     },
     HOW_IT_WORKS,
-    PILOTED_VS_AFK,
+    opts?.pilotedOnly ? PILOTED_ONLY : PILOTED_VS_AFK,
   ],
 });
 
@@ -878,9 +903,26 @@ SERVICE_PAGES['ffxiv-model-o'] = savageMountPage('Model O', 'Alphascape V4.0 (Sa
 SERVICE_PAGES['ffxiv-gobwalker'] = savageMountPage('Gobwalker', 'Alexander - The Burden of the Father (Savage)', 60, '/boosting/ffxiv/ffxiv-alexander-savage');
 SERVICE_PAGES['ffxiv-arrhidaeus'] = savageMountPage('Arrhidaeus', 'Alexander - The Soul of the Creator (Savage)', 60, '/boosting/ffxiv/ffxiv-alexander-savage');
 SERVICE_PAGES['ffxiv-juedi-mount'] = savageMountPage('Juedi', 'Heaven-on-High (Deep Dungeon)', 100, '/boosting/ffxiv/ffxiv-hoh', '— 4 full clears required.');
-SERVICE_PAGES['ffxiv-cerberus-mount'] = savageMountPage('Cerberus', 'Delubrum Reginae (Savage)', 80, '/boosting/ffxiv?cat=alliance-raids');
-SERVICE_PAGES['ffxiv-demi-ozma'] = savageMountPage('Demi-Ozma', 'The Baldesion Arsenal', 70, '/boosting/ffxiv?cat=alliance-raids');
-SERVICE_PAGES['ffxiv-demon-haul'] = savageMountPage('Demon Haul', 'The Forked Tower: Blood', 100, '/boosting/ffxiv?cat=alliance-raids');
+SERVICE_PAGES['ffxiv-aeturna-mount'] = savageMountPage('Aeturna', 'Eureka Orthos (Deep Dungeon)', 100, '/boosting/ffxiv/ffxiv-orthos', '— 4 full clears required.');
+SERVICE_PAGES['ffxiv-cerberus-mount'] = savageMountPage('Cerberus', 'Delubrum Reginae (Savage)', 80, '/boosting/ffxiv?cat=alliance-raids', undefined, { pilotedOnly: true });
+SERVICE_PAGES['ffxiv-demi-ozma'] = savageMountPage('Demi-Ozma', 'The Baldesion Arsenal', 70, '/boosting/ffxiv?cat=alliance-raids', undefined, {
+  pilotedOnly: true,
+  rows: [
+    {
+      icon: Medal,
+      title: 'Cryptic Seals & Eureka Fragments',
+      text: 'Exclusive drops earned for completing the encounters',
+    },
+    {
+      icon: Trophy,
+      title: 'Achievement: "We\'re on Your Side I"',
+      text: 'Achievement unlocked upon clearing the Baldesion Arsenal',
+    },
+  ],
+});
+SERVICE_PAGES['ffxiv-demon-haul'] = savageMountPage('Demon Haul', 'The Forked Tower: Blood', 100, '/boosting/ffxiv?cat=alliance-raids', undefined, { pilotedOnly: true });
+SERVICE_PAGES['ffxiv-dais-of-darkness-mount'] = savageMountPage('Dais of Darkness', 'The Cloud of Darkness (Chaotic)', 100, '/boosting/ffxiv/ffxiv-cloud-of-darkness');
+SERVICE_PAGES['ffxiv-shroud-of-darkness-mount'] = savageMountPage('Shroud of Darkness', 'The Cloud of Darkness (Chaotic)', 100, '/boosting/ffxiv/ffxiv-cloud-of-darkness');
 
 /** Mount buttons in the savage subpage reward blocks → their mount services. */
 export const MOUNT_LINKS: Record<string, string> = {
@@ -898,6 +940,10 @@ export const MOUNT_LINKS: Record<string, string> = {
   '(O12S) Model O': 'ffxiv-model-o',
   '(A4S) Gobwalker': 'ffxiv-gobwalker',
   '(A12S) Arrhidaeus': 'ffxiv-arrhidaeus',
+  'Dais of Darkness': 'ffxiv-dais-of-darkness-mount',
+  'Shroud of Darkness': 'ffxiv-shroud-of-darkness-mount',
+  'Juedi': 'ffxiv-juedi-mount',
+  'Aeturna': 'ffxiv-aeturna-mount',
 };
 
 
@@ -1055,30 +1101,135 @@ const GROUP_PLAY_VS_PILOTED: ServicePageContent['accordion'][number] = {
   ],
 };
 
-const ddRewards = (title: string, achievement: { title: string; text: string }): ServicePageContent['rewards'] => [
+const ddRewards = (
+  title: string,
+  achievement: { title: string; text: string },
+  /** Mount name rendered as a linked button in the 2nd reward spot */
+  mount?: string,
+): ServicePageContent['rewards'] => [
   { icon: Swords, title: 'Aetherpool Levels & Armour', text: 'Upgrades on your Aetherpool Level & Armour.' },
-  { icon: Gem, title: 'Tomestones & Loot', text: 'Various loot from acquiring and clearing the floors of the deep dungeon.' },
+  ...(mount
+    ? [{ icon: Trophy, title: `${mount} Mount (4 Full Clears)`, items: [mount] } satisfies ServicePageReward]
+    : [{ icon: Gem, title: 'Tomestones & Loot', text: 'Various loot from acquiring and clearing the floors of the deep dungeon.' } satisfies ServicePageReward]),
   { icon: BadgeCheck, title, text: 'Exclusive title achieved by completing the deep dungeon solo.' },
   { icon: Medal, title: achievement.title, text: achievement.text },
 ];
 
-/** Field exploration pages share one shape. */
-const fieldPage = (short: string, goal: string, loot: string): ServicePageContent => ({
-  short,
+
+SERVICE_PAGES['ffxiv-custom-deliveries'] = {
+  short: 'Custom Deliveries',
   rewardsHeading: 'What you get',
   rewards: [
-    { icon: ArrowUp, title: goal, text: 'Target rank or level reached — no grinding on your end.' },
-    { icon: Gem, title: loot, text: 'All currencies, loot and unlocks gathered along the way.' },
-    { icon: Timer, title: 'Time Saver', text: 'Weeks of repetitive field content skipped entirely.' },
-    { icon: Medal, title: 'Achievement Progress', text: 'Field exploration achievements unlocked en route.' },
+    { icon: ArrowUp, title: 'Full Satisfaction Reached', text: 'Any Custom Delivery NPC raised to your chosen satisfaction level — no weekly-cap grind.' },
+    { icon: Trophy, title: 'Mounts & Glamour Sets', text: 'NPC-specific mounts, outfits and glamour at max satisfaction.' },
+    { icon: BadgeCheck, title: 'Titles & Stories', text: 'Unique titles and questlines unlocked at every level.' },
+    { icon: Gem, title: 'Scrips & EXP Kept', text: 'Crafters’ and Gatherers’ Scrips, materia and every reward stays yours.' },
   ],
   accordion: [
-    { title: 'Requirements', items: ['Own the relevant expansion', 'Content unlocked (available as an additional service)'] },
+    {
+      title: 'Requirements',
+      items: ['Own the relevant expansion', 'NPC unlocked (available as an additional service)'],
+    },
     HOW_IT_WORKS,
     PILOTED_BOOST,
   ],
+};
+
+SERVICE_PAGES['ffxiv-beast-tribes'] = {
+  short: 'Allied Society',
+  rewardsHeading: 'What you get',
+  rewards: [
+    { icon: ArrowUp, title: 'Target Rank Reached', text: 'Any Allied Society raised to your chosen rank — no daily-reset grind.' },
+    { icon: Trophy, title: 'Exclusive Society Mounts', text: 'Each faction offers an exclusive mount at max rank.' },
+    { icon: BadgeCheck, title: 'Titles & Questlines', text: 'Unique titles and NPC stories unlocked across every rank tier.' },
+    { icon: Gem, title: 'Currencies & Rewards Kept', text: 'Tribe currencies, minions and every reward from each session stays yours.' },
+  ],
+  accordion: [
+    {
+      title: 'Requirements',
+      items: ['Own the relevant expansion', 'Society unlocked (available as an additional service)'],
+    },
+    HOW_IT_WORKS,
+    PILOTED_BOOST,
+  ],
+};
+
+SERVICE_PAGES['ffxiv-cloud-of-darkness'] = {
+  short: 'Cloud of Darkness',
+  rewardsHeading: 'Rewards',
+  rewards: [
+    { icon: Trophy, title: 'Mount Drops (Guaranteed at minimum ilvl)', items: ['Dais of Darkness', 'Shroud of Darkness'] },
+    { icon: Package, title: 'Clouddark Armours & Wisp of Darkness Minion', text: 'Exclusive Clouddark demimateria earned for completing the encounter.' },
+    { icon: Swords, title: 'Chaotic Alliance Raid Completion', text: 'The Cloud of Darkness (Chaotic) completed.' },
+    { icon: BadgeCheck, title: 'Achievement: "Cloud Strife"', text: 'Achievement unlocked upon defeating The Cloud of Darkness (Chaotic).' },
+  ],
+  accordion: [
+    {
+      title: 'Requirements',
+      items: ['Have a level 100 Job', 'Own the Dawntrail Expansion', 'Normal Mode Completion / Fight Unlocked', 'ilvl 740 or higher gear'],
+    },
+    HOW_IT_WORKS,
+    {
+      title: 'Group Play vs Piloted Boost',
+      groups: [
+        {
+          heading: 'Group Play',
+          items: [
+            "You'll be raiding alongside our team on your own character",
+            'RNG Loot — roll on all dropped loot alongside the party (per clear)',
+            'Full Loot — every mount, armour and minion drop is yours (per clear)',
+          ],
+        },
+        {
+          heading: 'Piloted Boost',
+          items: ['A professional raider will be logged onto your account and complete the content on your behalf'],
+        },
+      ],
+    },
+  ],
+};
+
+/** Method accordion for the Echoes of Vana'diel alliance raids — same grouped
+    layout as the other Group Play pages. */
+const ALLIANCE_GROUP_VS_PILOTED: ServicePageContent['accordion'][number] = {
+  title: 'Group Play vs Piloted Boost',
+  groups: [
+    {
+      heading: 'Group Play',
+      items: ["You'll be raiding alongside our team on your own character"],
+    },
+    {
+      heading: 'Piloted Boost',
+      items: ['A professional raider will be logged onto your account and complete the content on your behalf'],
+    },
+  ],
+};
+
+const allianceRaidPage = (
+  short: string,
+  token: string,
+): ServicePageContent => ({
+  short,
+  rewardsHeading: 'Rewards',
+  rewards: [
+    { icon: Package, title: token, text: 'High item level gear from every clear, straight to your armoury.' },
+    { icon: Gem, title: 'All Loot Kept', text: 'Minions, orchestrion rolls, cards and tomestones — every drop from the run stays on your character.' },
+    { icon: Swords, title: 'Alliance Raid Completion', text: `${short} completed.` },
+    { icon: Medal, title: 'Achievement Unlocked', text: `Achievement unlocked upon completing ${short}.` },
+  ],
+  accordion: [
+    {
+      title: 'Requirements',
+      items: ['Have a level 100 Job', 'Own the Dawntrail Expansion', 'Duty unlocked (available as an additional service)'],
+    },
+    HOW_IT_WORKS,
+    ALLIANCE_GROUP_VS_PILOTED,
+  ],
 });
 
+SERVICE_PAGES['ffxiv-jeuno-first-walk'] = allianceRaidPage('Jeuno: The First Walk', 'Guaranteed Gear');
+SERVICE_PAGES['ffxiv-san-doria-second-walk'] = allianceRaidPage("San d'Oria: The Second Walk", 'Guaranteed Gear Upgrade Token');
+SERVICE_PAGES['ffxiv-windurst-third-walk'] = allianceRaidPage('Windurst: The Third Walk', 'Guaranteed Gear Upgrade Token');
 
 SERVICE_PAGES['ffxiv-potd-solo'] = deepDungeonPage(
   'Palace of the Dead',
@@ -1088,13 +1239,13 @@ SERVICE_PAGES['ffxiv-potd-solo'] = deepDungeonPage(
 );
 SERVICE_PAGES['ffxiv-hoh'] = deepDungeonPage(
   'Heaven-on-High',
-  ddRewards('Lone Hero Title', { title: 'Achievement: “Heaven Is a Lonely Place II”', text: 'Achievement unlocked upon clearing Heaven-on-High Floor 100 Solo.' }),
+  ddRewards('Lone Hero Title', { title: 'Achievement: “Heaven Is a Lonely Place II”', text: 'Achievement unlocked upon clearing Heaven-on-High Floor 100 Solo.' }, 'Juedi'),
   ['Have a level 100 Job', '95+ Aetherpool Weapon & Armour (available as an add-on)', 'ilvl 740 or higher gear'],
   GROUP_PLAY_VS_PILOTED,
 );
 SERVICE_PAGES['ffxiv-orthos'] = deepDungeonPage(
   'Eureka Orthos',
-  ddRewards('Once and Future King/Queen Title', { title: 'Achievement: “All by Eurekaself II”', text: 'Achievement unlocked upon clearing Eureka Orthos Floor 100 Solo.' }),
+  ddRewards('Once and Future King/Queen Title', { title: 'Achievement: “All by Eurekaself II”', text: 'Achievement unlocked upon clearing Eureka Orthos Floor 100 Solo.' }, 'Aeturna'),
   ['Have a level 100 Job', '95+ Aetherpool Weapon & Armour (available as an add-on)', 'ilvl 740 or higher gear'],
   GROUP_PLAY_VS_PILOTED,
 );
@@ -1116,11 +1267,72 @@ SERVICE_PAGES['ffxiv-deep-dungeon-bundle'] = deepDungeonPage(
   GROUP_PLAY_VS_PILOTED,
 );
 
-SERVICE_PAGES['ffxiv-resistance-rank'] = fieldPage('Resistance Rank', 'Resistance Rank 1–25', 'Bozjan field notes & story unlocks');
-SERVICE_PAGES['ffxiv-eureka-leveling'] = fieldPage('Eureka', 'Elemental Level 1–60', 'Logograms, kettles & Eureka loot');
-SERVICE_PAGES['ffxiv-occult-phantom-level'] = fieldPage('Phantom Job', 'Phantom Job Level 1–10', 'Full phantom job mastery set');
-SERVICE_PAGES['ffxiv-occult-job-unlocks'] = fieldPage('Job Unlocks', 'Phantom Jobs Unlocked', 'Every unlock quest handled for you');
-SERVICE_PAGES['ffxiv-island-sanctuary'] = fieldPage('Island Sanctuary', 'Sanctuary Rank 1–20', 'Landmarks, rare animals & workshop automation');
+SERVICE_PAGES['ffxiv-resistance-rank'] = {
+  short: 'Resistance Rank',
+  rewardsHeading: 'What you get',
+  rewards: [
+    { icon: ArrowUp, title: 'Increased Resistance Rank', text: 'Your Bozja Rank increased to your desired level' },
+    { icon: BadgeCheck, title: 'Completion of Bozjan and Zadnor content', text: 'Bozja Story mode completed up to your desired level' },
+    { icon: Undo2, title: 'Access to Main Raids', text: 'Gain access to the 48 Man Raids inside of Bozja' },
+    { icon: Package, title: 'Access to Bozja exclusive mounts, minions, and cosmetics', text: 'Acquire mounts, minions and cosmetics from Bozja or Zadnor' },
+  ],
+  accordion: [
+    {
+      title: 'Requirements',
+      items: ['Have a level 90 Job', 'Own the Shadowbringers Expansion', 'Bozja Unlocked'],
+    },
+    HOW_IT_WORKS,
+    PILOTED_ONLY,
+  ],
+};
+SERVICE_PAGES['ffxiv-eureka-leveling'] = {
+  short: 'Eureka',
+  rewardsHeading: 'What you get',
+  rewards: [
+    { icon: Swords, title: 'Increased Elemental Level', text: 'Get your elemental level increased to your specific requirement!' },
+    { icon: Package, title: 'Completion of Eureka zone progression', text: 'Eureka zone progression from lvl 1 to lvl 60' },
+    { icon: Medal, title: 'Baldesion Arsenal', text: 'Unlock the Baldesion Arsenal' },
+    { icon: Trophy, title: 'Eureka Relic Weapon', text: 'Progress toward Eureka relic weapons and armor' },
+  ],
+  accordion: [
+    { title: 'Requirements', items: ['Own the relevant expansion', 'Content unlocked (available as an additional service)'] },
+    HOW_IT_WORKS,
+    PILOTED_BOOST,
+  ],
+};
+SERVICE_PAGES['ffxiv-occult-crescent'] = {
+  short: 'Occult Crescent',
+  rewardsHeading: 'What you get',
+  rewards: [
+    { icon: Swords, title: 'Occult Crescent Glamour', text: 'Exclusive glamour only accessible via the Occult Crescent' },
+    { icon: Package, title: 'Phantom Jobs', text: 'Level up your Phantom Jobs to your desired level' },
+    { icon: Medal, title: 'Relic Steps', text: 'Gain access to the Dawntrail Relic steps and weapons' },
+    { icon: Trophy, title: 'Occult Crescent Bunnies', text: 'Gain access to the fortune carrot events that can make you lots of gil!' },
+  ],
+  accordion: [
+    {
+      title: 'Requirements',
+      items: ['Have a level 100 Job', 'Own the Dawntrail Expansion', 'Occult Crescent Unlocked'],
+    },
+    HOW_IT_WORKS,
+    PILOTED_BOOST,
+  ],
+};
+SERVICE_PAGES['ffxiv-island-sanctuary'] = {
+  short: 'Island Sanctuary',
+  rewardsHeading: 'What you get',
+  rewards: [
+    { icon: ArrowUp, title: 'Sanctuary Ranks 1 - 20', text: 'Your Sanctuary Rank increased to your desired level.' },
+    { icon: Gem, title: 'Landmarks, Rare Animals & Automation', text: 'Every landmark, rare animal and workshop automation unlocked along the way.' },
+    { icon: BadgeCheck, title: 'All Logs completion (available as an add-on)', text: 'Full Gathering and Hunting Logs completed on request — every node, catch and creature recorded.' },
+    { icon: Medal, title: 'Achievement Progress', text: 'Island sanctuary achievements unlocked en route.' },
+  ],
+  accordion: [
+    { title: 'Requirements', items: ['Own the relevant expansion', 'Content unlocked (available as an additional service)'] },
+    HOW_IT_WORKS,
+    PILOTED_BOOST,
+  ],
+};
 
 export function getServicePage(id?: string) {
   return id ? SERVICE_PAGES[id] : undefined;

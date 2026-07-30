@@ -114,6 +114,27 @@ import scStormbloodTrialsBundle from '@/assets/images/service-cards/ffxiv/extrem
 import scHeavenswardTrialsBundle from '@/assets/images/service-cards/ffxiv/extreme-trials/ffxiv-heavensward-extreme-bundle.webp';
 import scMemoriaMisera from '@/assets/images/service-cards/ffxiv/extreme-trials/ffxiv-memoria-misera.webp';
 import scGreatHunt from '@/assets/images/service-cards/ffxiv/extreme-trials/ffxiv-the-great-hunt.webp';
+import scAlliedSociety from '@/assets/images/service-cards/ffxiv/reputation/ffxiv-allied-society.webp';
+import scCustomDelivery from '@/assets/images/service-cards/ffxiv/reputation/ffxiv-custom-delivery.webp';
+import scOccultCrescent from '@/assets/images/service-cards/ffxiv/field-ops-misc/ffxiv-occult-crescent-leveling.webp';
+import scResistanceRank from '@/assets/images/service-cards/ffxiv/field-ops-misc/ffxiv-resistance-rank.webp';
+import scEurekaLeveling from '@/assets/images/service-cards/ffxiv/field-ops-misc/ffxiv-eureka-leveling.webp';
+import scIslandSanctuary from '@/assets/images/service-cards/ffxiv/field-ops-misc/ffxiv-island-sanctuary-rank.webp';
+import scCloudOfDarkness from '@/assets/images/service-cards/ffxiv/24-player-raids/ffxiv-cloud-of-darkness.webp';
+import scDelubrumReginae from '@/assets/images/service-cards/ffxiv/24-player-raids/ffxiv-delubrum-reginae.webp';
+import scBaldesionArsenal from '@/assets/images/service-cards/ffxiv/24-player-raids/ffxiv-the-baldesion-arsenal.webp';
+import scForkedTowerBlood from '@/assets/images/service-cards/ffxiv/24-player-raids/ffxiv-the-forked-tower-blood.webp';
+import scForkedTowerMagic from '@/assets/images/service-cards/ffxiv/24-player-raids/ffxiv-the-forked-tower-magic.webp';
+import scJeunoFirstWalk from '@/assets/images/service-cards/ffxiv/24-player-raids/ffxiv-jueno-the-first-walk.webp';
+import scSanDoriaSecondWalk from '@/assets/images/service-cards/ffxiv/24-player-raids/ffxiv-san-doria-the-second-walk.webp';
+import scWindurstThirdWalk from '@/assets/images/service-cards/ffxiv/24-player-raids/ffxiv-windurst-the-third-walk.webp';
+import scDaisOfDarkness from '@/assets/images/service-cards/ffxiv/mounts/ffxiv-dais-of-darkness.webp';
+import scShroudOfDarkness from '@/assets/images/service-cards/ffxiv/mounts/ffxiv-shroud-of-darkness.webp';
+import scAeturna from '@/assets/images/service-cards/ffxiv/mounts/ffxiv-aeturna.webp';
+import scAnotherMerchantsTale from '@/assets/images/service-cards/ffxiv/criterion-dungeons/ffxiv-another-merchants-tale.webp';
+import scAnotherAloaloIsland from '@/assets/images/service-cards/ffxiv/criterion-dungeons/ffxiv-another-aloalo-island.webp';
+import scAnotherMountRokkon from '@/assets/images/service-cards/ffxiv/criterion-dungeons/ffxiv-another-mount-rokkon.webp';
+import scAnotherSildihnSubterrane from '@/assets/images/service-cards/ffxiv/criterion-dungeons/ffxiv-another-sildihn-subterrane.webp';
 import { SERVICE_PAGES } from '@/data/servicePages';
 import type { CatalogConfig } from '@/data/pricing';
 
@@ -135,12 +156,12 @@ export const games: Game[] = [
           {
             id: 'ffxiv-gil-pack',
             name: 'FFXIV Gil',
-            tag2: 'Delivered through safest methods',
+            tag2: 'Any world, any amount',
             longDescription:
               'Gil is the most widely accepted form of in-game currency. The amount of gil you hold is indicated on the currency panel. The gil cap is 999,999,999 for the player and each retainer, while players on a Free Trial are capped at 300,000 gil.',
             price: 0,
             tag1: '5M - 900M Gil',
-            tag3: 'Any world, any amount',
+            tag3: 'Manual or Piloted Trade',
             image: scGil,
             tag: 'Popular',
           },
@@ -157,7 +178,7 @@ export const games: Game[] = [
         // share the original service's id, so serviceCount dedupes them and
         // they never inflate the totals. Both the name and the proxy list are
         // overridden by the category entry in public/db/ffxiv-Catalog.json.
-        proxies: ['ffxiv-dmu', 'ffxiv-arcadion-savage', 'ffxiv-wings-of-legacy', 'ffxiv-wings-of-nihility', 'ffxiv-lowrider-t1rant', 'ffxiv-dawntrail-trials-bundle', 'ffxiv-the-unmaking', 'ffxiv-leveling-boost', 'ffxiv-msq-skip', 'ffxiv-cc-rank-boost', 'ffxiv-pvp-series-boost'],
+        proxies: ['ffxiv-dmu', 'ffxiv-arcadion-savage', 'ffxiv-wings-of-legacy', 'ffxiv-wings-of-nihility', 'ffxiv-lowrider-t1rant', 'ffxiv-dawntrail-trials-bundle', 'ffxiv-the-unmaking', 'ffxiv-leveling-boost', 'ffxiv-msq-skip', 'ffxiv-cc-rank-boost', 'ffxiv-pvp-series-boost', 'ffxiv-occult-crescent'],
       },
       {
         id: 'ultimate-raids',
@@ -319,15 +340,27 @@ export const games: Game[] = [
       },
       {
         id: 'alliance-raids',
-        name: '24 Player Raids',
+        name: '24+ Player Raids',
         services: [
+          {
+            id: 'ffxiv-cloud-of-darkness',
+            name: 'The Cloud of Darkness (Chaotic)',
+            tag2: '12 - 24 Player Chaotic Raid Clear',
+            price: 0,
+            tag1: 'Darkness mounts and gear',
+            tag3: 'Group Play or Piloted',
+            longDescription:
+              'The dread cloud looms over the AAC — a chaotic alliance raid where one mistake cascades into wipe after wipe. Our raiders clear it piloted, with demimateria and the rare mount chance on top.',
+            image: scCloudOfDarkness,
+            tag: 'New',
+          },
           {
             id: 'ffxiv-delubrum-reginae-savage',
             name: 'Delubrum Reginae (Savage)',
             tag2: '48-man savage raid clear',
             price: 0,
             tag1: 'Cerberus mount chance & title',
-            image: scBlank,
+            image: scDelubrumReginae,
           },
           {
             id: 'ffxiv-baldesion-arsenal',
@@ -335,7 +368,7 @@ export const games: Game[] = [
             tag2: 'Full BA clear with a veteran group',
             price: 0,
             tag1: 'Demi-Ozma mount chance',
-            image: scBlank,
+            image: scBaldesionArsenal,
           },
           {
             id: 'ffxiv-forked-tower-blood',
@@ -343,7 +376,7 @@ export const games: Game[] = [
             tag2: 'Occult Crescent raid clear',
             price: 0,
             tag1: 'All loot included',
-            image: scBlank,
+            image: scForkedTowerBlood,
           },
           {
             id: 'ffxiv-forked-tower-magic',
@@ -351,31 +384,40 @@ export const games: Game[] = [
             tag2: 'Occult Crescent raid clear',
             price: 0,
             tag1: 'All loot included',
-            image: scBlank,
+            image: scForkedTowerMagic,
           },
           {
             id: 'ffxiv-jeuno-first-walk',
             name: 'Jeuno: The First Walk',
-            tag2: 'Quick 7.1 Alliance Raid run',
+            tag2: "Echoes of Vana'diel (Alliance Raid)",
             price: 0,
-            tag1: 'Chance at 720 ilvl gear & Nano Lord minion',
-            image: scBlank,
+            tag1: 'Guaranteed gear',
+            tag3: 'Group Play or Piloted',
+            longDescription:
+              "The first walk through the ruined streets of Jeuno — a 24-player trip back to Vana'diel with 720+ ilvl gear, the Nano Lord minion and every drop along the way. Cleared piloted or alongside our raiders in group play.",
+            image: scJeunoFirstWalk,
           },
           {
             id: 'ffxiv-san-doria-second-walk',
             name: "San d'Oria: The Second Walk",
-            tag2: 'Quick 7.3 raid clear',
+            tag2: "Echoes of Vana'diel (Alliance Raid)",
             price: 0,
-            tag1: 'Guaranteed Gear Upgrade Token',
-            image: scBlank,
+            tag1: 'Guaranteed gear',
+            tag3: 'Group Play or Piloted',
+            longDescription:
+              "The Echoes of Vana'diel continue in San d'Oria — a full 24-player alliance clear with a guaranteed gear upgrade token and all loot kept. Cleared piloted or alongside our raiders in group play.",
+            image: scSanDoriaSecondWalk,
           },
           {
             id: 'ffxiv-windurst-third-walk',
             name: 'Windurst: The Third Walk',
-            tag2: "Echoes of Vana'diel alliance raid clear",
+            tag2: "Echoes of Vana'diel (Alliance Raid)",
             price: 0,
-            tag1: 'Guaranteed Gear Upgrade Token',
-            image: scBlank,
+            tag1: 'Guaranteed gear',
+            tag3: 'Group Play or Piloted',
+            longDescription:
+              "The third walk of the Echoes of Vana'diel series in Windurst — a full 24-player alliance clear with a guaranteed gear upgrade token and all loot kept. Cleared piloted or alongside our raiders in group play.",
+            image: scWindurstThirdWalk,
           },
         ],
       },
@@ -622,9 +664,9 @@ export const games: Game[] = [
           {
             id: 'ffxiv-potd-solo',
             name: 'Palace of the Dead (Deep Dungeon)',
-            tag2: 'Necromancer title & achievements',
+            tag2: '1 - 200 Floors',
             price: 0,
-            tag1: '1 - 200 Floors',
+            tag1: 'Necromancer title & achievements',
             tag3: 'Group Play or Solo Piloted',
             longDescription:
               'In the subterranean city of Gelmorra, deep within a forgotten corner of Issom-Har, stout-hearted explorers have uncovered the entrance to a labyrinthine dungeon. Those who set foot inside its maddening halls find their vigor drained by an irresistible fog of innervation, and repeated excursions have failed to map its seemingly inconstant architecture.',
@@ -634,9 +676,9 @@ export const games: Game[] = [
           {
             id: 'ffxiv-hoh',
             name: 'Heaven-on-High (Deep Dungeon)',
-            tag2: 'Lone Hero title & achievements',
+            tag2: '1 - 100 Floors',
             price: 0,
-            tag1: '1 - 100 Floors',
+            tag1: 'Lone Hero title & achievements',
             tag3: 'Group Play or Solo Piloted',
             longDescription:
               'Rising high above the Ruby Sea from the island of Onokoro, Heaven-on-High is said to be the stairway traversed by kami descending from their empyrean home. Following the discovery of a secret entrance, the Confederate leader Rasho asks you to investigate the tower and brave the hordes of vile fiends that lurk within.',
@@ -645,9 +687,9 @@ export const games: Game[] = [
           {
             id: 'ffxiv-orthos',
             name: 'Eureka Orthos (Deep Dungeon)',
-            tag2: 'Once and Future King/Queen title',
+            tag2: '1 - 100 Floors',
             price: 0,
-            tag1: '1 - 100 Floors',
+            tag1: 'Once and Future King/Queen title',
             tag3: 'Group Play or Solo Piloted',
             longDescription:
               'Beneath the Crystal Tower in Mor Dhona, the Allagan Empire’s deepest secrets slumber. Eureka Orthos descends into a research facility abandoned for millennia — a hundred floors of Allagan horrors waiting beneath the syndicate’s watchful eye.',
@@ -656,9 +698,9 @@ export const games: Game[] = [
           {
             id: 'ffxiv-pilgrims-traverse',
             name: 'Pilgrim\'s Traverse (Deep Dungeon)',
-            tag2: 'The Enlightened title & loot',
+            tag2: '1 - 100 Floors',
             price: 0,
-            tag1: '1 - 100 Floors',
+            tag1: 'The Enlightened title & loot',
             tag3: 'Group Play or Solo Piloted',
             longDescription:
               'Beneath the verdant hills of Il Mheg, a holy road winds down into the dark. Pilgrim’s Traverse calls the faithful and the foolhardy alike to walk its ninety-nine floors, gathering offerings for the verse that waits at journey’s end.',
@@ -667,9 +709,9 @@ export const games: Game[] = [
           {
             id: 'ffxiv-deep-dungeon-bundle',
             name: 'Deep Dungeons Bundle',
-            tag2: 'Every solo title & all loot',
+            tag2: '500 Floors — all four dungeons',
             price: 0,
-            tag1: '500 Floors — all four dungeons',
+            tag1: 'Every solo title & all loot',
             tag3: 'Group Play or Solo Piloted',
             longDescription:
               'Palace of the Dead to Pilgrim’s Traverse, this bundle contains all of FFXIV’s current deep dungeons — every floor, every title and every achievement in one package.',
@@ -683,20 +725,22 @@ export const games: Game[] = [
         name: 'Criterion Dungeons',
         services: [
           {
-            id: 'ffxiv-variant-sildihn-subterrane',
-            name: "Variant: The Sil'dihn Subterrane",
+            id: 'ffxiv-variant-merchants-tale',
+            name: "Variant: Merchant's Tale",
             tag2: 'All 12 routes available',
             price: 0,
             tag1: 'Fresh cosmetic rewards',
             image: scBlank,
+            tag: 'New',
           },
           {
-            id: 'ffxiv-variant-mount-rokkon',
-            name: 'Variant: Mount Rokkon',
-            tag2: 'All 12 routes available',
+            id: 'ffxiv-another-merchants-tale',
+            name: "Another Merchant's Tale",
+            tag2: 'Criterion clear with all loot',
             price: 0,
-            tag1: 'Rewards & glamour sets',
-            image: scBlank,
+            tag1: 'Exclusive title & rewards',
+            image: scAnotherMerchantsTale,
+            tag: 'New',
           },
           {
             id: 'ffxiv-variant-aloalo-island',
@@ -707,28 +751,19 @@ export const games: Game[] = [
             image: scBlank,
           },
           {
-            id: 'ffxiv-criterion-glamour-set',
-            name: 'Glamour Set from 1 Criterion',
-            tag2: 'Full glamour set from any Criterion dungeon',
-            price: 0,
-            tag1: 'All paths cleared',
-            image: scBlank,
-          },
-          {
-            id: 'ffxiv-criterion-mount-all-paths',
-            name: 'Mount from 1 Criterion [All Paths]',
-            tag2: 'Guaranteed mount from any Criterion dungeon',
-            price: 0,
-            tag1: 'All paths cleared',
-            image: scBlank,
-            tag: 'Best Value',
-          },
-          {
-            id: 'ffxiv-another-sildihn-subterrane',
-            name: "Another Sil'dihn Subterrane",
+            id: 'ffxiv-another-aloalo-island',
+            name: 'Another Aloalo Island',
             tag2: 'Criterion clear with all loot',
             price: 0,
-            tag1: "Infamy of Sil'dih title",
+            tag1: 'Mount and title',
+            image: scAnotherAloaloIsland,
+          },
+          {
+            id: 'ffxiv-variant-mount-rokkon',
+            name: 'Variant: Mount Rokkon',
+            tag2: 'All 12 routes available',
+            price: 0,
+            tag1: 'Rewards & glamour sets',
             image: scBlank,
           },
           {
@@ -737,40 +772,23 @@ export const games: Game[] = [
             tag2: 'Criterion clear with all loot',
             price: 0,
             tag1: 'Chance at Shishioji mount',
+            image: scAnotherMountRokkon,
+          },
+          {
+            id: 'ffxiv-variant-sildihn-subterrane',
+            name: "Variant: The Sil'dihn Subterrane",
+            tag2: 'All 12 routes available',
+            price: 0,
+            tag1: 'Fresh cosmetic rewards',
             image: scBlank,
           },
           {
-            id: 'ffxiv-another-aloalo-island',
-            name: 'Another Aloalo Island',
+            id: 'ffxiv-another-sildihn-subterrane',
+            name: "Another Sil'dihn Subterrane",
             tag2: 'Criterion clear with all loot',
             price: 0,
-            tag1: 'Mount and title',
-            image: scBlank,
-          },
-          {
-            id: 'ffxiv-another-sildihn-savage',
-            name: "Another Sil'dihn Subterrane (Savage)",
-            tag2: 'Savage Criterion clear',
-            price: 0,
-            tag1: 'Exclusive rewards & title',
-            image: scBlank,
-            tag: 'Hot',
-          },
-          {
-            id: 'ffxiv-another-rokkon-savage',
-            name: 'Another Mount Rokkon (Savage)',
-            tag2: 'Savage Criterion clear',
-            price: 0,
-            tag1: 'Exclusive rewards & title',
-            image: scBlank,
-          },
-          {
-            id: 'ffxiv-another-aloalo-savage',
-            name: 'Another Aloalo Island (Savage)',
-            tag2: 'Savage Criterion clear',
-            price: 0,
-            tag1: 'Exclusive rewards & title',
-            image: scBlank,
+            tag1: "Infamy of Sil'dih title",
+            image: scAnotherSildihnSubterrane,
           },
         ],
       },
@@ -1125,17 +1143,6 @@ export const games: Game[] = [
             image: scCerberus,
           },
           {
-            id: 'ffxiv-demi-ozma',
-            name: 'Demi-Ozma (Mount)',
-            tag2: 'The Baldesion Arsenal',
-            price: 0,
-            tag1: 'Guaranteed mount drop',
-            tag3: 'Piloted Service',
-            longDescription:
-              'A fragment of Ozma itself from the depths of The Baldesion Arsenal — guaranteed completion with a veteran group.',
-            image: scDemiOzma,
-          },
-          {
             id: 'ffxiv-demon-haul',
             name: 'Demon Haul (Mount)',
             tag2: 'The Forked Tower: Blood',
@@ -1147,15 +1154,59 @@ export const games: Game[] = [
             image: scDemonHaul,
           },
           {
+            id: 'ffxiv-dais-of-darkness-mount',
+            name: 'Dais of Darkness (Mount)',
+            tag2: 'The Cloud of Darkness (Chaotic)',
+            price: 0,
+            tag1: 'Guaranteed mount drop',
+            tag3: 'Group Play or Piloted',
+            longDescription:
+              'A swirling throne of umbral energy from The Cloud of Darkness (Chaotic) — guaranteed at minimum ilvl, piloted or alongside our raiders in group play.',
+            image: scDaisOfDarkness,
+          },
+          {
+            id: 'ffxiv-shroud-of-darkness-mount',
+            name: 'Shroud of Darkness (Mount)',
+            tag2: 'The Cloud of Darkness (Chaotic)',
+            price: 0,
+            tag1: 'Guaranteed mount drop',
+            tag3: 'Group Play or Piloted',
+            longDescription:
+              'Wings woven from pure darkness, earned in The Cloud of Darkness (Chaotic) — guaranteed at minimum ilvl, piloted or alongside our raiders in group play.',
+            image: scShroudOfDarkness,
+          },
+          {
+            id: 'ffxiv-demi-ozma',
+            name: 'Demi-Ozma (Mount)',
+            tag2: 'The Baldesion Arsenal',
+            price: 0,
+            tag1: 'Guaranteed mount drop',
+            tag3: 'Piloted Service',
+            longDescription:
+              'A fragment of Ozma itself from the depths of The Baldesion Arsenal — guaranteed completion with a veteran group.',
+            image: scDemiOzma,
+          },
+          {
             id: 'ffxiv-juedi-mount',
             name: 'Juedi (Mount)',
             tag2: 'Heaven-on-High (Deep Dungeon)',
             price: 0,
             tag1: 'Guaranteed mount drop',
-            tag3: 'Piloted or Group Play',
+            tag3: 'Group Play or Piloted',
             longDescription:
               'The qirin steed of the Empyrean stair — Juedi descends only for those who conquer Heaven-on-High. Guaranteed with four full clears, piloted or alongside our raiders in group play.',
             image: scJuedi,
+          },
+          {
+            id: 'ffxiv-aeturna-mount',
+            name: 'Aeturna (Mount)',
+            tag2: 'Eureka Orthos (Deep Dungeon)',
+            price: 0,
+            tag1: 'Guaranteed mount drop',
+            tag3: 'Group Play or Piloted',
+            longDescription:
+              'The eternal sentinel of Eureka Orthos — Aeturna answers only to those who master its hundred floors. Guaranteed with four full clears, piloted or alongside our raiders in group play.',
+            image: scAeturna,
           },
         ],
       },
@@ -1165,11 +1216,23 @@ export const games: Game[] = [
         services: [
           {
             id: 'ffxiv-beast-tribes',
-            name: 'Beast Tribe Reputation Max',
-            tag2: 'Allied rank with every tribe — mounts, minions and questlines unlocked.',
+            name: 'Allied Society Reputation Boost',
+            tag2: 'Mounts, minions & questlines unlocked',
             price: 0,
-            tag1: '1–2 weeks',
-            image: scBlank,
+            tag1: 'Any society, any rank',
+            tag3: 'Piloted Service',
+            image: scAlliedSociety,
+          },
+          {
+            id: 'ffxiv-custom-deliveries',
+            name: 'Custom Delivery Reputation Boost',
+            tag2: 'Scrips, mounts & glamour sets',
+            price: 0,
+            tag1: 'Any NPC, any level',
+            tag3: 'Piloted Service',
+            longDescription:
+              'Weekly turn-ins without the wait. Our raiders handle your Custom Deliveries — any NPC raised to full Satisfaction while you keep every Scrip, title and glamour reward along the way.',
+            image: scCustomDelivery,
           },
         ],
       },
@@ -1182,8 +1245,8 @@ export const games: Game[] = [
             name: 'Job Leveling Boost',
             tag2: 'Job quests included',
             price: 0,
-            tag1: 'Save time and effort',
-            tag3: 'Any job, any level',
+            tag1: 'Any job, any level',
+            tag3: 'Piloted Service',
             longDescription:
               'Skip the grind and level your chosen job quickly and efficiently. Our Job Leveling boost helps you reach your target level while saving time, letting you focus on endgame content, raiding, or gearing without the repetitive leveling process.',
             image: scLeveling,
@@ -1194,8 +1257,8 @@ export const games: Game[] = [
             name: 'Blue Mage Leveling Boost',
             tag2: 'All spells unlock (optional)',
             price: 0,
-            tag1: 'Save time and effort',
-            tag3: 'Any level up to 80',
+            tag1: 'Any level up to 80',
+            tag3: 'Piloted Service',
             longDescription:
               'Blue Mage learns by watching — a limited job that copies the spells of friends and foes alike. Our Blue Mage Leveling boost powers your Blue Mage all the way to 80, with the option to fill your spellbook with every spell the job can learn.',
             image: scBlu,
@@ -1205,11 +1268,22 @@ export const games: Game[] = [
             name: 'MSQ Completion Boost',
             tag2: 'Job quests included',
             price: 0,
-            tag1: 'Save time and effort',
-            tag3: 'Any Expansion or Patches',
+            tag1: 'Any Expansion or Patches',
+            tag3: 'Piloted Service',
             longDescription:
               'The main scenario is the heart of Eorzea’s story — but not everyone has the time to live through every chapter. Our MSQ Completion boost carries your character through the Main Scenario up to your chosen expansion, unlocking duties, trials and endgame content along the way.',
             image: scMsq,
+          },
+          {
+            id: 'ffxiv-crafter-gatherer-leveling',
+            name: 'Crafter/Gatherer Leveling Boost',
+            tag2: 'Any DoH / DoL job',
+            price: 0,
+            tag1: 'Any job, any level',
+            tag3: 'Piloted Service',
+            longDescription:
+              'Crafters and gatherers level on their own track — leves, collectables and cosmic missions included. Our Crafter/Gatherer Leveling boost takes any Disciple of the Hand or Land to your target level while you keep every scrip, material and reward.',
+            image: scBlank,
           },
         ],
       },
@@ -1218,53 +1292,62 @@ export const games: Game[] = [
         name: 'Field Explorations & Misc',
         services: [
           {
-            id: 'ffxiv-resistance-rank',
-            name: 'Resistance Rank 1–25',
-            tag2: 'Bozja & Zadnor field operations',
+            id: 'ffxiv-occult-crescent',
+            name: 'Occult Crescent Leveling Boost',
+            tag2: 'Phantom Relic & Jobs',
             price: 0,
-            tag1: '1–2 weeks',
+            tag1: 'Any Job, any level',
+            tag3: 'Piloted Service',
+            longDescription:
+              'Unlock any Occult Crescent phantom job — Freeloader, Time Mage, Cannoneer, Berserker, Astrologian and more — without the questline grind. Pick exactly the jobs you need.',
+            image: scOccultCrescent,
+          },
+          {
+            id: 'ffxiv-cosmic-exploration',
+            name: 'Cosmic Exploration Boost',
+            tag2: 'Cosmic tools & mech ops',
+            price: 0,
+            tag1: 'All stellar missions done',
+            tag3: 'Piloted Service',
+            image: scBlank,
+            tag: 'New',
+          },
+          {
+            id: 'ffxiv-resistance-rank',
+            name: 'Resistance Rank Boost',
+            tag2: 'Resistance Relic',
+            price: 0,
+            tag1: '1 - 25 Rank',
+            tag3: 'Piloted Service',
             longDescription:
               'The Bozjan southern front and the fields of Zadnor await. We grind your Resistance Rank from 1 to 25 through skirmishes, critical engagements and duels, unlocking every story beat and field note along the way.',
-            image: scBlank,
+            image: scResistanceRank,
           },
           {
             id: 'ffxiv-eureka-leveling',
-            name: 'Eureka Level 1–60',
-            tag2: 'Anemos to Hydatos — the full elemental climb',
+            name: 'Eureka Leveling Boost',
+            tag2: 'Eureka Relic & Armour',
             price: 0,
-            tag1: '1–2 weeks',
+            tag1: '1 - 60 Elemental Level',
+            tag3: 'Piloted Service',
             longDescription:
               'The Forbidden Land of Eureka swallows the unprepared. Our runners carry you from elemental level 1 to 60 through Anemos, Pagos, Pyros and Hydatos, with every logogram and kettle filled en route.',
-            image: scBlank,
+            image: scEurekaLeveling,
           },
           {
-            id: 'ffxiv-occult-phantom-level',
-            name: 'Phantom Job Level 1–10',
-            tag2: 'Occult Crescent phantom job mastery',
-            price: 0,
-            tag1: '2–3 days',
-            longDescription:
-              'Phantom jobs define the Occult Crescent meta. We level any phantom job from 1 to 10, unlocking its full mastery set so you walk into every encounter with the strongest kit available.',
-            image: scBlank,
-          },
-          {
-            id: 'ffxiv-occult-job-unlocks',
-            name: 'Occult Job Unlocks',
-            tag2: 'Any phantom job unlocked on demand',
-            price: 0,
-            tag1: '24 hours',
-            longDescription:
-              'Unlock any Occult Crescent phantom job — Freeloader, Time Mage, Cannoneer, Berserker, Astrologian and more — without the questline grind. Pick exactly the jobs you need.',
-            image: scBlank,
-          },
-            {
             id: 'ffxiv-island-sanctuary',
-            name: 'Island Sanctuary Rank 1–20',
-            tag2: 'Sanctuary rank 20, all landmarks, rare animals and workshop automation.',
+            name: 'Island Sanctuary Rank Boost',
+            tag2: "Seafarer's & Islander's Cowries",
             price: 0,
-            tag1: '1 week',
-            image: scBlank,
+            tag1: '1 - 20 Rank',
+            tag3: 'Piloted Service',
+            image: scIslandSanctuary,
           },
+
+
+
+
+  
         ],
       },
       {

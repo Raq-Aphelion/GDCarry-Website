@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Clock } from 'lucide-react';
+import { Armchair, Clock, Gamepad2 } from 'lucide-react';
 import FadeImage from './FadeImage';
 import FieldPopup from './FieldPopup';
 import { CustomSelect } from './PurchaseBox';
@@ -36,6 +36,12 @@ const MIN_M = 5;
 const MAX_M = 900;
 const CHIPS = [5, 10, 20, 50, 100, 200];
 
+/** Trade methods: manual face-to-face trade (default) or piloted delivery (+10%). */
+const METHODS = [
+  { id: 'manual', label: 'Manual', icon: Gamepad2 },
+  { id: 'piloted', label: 'Piloted', icon: Armchair },
+] as const;
+
 const fmt = (millions: number) => (millions * 1_000_000).toLocaleString('en-US');
 
 /** FFXIV Gil purchase box: amount (input + slider + quick chips) with
@@ -51,6 +57,7 @@ export default function GilPurchaseBox({ service, gameShort }: { service: Servic
 
   const [millions, setMillions] = useState(5);
   const [inputValue, setInputValue] = useState(fmt(5));
+  const [method, setMethod] = useState<(typeof METHODS)[number]['id']>('manual');
   const [region, setRegion] = useState('');
   const [dc, setDc] = useState('');
   const [server, setServer] = useState('');
@@ -99,7 +106,8 @@ export default function GilPurchaseBox({ service, gameShort }: { service: Servic
     setServerError(false);
   };
 
-  const total = millions * pricePerMillion;
+  // Piloted trade carries a +10% fee over the manual rate
+  const total = millions * pricePerMillion * (method === 'piloted' ? 1.1 : 1);
 
   const addToCart = () => {
     const missing = { region: !region, dc: !dc, server: !server };
@@ -111,11 +119,18 @@ export default function GilPurchaseBox({ service, gameShort }: { service: Servic
     addItem(
       {
         ...service,
-        id: `${service.id}::${region}|${dc}|${server}`,
-        price: pricePerMillion, // per 1 M gil — qty is the amount in millions
+        id: `${service.id}::${method}|${region}|${dc}|${server}`,
+        // per 1 M gil — qty is the amount in millions; piloted trade carries a +10% fee
+        price: pricePerMillion * (method === 'piloted' ? 1.1 : 1),
       },
       gameShort,
-      [`${fmt(millions)} Gil`, `Region: ${REGIONS[region].label}`, `Data Center: ${dc}`, `Server: ${server}`],
+      [
+        `${fmt(millions)} Gil`,
+        `Trade: ${method === 'piloted' ? 'Piloted' : 'Manual'}`,
+        `Region: ${REGIONS[region].label}`,
+        `Data Center: ${dc}`,
+        `Server: ${server}`,
+      ],
       millions,
     );
     openCart();
@@ -139,9 +154,34 @@ export default function GilPurchaseBox({ service, gameShort }: { service: Servic
         <div className="h-28" />
 
         <div className="relative space-y-4 p-4">
+          {/* Trade method */}
+          <div>
+            <p className="pl-px text-sm font-semibold text-white [text-shadow:0_1px_4px_rgb(0_0_0/0.7)]">Trade Method</p>
+            <div className="mt-2.5 grid grid-cols-2 gap-3">
+              {METHODS.map((m) => (
+                <button
+                  key={m.id}
+                  type="button"
+                  onClick={() => setMethod(m.id)}
+                  aria-pressed={method === m.id}
+                  className={`flex items-center justify-center gap-2 rounded-[5px] border px-3 py-2.5 transition-all duration-300 ${
+                    method === m.id
+                      ? 'border-navy-600 bg-navy-800 text-white cyan-glow'
+                      : 'border-navy-700/70 bg-navy-850 text-slate-500 hover:border-navy-600 hover:text-slate-300'
+                  }`}
+                >
+                  <m.icon className={`h-4 w-4 shrink-0 ${method === m.id ? 'text-cyan-400' : 'opacity-70'}`} />
+                  <span className={`text-[11px] font-semibold uppercase tracking-wider ${method === m.id ? 'text-cyan-400' : 'opacity-70'}`}>
+                    {m.label}
+                  </span>
+                </button>
+              ))}
+            </div>
+          </div>
+
           {/* Currency amount */}
           <div>
-            <p className="pl-px text-sm font-semibold text-white [text-shadow:0_1px_4px_rgb(0_0_0/0.7)]">Currency Amount</p>
+            <p className="pl-px text-sm font-semibold text-white">Amount of Gil</p>
             <input
               type="text"
               inputMode="numeric"

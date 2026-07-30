@@ -204,7 +204,7 @@ export default function TrialBundlePurchaseBox({ service, gameShort }: { service
           {/* Runs — right under the method pill; pinned to 1 while Mount
               Guaranteed is on */}
           <div className={guaranteed ? 'pointer-events-none opacity-50' : ''}>
-            <p className="pl-px text-sm font-semibold text-white">Runs</p>
+            <p className="pl-px text-sm font-semibold text-white">Amount of Runs</p>
             <input
               type="text"
               inputMode="numeric"
@@ -246,7 +246,8 @@ export default function TrialBundlePurchaseBox({ service, gameShort }: { service
           {/* Mount guaranteed — forces all trials + 1 run at the mount's price */}
           {cfg && (
             <div>
-              <p className="mb-2 pl-px text-xs font-semibold text-slate-300">Mount Guaranteed</p>
+              <p className="pl-px text-sm font-semibold text-white">Mount Guaranteed</p>
+              <div className="mt-2.5">
               {row(
                 'mount-guaranteed',
                 `${cfg.mountLabel} Guaranteed`,
@@ -254,6 +255,7 @@ export default function TrialBundlePurchaseBox({ service, gameShort }: { service
                 guaranteed,
                 toggleGuaranteed,
               )}
+              </div>
             </div>
           )}
 

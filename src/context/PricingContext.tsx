@@ -59,7 +59,9 @@ export function PricingProvider({ children }: { children: ReactNode }) {
     const dd = db.deepDungeons?.[serviceId];
     if (dd) return Math.min(dd.solo.price, ...(dd.group?.options.map((o) => o.price) ?? []));
     const fl = db.fieldLeveling?.[serviceId];
-    if (fl) return (fl.defaultEnd - fl.defaultStart) * (fl.priceTiers[0]?.pricePerLevel ?? 0);
+    if (fl) return fl.fromPrice ?? (fl.defaultEnd - fl.defaultStart) * (fl.priceTiers[0]?.pricePerLevel ?? 0);
+    const rep = db.reputation?.[serviceId];
+    if (rep) return rep.fromPrice ?? rep.pricePerRank;
     const mountSeries = db.mounts?.series?.[serviceId];
     if (mountSeries) return mountSeries.fromPrice ?? mountSeries.mounts[0]?.price ?? fallback;
     if (serviceId === db.msqBoost?.serviceId && db.msqBoost.expansions?.[0] != null)

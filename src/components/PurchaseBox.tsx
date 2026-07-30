@@ -144,7 +144,9 @@ export default function PurchaseBox({ service, gameShort }: { service: Service; 
       { id: 'piloted', label: 'Piloted', price: methodPrices?.piloted ?? basePrice, icon: Armchair },
     ];
     const afkPrice = methodPrices ? methodPrices.afk : Math.max(basePrice - cfg.afkDiscount, 0);
-    if (afkPrice != null) list.push({ id: 'afk', label: 'AFK Carry', price: afkPrice, icon: Gamepad2 });
+    if (afkPrice != null)
+      list.push({ id: 'afk', label: methodPrices?.afkLabel ?? 'AFK Carry', price: afkPrice, icon: Gamepad2 });
+    if (methodPrices?.groupFirst) list.reverse();
     return list;
   }, [basePrice, cfg.afkDiscount, methodPrices]);
 
@@ -320,7 +322,7 @@ export default function PurchaseBox({ service, gameShort }: { service: Service; 
           {/* Runs: the field allows up to 999; the slider's max follows the
               field value but never drops below the configured default */}
           <div>
-            <p className="pl-px text-sm font-semibold text-white">How many runs?</p>
+            <p className="pl-px text-sm font-semibold text-white">Amount of Runs</p>
             <input
               type="text"
               inputMode="numeric"

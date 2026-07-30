@@ -128,7 +128,7 @@ export default function TrialPurchaseBox({ service, gameShort }: { service: Serv
 
           {/* Runs */}
           <div>
-            <p className="pl-px text-sm font-semibold text-white">Runs</p>
+            <p className="pl-px text-sm font-semibold text-white">Amount of Runs</p>
             <input
               type="text"
               inputMode="numeric"

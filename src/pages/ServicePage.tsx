@@ -18,6 +18,7 @@ import SavageMountPurchaseBox from '@/components/SavageMountPurchaseBox';
 import TrialPurchaseBox from '@/components/TrialPurchaseBox';
 import TrialBundlePurchaseBox from '@/components/TrialBundlePurchaseBox';
 import DeepDungeonPurchaseBox from '@/components/DeepDungeonPurchaseBox';
+import ReputationPurchaseBox from '@/components/ReputationPurchaseBox';
 import Reveal from '@/components/Reveal';
 import ServiceCard from '@/components/ServiceCard';
 import { getGame, serviceLink } from '@/data/games';
@@ -405,6 +406,8 @@ export default function ServicePage() {
               gameShort={game.short}
               config={{ ...db.fieldLeveling[service.id], showJob: false }}
             />
+          ) : db.reputation?.[service.id] ? (
+            <ReputationPurchaseBox key={service.id} service={service} gameShort={game.short} />
           ) : (
             <PurchaseBox service={service} gameShort={game.short} />
           )}

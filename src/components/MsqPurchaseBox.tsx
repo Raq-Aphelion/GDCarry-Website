@@ -49,7 +49,8 @@ const JOBS = [
 
 /** MSQ Completion purchase box: job and data center selects, a contiguous
     expansion range (checking two endpoints force-checks everything between),
-    and Gear Options — per-expansion pricing from ffxiv-Leveling. */
+    and an Additional Options drawer with Aether Currents, Gear Options,
+    Private Stream and Priority — per-expansion pricing from ffxiv-Leveling. */
 export default function MsqPurchaseBox({ service, gameShort }: { service: Service; gameShort: string }) {
   const { addItem, openCart } = useCart();
   const { format } = useCurrency();
@@ -57,12 +58,15 @@ export default function MsqPurchaseBox({ service, gameShort }: { service: Servic
   const cfg = db.msqBoost;
   const EXPANSIONS = cfg?.expansions ?? [];
   const GEAR_OPTIONS = db.purchaseBox.gearOptions;
+  const priorityMultiplier = db.purchaseBox.priorityMultiplier;
 
   const [job, setJob] = useState('');
   const [dc, setDc] = useState('');
   const [expansions, setExpansions] = useState<number[]>([]);
   const [aether, setAether] = useState(false);
   const [gearIdx, setGearIdx] = useState(0);
+  const [stream, setStream] = useState(false);
+  const [priority, setPriority] = useState(false);
   const [jobError, setJobError] = useState(false);
   const [dcError, setDcError] = useState(false);
   const [optionsOpen, setOptionsOpen] = useState(false);
@@ -102,8 +106,12 @@ export default function MsqPurchaseBox({ service, gameShort }: { service: Servic
   const aetherWhitelist = cfg?.aetherCurrents?.expansions ?? [];
   const aetherCount = expansions.filter((i) => EXPANSIONS[i] && aetherWhitelist.includes(EXPANSIONS[i].id)).length;
   const aetherPrice = aether ? aetherCount * (cfg?.aetherCurrents?.pricePerExpansion ?? 0) : 0;
+  // Priority multiplies expansions + aether only; gear and stream stay flat
+  const expansionsTotal = expansions.reduce((s, i) => s + (EXPANSIONS[i]?.price ?? 0), 0);
   const total =
-    expansions.reduce((s, i) => s + (EXPANSIONS[i]?.price ?? 0), 0) + aetherPrice + gearPrice;
+    (expansionsTotal + aetherPrice) * (priority ? priorityMultiplier : 1) +
+    gearPrice +
+    (stream ? 10 : 0);
 
   const addToCart = () => {
     if (!hasExpansions) return;
@@ -137,6 +145,8 @@ export default function MsqPurchaseBox({ service, gameShort }: { service: Servic
         `Data Center: ${dc}`,
         ...(aether && aetherPrice > 0 ? [`${cfg!.aetherCurrents!.label} (×${aetherCount})`] : []),
         ...(gearPrice > 0 ? [GEAR_OPTIONS[gearIdx].label] : []),
+        ...(stream ? ['Private Stream'] : []),
+        ...(priority ? [`Priority (+${Math.round((priorityMultiplier - 1) * 100)}%)`] : []),
       ],
       1,
     );
@@ -296,6 +306,43 @@ export default function MsqPurchaseBox({ service, gameShort }: { service: Servic
                       onSelect={setGearIdx}
                       ariaLabel="Gear options"
                     />
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <button
+                      type="button"
+                      onClick={() => setStream((s) => !s)}
+                      aria-pressed={stream}
+                      className="flex w-full items-center gap-3 rounded-[5px] bg-navy-850 px-2.5 py-1.5 text-left transition-colors hover:bg-navy-800"
+                    >
+                      <span
+                        className={`flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-[3px] border transition-colors ${
+                          stream ? 'border-cyan-600 bg-cyan-600 text-navy-900' : 'border-navy-600 text-transparent'
+                        }`}
+                      >
+                        <Check className="h-3 w-3" strokeWidth={3.5} />
+                      </span>
+                      <span className="min-w-0 flex-1 truncate text-sm text-slate-300">Private Stream</span>
+                      <span className="text-xs font-bold text-cyan-400">+{format(10)}</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setPriority((p) => !p)}
+                      aria-pressed={priority}
+                      className="flex w-full items-center gap-3 rounded-[5px] bg-navy-850 px-2.5 py-1.5 text-left transition-colors hover:bg-navy-800"
+                    >
+                      <span
+                        className={`flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-[3px] border transition-colors ${
+                          priority ? 'border-cyan-600 bg-cyan-600 text-navy-900' : 'border-navy-600 text-transparent'
+                        }`}
+                      >
+                        <Check className="h-3 w-3" strokeWidth={3.5} />
+                      </span>
+                      <span className="min-w-0 flex-1 truncate text-sm text-slate-300">Priority</span>
+                      <span className="text-xs font-bold text-cyan-400">
+                        +{Math.round((priorityMultiplier - 1) * 100)}%
+                      </span>
+                    </button>
                   </div>
                 </div>
               </div>

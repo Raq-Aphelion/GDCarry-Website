@@ -32,7 +32,13 @@
             "note": "All chests collected"
           }
         ]
-      }
+      },
+      "unlock": {
+        "id": "unlock",
+        "label": "Deep Dungeon Unlock",
+        "price": 10
+      },
+      "soloHeading": "Upgrades and Loot"
     },
     "ffxiv-hoh": {
       "completion": "5-7 Days",
@@ -43,12 +49,6 @@
             "id": "aetherpool",
             "label": "95+ Aetherpool Farmed",
             "price": 100
-          },
-          {
-            "id": "juedi",
-            "label": "Juedi (4 Clears)",
-            "price": 0,
-            "timesBase": 4
           },
           {
             "id": "weapon",
@@ -77,7 +77,13 @@
           "label": "Juedi (4 Clears)",
           "times": 4
         }
-      }
+      },
+      "unlock": {
+        "id": "unlock",
+        "label": "Deep Dungeon Unlock",
+        "price": 10
+      },
+      "soloHeading": "Upgrades and Loot"
     },
     "ffxiv-orthos": {
       "completion": "5-7 Days",
@@ -110,8 +116,19 @@
             "price": 135,
             "note": "All chests collected"
           }
-        ]
-      }
+        ],
+        "multiplier": {
+          "heading": "Mount",
+          "label": "Aeturna (4 Clears)",
+          "times": 4
+        }
+      },
+      "unlock": {
+        "id": "unlock",
+        "label": "Deep Dungeon Unlock",
+        "price": 10
+      },
+      "soloHeading": "Upgrades and Loot"
     },
     "ffxiv-pilgrims-traverse": {
       "completion": "5-7 Days",
@@ -122,6 +139,12 @@
             "id": "aetherpool",
             "label": "95+ Aetherpool Farmed",
             "price": 175
+          },
+          {
+            "id": "book-farm",
+            "label": "Book Farm (Floors 71-100)",
+            "price": 70,
+            "note": "Requires floors 1-100 cleared"
           }
         ]
       },
@@ -149,7 +172,13 @@
             "requiresOption": "farm"
           }
         ]
-      }
+      },
+      "unlock": {
+        "id": "unlock",
+        "label": "Deep Dungeon Unlock",
+        "price": 10
+      },
+      "soloHeading": "Upgrades"
     },
     "ffxiv-deep-dungeon-bundle": {
       "completion": "14 Days",
@@ -160,11 +189,6 @@
             "id": "aetherpool",
             "label": "99/99 Aetherpool Farmed",
             "price": 400
-          },
-          {
-            "id": "unlock",
-            "label": "Deep Dungeon Unlocks",
-            "price": 40
           }
         ]
       },
@@ -181,6 +205,61 @@
             "label": "Farm",
             "price": 580,
             "note": "All chests collected"
+          }
+        ]
+      },
+      "soloHeading": "Upgrades",
+      "unlock": {
+        "id": "unlock",
+        "label": "Deep Dungeon Unlocks",
+        "price": 40
+      }
+    },
+    "ffxiv-cloud-of-darkness": {
+      "completion": "3-5 Days",
+      "soloHeading": "Mounts Guaranteed",
+      "soloLabel": "Piloted",
+      "disableRunsOnAddons": true,
+      "streamPilotedOnly": true,
+      "solo": {
+        "price": 440,
+        "addons": [
+          {
+            "id": "dais",
+            "label": "Dais of Darkness",
+            "price": 850
+          },
+          {
+            "id": "shroud",
+            "label": "Shroud of Darkness",
+            "price": 1100
+          }
+        ]
+      },
+      "group": {
+        "addonsHeading": "Mounts Guaranteed",
+        "options": [
+          {
+            "id": "rng-loot",
+            "label": "RNG Loot",
+            "price": 100
+          },
+          {
+            "id": "full-loot",
+            "label": "Full Loot",
+            "price": 350
+          }
+        ],
+        "addons": [
+          {
+            "id": "dais",
+            "label": "Dais of Darkness",
+            "price": 850
+          },
+          {
+            "id": "shroud",
+            "label": "Shroud of Darkness",
+            "price": 1100
           }
         ]
       }

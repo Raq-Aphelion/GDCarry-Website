@@ -9,10 +9,50 @@
         {
           "min": 1,
           "max": 25,
-          "pricePerLevel": 4.5834
+          "pricePerLevel": 4
         }
       ],
-      "completion": "1-2 Weeks"
+      "startLabel": "Your rank",
+      "fromPrice": 4,
+      "optionGroups": [
+        {
+          "heading": "Relic Weapon",
+          "options": [
+            {
+              "id": "weapon",
+              "label": "Complete Resistance Weapon",
+              "price": 450,
+              "selectOptions": {
+                "label": "Job",
+                "options": [
+                  "Paladin (PLD)",
+                  "Warrior (WAR)",
+                  "Dark Knight (DRK)",
+                  "Gunbreaker (GNB)",
+                  "White Mage (WHM)",
+                  "Scholar (SCH)",
+                  "Astrologian (AST)",
+                  "Sage (SGE)",
+                  "Monk (MNK)",
+                  "Dragoon (DRG)",
+                  "Ninja (NIN)",
+                  "Samurai (SAM)",
+                  "Reaper (RPR)",
+                  "Viper (VPR)",
+                  "Bard (BRD)",
+                  "Machinist (MCH)",
+                  "Dancer (DNC)",
+                  "Black Mage (BLM)",
+                  "Summoner (SMN)",
+                  "Red Mage (RDM)",
+                  "Pictomancer (PCT)"
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "completion": "3 Days"
     },
     "ffxiv-eureka-leveling": {
       "levelMin": 1,
@@ -22,25 +62,94 @@
       "priceTiers": [
         {
           "min": 1,
-          "max": 60,
-          "pricePerLevel": 4.2373
-        }
-      ],
-      "completion": "1-2 Weeks"
-    },
-    "ffxiv-occult-phantom-level": {
-      "levelMin": 1,
-      "levelMax": 10,
-      "defaultStart": 1,
-      "defaultEnd": 10,
-      "priceTiers": [
+          "max": 15,
+          "pricePerLevel": 4
+        },
         {
-          "min": 1,
-          "max": 10,
-          "pricePerLevel": 11.1112
+          "min": 16,
+          "max": 30,
+          "pricePerLevel": 4.5
+        },
+        {
+          "min": 31,
+          "max": 45,
+          "pricePerLevel": 5
+        },
+        {
+          "min": 46,
+          "max": 60,
+          "pricePerLevel": 6
         }
       ],
-      "completion": "2-3 Days"
+      "fromPrice": 4,
+      "optionGroups": [
+        {
+          "heading": "Relic Weapon",
+          "options": [
+            {
+              "id": "weapon",
+              "label": "Complete Eureka Relic",
+              "price": 400,
+              "selectOptions": {
+                "label": "Job",
+                "options": [
+                  "Paladin (PLD)",
+                  "Warrior (WAR)",
+                  "Dark Knight (DRK)",
+                  "Gunbreaker (GNB)",
+                  "White Mage (WHM)",
+                  "Scholar (SCH)",
+                  "Astrologian (AST)",
+                  "Sage (SGE)",
+                  "Monk (MNK)",
+                  "Dragoon (DRG)",
+                  "Ninja (NIN)",
+                  "Samurai (SAM)",
+                  "Reaper (RPR)",
+                  "Viper (VPR)",
+                  "Bard (BRD)",
+                  "Machinist (MCH)",
+                  "Dancer (DNC)",
+                  "Black Mage (BLM)",
+                  "Summoner (SMN)",
+                  "Red Mage (RDM)",
+                  "Pictomancer (PCT)"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "heading": "Eurekan Armour",
+          "options": [
+            {
+              "id": "armour",
+              "label": "Elemental Armour",
+              "price": 350,
+              "selectOptions": {
+                "label": "Armour Set",
+                "options": [
+                  "Elemental Set of Fending (PLD, WAR, DRK, GNB)",
+                  "Elemental Set of Maiming (DRG, RPR)",
+                  "Elemental Set of Striking (MNK, SAM)",
+                  "Elemental Set of Scouting (NIN)",
+                  "Elemental Set of Aiming (BRD, MCH, DNC)",
+                  "Elemental Set of Casting (BLM, SMN, RDM, BLU)",
+                  "Elemental Set of Healing (WHM, SCH, AST, SGE)"
+                ]
+              }
+            },
+            {
+              "id": "armour-plus",
+              "label": "Elemental Armour +1",
+              "price": 50,
+              "requiresOption": "armour"
+            }
+          ]
+        }
+      ],
+      "stream": 10,
+      "completion": "1-2 Weeks"
     },
     "ffxiv-island-sanctuary": {
       "levelMin": 1,
@@ -49,12 +158,1033 @@
       "defaultEnd": 20,
       "priceTiers": [
         {
-          "min": 1,
+          "min": 2,
+          "max": 2,
+          "pricePerLevel": 15.5
+        },
+        {
+          "min": 3,
+          "max": 3,
+          "pricePerLevel": 16
+        },
+        {
+          "min": 4,
+          "max": 4,
+          "pricePerLevel": 16.5
+        },
+        {
+          "min": 5,
+          "max": 5,
+          "pricePerLevel": 17
+        },
+        {
+          "min": 6,
+          "max": 6,
+          "pricePerLevel": 17.5
+        },
+        {
+          "min": 7,
+          "max": 7,
+          "pricePerLevel": 18
+        },
+        {
+          "min": 8,
+          "max": 8,
+          "pricePerLevel": 18.5
+        },
+        {
+          "min": 9,
+          "max": 9,
+          "pricePerLevel": 19
+        },
+        {
+          "min": 10,
+          "max": 10,
+          "pricePerLevel": 19.5
+        },
+        {
+          "min": 11,
+          "max": 11,
+          "pricePerLevel": 20
+        },
+        {
+          "min": 12,
+          "max": 12,
+          "pricePerLevel": 20.5
+        },
+        {
+          "min": 13,
+          "max": 13,
+          "pricePerLevel": 21
+        },
+        {
+          "min": 14,
+          "max": 14,
+          "pricePerLevel": 21.5
+        },
+        {
+          "min": 15,
+          "max": 15,
+          "pricePerLevel": 22
+        },
+        {
+          "min": 16,
+          "max": 16,
+          "pricePerLevel": 22.5
+        },
+        {
+          "min": 17,
+          "max": 17,
+          "pricePerLevel": 23
+        },
+        {
+          "min": 18,
+          "max": 18,
+          "pricePerLevel": 23.5
+        },
+        {
+          "min": 19,
+          "max": 19,
+          "pricePerLevel": 24
+        },
+        {
+          "min": 20,
           "max": 20,
-          "pricePerLevel": 34.2106
+          "pricePerLevel": 24.5
         }
       ],
-      "completion": "1 Week"
+      "completion": "1 Week",
+      "startLabel": "Your rank",
+      "fromPrice": 15,
+      "addon": {
+        "id": "unlock",
+        "label": "Island Sanctuary Unlock",
+        "price": 5
+      },
+      "optionGroups": [
+        {
+          "heading": "Completions",
+          "options": [
+            {
+              "id": "gathering-log",
+              "label": "Full Gathering Log",
+              "price": 150
+            },
+            {
+              "id": "hunting-log",
+              "label": "Full Hunting Log",
+              "price": 100
+            }
+          ]
+        }
+      ]
+    },
+    "ffxiv-occult-crescent": {
+      "levelMin": 1,
+      "levelMax": 24,
+      "defaultStart": 1,
+      "defaultEnd": 2,
+      "priceTiers": [
+        {
+          "min": 1,
+          "max": 24,
+          "pricePerLevel": 20
+        }
+      ],
+      "fromPrice": 70,
+      "jobs": [
+        {
+          "label": "Freelancer",
+          "max": 24,
+          "priceTiers": [
+            {
+              "min": 1,
+              "max": 24,
+              "pricePerLevel": 70
+            }
+          ]
+        },
+        {
+          "label": "Knight",
+          "max": 6,
+          "priceTiers": [
+            {
+              "min": 2,
+              "max": 2,
+              "pricePerLevel": 11
+            },
+            {
+              "min": 3,
+              "max": 3,
+              "pricePerLevel": 11
+            },
+            {
+              "min": 4,
+              "max": 4,
+              "pricePerLevel": 11
+            },
+            {
+              "min": 5,
+              "max": 5,
+              "pricePerLevel": 11
+            },
+            {
+              "min": 6,
+              "max": 6,
+              "pricePerLevel": 11
+            }
+          ]
+        },
+        {
+          "label": "Monk",
+          "max": 6,
+          "priceTiers": [
+            {
+              "min": 2,
+              "max": 2,
+              "pricePerLevel": 10
+            },
+            {
+              "min": 3,
+              "max": 3,
+              "pricePerLevel": 10
+            },
+            {
+              "min": 4,
+              "max": 4,
+              "pricePerLevel": 10
+            },
+            {
+              "min": 5,
+              "max": 5,
+              "pricePerLevel": 10
+            },
+            {
+              "min": 6,
+              "max": 6,
+              "pricePerLevel": 11
+            }
+          ]
+        },
+        {
+          "label": "Thief",
+          "max": 6,
+          "priceTiers": [
+            {
+              "min": 2,
+              "max": 2,
+              "pricePerLevel": 16
+            },
+            {
+              "min": 3,
+              "max": 3,
+              "pricePerLevel": 16
+            },
+            {
+              "min": 4,
+              "max": 4,
+              "pricePerLevel": 16
+            },
+            {
+              "min": 5,
+              "max": 5,
+              "pricePerLevel": 16
+            },
+            {
+              "min": 6,
+              "max": 6,
+              "pricePerLevel": 19
+            }
+          ]
+        },
+        {
+          "label": "Samurai",
+          "max": 5,
+          "priceTiers": [
+            {
+              "min": 2,
+              "max": 2,
+              "pricePerLevel": 20
+            },
+            {
+              "min": 3,
+              "max": 3,
+              "pricePerLevel": 20
+            },
+            {
+              "min": 4,
+              "max": 4,
+              "pricePerLevel": 20
+            },
+            {
+              "min": 5,
+              "max": 5,
+              "pricePerLevel": 23
+            }
+          ]
+        },
+        {
+          "label": "Berserker",
+          "max": 3,
+          "priceTiers": [
+            {
+              "min": 2,
+              "max": 2,
+              "pricePerLevel": 61
+            },
+            {
+              "min": 3,
+              "max": 3,
+              "pricePerLevel": 62
+            }
+          ]
+        },
+        {
+          "label": "Ranger",
+          "max": 6,
+          "priceTiers": [
+            {
+              "min": 2,
+              "max": 2,
+              "pricePerLevel": 12
+            },
+            {
+              "min": 3,
+              "max": 3,
+              "pricePerLevel": 12
+            },
+            {
+              "min": 4,
+              "max": 4,
+              "pricePerLevel": 12
+            },
+            {
+              "min": 5,
+              "max": 5,
+              "pricePerLevel": 12
+            },
+            {
+              "min": 6,
+              "max": 6,
+              "pricePerLevel": 12
+            }
+          ]
+        },
+        {
+          "label": "Time Mage",
+          "max": 5,
+          "priceTiers": [
+            {
+              "min": 2,
+              "max": 2,
+              "pricePerLevel": 17
+            },
+            {
+              "min": 3,
+              "max": 3,
+              "pricePerLevel": 17
+            },
+            {
+              "min": 4,
+              "max": 4,
+              "pricePerLevel": 17
+            },
+            {
+              "min": 5,
+              "max": 5,
+              "pricePerLevel": 18
+            }
+          ]
+        },
+        {
+          "label": "Chemist",
+          "max": 4,
+          "priceTiers": [
+            {
+              "min": 2,
+              "max": 2,
+              "pricePerLevel": 27
+            },
+            {
+              "min": 3,
+              "max": 3,
+              "pricePerLevel": 27
+            },
+            {
+              "min": 4,
+              "max": 4,
+              "pricePerLevel": 29
+            }
+          ]
+        },
+        {
+          "label": "Geomancer",
+          "max": 5,
+          "priceTiers": [
+            {
+              "min": 2,
+              "max": 2,
+              "pricePerLevel": 16
+            },
+            {
+              "min": 3,
+              "max": 3,
+              "pricePerLevel": 16
+            },
+            {
+              "min": 4,
+              "max": 4,
+              "pricePerLevel": 16
+            },
+            {
+              "min": 5,
+              "max": 5,
+              "pricePerLevel": 17
+            }
+          ]
+        },
+        {
+          "label": "Bard",
+          "max": 4,
+          "priceTiers": [
+            {
+              "min": 2,
+              "max": 2,
+              "pricePerLevel": 32
+            },
+            {
+              "min": 3,
+              "max": 3,
+              "pricePerLevel": 32
+            },
+            {
+              "min": 4,
+              "max": 4,
+              "pricePerLevel": 32
+            }
+          ]
+        },
+        {
+          "label": "Oracle",
+          "max": 5,
+          "priceTiers": [
+            {
+              "min": 2,
+              "max": 2,
+              "pricePerLevel": 17
+            },
+            {
+              "min": 3,
+              "max": 3,
+              "pricePerLevel": 17
+            },
+            {
+              "min": 4,
+              "max": 4,
+              "pricePerLevel": 17
+            },
+            {
+              "min": 5,
+              "max": 5,
+              "pricePerLevel": 18
+            }
+          ]
+        },
+        {
+          "label": "Cannoneer",
+          "max": 6,
+          "priceTiers": [
+            {
+              "min": 2,
+              "max": 2,
+              "pricePerLevel": 9
+            },
+            {
+              "min": 3,
+              "max": 3,
+              "pricePerLevel": 9
+            },
+            {
+              "min": 4,
+              "max": 4,
+              "pricePerLevel": 9
+            },
+            {
+              "min": 5,
+              "max": 5,
+              "pricePerLevel": 9
+            },
+            {
+              "min": 6,
+              "max": 6,
+              "pricePerLevel": 10
+            }
+          ]
+        },
+        {
+          "label": "Mystic Knight",
+          "max": 4,
+          "priceTiers": [
+            {
+              "min": 2,
+              "max": 2,
+              "pricePerLevel": 32
+            },
+            {
+              "min": 3,
+              "max": 3,
+              "pricePerLevel": 32
+            },
+            {
+              "min": 4,
+              "max": 4,
+              "pricePerLevel": 32
+            }
+          ]
+        },
+        {
+          "label": "Gladiator",
+          "max": 4,
+          "priceTiers": [
+            {
+              "min": 2,
+              "max": 2,
+              "pricePerLevel": 29
+            },
+            {
+              "min": 3,
+              "max": 3,
+              "pricePerLevel": 29
+            },
+            {
+              "min": 4,
+              "max": 4,
+              "pricePerLevel": 29
+            }
+          ]
+        },
+        {
+          "label": "Dancer",
+          "max": 4,
+          "priceTiers": [
+            {
+              "min": 2,
+              "max": 2,
+              "pricePerLevel": 26
+            },
+            {
+              "min": 3,
+              "max": 3,
+              "pricePerLevel": 26
+            },
+            {
+              "min": 4,
+              "max": 4,
+              "pricePerLevel": 26
+            }
+          ]
+        },
+        {
+          "label": "Ninja",
+          "max": 6,
+          "priceTiers": [
+            {
+              "min": 2,
+              "max": 2,
+              "pricePerLevel": 22
+            },
+            {
+              "min": 3,
+              "max": 3,
+              "pricePerLevel": 22
+            },
+            {
+              "min": 4,
+              "max": 4,
+              "pricePerLevel": 22
+            },
+            {
+              "min": 5,
+              "max": 5,
+              "pricePerLevel": 22
+            },
+            {
+              "min": 6,
+              "max": 6,
+              "pricePerLevel": 22
+            }
+          ]
+        },
+        {
+          "label": "Black Mage",
+          "max": 5,
+          "priceTiers": [
+            {
+              "min": 2,
+              "max": 2,
+              "pricePerLevel": 27
+            },
+            {
+              "min": 3,
+              "max": 3,
+              "pricePerLevel": 27
+            },
+            {
+              "min": 4,
+              "max": 4,
+              "pricePerLevel": 27
+            },
+            {
+              "min": 5,
+              "max": 5,
+              "pricePerLevel": 29
+            }
+          ]
+        },
+        {
+          "label": "White Mage",
+          "max": 5,
+          "priceTiers": [
+            {
+              "min": 2,
+              "max": 2,
+              "pricePerLevel": 27
+            },
+            {
+              "min": 3,
+              "max": 3,
+              "pricePerLevel": 27
+            },
+            {
+              "min": 4,
+              "max": 4,
+              "pricePerLevel": 27
+            },
+            {
+              "min": 5,
+              "max": 5,
+              "pricePerLevel": 29
+            }
+          ]
+        },
+        {
+          "label": "Dragoon",
+          "max": 4,
+          "priceTiers": [
+            {
+              "min": 2,
+              "max": 2,
+              "pricePerLevel": 40
+            },
+            {
+              "min": 3,
+              "max": 3,
+              "pricePerLevel": 40
+            },
+            {
+              "min": 4,
+              "max": 4,
+              "pricePerLevel": 40
+            }
+          ]
+        },
+        {
+          "label": "Summoner",
+          "max": 5,
+          "priceTiers": [
+            {
+              "min": 2,
+              "max": 2,
+              "pricePerLevel": 30
+            },
+            {
+              "min": 3,
+              "max": 3,
+              "pricePerLevel": 30
+            },
+            {
+              "min": 4,
+              "max": 4,
+              "pricePerLevel": 30
+            },
+            {
+              "min": 5,
+              "max": 5,
+              "pricePerLevel": 30
+            }
+          ]
+        },
+        {
+          "label": "Necromancer",
+          "max": 5,
+          "priceTiers": [
+            {
+              "min": 2,
+              "max": 2,
+              "pricePerLevel": 29
+            },
+            {
+              "min": 3,
+              "max": 3,
+              "pricePerLevel": 29
+            },
+            {
+              "min": 4,
+              "max": 4,
+              "pricePerLevel": 29
+            },
+            {
+              "min": 5,
+              "max": 5,
+              "pricePerLevel": 30
+            }
+          ]
+        },
+        {
+          "label": "Blue Mage",
+          "max": 3,
+          "priceTiers": [
+            {
+              "min": 2,
+              "max": 2,
+              "pricePerLevel": 60
+            },
+            {
+              "min": 3,
+              "max": 3,
+              "pricePerLevel": 60
+            }
+          ]
+        },
+        {
+          "label": "Red Mage",
+          "max": 6,
+          "priceTiers": [
+            {
+              "min": 2,
+              "max": 2,
+              "pricePerLevel": 20
+            },
+            {
+              "min": 3,
+              "max": 3,
+              "pricePerLevel": 20
+            },
+            {
+              "min": 4,
+              "max": 4,
+              "pricePerLevel": 20
+            },
+            {
+              "min": 5,
+              "max": 5,
+              "pricePerLevel": 20
+            },
+            {
+              "min": 6,
+              "max": 6,
+              "pricePerLevel": 23
+            }
+          ]
+        }
+      ],
+      "defaultJob": "Freelancer",
+      "addon": {
+        "id": "unlock",
+        "label": "Unlock Occult Crescent",
+        "price": 35
+      },
+      "stream": 10,
+      "completion": "3 Days",
+      "optionGroups": [
+        {
+          "heading": "Relic Weapon",
+          "options": [
+            {
+              "id": "weapon",
+              "label": "Complete Phantom Weapon",
+              "price": 450,
+              "selectOptions": {
+                "label": "Job",
+                "options": [
+                  "Paladin (PLD)",
+                  "Warrior (WAR)",
+                  "Dark Knight (DRK)",
+                  "Gunbreaker (GNB)",
+                  "White Mage (WHM)",
+                  "Scholar (SCH)",
+                  "Astrologian (AST)",
+                  "Sage (SGE)",
+                  "Monk (MNK)",
+                  "Dragoon (DRG)",
+                  "Ninja (NIN)",
+                  "Samurai (SAM)",
+                  "Reaper (RPR)",
+                  "Viper (VPR)",
+                  "Bard (BRD)",
+                  "Machinist (MCH)",
+                  "Dancer (DNC)",
+                  "Black Mage (BLM)",
+                  "Summoner (SMN)",
+                  "Red Mage (RDM)",
+                  "Pictomancer (PCT)"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "reputation": {
+    "ffxiv-beast-tribes": {
+      "completion": "2-4 Weeks",
+      "fromPrice": 15,
+      "rankMin": 1,
+      "rankMax": 8,
+      "defaultStart": 1,
+      "defaultEnd": 8,
+      "pricePerRank": 15,
+      "factions": [
+        {
+          "id": "pelupelu",
+          "label": "Pelupelu (Dawntrail)",
+          "maxRank": 8
+        },
+        {
+          "id": "mamool-ja",
+          "label": "Mamool Ja (Dawntrail)",
+          "maxRank": 8
+        },
+        {
+          "id": "yok-huy",
+          "label": "Yok Huy (Dawntrail)",
+          "maxRank": 8
+        },
+        {
+          "id": "arkasodara",
+          "label": "Arkasodara (Endwalker)",
+          "maxRank": 8
+        },
+        {
+          "id": "omicron",
+          "label": "Omicron (Endwalker)",
+          "maxRank": 8
+        },
+        {
+          "id": "loporrits",
+          "label": "Loporrits (Endwalker)",
+          "maxRank": 8
+        },
+        {
+          "id": "pixie",
+          "label": "Pixie (Shadowbringers)",
+          "maxRank": 8
+        },
+        {
+          "id": "qitari",
+          "label": "Qitari (Shadowbringers)",
+          "maxRank": 8
+        },
+        {
+          "id": "dwarf",
+          "label": "Dwarf (Shadowbringers)",
+          "maxRank": 8
+        },
+        {
+          "id": "kojin",
+          "label": "Kojin (Stormblood)",
+          "maxRank": 8
+        },
+        {
+          "id": "ananta",
+          "label": "Ananta (Stormblood)",
+          "maxRank": 8
+        },
+        {
+          "id": "namazu",
+          "label": "Namazu (Stormblood)",
+          "maxRank": 8
+        },
+        {
+          "id": "vanu-vanu",
+          "label": "Vanu Vanu (Heavensward)",
+          "maxRank": 8
+        },
+        {
+          "id": "vath",
+          "label": "Vath (Heavensward)",
+          "maxRank": 8
+        },
+        {
+          "id": "moogle",
+          "label": "Moogle (Heavensward)",
+          "maxRank": 8
+        },
+        {
+          "id": "ixali",
+          "label": "Ixali (A Realm Reborn)",
+          "maxRank": 5
+        },
+        {
+          "id": "amaljaa",
+          "label": "Amalj'aa (A Realm Reborn)",
+          "maxRank": 5
+        },
+        {
+          "id": "sylph",
+          "label": "Sylph (A Realm Reborn)",
+          "maxRank": 5
+        },
+        {
+          "id": "kobold",
+          "label": "Kobold (A Realm Reborn)",
+          "maxRank": 5
+        },
+        {
+          "id": "sahagin",
+          "label": "Sahagin (A Realm Reborn)",
+          "maxRank": 5
+        }
+      ],
+      "rankNames": [
+        "Neutral",
+        "Recognized",
+        "Friendly",
+        "Trusted",
+        "Respected",
+        "Honored",
+        "Sworn",
+        "Bloodsworn"
+      ],
+      "alliedPackages": [
+        {
+          "id": "arr",
+          "label": "A Realm Reborn Allied Societies",
+          "price": 300
+        },
+        {
+          "id": "hw",
+          "label": "Heavensward Allied Societies",
+          "price": 300
+        },
+        {
+          "id": "sb",
+          "label": "Stormblood Allied Societies",
+          "price": 300
+        },
+        {
+          "id": "ew",
+          "label": "Endwalker Allied Societies",
+          "price": 300
+        },
+        {
+          "id": "dt",
+          "label": "Dawntrail Allied Societies",
+          "price": 300
+        }
+      ],
+      "unlock": {
+        "label": "Allied Society Unlock",
+        "price": 10,
+        "arrPrice": 60,
+        "otherPrice": 30
+      }
+    },
+    "ffxiv-custom-deliveries": {
+      "completion": "2-4 Weeks",
+      "fromPrice": 8,
+      "rankMin": 0,
+      "rankMax": 5,
+      "defaultStart": 0,
+      "defaultEnd": 5,
+      "pricePerRank": 8,
+      "rankNames": [
+        "Satisfaction 0",
+        "Satisfaction 1",
+        "Satisfaction 2",
+        "Satisfaction 3",
+        "Satisfaction 4",
+        "Satisfaction 5"
+      ],
+      "factionLabel": "Custom Delivery NPC",
+      "factions": [
+        {
+          "id": "tiisol-ja",
+          "label": "Tiisol Ja (Dawntrail)",
+          "maxRank": 5
+        },
+        {
+          "id": "nitowikwe",
+          "label": "Nitowikwe (Dawntrail)",
+          "maxRank": 5
+        },
+        {
+          "id": "margrat",
+          "label": "Margrat (Dawntrail)",
+          "maxRank": 5
+        },
+        {
+          "id": "anden",
+          "label": "Anden (Endwalker)",
+          "maxRank": 5
+        },
+        {
+          "id": "ameliance",
+          "label": "Ameliance (Endwalker)",
+          "maxRank": 5
+        },
+        {
+          "id": "charlemend",
+          "label": "Charlemend (Shadowbringers)",
+          "maxRank": 5
+        },
+        {
+          "id": "ehll-tou",
+          "label": "Ehll Tou (Shadowbringers)",
+          "maxRank": 5
+        },
+        {
+          "id": "kai-shirr",
+          "label": "Kai-Shirr (Shadowbringers)",
+          "maxRank": 5
+        },
+        {
+          "id": "adkiragh",
+          "label": "Adkiragh (Stormblood)",
+          "maxRank": 5
+        },
+        {
+          "id": "kurenai",
+          "label": "Kurenai (Stormblood)",
+          "maxRank": 5
+        },
+        {
+          "id": "mnaago",
+          "label": "M'naago (Stormblood)",
+          "maxRank": 5
+        },
+        {
+          "id": "zhloe",
+          "label": "Zhloe Aliapoh (Heavensward)",
+          "maxRank": 5
+        }
+      ],
+      "rankNameOnly": true,
+      "packagesLabel": "All Custom Deliveries",
+      "alliedPackages": [
+        {
+          "id": "all",
+          "label": "Satisfaction 5 for all",
+          "price": 480
+        }
+      ],
+      "unlock": {
+        "label": "Custom Delivery Unlock",
+        "price": 10,
+        "arrPrice": 0,
+        "otherPrice": 120
+      }
     }
   }
 }

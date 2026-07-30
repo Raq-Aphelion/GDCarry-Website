@@ -4,7 +4,8 @@ import { useCurrency } from '@/context/CurrencyContext';
 import { usePricing } from '@/context/PricingContext';
 
 /** Shared Additional Options block for mount purchase boxes: Private Stream
-    (flat, from the mount service) and Priority (× priorityMultiplier). */
+    (flat, from the mount service) and Priority (× priorityMultiplier).
+    `extraRow` prepends a custom row (e.g. Deep Dungeon Unlock). */
 export default function MountAddonsBlock({
   stream,
   setStream,
@@ -12,6 +13,8 @@ export default function MountAddonsBlock({
   setPriority,
   streamPrice,
   onToggle,
+  extraRow,
+  hideStream = false,
 }: {
   stream: boolean;
   setStream: (v: boolean) => void;
@@ -19,6 +22,10 @@ export default function MountAddonsBlock({
   setPriority: (v: boolean) => void;
   streamPrice: number;
   onToggle?: () => void;
+  /** Custom first row (label, price hint, checked state, toggle) */
+  extraRow?: { label: string; hint: string; checked: boolean; onClick: () => void };
+  /** Hide the Private Stream row (e.g. allied society) */
+  hideStream?: boolean;
 }) {
   const { format } = useCurrency();
   const { db } = usePricing();
@@ -83,7 +90,8 @@ export default function MountAddonsBlock({
       >
         <div className={`min-w-0 ${optionsExpanded ? 'overflow-visible' : 'overflow-hidden'}`}>
           <div className="space-y-1.5 px-4 pb-3 pt-1">
-            {row('Private Stream', `+${format(streamPrice)}`, stream, () => setStream(!stream))}
+            {extraRow && row(extraRow.label, extraRow.hint, extraRow.checked, extraRow.onClick)}
+            {!hideStream && row('Private Stream', `+${format(streamPrice)}`, stream, () => setStream(!stream))}
             {row('Priority', `+${Math.round((priorityMultiplier - 1) * 100)}%`, priority, () => setPriority(!priority))}
           </div>
         </div>

@@ -4,6 +4,8 @@
 
 @layer base {
   :root {
+    /* Keep form controls dark in browsers that recolor them (e.g. Opera mobile). */
+    color-scheme: dark;
     --background: 226 69% 6%;
     --foreground: 210 40% 96%;
     --card: 224 60% 9%;
@@ -279,6 +281,10 @@ input[type='number'] {
 }
 .marquee {
   animation: marquee 46s linear infinite;
+  animation-play-state: running;
+}
+.marquee-paused {
+  animation-play-state: paused;
 }
 
 /* Slow float for hero dice accents */
