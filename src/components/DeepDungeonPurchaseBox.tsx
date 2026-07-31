@@ -157,13 +157,20 @@ export default function DeepDungeonPurchaseBox({ service, gameShort }: { service
       return;
     }
     const isGroup = effMethod === 'group';
+    // Per-run cart model: price is the per-completion core, qty the run count,
+    // flat the one-off extras (add-ons are inside the priority multiplication
+    // in the box formula, so they're pre-multiplied here — cart flat is not)
     addItem(
       {
         ...service,
-        id: `${service.id}::${dc}|${effMethod}|${isGroup ? `${option}~${[...groupChecked].sort().join(',')}` : [...checked].sort().join(',')}|${effRuns > 1 ? `x${effRuns}` : ''}${isGroup && mountOn ? 'm' : ''}${stream ? 's' : ''}${priority ? 'p' : ''}${unlockChecked ? 'u' : ''}`,
-        price: total,
+        id: `${service.id}::${dc}|${effMethod}|${isGroup ? `${option}~${[...groupChecked].sort().join(',')}` : [...checked].sort().join(',')}${isGroup && mountOn ? 'm' : ''}${stream ? 's' : ''}${priority ? 'p' : ''}${unlockChecked ? 'u' : ''}`,
+        price: core,
+        flat:
+          addonsPart * (priority ? priorityMultiplier : 1) +
+          (unlockChecked ? (cfg?.unlock?.price ?? 0) : 0) +
+          effStreamPrice,
+        multiplier: priority ? priorityMultiplier : undefined,
         method: isGroup ? 'Group Play' : (cfg?.soloLabel ?? 'Solo Piloted'),
-        qtyLocked: true,
       },
       gameShort,
       [
@@ -176,7 +183,7 @@ export default function DeepDungeonPurchaseBox({ service, gameShort }: { service
         ...(stream ? ['Private Stream'] : []),
         ...(priority ? [`Priority (+${Math.round((priorityMultiplier - 1) * 100)}%)`] : []),
       ],
-      1,
+      effRuns,
     );
     openCart();
   };

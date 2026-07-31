@@ -128,13 +128,19 @@ export default function GamePage() {
         ? [
             { title: 'Extreme Trial Mounts', ids: db.catalog?.mountDutyGroups?.extreme ?? [] },
             { title: 'Savage Raid Mounts', ids: db.catalog?.mountDutyGroups?.savage ?? [] },
+            { title: 'V&C Dungeons', ids: db.catalog?.mountDutyGroups?.vc ?? [] },
           ].filter((d) => d.ids.length)
         : activeSub.id === 'trials'
           ? Object.entries(db.catalog?.trialExpansionGroups ?? {}).map(([title, ids]) => ({
               title,
               ids,
             }))
-          : [];
+          : activeSub.id === 'criterion-dungeons'
+            ? Object.entries(db.catalog?.dungeonGroups ?? {}).map(([title, ids]) => ({
+                title,
+                ids,
+              }))
+            : [];
     if (!defs.length) return null;
     const grouped = new Set(defs.flatMap((d) => d.ids));
     const sections = defs
@@ -152,7 +158,12 @@ export default function GamePage() {
     const other = activeServices.filter((sv) => !grouped.has(sv.id));
     if (other.length) {
       sections.push({
-        title: activeSub.id === 'mounts' ? 'Other Mounts' : 'Other Trials',
+        title:
+          activeSub.id === 'mounts'
+            ? 'Other Mounts'
+            : activeSub.id === 'criterion-dungeons'
+              ? 'Other Dungeons'
+              : 'Other Trials',
         services: other,
       });
     }
@@ -174,10 +185,17 @@ export default function GamePage() {
             <ServiceCard service={service} />
           </Reveal>
           {/* Inline custom-order CTA on mobile: only in categories with
-              more than 7 card rows (7+ services at 1 col), pinned after
-              the 2nd card so 2 rows sit above it */}
+              more than 7 card rows (7+ services at 1 col). Below 400px
+              (1 col) it follows the 2nd card; at 2 cols it follows the
+              4th card and spans both columns — 2 full rows above it in
+              either case */}
           {withCtas && activeServices.length > 7 && i === 1 && (
-            <div className="mx-auto w-full max-w-[280px] sm:hidden">
+            <div className="mx-auto w-full max-w-[280px] min-[400px]:hidden">
+              <CustomOrderCta compact />
+            </div>
+          )}
+          {withCtas && activeServices.length > 7 && i === 3 && (
+            <div className="hidden w-full min-[400px]:col-span-2 min-[400px]:block sm:hidden">
               <CustomOrderCta compact />
             </div>
           )}

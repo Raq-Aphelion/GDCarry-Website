@@ -131,10 +131,23 @@ import scWindurstThirdWalk from '@/assets/images/service-cards/ffxiv/24-player-r
 import scDaisOfDarkness from '@/assets/images/service-cards/ffxiv/mounts/ffxiv-dais-of-darkness.webp';
 import scShroudOfDarkness from '@/assets/images/service-cards/ffxiv/mounts/ffxiv-shroud-of-darkness.webp';
 import scAeturna from '@/assets/images/service-cards/ffxiv/mounts/ffxiv-aeturna.webp';
-import scAnotherMerchantsTale from '@/assets/images/service-cards/ffxiv/criterion-dungeons/ffxiv-another-merchants-tale.webp';
-import scAnotherAloaloIsland from '@/assets/images/service-cards/ffxiv/criterion-dungeons/ffxiv-another-aloalo-island.webp';
-import scAnotherMountRokkon from '@/assets/images/service-cards/ffxiv/criterion-dungeons/ffxiv-another-mount-rokkon.webp';
-import scAnotherSildihnSubterrane from '@/assets/images/service-cards/ffxiv/criterion-dungeons/ffxiv-another-sildihn-subterrane.webp';
+import scGenieOfTheLamp from '@/assets/images/service-cards/ffxiv/mounts/vc-dungeons/ffxiv-genie-of-the-lamp.webp';
+import scRoyalMagickedCarpet from '@/assets/images/service-cards/ffxiv/mounts/vc-dungeons/ffxiv-royal-magicked-carpet.webp';
+import scQuaqua from '@/assets/images/service-cards/ffxiv/mounts/vc-dungeons/ffxiv-quaqua.webp';
+import scSpectralStatice from '@/assets/images/service-cards/ffxiv/mounts/vc-dungeons/ffxiv-spectral-statice.webp';
+import scShishioji from '@/assets/images/service-cards/ffxiv/mounts/vc-dungeons/ffxiv-shishioji.webp';
+import scBuraburaChochin from '@/assets/images/service-cards/ffxiv/mounts/vc-dungeons/ffxiv-burabura-chochin.webp';
+import scSildihnThrone from '@/assets/images/service-cards/ffxiv/mounts/vc-dungeons/ffxiv-sildihn-throne.webp';
+import scSilkie from '@/assets/images/service-cards/ffxiv/mounts/vc-dungeons/ffxiv-silkie.webp';
+import scCosmicExploration from '@/assets/images/service-cards/ffxiv/field-ops-misc/ffxiv-cosmic-exploration.webp';
+import scAnotherMerchantsTale from '@/assets/images/service-cards/ffxiv/vc-dungeons/criterion/ffxiv-another-merchants-tale.webp';
+import scAnotherAloaloIsland from '@/assets/images/service-cards/ffxiv/vc-dungeons/criterion/ffxiv-another-aloalo-island.webp';
+import scAnotherMountRokkon from '@/assets/images/service-cards/ffxiv/vc-dungeons/criterion/ffxiv-another-mount-rokkon.webp';
+import scAnotherSildihnSubterrane from '@/assets/images/service-cards/ffxiv/vc-dungeons/criterion/ffxiv-another-sildihn-subterrane.webp';
+import scVariantMerchantsTale from '@/assets/images/service-cards/ffxiv/vc-dungeons/variant/ffxiv-variant-merchants-tale.webp';
+import scVariantAloaloIsland from '@/assets/images/service-cards/ffxiv/vc-dungeons/variant/ffxiv-variant-aloalo-island.webp';
+import scVariantMountRokkon from '@/assets/images/service-cards/ffxiv/vc-dungeons/variant/ffxiv-variant-mount-rokkon.webp';
+import scVariantSildihnSubterrane from '@/assets/images/service-cards/ffxiv/vc-dungeons/variant/ffxiv-variant-sildihn-subterrane.webp';
 import { SERVICE_PAGES } from '@/data/servicePages';
 import type { CatalogConfig } from '@/data/pricing';
 
@@ -662,27 +675,15 @@ export const games: Game[] = [
         name: 'Deep Dungeons',
         services: [
           {
-            id: 'ffxiv-potd-solo',
-            name: 'Palace of the Dead (Deep Dungeon)',
-            tag2: '1 - 200 Floors',
-            price: 0,
-            tag1: 'Necromancer title & achievements',
-            tag3: 'Group Play or Solo Piloted',
-            longDescription:
-              'In the subterranean city of Gelmorra, deep within a forgotten corner of Issom-Har, stout-hearted explorers have uncovered the entrance to a labyrinthine dungeon. Those who set foot inside its maddening halls find their vigor drained by an irresistible fog of innervation, and repeated excursions have failed to map its seemingly inconstant architecture.',
-            image: scPalaceOfTheDead,
-            tag: 'Hot',
-          },
-          {
-            id: 'ffxiv-hoh',
-            name: 'Heaven-on-High (Deep Dungeon)',
+            id: 'ffxiv-pilgrims-traverse',
+            name: 'Pilgrim\'s Traverse (Deep Dungeon)',
             tag2: '1 - 100 Floors',
             price: 0,
-            tag1: 'Lone Hero title & achievements',
+            tag1: 'The Enlightened title & loot',
             tag3: 'Group Play or Solo Piloted',
             longDescription:
-              'Rising high above the Ruby Sea from the island of Onokoro, Heaven-on-High is said to be the stairway traversed by kami descending from their empyrean home. Following the discovery of a secret entrance, the Confederate leader Rasho asks you to investigate the tower and brave the hordes of vile fiends that lurk within.',
-            image: scHeavenOnHigh,
+              'Beneath the verdant hills of Il Mheg, a holy road winds down into the dark. Pilgrim’s Traverse calls the faithful and the foolhardy alike to walk its ninety-nine floors, gathering offerings for the verse that waits at journey’s end.',
+            image: scPilgrimsTraverse,
           },
           {
             id: 'ffxiv-orthos',
@@ -696,15 +697,27 @@ export const games: Game[] = [
             image: scEurekaOrthos,
           },
           {
-            id: 'ffxiv-pilgrims-traverse',
-            name: 'Pilgrim\'s Traverse (Deep Dungeon)',
+            id: 'ffxiv-hoh',
+            name: 'Heaven-on-High (Deep Dungeon)',
             tag2: '1 - 100 Floors',
             price: 0,
-            tag1: 'The Enlightened title & loot',
+            tag1: 'Lone Hero title & achievements',
             tag3: 'Group Play or Solo Piloted',
             longDescription:
-              'Beneath the verdant hills of Il Mheg, a holy road winds down into the dark. Pilgrim’s Traverse calls the faithful and the foolhardy alike to walk its ninety-nine floors, gathering offerings for the verse that waits at journey’s end.',
-            image: scPilgrimsTraverse,
+              'Rising high above the Ruby Sea from the island of Onokoro, Heaven-on-High is said to be the stairway traversed by kami descending from their empyrean home. Following the discovery of a secret entrance, the Confederate leader Rasho asks you to investigate the tower and brave the hordes of vile fiends that lurk within.',
+            image: scHeavenOnHigh,
+          },
+          {
+            id: 'ffxiv-potd-solo',
+            name: 'Palace of the Dead (Deep Dungeon)',
+            tag2: '1 - 200 Floors',
+            price: 0,
+            tag1: 'Necromancer title & achievements',
+            tag3: 'Group Play or Solo Piloted',
+            longDescription:
+              'In the subterranean city of Gelmorra, deep within a forgotten corner of Issom-Har, stout-hearted explorers have uncovered the entrance to a labyrinthine dungeon. Those who set foot inside its maddening halls find their vigor drained by an irresistible fog of innervation, and repeated excursions have failed to map its seemingly inconstant architecture.',
+            image: scPalaceOfTheDead,
+            tag: 'Hot',
           },
           {
             id: 'ffxiv-deep-dungeon-bundle',
@@ -722,73 +735,97 @@ export const games: Game[] = [
       },
       {
         id: 'criterion-dungeons',
-        name: 'Criterion Dungeons',
+        name: 'V&C Dungeons',
         services: [
-          {
-            id: 'ffxiv-variant-merchants-tale',
-            name: "Variant: Merchant's Tale",
-            tag2: 'All 12 routes available',
-            price: 0,
-            tag1: 'Fresh cosmetic rewards',
-            image: scBlank,
-            tag: 'New',
-          },
           {
             id: 'ffxiv-another-merchants-tale',
             name: "Another Merchant's Tale",
-            tag2: 'Criterion clear with all loot',
+            tag2: 'Criterion: Normal mode',
             price: 0,
-            tag1: 'Exclusive title & rewards',
+            tag1: 'Exclusive Loot + Tokens',
+            tag3: 'Group Play or Piloted',
+            longDescription:
+              "The Merchant's Tale depicts a Corvos from before the Garlean occupation, made even more wondrous by the flourishes of countless storytellers throughout the ages. As you relate the details of your time within its pages to Osmon, he continues the timeless storytelling tradition by adding his own embellishments to an already fantastic fable, and you feel yourself drawn back in to the beautiful but increasingly dangerous world of folklore...",
             image: scAnotherMerchantsTale,
+            tag: 'New',
+          },
+          {
+            id: 'ffxiv-another-aloalo-island',
+            name: 'Another Aloalo Island',
+            tag2: 'Criterion: Normal & Savage',
+            price: 0,
+            tag1: 'Exclusive Loot + Tokens',
+            tag3: 'Group Play or Piloted',
+            longDescription:
+              'Inspired by your tale, Osmon rejoices as his imagination soars to heights untold. Visions of the glorious civilizations the peoples of Aloalo built take shape in his mind, populating the island with beasts imbued by esoteric magicks. Drawn into this tide of fantasy and swept to its remotest edge, you must now do battle with the mundane made legendary.',
+            image: scAnotherAloaloIsland,
+          },
+          {
+            id: 'ffxiv-another-mount-rokkon',
+            name: 'Another Mount Rokkon',
+            tag2: 'Criterion: Normal & Savage',
+            price: 0,
+            tag1: 'Exclusive Loot + Tokens',
+            tag3: 'Group Play or Piloted',
+            longDescription:
+              'Delighted beyond measure to hear tell of the mononoke haunting Mount Rokkon, Osmon cannot help but speculate upon the nature of spirits—and what should result were they to grow more powerful than nature is wont to allow...',
+            image: scAnotherMountRokkon,
+          },
+          {
+            id: 'ffxiv-another-sildihn-subterrane',
+            name: "Another Sil'dihn Subterrane",
+            tag2: 'Criterion: Normal & Savage',
+            price: 0,
+            tag1: 'Exclusive Loot + Tokens',
+            tag3: 'Group Play or Piloted',
+            longDescription:
+              "The retelling of your adventures has set Osmon's imagination aflame with visions of perilous passages and mighty sentinels. He wonders, however, if dwelling in the damp has weakened the guardians; if, before rust and decay set in, that they had once been far more powerful. You cannot help but ponder the possibilities, your thoughts drifting as Osmon's hypothetical scenario plays out in your mind...",
+            image: scAnotherSildihnSubterrane,
+          },
+          {
+            id: 'ffxiv-variant-merchants-tale',
+            name: "Variant: Merchant's Tale",
+            tag2: 'Variant: All 13 routes & Advanced',
+            price: 0,
+            tag1: 'Exclusive Loot + Tokens',
+            tag3: 'Group Play or Piloted',
+            longDescription:
+              "Your latest odd job commission brings you together with one Y'nazqha, a gleaner who finds herself in possession of an unusual book inherited from her father and mentor. It contains a rendition of The Merchant's Tale, a fable passed down through generations in Corvos. While the beautifully illuminated pages of the manuscript set it apart from common storybooks, its most singular feature is the enchantment which can pull the very mind of its readers into the story.",
+            image: scVariantMerchantsTale,
             tag: 'New',
           },
           {
             id: 'ffxiv-variant-aloalo-island',
             name: 'Variant: Aloalo Island',
-            tag2: 'All 12 routes available',
+            tag2: 'Variant: All 12 routes',
             price: 0,
-            tag1: 'Chance for a special mount',
-            image: scBlank,
-          },
-          {
-            id: 'ffxiv-another-aloalo-island',
-            name: 'Another Aloalo Island',
-            tag2: 'Criterion clear with all loot',
-            price: 0,
-            tag1: 'Mount and title',
-            image: scAnotherAloaloIsland,
+            tag1: 'Exclusive Loot + Tokens',
+            tag3: 'Group Play or Piloted',
+            longDescription:
+              "In a seldom-traveled corner of the south sea isles lies Aloalo, an island filled with lush vegetation and teeming with vibrant wildlife. Yet the survival of this paradise hinges on a delicate natural balance which has only grown more precarious since the island's stewards departed a century ago. Answering the plea of a messenger most peculiar, you must join Matsya on a journey to restore order to Aloalo, and in the process uncover secrets long forgotten.",
+            image: scVariantAloaloIsland,
           },
           {
             id: 'ffxiv-variant-mount-rokkon',
             name: 'Variant: Mount Rokkon',
-            tag2: 'All 12 routes available',
+            tag2: 'Variant: All 12 routes',
             price: 0,
-            tag1: 'Rewards & glamour sets',
-            image: scBlank,
-          },
-          {
-            id: 'ffxiv-another-mount-rokkon',
-            name: 'Another Mount Rokkon',
-            tag2: 'Criterion clear with all loot',
-            price: 0,
-            tag1: 'Chance at Shishioji mount',
-            image: scAnotherMountRokkon,
+            tag1: 'Exclusive Loot + Tokens',
+            tag3: 'Group Play or Piloted',
+            longDescription:
+              "On Hingashi's westernmost isle of Shishu lies the long-venerated Mount Rokkon. Once refuge for humble monks and weary pilgrims, the holy site lately fell to a host of malevolent mononoke, spurring the local liege lord to take the unprecedented step of inviting ijin to assist in reclaiming its slopes. As in his wont, Hancock has secured the promise of valuable rewards in exchange for his—and your—assistance, but each of these treasures has a life of its own...",
+            image: scVariantMountRokkon,
           },
           {
             id: 'ffxiv-variant-sildihn-subterrane',
             name: "Variant: The Sil'dihn Subterrane",
-            tag2: 'All 12 routes available',
+            tag2: 'Variant: All 12 routes',
             price: 0,
-            tag1: 'Fresh cosmetic rewards',
-            image: scBlank,
-          },
-          {
-            id: 'ffxiv-another-sildihn-subterrane',
-            name: "Another Sil'dihn Subterrane",
-            tag2: 'Criterion clear with all loot',
-            price: 0,
-            tag1: "Infamy of Sil'dih title",
-            image: scAnotherSildihnSubterrane,
+            tag1: 'Exclusive Loot + Tokens',
+            tag3: 'Group Play or Piloted',
+            longDescription:
+              'An extensive warren of tunnels and waterways stretches beneath the barren lands of Thanalan, but none come now to marvel at this remnant of fallen Sil\'dih. Its memories lie undisturbed, festering silently in the dark and the damp. Yet not for much longer. You have come at the personal behest of Nanamo Ul Namo, and together will you throw open the gate to the desert nation\'s troubled past.',
+            image: scVariantSildihnSubterrane,
           },
         ],
       },
@@ -1187,6 +1224,17 @@ export const games: Game[] = [
             image: scDemiOzma,
           },
           {
+            id: 'ffxiv-aeturna-mount',
+            name: 'Aeturna (Mount)',
+            tag2: 'Eureka Orthos (Deep Dungeon)',
+            price: 0,
+            tag1: 'Guaranteed mount drop',
+            tag3: 'Group Play or Piloted',
+            longDescription:
+              'The eternal sentinel of Eureka Orthos — Aeturna answers only to those who master its hundred floors. Guaranteed with four full clears, piloted or alongside our raiders in group play.',
+            image: scAeturna,
+          },
+          {
             id: 'ffxiv-juedi-mount',
             name: 'Juedi (Mount)',
             tag2: 'Heaven-on-High (Deep Dungeon)',
@@ -1198,15 +1246,92 @@ export const games: Game[] = [
             image: scJuedi,
           },
           {
-            id: 'ffxiv-aeturna-mount',
-            name: 'Aeturna (Mount)',
-            tag2: 'Eureka Orthos (Deep Dungeon)',
+            id: 'ffxiv-genie-of-the-lamp-mount',
+            name: 'Genie of the Lamp (Mount)',
+            tag2: "Another Merchant's Tale",
+            price: 0,
+            tag1: 'Guaranteed (any number of runs)',
+            tag3: 'Group Play or Piloted',
+            longDescription:
+              "The lamp-dwelling spirit of Corvos — an imitation of legend that still carries you wherever you wish to go. Guaranteed from Another Merchant's Tale, piloted or alongside our raiders in group play.",
+            image: scGenieOfTheLamp,
+          },
+          {
+            id: 'ffxiv-royal-magicked-carpet-mount',
+            name: 'Royal Magicked Carpet (Mount)',
+            tag2: "Variant: Merchant's Tale (Advanced)",
+            price: 0,
+            tag1: 'Guaranteed (any number of runs)',
+            tag3: 'Group Play or Piloted',
+            longDescription:
+              "The sole survivor of the pari's blaze — a flying carpet of Corvosi legend, yours for unlocking every route of the Merchant's Tale. Piloted or alongside our raiders in group play.",
+            image: scRoyalMagickedCarpet,
+          },
+          {
+            id: 'ffxiv-quaqua-mount',
+            name: 'Quaqua (Mount)',
+            tag2: 'Another Aloalo Island',
+            price: 0,
+            tag1: 'Guaranteed (any number of runs)',
+            tag3: 'Group Play or Piloted',
+            longDescription:
+              'A wooden familiar of ancient arcanima from Aloalo Island — guaranteed from the criterion clear, piloted or alongside our raiders in group play.',
+            image: scQuaqua,
+          },
+          {
+            id: 'ffxiv-spectral-statice-mount',
+            name: 'Spectral Statice (Mount)',
+            tag2: 'Variant: Aloalo Island',
             price: 0,
             tag1: 'Guaranteed mount drop',
             tag3: 'Group Play or Piloted',
             longDescription:
-              'The eternal sentinel of Eureka Orthos — Aeturna answers only to those who master its hundred floors. Guaranteed with four full clears, piloted or alongside our raiders in group play.',
-            image: scAeturna,
+              'The mischief-loving faerie of Aloalo — earned for unlocking every conservation record on the island. Piloted or alongside our raiders in group play.',
+            image: scSpectralStatice,
+          },
+          {
+            id: 'ffxiv-shishioji-mount',
+            name: 'Shishioji (Mount)',
+            tag2: 'Another Mount Rokkon',
+            price: 0,
+            tag1: 'Guaranteed (any number of runs)',
+            tag3: 'Group Play or Piloted',
+            longDescription:
+              'The lion-dog guardian of Mount Rokkon — guaranteed from the criterion clear, piloted or alongside our raiders in group play.',
+            image: scShishioji,
+          },
+          {
+            id: 'ffxiv-burabura-chochin-mount',
+            name: 'Burabura Chochin (Mount)',
+            tag2: 'Variant: Mount Rokkon',
+            price: 0,
+            tag1: 'Guaranteed mount drop',
+            tag3: 'Group Play or Piloted',
+            longDescription:
+              'The swaying paper lantern of Mount Rokkon — earned for unlocking every route through the temple paths. Piloted or alongside our raiders in group play.',
+            image: scBuraburaChochin,
+          },
+          {
+            id: 'ffxiv-sildihn-throne-mount',
+            name: "Sil'dihn Throne (Mount)",
+            tag2: "Another Sil'dihn Subterrane",
+            price: 0,
+            tag1: 'Guaranteed (any number of runs)',
+            tag3: 'Group Play or Piloted',
+            longDescription:
+              "The seat of Sil'dihn royalty, raised from the sunken city — guaranteed from the criterion clear, piloted or alongside our raiders in group play.",
+            image: scSildihnThrone,
+          },
+          {
+            id: 'ffxiv-silkie-mount',
+            name: 'Silkie (Mount)',
+            tag2: "Variant: The Sil'dihn Subterrane",
+            price: 0,
+            tag1: 'Guaranteed mount drop',
+            tag3: 'Group Play or Piloted',
+            longDescription:
+              "The fluffy marmot of the Sil'dihn aqueducts — earned for unlocking every route of the subterrane. Piloted or alongside our raiders in group play.",
+            image: scSilkie,
           },
         ],
       },
@@ -1242,13 +1367,13 @@ export const games: Game[] = [
         services: [
           {
             id: 'ffxiv-leveling-boost',
-            name: 'Job Leveling Boost',
+            name: 'Combat Job Leveling Boost',
             tag2: 'Job quests included',
             price: 0,
             tag1: 'Any job, any level',
             tag3: 'Piloted Service',
             longDescription:
-              'Skip the grind and level your chosen job quickly and efficiently. Our Job Leveling boost helps you reach your target level while saving time, letting you focus on endgame content, raiding, or gearing without the repetitive leveling process.',
+              'Skip the grind and level your chosen job quickly and efficiently. Our Combat Job Leveling boost helps you reach your target level while saving time, letting you focus on endgame content, raiding, or gearing without the repetitive leveling process.',
             image: scLeveling,
             tag: 'Popular',
           },
@@ -1276,13 +1401,13 @@ export const games: Game[] = [
           },
           {
             id: 'ffxiv-crafter-gatherer-leveling',
-            name: 'Crafter/Gatherer Leveling Boost',
+            name: 'Crafter & Gatherer Leveling Boost',
             tag2: 'Any DoH / DoL job',
             price: 0,
             tag1: 'Any job, any level',
             tag3: 'Piloted Service',
             longDescription:
-              'Crafters and gatherers level on their own track — leves, collectables and cosmic missions included. Our Crafter/Gatherer Leveling boost takes any Disciple of the Hand or Land to your target level while you keep every scrip, material and reward.',
+              'Crafters and gatherers level on their own track — leves, collectables and cosmic missions included. Our Crafter & Gatherer Leveling boost takes any Disciple of the Hand or Land to your target level while you keep every scrip, material and reward.',
             image: scBlank,
           },
         ],
@@ -1309,7 +1434,7 @@ export const games: Game[] = [
             price: 0,
             tag1: 'All stellar missions done',
             tag3: 'Piloted Service',
-            image: scBlank,
+            image: scCosmicExploration,
             tag: 'New',
           },
           {

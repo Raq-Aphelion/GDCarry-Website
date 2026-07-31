@@ -836,21 +836,22 @@ SERVICE_PAGES['ffxiv-wings-of-nihility'] = wingPage('Wings of Nihility', 'The Un
 /** Savage raid mount pages share one shape; level varies by expansion.
     `note` appends plain text next to the duty button (e.g. clears required).
     `pilotedOnly` removes every AFK mention (method reward row + accordion);
-    `rows` replaces the bottom two reward rows. */
+    `rows` replaces the bottom two reward rows;
+    `dropTitle` overrides the 'Guaranteed Mount Drop From' reward title. */
 const savageMountPage = (
   short: string,
   duty: string,
   level: number,
   dutyTo: string,
   note?: string,
-  opts?: { pilotedOnly?: boolean; rows?: ServicePageReward[] },
+  opts?: { pilotedOnly?: boolean; rows?: ServicePageReward[]; dropTitle?: string },
 ): ServicePageContent => ({
   short,
   rewardsHeading: 'What you get',
   rewards: [
     {
       icon: Trophy,
-      title: 'Guaranteed Mount Drop From',
+      title: opts?.dropTitle ?? 'Guaranteed Mount Drop From',
       dutyButton: { label: duty, to: dutyTo },
       ...(note ? { text: note } : {}),
     },
@@ -904,6 +905,14 @@ SERVICE_PAGES['ffxiv-gobwalker'] = savageMountPage('Gobwalker', 'Alexander - The
 SERVICE_PAGES['ffxiv-arrhidaeus'] = savageMountPage('Arrhidaeus', 'Alexander - The Soul of the Creator (Savage)', 60, '/boosting/ffxiv/ffxiv-alexander-savage');
 SERVICE_PAGES['ffxiv-juedi-mount'] = savageMountPage('Juedi', 'Heaven-on-High (Deep Dungeon)', 100, '/boosting/ffxiv/ffxiv-hoh', '— 4 full clears required.');
 SERVICE_PAGES['ffxiv-aeturna-mount'] = savageMountPage('Aeturna', 'Eureka Orthos (Deep Dungeon)', 100, '/boosting/ffxiv/ffxiv-orthos', '— 4 full clears required.');
+SERVICE_PAGES['ffxiv-genie-of-the-lamp-mount'] = savageMountPage('Genie of the Lamp', "Another Merchant's Tale", 100, '/boosting/ffxiv/ffxiv-another-merchants-tale', '— random drop or 100 Corvosi Manuscripts exchange.', { dropTitle: 'Mount Drop From' });
+SERVICE_PAGES['ffxiv-royal-magicked-carpet-mount'] = savageMountPage('Royal Magicked Carpet', "Variant: Merchant's Tale", 90, '/boosting/ffxiv/ffxiv-variant-merchants-tale', '— random drop or 100 Corvosi Brass exchange.', { dropTitle: 'Mount Drop From' });
+SERVICE_PAGES['ffxiv-quaqua-mount'] = savageMountPage('Quaqua', 'Another Aloalo Island', 90, '/boosting/ffxiv/ffxiv-another-aloalo-island', '— random drop or 100 Aloalo Coins exchange.', { dropTitle: 'Mount Drop From' });
+SERVICE_PAGES['ffxiv-spectral-statice-mount'] = savageMountPage('Spectral Statice', 'Variant: Aloalo Island', 90, '/boosting/ffxiv/ffxiv-variant-aloalo-island', '— all 12 routes required.');
+SERVICE_PAGES['ffxiv-shishioji-mount'] = savageMountPage('Shishioji', 'Another Mount Rokkon', 90, '/boosting/ffxiv/ffxiv-another-mount-rokkon', '— random drop or 100 Shishu Coin exchange.', { dropTitle: 'Mount Drop From' });
+SERVICE_PAGES['ffxiv-burabura-chochin-mount'] = savageMountPage('Burabura Chochin', 'Variant: Mount Rokkon', 90, '/boosting/ffxiv/ffxiv-variant-mount-rokkon', '— all 12 routes required.');
+SERVICE_PAGES['ffxiv-sildihn-throne-mount'] = savageMountPage("Sil'dihn Throne", "Another Sil'dihn Subterrane", 90, '/boosting/ffxiv/ffxiv-another-sildihn-subterrane', "— random drop or 100 Sil'dihn Silver exchange.", { dropTitle: 'Mount Drop From' });
+SERVICE_PAGES['ffxiv-silkie-mount'] = savageMountPage('Silkie', "Variant: The Sil'dihn Subterrane", 90, '/boosting/ffxiv/ffxiv-variant-sildihn-subterrane', '— all 12 routes required.');
 SERVICE_PAGES['ffxiv-cerberus-mount'] = savageMountPage('Cerberus', 'Delubrum Reginae (Savage)', 80, '/boosting/ffxiv?cat=alliance-raids', undefined, { pilotedOnly: true });
 SERVICE_PAGES['ffxiv-demi-ozma'] = savageMountPage('Demi-Ozma', 'The Baldesion Arsenal', 70, '/boosting/ffxiv?cat=alliance-raids', undefined, {
   pilotedOnly: true,
@@ -944,6 +953,14 @@ export const MOUNT_LINKS: Record<string, string> = {
   'Shroud of Darkness': 'ffxiv-shroud-of-darkness-mount',
   'Juedi': 'ffxiv-juedi-mount',
   'Aeturna': 'ffxiv-aeturna-mount',
+  'Genie of the Lamp': 'ffxiv-genie-of-the-lamp-mount',
+  'Royal Magicked Carpet': 'ffxiv-royal-magicked-carpet-mount',
+  'Quaqua': 'ffxiv-quaqua-mount',
+  'Spectral Statice': 'ffxiv-spectral-statice-mount',
+  'Shishioji': 'ffxiv-shishioji-mount',
+  'Burabura Chochin': 'ffxiv-burabura-chochin-mount',
+  "Sil'dihn Throne": 'ffxiv-sildihn-throne-mount',
+  'Silkie': 'ffxiv-silkie-mount',
 };
 
 
@@ -1230,6 +1247,105 @@ const allianceRaidPage = (
 SERVICE_PAGES['ffxiv-jeuno-first-walk'] = allianceRaidPage('Jeuno: The First Walk', 'Guaranteed Gear');
 SERVICE_PAGES['ffxiv-san-doria-second-walk'] = allianceRaidPage("San d'Oria: The Second Walk", 'Guaranteed Gear Upgrade Token');
 SERVICE_PAGES['ffxiv-windurst-third-walk'] = allianceRaidPage('Windurst: The Third Walk', 'Guaranteed Gear Upgrade Token');
+
+/** Variant dungeon pages share one shape; level/expansion differ per dungeon.
+    `mount` replaces the generic cosmetics row (2nd spot) with a mount button;
+    title/note overridable (e.g. exchange mounts drop the routes mention). */
+const variantPage = (
+  short: string,
+  level: number,
+  expansion: string,
+  mount?: { name: string; title?: string; note?: string },
+  routes = 12,
+): ServicePageContent => ({
+  short,
+  rewardsHeading: 'What you get',
+  rewards: [
+    { icon: Package, title: `All ${routes} Routes Available`, text: 'Branching paths, secret bosses and every lore entry can be completed on request.' },
+    ...(mount
+      ? [{
+          icon: Trophy,
+          title: mount.title ?? `${mount.name} Mount (All 12 Routes)`,
+          items: [mount.name],
+          ...(mount.note ? { text: mount.note } : {}),
+        } satisfies ServicePageReward]
+      : [{ icon: Gem, title: 'Cosmetics & Glamour Rewards', text: 'Mounts, minions and glamour items earned from route completion stay yours.' } satisfies ServicePageReward]),
+    { icon: BadgeCheck, title: 'V&C Dungeon Finder Entries', text: 'Lore entries unlocked in your V&C Dungeon Finder record.' },
+    { icon: Medal, title: 'Achievement Unlocked', text: `Achievement unlocked upon completing ${short}.` },
+  ],
+  accordion: [
+    {
+      title: 'Requirements',
+      items: [`Have a level ${level} Job`, `Own the ${expansion} Expansion`, 'Dungeon unlocked (available as an additional service)'],
+    },
+    HOW_IT_WORKS,
+    ALLIANCE_GROUP_VS_PILOTED,
+  ],
+});
+
+/** Criterion ("Another …") pages; `extra` is the dungeon-specific 3rd row.
+    `mount` replaces the generic coins row (2nd spot) with a mount button. */
+const criterionPage = (
+  short: string,
+  level: number,
+  expansion: string,
+  extra: ServicePageReward,
+  mount?: { name: string; note?: string },
+): ServicePageContent => ({
+  short,
+  rewardsHeading: 'What you get',
+  rewards: [
+    { icon: Swords, title: 'Criterion Clear', text: 'Difficult 4-player content cleared with a veteran group.' },
+    ...(mount
+      ? [{
+          icon: Trophy,
+          title: `${mount.name} Mount`,
+          items: [mount.name],
+          ...(mount.note ? { text: mount.note } : {}),
+        } satisfies ServicePageReward]
+      : [{ icon: Coins, title: '4 Dungeon Coins per Clear', text: 'Coins trade for materia, orchestrion rolls and the exclusive mount (100 coins).' } satisfies ServicePageReward]),
+    extra,
+    { icon: Medal, title: 'Achievement Unlocked', text: `Achievement unlocked upon completing ${short}.` },
+  ],
+  accordion: [
+    {
+      title: 'Requirements',
+      items: [`Have a level ${level} Job`, `Own the ${expansion} Expansion`, 'Criterion unlocked (variant completion available as an additional service)'],
+    },
+    HOW_IT_WORKS,
+    ALLIANCE_GROUP_VS_PILOTED,
+  ],
+});
+
+SERVICE_PAGES['ffxiv-variant-merchants-tale'] = variantPage("Variant: Merchant's Tale", 90, 'Dawntrail', {
+  name: 'Royal Magicked Carpet',
+  title: 'Royal Magicked Carpet Mount (Advanced only)',
+  note: '— random drop or 100 Corvosi Brass exchange.',
+}, 13);
+SERVICE_PAGES['ffxiv-variant-aloalo-island'] = variantPage('Variant: Aloalo Island', 90, 'Endwalker', { name: 'Spectral Statice' });
+SERVICE_PAGES['ffxiv-variant-mount-rokkon'] = variantPage('Variant: Mount Rokkon', 90, 'Endwalker', { name: 'Burabura Chochin' });
+SERVICE_PAGES['ffxiv-variant-sildihn-subterrane'] = variantPage("Variant: The Sil'dihn Subterrane", 90, 'Endwalker', { name: 'Silkie' });
+
+SERVICE_PAGES['ffxiv-another-merchants-tale'] = criterionPage("Another Merchant's Tale", 100, 'Dawntrail', {
+  icon: BadgeCheck,
+  title: 'Exclusive Title & Rewards',
+  text: 'Title and dungeon-specific rewards from the criterion clear.',
+}, { name: 'Genie of the Lamp', note: '— random drop or 100 Corvosi Manuscripts exchange.' });
+SERVICE_PAGES['ffxiv-another-aloalo-island'] = criterionPage('Another Aloalo Island', 90, 'Endwalker', {
+  icon: Coins,
+  title: '4 Aloalo Coins per Clear',
+  text: 'Coins trade for materia, orchestrion rolls and the Quaqua mount (100 coins).',
+}, { name: 'Quaqua', note: '— random drop or 100 Aloalo Coins exchange.' });
+SERVICE_PAGES['ffxiv-another-mount-rokkon'] = criterionPage('Another Mount Rokkon', 90, 'Endwalker', {
+  icon: Coins,
+  title: '4 Rokkon Coins per Clear',
+  text: 'Coins trade for materia, orchestrion rolls and the Shishioji mount (100 coins).',
+}, { name: 'Shishioji', note: '— random drop or 100 Shishu Coin exchange.' });
+SERVICE_PAGES['ffxiv-another-sildihn-subterrane'] = criterionPage("Another Sil'dihn Subterrane", 90, 'Endwalker', {
+  icon: BadgeCheck,
+  title: 'Title: Infamy of Sil\'dih',
+  text: 'Exclusive title from the criterion clear.',
+}, { name: "Sil'dihn Throne", note: "— random drop or 100 Sil'dihn Silver exchange." });
 
 SERVICE_PAGES['ffxiv-potd-solo'] = deepDungeonPage(
   'Palace of the Dead',

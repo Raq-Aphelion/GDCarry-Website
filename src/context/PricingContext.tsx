@@ -58,6 +58,8 @@ export function PricingProvider({ children }: { children: ReactNode }) {
     if (tb) return tb.bundlePrice;
     const dd = db.deepDungeons?.[serviceId];
     if (dd) return Math.min(dd.solo.price, ...(dd.group?.options.map((o) => o.price) ?? []));
+    const cr = db.criterion?.[serviceId];
+    if (cr) return cr.price;
     const fl = db.fieldLeveling?.[serviceId];
     if (fl) return fl.fromPrice ?? (fl.defaultEnd - fl.defaultStart) * (fl.priceTiers[0]?.pricePerLevel ?? 0);
     const rep = db.reputation?.[serviceId];

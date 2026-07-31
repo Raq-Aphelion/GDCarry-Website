@@ -7,11 +7,14 @@ export const lineTotal = (item: CartItem): number =>
   item.price * item.qty * (item.multiplier ?? 1) * (1 + (item.logsPercent ?? 0) / 100) + (item.flat ?? 0);
 
 /** Meta line under a cart item's name: game, boost method (for configured
-    services), and quantity — "N runs" for configured services (quantity is
-    the run count), ×N otherwise. Updates live with the +/- controls. */
+    services), and quantity — "N runs" for run-based services (quantity is the
+    run count), ×N otherwise; one-off orders (qtyLocked) show no quantity.
+    Updates live with the +/- controls. */
 export const cartMeta = (item: CartItem): string =>
   item.method
-    ? `${item.gameShort} · ${item.method} · ${item.qty} run${item.qty !== 1 ? 's' : ''}`
+    ? item.qtyLocked
+      ? `${item.gameShort} · ${item.method}`
+      : `${item.gameShort} · ${item.method} · ${item.qty} run${item.qty !== 1 ? 's' : ''}`
     : `${item.gameShort} · ×${item.qty}`;
 
 /** Detail lines shown for a cart item. Gil lines derive the amount live from

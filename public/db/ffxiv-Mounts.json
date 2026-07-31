@@ -398,6 +398,70 @@
         "trial": "Eureka Orthos (Deep Dungeon)",
         "completion": "24 Hours"
       },
+      "ffxiv-genie-of-the-lamp-mount": {
+        "price": 200,
+        "afkPrice": 200,
+        "afkLabel": "Group Play",
+        "groupFirst": true,
+        "trial": "Another Merchant's Tale",
+        "completion": "24 Hours"
+      },
+      "ffxiv-royal-magicked-carpet-mount": {
+        "price": 200,
+        "afkPrice": 200,
+        "afkLabel": "Group Play",
+        "groupFirst": true,
+        "trial": "Variant: Merchant's Tale",
+        "completion": "24 Hours"
+      },
+      "ffxiv-quaqua-mount": {
+        "price": 200,
+        "afkPrice": 200,
+        "afkLabel": "Group Play",
+        "groupFirst": true,
+        "trial": "Another Aloalo Island",
+        "completion": "24 Hours"
+      },
+      "ffxiv-spectral-statice-mount": {
+        "price": 80,
+        "afkPrice": 70,
+        "afkLabel": "Group Play",
+        "groupFirst": true,
+        "trial": "Variant: Aloalo Island",
+        "completion": "24 Hours"
+      },
+      "ffxiv-shishioji-mount": {
+        "price": 200,
+        "afkPrice": 200,
+        "afkLabel": "Group Play",
+        "groupFirst": true,
+        "trial": "Another Mount Rokkon",
+        "completion": "24 Hours"
+      },
+      "ffxiv-burabura-chochin-mount": {
+        "price": 80,
+        "afkPrice": 70,
+        "afkLabel": "Group Play",
+        "groupFirst": true,
+        "trial": "Variant: Mount Rokkon",
+        "completion": "24 Hours"
+      },
+      "ffxiv-sildihn-throne-mount": {
+        "price": 200,
+        "afkPrice": 200,
+        "afkLabel": "Group Play",
+        "groupFirst": true,
+        "trial": "Another Sil'dihn Subterrane",
+        "completion": "24 Hours"
+      },
+      "ffxiv-silkie-mount": {
+        "price": 80,
+        "afkPrice": 70,
+        "afkLabel": "Group Play",
+        "groupFirst": true,
+        "trial": "Variant: The Sil'dihn Subterrane",
+        "completion": "24 Hours"
+      },
       "ffxiv-cerberus-mount": {
         "price": 350,
         "trial": "Delubrum Reginae (Savage)",

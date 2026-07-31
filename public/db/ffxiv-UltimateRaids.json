@@ -6,7 +6,7 @@
   },
   "purchaseBox": {
     "runsMin": 1,
-    "runsMax": 10,
+    "runsMax": 12,
     "priorityMultiplier": 2,
     "gearOptions": [
       {

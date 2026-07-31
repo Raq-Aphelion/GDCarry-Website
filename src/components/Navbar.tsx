@@ -407,7 +407,7 @@ export default function Navbar() {
                           className="group/btn relative z-10 flex h-full min-w-0 flex-1 cursor-pointer items-center pl-3 pr-3 text-left transition-colors hover:bg-white/5"
                         >
                           <span
-                            className={`flex h-6 min-w-6 shrink-0 items-center justify-center rounded-full bg-navy-800/80 px-1.5 text-[10px] font-bold ${
+                            className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-navy-800/80 text-[10px] font-bold ${
                               onGame ? 'text-cyan-400' : 'text-slate-300'
                             }`}
                           >
@@ -610,7 +610,7 @@ export default function Navbar() {
                     className="relative z-10 flex h-full shrink-0 cursor-pointer items-center gap-2 px-3 transition-colors hover:bg-white/5"
                   >
                     <span
-                      className={`flex h-6 min-w-6 items-center justify-center rounded-full bg-navy-800/80 px-1.5 text-[10px] font-bold ${
+                      className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-navy-800/80 text-[10px] font-bold ${
                         onGame ? 'text-cyan-400' : 'text-slate-300'
                       }`}
                     >

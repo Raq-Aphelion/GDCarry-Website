@@ -18,6 +18,7 @@ import SavageMountPurchaseBox from '@/components/SavageMountPurchaseBox';
 import TrialPurchaseBox from '@/components/TrialPurchaseBox';
 import TrialBundlePurchaseBox from '@/components/TrialBundlePurchaseBox';
 import DeepDungeonPurchaseBox from '@/components/DeepDungeonPurchaseBox';
+import CriterionPurchaseBox from '@/components/CriterionPurchaseBox';
 import ReputationPurchaseBox from '@/components/ReputationPurchaseBox';
 import Reveal from '@/components/Reveal';
 import ServiceCard from '@/components/ServiceCard';
@@ -166,7 +167,7 @@ export default function ServicePage() {
               <div className="min-w-0 text-left">
                 <p className="text-sm font-bold text-white max-sm:text-xs">{r.title}</p>
                 {r.items ? (
-                  <div className="mt-2 flex flex-wrap gap-2">
+                  <div className="mt-2 flex flex-wrap items-center gap-2">
                     {r.items.map((m) => {
                       const linked = MOUNT_LINKS[m];
                       const cls =
@@ -187,6 +188,9 @@ export default function ServicePage() {
                         </button>
                       );
                     })}
+                    {r.text && (
+                      <span className="text-sm leading-relaxed text-slate-400 max-sm:text-xs">{r.text}</span>
+                    )}
                   </div>
                 ) : r.dutyButton ? (
                   <div className="mt-2 flex flex-wrap items-center gap-2">
@@ -399,6 +403,8 @@ export default function ServicePage() {
             <TrialPurchaseBox key={service.id} service={service} gameShort={game.short} />
           ) : db.deepDungeons?.[service.id] ? (
             <DeepDungeonPurchaseBox key={service.id} service={service} gameShort={game.short} />
+          ) : db.criterion?.[service.id] ? (
+            <CriterionPurchaseBox key={service.id} service={service} gameShort={game.short} />
           ) : db.fieldLeveling?.[service.id] ? (
             <LevelingPurchaseBox
               key={service.id}

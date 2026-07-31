@@ -59,7 +59,7 @@
       },
       {
         "id": "criterion-dungeons",
-        "name": "Criterion Dungeons"
+        "name": "V&C Dungeons"
       },
       {
         "id": "mounts",
@@ -105,21 +105,45 @@
         "ffxiv-felyne-cart"
       ],
       "savage": [
-        "ffxiv-monowheel-s1",
-        "ffxiv-air-wheeler-c9",
         "ffxiv-lowrider-t1rant",
-        "ffxiv-demi-phoinix",
-        "ffxiv-sunforged",
+        "ffxiv-air-wheeler-c9",
+        "ffxiv-monowheel-s1",
         "ffxiv-megaloambystoma",
-        "ffxiv-skyslipper",
-        "ffxiv-ramuh",
+        "ffxiv-sunforged",
+        "ffxiv-demi-phoinix",
         "ffxiv-eden-mount",
-        "ffxiv-alte-roite",
-        "ffxiv-air-force",
+        "ffxiv-ramuh",
+        "ffxiv-skyslipper",
+        "ffxiv-cerberus-mount",
         "ffxiv-model-o",
-        "ffxiv-gobwalker",
+        "ffxiv-air-force",
+        "ffxiv-alte-roite",
         "ffxiv-arrhidaeus",
-        "ffxiv-cerberus-mount"
+        "ffxiv-gobwalker"
+      ],
+      "vc": [
+        "ffxiv-genie-of-the-lamp-mount",
+        "ffxiv-royal-magicked-carpet-mount",
+        "ffxiv-quaqua-mount",
+        "ffxiv-spectral-statice-mount",
+        "ffxiv-shishioji-mount",
+        "ffxiv-burabura-chochin-mount",
+        "ffxiv-sildihn-throne-mount",
+        "ffxiv-silkie-mount"
+      ]
+    },
+    "dungeonGroups": {
+      "Criterion Dungeons": [
+        "ffxiv-another-merchants-tale",
+        "ffxiv-another-aloalo-island",
+        "ffxiv-another-mount-rokkon",
+        "ffxiv-another-sildihn-subterrane"
+      ],
+      "Variant Dungeons": [
+        "ffxiv-variant-merchants-tale",
+        "ffxiv-variant-aloalo-island",
+        "ffxiv-variant-mount-rokkon",
+        "ffxiv-variant-sildihn-subterrane"
       ]
     },
     "trialExpansionGroups": {
@@ -245,7 +269,15 @@
       "ffxiv-shroud-of-darkness-mount": 1,
       "ffxiv-aeturna-mount": 1,
       "ffxiv-cosmic-exploration": 1,
-      "ffxiv-crafter-gatherer-leveling": 1
+      "ffxiv-crafter-gatherer-leveling": 1,
+      "ffxiv-genie-of-the-lamp-mount": 1,
+      "ffxiv-royal-magicked-carpet-mount": 1,
+      "ffxiv-quaqua-mount": 1,
+      "ffxiv-spectral-statice-mount": 1,
+      "ffxiv-shishioji-mount": 1,
+      "ffxiv-burabura-chochin-mount": 1,
+      "ffxiv-sildihn-throne-mount": 1,
+      "ffxiv-silkie-mount": 1
     }
   }
 }

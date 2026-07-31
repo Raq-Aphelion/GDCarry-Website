@@ -66,9 +66,10 @@ export default function TrialPurchaseBox({ service, gameShort }: { service: Serv
       {
         ...service,
         id: `${service.id}::${method}|${dc}`,
-        price: methodBase * (priority ? priorityMultiplier : 1),
+        price: methodBase,
         method: methodLabel,
         flat: stream ? streamPrice : undefined,
+        multiplier: priority ? priorityMultiplier : undefined,
       },
       gameShort,
       [

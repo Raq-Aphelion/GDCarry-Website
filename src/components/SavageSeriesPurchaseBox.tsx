@@ -174,16 +174,21 @@ export default function SavageSeriesPurchaseBox({ service, gameShort }: { servic
         ? fights.map((id) => Object.values(cfg!.fights).flat().find((f) => f.id === id)!.label)
         : [];
     const selectedUnlocks = unlocks.map((id) => cfg!.unlocks.find((u) => u.id === id)!.label);
-    // Run count only makes sense for specific fights — tier bundles and
-    // unlock-only orders are one-offs, so their cart qty controls are locked.
-    const qtyLocked = !hasSelection || effRuns > 1;
+    // Per-run cart model: price is the per-run selection total, qty the run
+    // count (cart +/- adjusts runs, identical configs merge). flat covers the
+    // one-off parts (log fees, unlocks — pre-multiplied by priority when they
+    // are the whole order — gear, stream). Unlock-only orders stay one-offs.
+    const streamPart = subtotal > 0 && stream ? (cfg?.stream ?? 0) : 0;
     addItem(
       {
         ...service,
-        id: `${service.id}::${method}|${dc}`,
-        price: total,
+        id: `${service.id}::${method}|${dc}|${shown}~${[...bundles, ...fights].sort().join(',')}|${[...unlocks].sort().join(',')}${gearPrice > 0 ? `g${effGearIdx}` : ''}${logsPercent > 0 || logsPrice > 0 ? `l${effLogIdx}` : ''}${stream ? 's' : ''}${priority ? 'p' : ''}`,
+        price: bundlesTotal + fightsTotal,
         method: methodLabel,
-        qtyLocked,
+        flat: logsPrice + unlocksPart + gearPrice + streamPart,
+        multiplier: priority ? priorityMultiplier : undefined,
+        logsPercent: logsPercent > 0 ? logsPercent : undefined,
+        ...(hasSelection ? {} : { qtyLocked: true }),
       },
       gameShort,
       [
@@ -196,7 +201,7 @@ export default function SavageSeriesPurchaseBox({ service, gameShort }: { servic
         ...(logsPercent > 0 || logsPrice > 0 ? [LOG_OPTIONS[effLogIdx].label] : []),
         ...(priority ? [`Priority (+${Math.round((priorityMultiplier - 1) * 100)}%)`] : []),
       ],
-      1,
+      hasSelection ? effRuns : 1,
     );
     openCart();
   };

@@ -42,12 +42,16 @@ export interface CatalogConfig {
   categories?: CatalogCategory[];
   /** Mounts split by the duty type they drop from — service ids per group;
       unlisted mounts trail under 'Other Mounts' */
-  mountDutyGroups?: { extreme?: string[]; savage?: string[] };
+  mountDutyGroups?: { extreme?: string[]; savage?: string[]; vc?: string[] };
   /** Extreme trials grouped into sections — key = section title (object order
       = display order), ids = trials newest to oldest; series bundles are
       proxies from the Mounts category; unlisted trials trail under 'Other
       Trials' */
   trialExpansionGroups?: Record<string, string[]>;
+  /** Variant & Criterion dungeons grouped into sections — key = section title
+      (object order = display order), ids = dungeons newest to oldest;
+      unlisted dungeons trail under 'Other Dungeons' */
+  dungeonGroups?: Record<string, string[]>;
   /** Service id -> 1 enabled / 0 disabled (unlisted = enabled) */
   services?: Record<string, 0 | 1>;
 }
@@ -66,6 +70,10 @@ export interface PricingAddon {
   /** Multiplies the method's base price when checked (shown as a percentage);
       other add-ons stay additive on top of the multiplied price */
   timesBase?: number;
+  /** Pins Amount of Runs to this count while checked (e.g. Mount All Paths) */
+  forcedRuns?: number;
+  /** Piloted-method price when it differs from `price` (e.g. criterion mounts) */
+  pilotedPrice?: number;
   /** Second-method (AFK Carry) price when it differs from `price` */
   afkPrice?: number;
   /** When the option is checked, show a dropdown of these choices
@@ -304,6 +312,32 @@ export interface PricingDb {
       unlock?: PricingAddon;
     }
   >;
+  /** Variant & Criterion dungeons (from ffxiv-Criterion): base = Normal
+      (or variant) clear; `savagePrice` adds the Savage difficulty toggle;
+      add-ons are Normal-only */
+  criterion?: Record<
+    string,
+    {
+      /** Group Play price per run */
+      price: number;
+      /** Piloted price per run when it differs from Group Play */
+      pilotedPrice?: number;
+      /** Second-difficulty per-run price (flat both methods); when omitted the
+          second difficulty keeps the normal method-aware price */
+      savagePrice?: number;
+      /** Second-difficulty per-run prices when they differ per method
+          (e.g. Merchant's Tale Advanced) — take precedence over savagePrice */
+      advancedPrice?: number;
+      advancedPilotedPrice?: number;
+      /** Custom labels for the difficulty toggle (default Normal / Savage) */
+      difficulty?: { normal: string; advanced: string };
+      completion: string;
+      /** Add-ons offered on the first (Normal) difficulty only */
+      addons?: PricingAddon[];
+      /** Add-ons offered on the second (Savage/Advanced) difficulty only */
+      advancedAddons?: PricingAddon[];
+    }
+  >;
   /** Field exploration rank/level ranges (from ffxiv-FieldExplorations) —
       same per-level model as job leveling */
   fieldLeveling?: Record<
@@ -416,6 +450,7 @@ const CATEGORY_FILES = [
   'ffxiv-Trials',
   'ffxiv-DeepDungeons',
   'ffxiv-AllianceRaids',
+  'ffxiv-Criterion',
   'ffxiv-FieldExplorations',
   'ffxiv-Catalog',
 ];
@@ -445,6 +480,7 @@ export async function loadPricing(): Promise<PricingDb> {
     let trials: PricingDb['trials'];
     let trialBundles: PricingDb['trialBundles'];
     let deepDungeons: PricingDb['deepDungeons'];
+    let criterion: PricingDb['criterion'];
     let fieldLeveling: PricingDb['fieldLeveling'];
     let reputation: PricingDb['reputation'];
     let unlockAddon: PricingDb['unlockAddon'];
@@ -456,7 +492,7 @@ export async function loadPricing(): Promise<PricingDb> {
           if (!r.ok) return;
           const cat = (await r.json()) as Pick<
             PricingDb,
-            'methodPrices' | 'addonPrices' | 'serviceAddons' | 'purchaseBox' | 'gil' | 'savageSeries' | 'leveling' | 'msqBoost' | 'bluLeveling' | 'pvpSeries' | 'ccRank' | 'wolfMarks' | 'mounts' | 'trials' | 'trialBundles' | 'deepDungeons' | 'fieldLeveling' | 'reputation' | 'unlockAddon' | 'catalog'
+            'methodPrices' | 'addonPrices' | 'serviceAddons' | 'purchaseBox' | 'gil' | 'savageSeries' | 'leveling' | 'msqBoost' | 'bluLeveling' | 'pvpSeries' | 'ccRank' | 'wolfMarks' | 'mounts' | 'trials' | 'trialBundles' | 'deepDungeons' | 'criterion' | 'fieldLeveling' | 'reputation' | 'unlockAddon' | 'catalog'
           >;
           Object.assign(methodPrices, cat.methodPrices);
           Object.assign(addonPrices, cat.addonPrices);
@@ -474,6 +510,7 @@ export async function loadPricing(): Promise<PricingDb> {
           if (cat.trials) trials = { ...trials, ...cat.trials };
           if (cat.trialBundles) trialBundles = { ...trialBundles, ...cat.trialBundles };
           if (cat.deepDungeons) deepDungeons = { ...deepDungeons, ...cat.deepDungeons };
+          if (cat.criterion) criterion = { ...criterion, ...cat.criterion };
           if (cat.fieldLeveling) fieldLeveling = { ...fieldLeveling, ...cat.fieldLeveling };
           if (cat.reputation) reputation = { ...reputation, ...cat.reputation };
           if (cat.unlockAddon) unlockAddon = cat.unlockAddon;
@@ -505,6 +542,7 @@ export async function loadPricing(): Promise<PricingDb> {
       trials,
       trialBundles,
       deepDungeons,
+      criterion,
       fieldLeveling,
       reputation,
       servicePrices: db.servicePrices ?? {},

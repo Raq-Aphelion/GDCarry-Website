@@ -103,12 +103,10 @@ export default function TrialBundlePurchaseBox({ service, gameShort }: { service
       {
         ...service,
         id: `${service.id}::${method}|${dc}|${guaranteed ? 'guaranteed' : [...checked].sort().join(',')}`,
-        price: guaranteed
-          ? mountPrice
-          : selectionTotal * (priority ? priorityMultiplier : 1),
+        price: guaranteed ? mountPrice : selectionTotal,
         method: methodLabel,
         flat: stream ? streamPrice : undefined,
-        ...(guaranteed ? { qtyLocked: true } : {}),
+        ...(guaranteed ? { qtyLocked: true } : { multiplier: priority ? priorityMultiplier : undefined }),
       },
       gameShort,
       [
