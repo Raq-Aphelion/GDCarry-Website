@@ -265,7 +265,7 @@ export default function SavageSeriesPurchaseBox({ service, gameShort }: { servic
                 const v = parseInt(e.target.value.replace(/[^0-9]/g, ''), 10);
                 if (!Number.isNaN(v)) setRuns(Math.min(Math.max(v, 1), db.purchaseBox.runsMax));
               }}
-              className="mt-2.5 h-10 w-full rounded-[5px] border border-navy-700/70 bg-navy-850 px-3.5 text-center text-sm text-slate-300 outline-none transition-colors focus:border-navy-600"
+              className="mt-2.5 h-10 w-full rounded-[5px] border border-navy-700/70 bg-navy-850 px-3.5 text-center text-sm text-cyan-400 outline-none transition-colors focus:border-navy-600"
             />
             <Slider
               className="mt-4"

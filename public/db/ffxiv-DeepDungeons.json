@@ -226,55 +226,6 @@
         "label": "Deep Dungeon Unlocks",
         "price": 40
       }
-    },
-    "ffxiv-cloud-of-darkness": {
-      "completion": "3-5 Days",
-      "soloHeading": "Mounts Guaranteed",
-      "soloLabel": "Piloted",
-      "disableRunsOnAddons": true,
-      "streamPilotedOnly": true,
-      "solo": {
-        "price": 440,
-        "addons": [
-          {
-            "id": "dais",
-            "label": "Dais of Darkness",
-            "price": 850
-          },
-          {
-            "id": "shroud",
-            "label": "Shroud of Darkness",
-            "price": 1100
-          }
-        ]
-      },
-      "group": {
-        "addonsHeading": "Mounts Guaranteed",
-        "options": [
-          {
-            "id": "rng-loot",
-            "label": "RNG Loot",
-            "price": 100
-          },
-          {
-            "id": "full-loot",
-            "label": "Full Loot",
-            "price": 350
-          }
-        ],
-        "addons": [
-          {
-            "id": "dais",
-            "label": "Dais of Darkness",
-            "price": 850
-          },
-          {
-            "id": "shroud",
-            "label": "Shroud of Darkness",
-            "price": 1100
-          }
-        ]
-      }
     }
   }
 }

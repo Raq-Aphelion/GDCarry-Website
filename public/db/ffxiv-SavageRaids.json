@@ -6,17 +6,17 @@
           {
             "id": "p1-p4",
             "label": "P1S - P4S (Asphodelos)",
-            "price": 100
+            "price": 62
           },
           {
             "id": "p5-p8",
             "label": "P5S - P8S (Abyssos)",
-            "price": 115
+            "price": 97
           },
           {
             "id": "p9-p12",
             "label": "P9S - P12S (Anabaseios)",
-            "price": 145
+            "price": 118
           }
         ],
         "fights": {
@@ -24,61 +24,61 @@
             {
               "id": "p1s",
               "label": "P1S (Asphodelos)",
-              "price": 25
+              "price": 14
             },
             {
               "id": "p2s",
               "label": "P2S (Asphodelos)",
-              "price": 25
+              "price": 14
             },
             {
               "id": "p3s",
               "label": "P3S (Asphodelos)",
-              "price": 25
+              "price": 14
             },
             {
               "id": "p4s",
               "label": "P4S (Asphodelos)",
-              "price": 44
+              "price": 35
             }
           ],
           "abyssos": [
             {
               "id": "p5s",
               "label": "P5S (Abyssos)",
-              "price": 25
+              "price": 14
             },
             {
               "id": "p6s",
               "label": "P6S (Abyssos)",
-              "price": 25
+              "price": 14
             },
             {
               "id": "p7s",
               "label": "P7S (Abyssos)",
-              "price": 25
+              "price": 14
             },
             {
               "id": "p8s",
               "label": "P8S (Abyssos)",
-              "price": 55
+              "price": 70
             }
           ],
           "anabaseios": [
             {
               "id": "p9s",
               "label": "P9S (Anabaseios)",
-              "price": 30
+              "price": 21
             },
             {
               "id": "p10s",
               "label": "P10S (Anabaseios)",
-              "price": 30
+              "price": 21
             },
             {
               "id": "p11s",
               "label": "P11S (Anabaseios)",
-              "price": 30
+              "price": 21
             },
             {
               "id": "p12s",
@@ -115,17 +115,17 @@
           {
             "id": "p1-p4",
             "label": "P1S - P4S (Asphodelos)",
-            "price": 135
+            "price": 62
           },
           {
             "id": "p5-p8",
             "label": "P5S - P8S (Abyssos)",
-            "price": 160
+            "price": 97
           },
           {
             "id": "p9-p12",
             "label": "P9S - P12S (Anabaseios)",
-            "price": 210
+            "price": 153
           }
         ],
         "fights": {
@@ -133,39 +133,39 @@
             {
               "id": "p1s",
               "label": "P1S (Asphodelos)",
-              "price": 30
+              "price": 14
             },
             {
               "id": "p2s",
               "label": "P2S (Asphodelos)",
-              "price": 30
+              "price": 14
             },
             {
               "id": "p3s",
               "label": "P3S (Asphodelos)",
-              "price": 30
+              "price": 14
             },
             {
               "id": "p4s",
               "label": "P4S (Asphodelos)",
-              "price": 55
+              "price": 35
             }
           ],
           "abyssos": [
             {
               "id": "p5s",
               "label": "P5S (Abyssos)",
-              "price": 35
+              "price": 14
             },
             {
               "id": "p6s",
               "label": "P6S (Abyssos)",
-              "price": 35
+              "price": 14
             },
             {
               "id": "p7s",
               "label": "P7S (Abyssos)",
-              "price": 35
+              "price": 14
             },
             {
               "id": "p8s",
@@ -177,17 +177,17 @@
             {
               "id": "p9s",
               "label": "P9S (Anabaseios)",
-              "price": 40
+              "price": 21
             },
             {
               "id": "p10s",
               "label": "P10S (Anabaseios)",
-              "price": 40
+              "price": 21
             },
             {
               "id": "p11s",
               "label": "P11S (Anabaseios)",
-              "price": 40
+              "price": 21
             },
             {
               "id": "p12s",
@@ -226,7 +226,7 @@
           {
             "id": "m-p1-4",
             "label": "M1S - M4S (Light-heavyweight)",
-            "price": 140
+            "price": 105
           },
           {
             "id": "m-p5-8",
@@ -244,12 +244,12 @@
             {
               "id": "m1s",
               "label": "M1S (Light-heavyweight)",
-              "price": 35
+              "price": 21
             },
             {
               "id": "m2s",
               "label": "M2S (Light-heavyweight)",
-              "price": 35
+              "price": 28
             },
             {
               "id": "m3s",
@@ -259,7 +259,7 @@
             {
               "id": "m4s",
               "label": "M4S (Light-heavyweight)",
-              "price": 70
+              "price": 54
             }
           ],
           "cw": [
@@ -271,7 +271,7 @@
             {
               "id": "m6s",
               "label": "M6S (Cruiserweight)",
-              "price": 54
+              "price": 45
             },
             {
               "id": "m7s",
@@ -298,7 +298,7 @@
             {
               "id": "m11s",
               "label": "M11S (Heavyweight)",
-              "price": 128
+              "price": 105
             },
             {
               "id": "m12s",
@@ -335,7 +335,7 @@
           {
             "id": "m-p1-4",
             "label": "M1S - M4S (Light-heavyweight)",
-            "price": 140
+            "price": 105
           },
           {
             "id": "m-p5-8",
@@ -354,12 +354,12 @@
             {
               "id": "m1s",
               "label": "M1S (Light-heavyweight)",
-              "price": 35
+              "price": 21
             },
             {
               "id": "m2s",
               "label": "M2S (Light-heavyweight)",
-              "price": 35
+              "price": 28
             },
             {
               "id": "m3s",
@@ -369,7 +369,7 @@
             {
               "id": "m4s",
               "label": "M4S (Light-heavyweight)",
-              "price": 70
+              "price": 54
             }
           ],
           "cw": [
@@ -381,7 +381,7 @@
             {
               "id": "m6s",
               "label": "M6S (Cruiserweight)",
-              "price": 54
+              "price": 45
             },
             {
               "id": "m7s",
@@ -410,7 +410,7 @@
             {
               "id": "m11s",
               "label": "M11S (Heavyweight)",
-              "price": 128,
+              "price": 105,
               "disabled": true
             },
             {

@@ -140,7 +140,7 @@ export default function ReputationPurchaseBox({ service, gameShort }: { service:
         const v = parseInt(e.target.value.replace(/[^0-9]/g, ''), 10);
         if (!Number.isNaN(v)) onChange(v);
       }}
-      className="h-10 w-full rounded-[5px] border border-navy-700/70 bg-navy-850 px-3.5 text-center text-sm text-slate-300 outline-none transition-colors focus:border-navy-600"
+      className="h-10 w-full rounded-[5px] border border-navy-700/70 bg-navy-850 px-3.5 text-center text-sm text-cyan-400 outline-none transition-colors focus:border-navy-600"
     />
   );
 

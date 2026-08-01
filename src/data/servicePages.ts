@@ -77,10 +77,16 @@ const PILOTED_BOOST: ServicePageAccordionSection = {
   items: ['A Professional Booster will be logged onto your account and complete the content on your behalf'],
 };
 
-/** Requirements shared by every Ultimate; `duty` is the unlock duty line. */
-const requirements = (duty: string, ilvl: string): ServicePageAccordionSection => ({
+/** Requirements shared by every Ultimate; `duty` is the unlock duty line,
+    `job`/`expansion` default to the current-expansion requirements. */
+const requirements = (
+  duty: string,
+  ilvl: string,
+  job = 'Have a level 100 Job',
+  expansion = 'Own the Dawntrail Expansion',
+): ServicePageAccordionSection => ({
   title: 'Requirements',
-  items: ['Have a level 100 Job', 'Own the Dawntrail Expansion', duty, ilvl],
+  items: [job, expansion, duty, ilvl],
 });
 
 const rewards = (
@@ -126,7 +132,18 @@ export const SERVICE_PAGES: Record<string, ServicePageContent> = {
       },
     ),
     accordion: [
-      requirements('Asphodelos: The Fourth Circle (Savage) Completed', 'ilvl 740 or higher gear'),
+      {
+        ...requirements('Asphodelos: The Fourth Circle (Savage) Completed', 'ilvl 600 or higher gear', 'Have a lvl 90 Job', 'Own the Endwalker Expansion'),
+        groups: [
+          {
+            heading: 'AFK Carry only (DSR Specific)',
+            items: [
+              "You'll need to be on a Physical DPS Job (ilvl 605 or higher)",
+              'Be attentive and accept raises — there are more than 10 per run; alternatively you can install the Yes Already plugin, which auto-accepts raises for you (PC only)',
+            ],
+          },
+        ],
+      },
       HOW_IT_WORKS,
       PILOTED_VS_AFK,
     ],
@@ -143,7 +160,7 @@ export const SERVICE_PAGES: Record<string, ServicePageContent> = {
       },
     ),
     accordion: [
-      requirements('Deltascape V4.0 (Savage) Completed (available as an add-on)', 'ilvl 740 or higher gear'),
+      requirements('Deltascape V4.0 (Savage) Completed (available as an add-on)', 'ilvl 345 or higher gear', 'Have a lvl 70 Job', 'Own the Stormblood Expansion'),
       HOW_IT_WORKS,
       PILOTED_VS_AFK,
     ],
@@ -160,7 +177,7 @@ export const SERVICE_PAGES: Record<string, ServicePageContent> = {
       },
     ),
     accordion: [
-      requirements('Sigmascape V4.0 (Savage) Completed (available as an add-on)', 'ilvl 740 or higher gear'),
+      requirements('Sigmascape V4.0 (Savage) Completed (available as an add-on)', 'ilvl 375 or higher gear', 'Have a lvl 70 Job', 'Own the Stormblood Expansion'),
       HOW_IT_WORKS,
       PILOTED_VS_AFK,
     ],
@@ -177,7 +194,19 @@ export const SERVICE_PAGES: Record<string, ServicePageContent> = {
       },
     ),
     accordion: [
-      requirements("Eden's Gate: Sepulture (Savage) Completed (available as an add-on)", 'ilvl 740 or higher gear'),
+      {
+        ...requirements("Eden's Gate: Sepulture (Savage) Completed (available as an add-on)", 'ilvl 470 or higher gear', 'Have a lvl 80 Job', 'Own the Shadowbringers Expansion'),
+        groups: [
+          {
+            heading: 'AFK Carry only (TEA Specific)',
+            items: [
+              "You'll need to be on any melee job (except Samurai) that's level 80 or above (ilvl 475 or higher)",
+              'Be attentive and accept raises — alternatively you can install the Yes Already plugin, which auto-accepts raises for you (PC only)',
+              "You'll be required to use the Limit Break at the end of the fight, make sure to have it on your hotbar",
+            ],
+          },
+        ],
+      },
       HOW_IT_WORKS,
       PILOTED_VS_AFK,
     ],
@@ -194,7 +223,7 @@ export const SERVICE_PAGES: Record<string, ServicePageContent> = {
       },
     ),
     accordion: [
-      requirements('Abyssos: The Eighth Circle (Savage) Completed (available as an add-on)', 'ilvl 740 or higher gear'),
+      requirements('Abyssos: The Eighth Circle (Savage) Completed (available as an add-on)', 'ilvl 630 or higher gear', 'Have a lvl 90 Job', 'Own the Endwalker Expansion'),
       HOW_IT_WORKS,
       PILOTED_ONLY,
     ],
@@ -306,7 +335,7 @@ SERVICE_PAGES['ffxiv-gil-pack'] = {
       title: 'How is the gil delivered?',
       groups: [
         {
-          heading: 'Safest Option (via a mannequin trade)',
+          heading: 'Mannequin Trade (safest option)',
           items: [
             {
               link: { label: 'Mannequins', href: 'https://na.finalfantasyxiv.com/lodestone/playguide/db/item/ec327b876c4/' },
@@ -321,7 +350,7 @@ SERVICE_PAGES['ffxiv-gil-pack'] = {
           ],
         },
         {
-          heading: 'Face to Face',
+          heading: 'Face to Face (manual trade)',
           items: [
             'A manager schedules the trade with you right after the order is confirmed',
             'You meet our trader in-game and the gil is handed over face to face',
@@ -329,7 +358,7 @@ SERVICE_PAGES['ffxiv-gil-pack'] = {
           ],
         },
         {
-          heading: 'Manual Trade',
+          heading: 'Direct Account Delivery (optional)',
           items: [
             'A professional trader logs onto your account and completes the delivery for you (+10% fee)',
             'Delivery is scheduled around times you are not playing',

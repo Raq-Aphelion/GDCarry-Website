@@ -517,6 +517,7 @@ const CATEGORY_FILES = [
   'ffxiv-AllianceRaids',
   'ffxiv-Criterion',
   'ffxiv-Relics',
+  'ffxiv-Reputation',
   'ffxiv-FieldExplorations',
   'ffxiv-Catalog',
 ];
@@ -575,7 +576,18 @@ export async function loadPricing(): Promise<PricingDb> {
           if (cat.pvpSeries) pvpSeries = cat.pvpSeries;
           if (cat.ccRank) ccRank = cat.ccRank;
           if (cat.wolfMarks) wolfMarks = cat.wolfMarks;
-          if (cat.mounts) mounts = { ...mounts, ...cat.mounts };
+          if (cat.mounts) {
+            // Group-aware merge: several category files can contribute entries
+            // to the same group (e.g. savageMounts) — a shallow spread would
+            // let a later file replace the whole group
+            mounts = {
+              ...mounts,
+              ...cat.mounts,
+              wings: { ...mounts?.wings, ...cat.mounts.wings },
+              series: { ...mounts?.series, ...cat.mounts.series },
+              savageMounts: { ...mounts?.savageMounts, ...cat.mounts.savageMounts },
+            };
+          }
           if (cat.trials) trials = { ...trials, ...cat.trials };
           if (cat.trialBundles) trialBundles = { ...trialBundles, ...cat.trialBundles };
           if (cat.deepDungeons) deepDungeons = { ...deepDungeons, ...cat.deepDungeons };

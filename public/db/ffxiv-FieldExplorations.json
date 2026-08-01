@@ -134,6 +134,7 @@
       "levelMax": 20,
       "defaultStart": 1,
       "defaultEnd": 20,
+      "endLabel": "Desired rank",
       "priceTiers": [
         {
           "min": 2,
@@ -919,254 +920,43 @@
       ]
     }
   },
-  "reputation": {
-    "ffxiv-beast-tribes": {
-      "completion": "2-4 Weeks",
-      "fromPrice": 15,
-      "rankMin": 1,
-      "rankMax": 8,
-      "defaultStart": 1,
-      "defaultEnd": 8,
-      "pricePerRank": 15,
-      "factions": [
+  "relics": {
+    "ffxiv-cosmic-exploration": {
+      "completion": "3-5 Days",
+      "fromPrice": 50,
+      "crafterJobs": true,
+      "selectLabel": "Tool Type",
+      "gearOptions": true,
+      "steps": [
         {
-          "id": "pelupelu",
-          "label": "Pelupelu (Dawntrail)",
-          "maxRank": 8
+          "label": "Cosmic (ilvl 720)",
+          "price": 50
         },
         {
-          "id": "mamool-ja",
-          "label": "Mamool Ja (Dawntrail)",
-          "maxRank": 8
+          "label": "Stellar (ilvl 750)",
+          "price": 70
         },
         {
-          "id": "yok-huy",
-          "label": "Yok Huy (Dawntrail)",
-          "maxRank": 8
+          "label": "Hypertool (ilvl 765)",
+          "price": 90
         },
         {
-          "id": "arkasodara",
-          "label": "Arkasodara (Endwalker)",
-          "maxRank": 8
-        },
-        {
-          "id": "omicron",
-          "label": "Omicron (Endwalker)",
-          "maxRank": 8
-        },
-        {
-          "id": "loporrits",
-          "label": "Loporrits (Endwalker)",
-          "maxRank": 8
-        },
-        {
-          "id": "pixie",
-          "label": "Pixie (Shadowbringers)",
-          "maxRank": 8
-        },
-        {
-          "id": "qitari",
-          "label": "Qitari (Shadowbringers)",
-          "maxRank": 8
-        },
-        {
-          "id": "dwarf",
-          "label": "Dwarf (Shadowbringers)",
-          "maxRank": 8
-        },
-        {
-          "id": "kojin",
-          "label": "Kojin (Stormblood)",
-          "maxRank": 8
-        },
-        {
-          "id": "ananta",
-          "label": "Ananta (Stormblood)",
-          "maxRank": 8
-        },
-        {
-          "id": "namazu",
-          "label": "Namazu (Stormblood)",
-          "maxRank": 8
-        },
-        {
-          "id": "vanu-vanu",
-          "label": "Vanu Vanu (Heavensward)",
-          "maxRank": 8
-        },
-        {
-          "id": "vath",
-          "label": "Vath (Heavensward)",
-          "maxRank": 8
-        },
-        {
-          "id": "moogle",
-          "label": "Moogle (Heavensward)",
-          "maxRank": 8
-        },
-        {
-          "id": "ixali",
-          "label": "Ixali (A Realm Reborn)",
-          "maxRank": 5
-        },
-        {
-          "id": "amaljaa",
-          "label": "Amalj'aa (A Realm Reborn)",
-          "maxRank": 5
-        },
-        {
-          "id": "sylph",
-          "label": "Sylph (A Realm Reborn)",
-          "maxRank": 5
-        },
-        {
-          "id": "kobold",
-          "label": "Kobold (A Realm Reborn)",
-          "maxRank": 5
-        },
-        {
-          "id": "sahagin",
-          "label": "Sahagin (A Realm Reborn)",
-          "maxRank": 5
+          "label": "Stars (ilvl 780)",
+          "price": 150
         }
       ],
-      "rankNames": [
-        "Neutral",
-        "Recognized",
-        "Friendly",
-        "Trusted",
-        "Respected",
-        "Honored",
-        "Sworn",
-        "Bloodsworn"
-      ],
-      "alliedPackages": [
-        {
-          "id": "arr",
-          "label": "A Realm Reborn Allied Societies",
-          "price": 300
-        },
-        {
-          "id": "hw",
-          "label": "Heavensward Allied Societies",
-          "price": 300
-        },
-        {
-          "id": "sb",
-          "label": "Stormblood Allied Societies",
-          "price": 300
-        },
-        {
-          "id": "ew",
-          "label": "Endwalker Allied Societies",
-          "price": 300
-        },
-        {
-          "id": "dt",
-          "label": "Dawntrail Allied Societies",
-          "price": 300
-        }
-      ],
+      "complete": {
+        "label": "Complete Cosmic Tools",
+        "price": 350
+      },
+      "mount": {
+        "label": "High Mobility Vacuum Suit (Mount)",
+        "price": 2000
+      },
       "unlock": {
-        "label": "Allied Society Unlock",
-        "price": 10,
-        "arrPrice": 60,
-        "otherPrice": 30
-      }
-    },
-    "ffxiv-custom-deliveries": {
-      "completion": "2-4 Weeks",
-      "fromPrice": 8,
-      "rankMin": 0,
-      "rankMax": 5,
-      "defaultStart": 0,
-      "defaultEnd": 5,
-      "pricePerRank": 8,
-      "rankNames": [
-        "Satisfaction 0",
-        "Satisfaction 1",
-        "Satisfaction 2",
-        "Satisfaction 3",
-        "Satisfaction 4",
-        "Satisfaction 5"
-      ],
-      "factionLabel": "Custom Delivery NPC",
-      "factions": [
-        {
-          "id": "tiisol-ja",
-          "label": "Tiisol Ja (Dawntrail)",
-          "maxRank": 5
-        },
-        {
-          "id": "nitowikwe",
-          "label": "Nitowikwe (Dawntrail)",
-          "maxRank": 5
-        },
-        {
-          "id": "margrat",
-          "label": "Margrat (Dawntrail)",
-          "maxRank": 5
-        },
-        {
-          "id": "anden",
-          "label": "Anden (Endwalker)",
-          "maxRank": 5
-        },
-        {
-          "id": "ameliance",
-          "label": "Ameliance (Endwalker)",
-          "maxRank": 5
-        },
-        {
-          "id": "charlemend",
-          "label": "Charlemend (Shadowbringers)",
-          "maxRank": 5
-        },
-        {
-          "id": "ehll-tou",
-          "label": "Ehll Tou (Shadowbringers)",
-          "maxRank": 5
-        },
-        {
-          "id": "kai-shirr",
-          "label": "Kai-Shirr (Shadowbringers)",
-          "maxRank": 5
-        },
-        {
-          "id": "adkiragh",
-          "label": "Adkiragh (Stormblood)",
-          "maxRank": 5
-        },
-        {
-          "id": "kurenai",
-          "label": "Kurenai (Stormblood)",
-          "maxRank": 5
-        },
-        {
-          "id": "mnaago",
-          "label": "M'naago (Stormblood)",
-          "maxRank": 5
-        },
-        {
-          "id": "zhloe",
-          "label": "Zhloe Aliapoh (Heavensward)",
-          "maxRank": 5
-        }
-      ],
-      "rankNameOnly": true,
-      "packagesLabel": "All Custom Deliveries",
-      "alliedPackages": [
-        {
-          "id": "all",
-          "label": "Satisfaction 5 for all",
-          "price": 480
-        }
-      ],
-      "unlock": {
-        "label": "Custom Delivery Unlock",
-        "price": 10,
-        "arrPrice": 0,
-        "otherPrice": 120
+        "id": "unlock",
+        "label": "Cosmic Exploration unlock",
+        "price": 10
       }
     }
   }

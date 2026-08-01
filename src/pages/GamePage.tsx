@@ -64,6 +64,15 @@ export default function GamePage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gameId, catParam]);
 
+  // Category selection also pushes ?cat= into the URL, so the browser
+  // back/forward buttons walk the category history. Switching categories
+  // always clears a search-results view (?q=).
+  const selectCategory = (id: string) => {
+    if (id === active && !searchParams.get('q')) return;
+    setActive(id);
+    setSearchParams({ cat: id });
+  };
+
   // On category change, smooth-scroll so the grid's top edge (where the header
   // background ends and the content segment starts) lands right below the
   // navbar — on mobile, below the sticky category chips bar instead.
@@ -290,7 +299,7 @@ export default function GamePage() {
       <MobileCategoryBar
         items={game.subcategories}
         activeId={active}
-        onSelect={setActive}
+        onSelect={selectCategory}
       />
 
       {/* ============ SIDEBAR + FILTERED SERVICES ============ */}
@@ -310,11 +319,7 @@ export default function GamePage() {
                   return (
                     <li key={sub.id}>
                       <button
-                        onClick={() => {
-                          setActive(sub.id);
-                          // Switching category from the sidebar clears a search-results view
-                          if (searchParams.get('q')) setSearchParams({ cat: sub.id });
-                        }}
+                        onClick={() => selectCategory(sub.id)}
                         aria-pressed={isActive}
                         className={`flex w-full items-center justify-between rounded-[5px] px-3 py-3 text-left text-sm transition-colors ${
                           isActive

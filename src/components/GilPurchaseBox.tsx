@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Armchair, Clock, Gamepad2 } from 'lucide-react';
+import { Armchair, Check, Clock, Gamepad2 } from 'lucide-react';
 import FadeImage from './FadeImage';
 import FieldPopup from './FieldPopup';
 import { CustomSelect } from './PurchaseBox';
@@ -36,10 +36,11 @@ const MIN_M = 5;
 const MAX_M = 900;
 const CHIPS = [5, 10, 20, 50, 100, 200];
 
-/** Trade methods: manual face-to-face trade (default) or piloted delivery (+10%). */
+/** Trade methods: Mannequin (safest, default) or face-to-face manual trade.
+    Direct Account Delivery (piloted) is an optional +10% checkmark below. */
 const METHODS = [
-  { id: 'manual', label: 'Face to Face', icon: Gamepad2 },
-  { id: 'piloted', label: 'Manual', icon: Armchair },
+  { id: 'manual', label: 'Mannequin', icon: Gamepad2 },
+  { id: 'piloted', label: 'Face to Face', icon: Armchair },
 ] as const;
 
 const fmt = (millions: number) => (millions * 1_000_000).toLocaleString('en-US');
@@ -58,6 +59,7 @@ export default function GilPurchaseBox({ service, gameShort }: { service: Servic
   const [millions, setMillions] = useState(5);
   const [inputValue, setInputValue] = useState(fmt(5));
   const [method, setMethod] = useState<(typeof METHODS)[number]['id']>('manual');
+  const [dad, setDad] = useState(false);
   const [region, setRegion] = useState('');
   const [dc, setDc] = useState('');
   const [server, setServer] = useState('');
@@ -106,8 +108,8 @@ export default function GilPurchaseBox({ service, gameShort }: { service: Servic
     setServerError(false);
   };
 
-  // Piloted trade carries a +10% fee over the manual rate
-  const total = millions * pricePerMillion * (method === 'piloted' ? 1.1 : 1);
+  // Direct Account Delivery carries a +10% fee over the base rate
+  const total = millions * pricePerMillion * (dad ? 1.1 : 1);
 
   const addToCart = () => {
     const missing = { region: !region, dc: !dc, server: !server };
@@ -119,14 +121,15 @@ export default function GilPurchaseBox({ service, gameShort }: { service: Servic
     addItem(
       {
         ...service,
-        id: `${service.id}::${method}|${region}|${dc}|${server}`,
-        // per 1 M gil — qty is the amount in millions; piloted trade carries a +10% fee
-        price: pricePerMillion * (method === 'piloted' ? 1.1 : 1),
+        id: `${service.id}::${method}|${dad ? 'dad' : ''}|${region}|${dc}|${server}`,
+        // per 1 M gil — qty is the amount in millions; DAD carries a +10% fee
+        price: pricePerMillion * (dad ? 1.1 : 1),
       },
       gameShort,
       [
         `${fmt(millions)} Gil`,
-        `Trade: ${method === 'piloted' ? 'Manual' : 'Face to Face'}`,
+        `Trade: ${METHODS.find((m) => m.id === method)?.label}`,
+        ...(dad ? ['Direct Account Delivery (+10%)'] : []),
         `Region: ${REGIONS[region].label}`,
         `Data Center: ${dc}`,
         `Server: ${server}`,
@@ -177,6 +180,23 @@ export default function GilPurchaseBox({ service, gameShort }: { service: Servic
                 </button>
               ))}
             </div>
+            {/* Direct Account Delivery — piloted delivery on your account (+10%) */}
+            <button
+              type="button"
+              onClick={() => setDad((d) => !d)}
+              aria-pressed={dad}
+              className="mt-2.5 flex w-full items-center gap-3 rounded-[5px] bg-navy-850 px-2.5 py-1.5 text-left transition-colors hover:bg-navy-800"
+            >
+              <span
+                className={`flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-[3px] border transition-colors ${
+                  dad ? 'border-cyan-600 bg-cyan-600 text-navy-900' : 'border-navy-600 text-transparent'
+                }`}
+              >
+                <Check className="h-3 w-3" strokeWidth={3.5} />
+              </span>
+              <span className="min-w-0 flex-1 truncate text-sm text-slate-300">Direct Account Delivery</span>
+              <span className="text-xs font-bold text-cyan-400">+10%</span>
+            </button>
           </div>
 
           {/* Currency amount */}
@@ -188,7 +208,7 @@ export default function GilPurchaseBox({ service, gameShort }: { service: Servic
               value={inputValue}
               onChange={(e) => onInputChange(e.target.value)}
               onBlur={onInputBlur}
-              className="mt-2.5 h-10 w-full rounded-[5px] border border-navy-700/70 bg-navy-850 px-3.5 py-2 text-center text-sm leading-none text-white outline-none transition-colors hover:border-navy-600 focus:border-navy-600"
+              className="mt-2.5 h-10 w-full rounded-[5px] border border-navy-700/70 bg-navy-850 px-3.5 py-2 text-center text-sm leading-none text-cyan-400 outline-none transition-colors hover:border-navy-600 focus:border-navy-600"
               aria-label="Currency amount"
             />
             <div className="px-1 py-4">

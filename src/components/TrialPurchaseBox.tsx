@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Armchair, Clock, Gamepad2 } from 'lucide-react';
 import FadeImage from './FadeImage';
 import FieldPopup from './FieldPopup';
+import DiscountTag from './DiscountTag';
 import MountAddonsBlock from './MountAddonsBlock';
 import { CustomSelect } from './PurchaseBox';
 import { Slider } from '@/components/ui/slider';
@@ -38,6 +39,12 @@ export default function TrialPurchaseBox({ service, gameShort }: { service: Serv
   const { db } = usePricing();
   const cfg = db.trials?.[service.id];
   const priorityMultiplier = db.purchaseBox.priorityMultiplier;
+
+  // Pilot discount vs AFK Carry — shown as a "Save X%" tag on the Piloted pill
+  const pilotSave =
+    cfg?.price != null && cfg.afkPrice != null && cfg.price < cfg.afkPrice
+      ? Math.round((1 - cfg.price / cfg.afkPrice) * 100)
+      : 0;
 
   const [method, setMethod] = useState<(typeof METHODS)[number]['id']>('piloted');
   const [runs, setRuns] = useState(1);
@@ -108,12 +115,13 @@ export default function TrialPurchaseBox({ service, gameShort }: { service: Serv
                   key={m.id}
                   onClick={() => setMethod(m.id)}
                   aria-pressed={method === m.id}
-                  className={`flex items-center justify-center gap-2 rounded-[5px] border px-3 py-2.5 transition-all duration-300 ${
+                  className={`relative flex items-center justify-center gap-2 rounded-[5px] border px-3 py-2.5 transition-all duration-300 ${
                     method === m.id
                       ? 'border-navy-600 bg-navy-800 text-white cyan-glow'
                       : 'border-navy-700/70 bg-navy-850 text-slate-500 hover:border-navy-600 hover:text-slate-300'
                   }`}
                 >
+                  {m.id === 'piloted' && pilotSave > 0 && <DiscountTag label={`Save ${pilotSave}%`} />}
                   <m.icon className={`h-4 w-4 shrink-0 ${method === m.id ? 'text-cyan-400' : 'opacity-70'}`} />
                   <span
                     className={`text-[11px] font-semibold uppercase tracking-wider ${
@@ -139,7 +147,7 @@ export default function TrialPurchaseBox({ service, gameShort }: { service: Serv
                 const v = parseInt(e.target.value.replace(/[^0-9]/g, ''), 10);
                 if (!Number.isNaN(v)) setRuns(Math.min(Math.max(v, 1), 99));
               }}
-              className="mt-2.5 h-10 w-full rounded-[5px] border border-navy-700/70 bg-navy-850 px-3.5 text-center text-sm text-slate-300 outline-none transition-colors focus:border-navy-600"
+              className="mt-2.5 h-10 w-full rounded-[5px] border border-navy-700/70 bg-navy-850 px-3.5 text-center text-sm text-cyan-400 outline-none transition-colors focus:border-navy-600"
             />
             <Slider
               className="mt-4"

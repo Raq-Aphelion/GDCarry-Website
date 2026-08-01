@@ -265,44 +265,6 @@
         "price": 10
       },
       "jobsUpTo": "arr"
-    },
-    "ffxiv-cosmic-exploration": {
-      "completion": "3-5 Days",
-      "fromPrice": 50,
-      "crafterJobs": true,
-      "selectLabel": "Tool Type",
-      "gearOptions": true,
-      "steps": [
-        {
-          "label": "Cosmic (ilvl 720)",
-          "price": 50
-        },
-        {
-          "label": "Stellar (ilvl 750)",
-          "price": 70
-        },
-        {
-          "label": "Hypertool (ilvl 765)",
-          "price": 90
-        },
-        {
-          "label": "Stars (ilvl 780)",
-          "price": 150
-        }
-      ],
-      "complete": {
-        "label": "Complete Cosmic Tools",
-        "price": 350
-      },
-      "mount": {
-        "label": "High Mobility Vacuum Suit (Mount)",
-        "price": 2000
-      },
-      "unlock": {
-        "id": "unlock",
-        "label": "Cosmic Exploration unlock",
-        "price": 10
-      }
     }
   }
 }

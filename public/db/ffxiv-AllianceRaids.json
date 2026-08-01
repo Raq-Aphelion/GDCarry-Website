@@ -1,22 +1,121 @@
 {
   "methodPrices": {
     "ffxiv-jeuno-first-walk": {
-      "piloted": 99,
-      "afk": 90,
+      "piloted": 120,
+      "afk": 105,
       "afkLabel": "Group Play",
       "groupFirst": true
     },
     "ffxiv-san-doria-second-walk": {
-      "piloted": 132,
-      "afk": 120,
+      "piloted": 120,
+      "afk": 105,
       "afkLabel": "Group Play",
       "groupFirst": true
     },
     "ffxiv-windurst-third-walk": {
-      "piloted": 165,
-      "afk": 150,
+      "piloted": 120,
+      "afk": 105,
       "afkLabel": "Group Play",
       "groupFirst": true
+    }
+  },
+  "criterion": {
+    "ffxiv-forked-tower-blood": {
+      "price": 120,
+      "savagePrice": 400,
+      "difficulty": {
+        "normal": "Normal",
+        "advanced": "Extreme"
+      },
+      "pilotedOnly": true,
+      "unlock": {
+        "id": "unlock",
+        "label": "Unlock The Forked Tower: Blood",
+        "price": 50
+      },
+      "completion": "24 Hours"
+    },
+    "ffxiv-forked-tower-magic": {
+      "price": 120,
+      "savagePrice": 400,
+      "difficulty": {
+        "normal": "Normal",
+        "advanced": "Extreme"
+      },
+      "pilotedOnly": true,
+      "unlock": {
+        "id": "unlock",
+        "label": "Unlock The Forked Tower: Magic",
+        "price": 90
+      },
+      "completion": "24 Hours"
+    }
+  },
+  "deepDungeons": {
+    "ffxiv-cloud-of-darkness": {
+      "completion": "3-5 Days",
+      "soloHeading": "Mounts Guaranteed",
+      "soloLabel": "Piloted",
+      "disableRunsOnAddons": true,
+      "streamPilotedOnly": true,
+      "solo": {
+        "price": 440,
+        "addons": [
+          {
+            "id": "dais",
+            "label": "Dais of Darkness",
+            "price": 850
+          },
+          {
+            "id": "shroud",
+            "label": "Shroud of Darkness",
+            "price": 1100
+          }
+        ]
+      },
+      "group": {
+        "addonsHeading": "Mounts Guaranteed",
+        "options": [
+          {
+            "id": "rng-loot",
+            "label": "RNG Loot",
+            "price": 100
+          },
+          {
+            "id": "full-loot",
+            "label": "Full Loot",
+            "price": 350
+          }
+        ],
+        "addons": [
+          {
+            "id": "dais",
+            "label": "Dais of Darkness",
+            "price": 850
+          },
+          {
+            "id": "shroud",
+            "label": "Shroud of Darkness",
+            "price": 1100
+          }
+        ]
+      }
+    }
+  },
+  "mounts": {
+    "savageMounts": {
+      "ffxiv-delubrum-reginae-savage": {
+        "price": 350,
+        "trial": "Delubrum Reginae (Savage)",
+        "completion": "24 Hours",
+        "pilotedOnly": true
+      },
+      "ffxiv-baldesion-arsenal": {
+        "price": 280,
+        "trial": "The Baldesion Arsenal",
+        "completion": "24 Hours",
+        "pilotedOnly": true
+      }
     }
   }
 }

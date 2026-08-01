@@ -336,7 +336,10 @@ export default function Navbar() {
       query={query}
       results={results}
       showResults={showResults}
-      onQueryChange={setQuery}
+      onQueryChange={(v) => {
+        setQuery(v);
+        setSearchFocused(true);
+      }}
       onFocus={() => setSearchFocused(true)}
       onGoResult={goToResult}
       onGoSearch={goToSearch}

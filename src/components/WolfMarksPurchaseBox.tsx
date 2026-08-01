@@ -117,7 +117,7 @@ export default function WolfMarksPurchaseBox({ service, gameShort }: { service: 
                 if (!Number.isNaN(v)) setAmount(v > (cfg?.amountMax ?? 20000) ? cfg!.amountMax : v);
               }}
               onBlur={() => setAmount((a) => clampAmount(a))}
-              className="mt-2.5 h-10 w-full rounded-[5px] border border-navy-700/70 bg-navy-850 px-3.5 text-center text-sm text-slate-300 outline-none transition-colors focus:border-navy-600"
+              className="mt-2.5 h-10 w-full rounded-[5px] border border-navy-700/70 bg-navy-850 px-3.5 text-center text-sm text-cyan-400 outline-none transition-colors focus:border-navy-600"
             />
             <Slider
               className="mt-4"

@@ -475,18 +475,6 @@
           }
         ]
       },
-      "ffxiv-delubrum-reginae-savage": {
-        "price": 350,
-        "trial": "Delubrum Reginae (Savage)",
-        "completion": "24 Hours",
-        "pilotedOnly": true
-      },
-      "ffxiv-baldesion-arsenal": {
-        "price": 280,
-        "trial": "The Baldesion Arsenal",
-        "completion": "24 Hours",
-        "pilotedOnly": true
-      },
       "ffxiv-cerberus-mount": {
         "price": 350,
         "trial": "Delubrum Reginae (Savage)",

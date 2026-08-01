@@ -321,7 +321,7 @@ export default function PurchaseBox({ service, gameShort }: { service: Service; 
           {/* Boost method */}
           <div>
             <p className="pl-px text-sm font-semibold text-white [text-shadow:0_1px_4px_rgb(0_0_0/0.7)]">Boost Method</p>
-            <div className="mt-2.5 grid grid-cols-2 gap-3">
+            <div className={`mt-2.5 grid gap-3 ${methods.length === 1 ? 'grid-cols-1' : 'grid-cols-2'}`}>
               {methods.map((m) => (
                 <button
                   key={m.id}
@@ -371,7 +371,7 @@ export default function PurchaseBox({ service, gameShort }: { service: Service; 
               onChange={(e) =>
                 setRuns(Math.min(999, Math.max(cfg.runsMin, Number(e.target.value.replace(/\D/g, '')) || cfg.runsMin)))
               }
-              className="mt-2.5 h-10 w-full rounded-[5px] border border-navy-700/70 bg-navy-850 px-3.5 py-2 text-center text-sm leading-none text-white outline-none transition-colors hover:border-navy-600 focus:border-navy-600"
+              className="mt-2.5 h-10 w-full rounded-[5px] border border-navy-700/70 bg-navy-850 px-3.5 py-2 text-center text-sm leading-none text-cyan-400 outline-none transition-colors hover:border-navy-600 focus:border-navy-600"
               aria-label="Number of runs"
             />
             <div className="px-1 pb-2 pt-4">
