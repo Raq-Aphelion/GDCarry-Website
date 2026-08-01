@@ -1,11 +1,12 @@
-import { useEffect, useState } from 'react';
+import { Fragment, useEffect, useState, type ReactNode } from 'react';
 import { Check, Minus, Plus, Settings2 } from 'lucide-react';
 import { useCurrency } from '@/context/CurrencyContext';
 import { usePricing } from '@/context/PricingContext';
 
 /** Shared Additional Options block for mount purchase boxes: Private Stream
     (flat, from the mount service) and Priority (× priorityMultiplier).
-    `extraRow` prepends a custom row (e.g. Deep Dungeon Unlock). */
+    `extraRow` prepends a custom row (e.g. Deep Dungeon Unlock); `extraRows`
+    prepends more rows after it (e.g. offerings). */
 export default function MountAddonsBlock({
   stream,
   setStream,
@@ -14,6 +15,8 @@ export default function MountAddonsBlock({
   streamPrice,
   onToggle,
   extraRow,
+  extraRows,
+  gearRow,
   hideStream = false,
 }: {
   stream: boolean;
@@ -24,6 +27,10 @@ export default function MountAddonsBlock({
   onToggle?: () => void;
   /** Custom first row (label, price hint, checked state, toggle) */
   extraRow?: { label: string; hint: string; checked: boolean; onClick: () => void };
+  /** Additional custom rows after `extraRow` */
+  extraRows?: { label: string; hint: string; checked: boolean; onClick: () => void }[];
+  /** Custom node rendered above the rows (e.g. a gear dropdown) */
+  gearRow?: ReactNode;
   /** Hide the Private Stream row (e.g. allied society) */
   hideStream?: boolean;
 }) {
@@ -90,7 +97,9 @@ export default function MountAddonsBlock({
       >
         <div className={`min-w-0 ${optionsExpanded ? 'overflow-visible' : 'overflow-hidden'}`}>
           <div className="space-y-1.5 px-4 pb-3 pt-1">
+            {gearRow}
             {extraRow && row(extraRow.label, extraRow.hint, extraRow.checked, extraRow.onClick)}
+            {extraRows?.map((r) => <Fragment key={r.label}>{row(r.label, r.hint, r.checked, r.onClick)}</Fragment>)}
             {!hideStream && row('Private Stream', `+${format(streamPrice)}`, stream, () => setStream(!stream))}
             {row('Priority', `+${Math.round((priorityMultiplier - 1) * 100)}%`, priority, () => setPriority(!priority))}
           </div>

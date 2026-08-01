@@ -60,6 +60,7 @@ export default function DeepDungeonPurchaseBox({ service, gameShort }: { service
   const [stream, setStream] = useState(false);
   const [priority, setPriority] = useState(false);
   const [unlockChecked, setUnlockChecked] = useState(false);
+  const [drawerChecked, setDrawerChecked] = useState<string[]>([]);
   const [dc, setDc] = useState('');
   const [dcError, setDcError] = useState(false);
 
@@ -77,6 +78,8 @@ export default function DeepDungeonPurchaseBox({ service, gameShort }: { service
     setMethod(id);
     // streamInSolo / streamPilotedOnly configs don't offer stream in Group Play
     if ((cfg?.streamInSolo || cfg?.streamPilotedOnly) && id === 'group') setStream(false);
+    // drawer add-ons (e.g. offerings) are Group Play only
+    if (cfg?.drawerAddons?.length && id === 'solo') setDrawerChecked([]);
     if (id !== shown) setFadeIn(false);
   };
   useEffect(() => {
@@ -90,7 +93,7 @@ export default function DeepDungeonPurchaseBox({ service, gameShort }: { service
   const pricedMethod: 'solo' | 'group' = hasGroup ? shown : 'solo';
 
   const { rootRef, wrapRef, stick, overflowTop, fixedStyle, blockHpx } = usePurchaseFloat(
-    `${dc}|${effMethod}|${option}|${groupChecked.length}|${mountOn}|${checked.length}|${stream}|${priority}|${unlockChecked}|${runs}`,
+    `${dc}|${effMethod}|${option}|${groupChecked.length}|${mountOn}|${checked.length}|${stream}|${priority}|${unlockChecked}|${drawerChecked.length}|${runs}`,
   );
 
   const toggle = (id: string) =>
@@ -142,6 +145,10 @@ export default function DeepDungeonPurchaseBox({ service, gameShort }: { service
           ? 1
           : 0;
   const effRuns = forcedRuns > 0 ? forcedRuns : runs;
+  const drawerAddonsTotal = drawerChecked.reduce(
+    (s, id) => s + (cfg?.drawerAddons?.find((a) => a.id === id)?.price ?? 0),
+    0,
+  );
   // Priority multiplies the method total × runs; unlock and stream are flat.
   // streamInSolo / streamPilotedOnly configs offer Private Stream only in Piloted.
   const effStreamPrice =
@@ -149,6 +156,7 @@ export default function DeepDungeonPurchaseBox({ service, gameShort }: { service
   const total =
     (core * effRuns + addonsPart) * (priority ? priorityMultiplier : 1) +
     (unlockChecked ? (cfg?.unlock?.price ?? 0) : 0) +
+    drawerAddonsTotal +
     effStreamPrice;
 
   const addToCart = () => {
@@ -168,6 +176,7 @@ export default function DeepDungeonPurchaseBox({ service, gameShort }: { service
         flat:
           addonsPart * (priority ? priorityMultiplier : 1) +
           (unlockChecked ? (cfg?.unlock?.price ?? 0) : 0) +
+          drawerAddonsTotal +
           effStreamPrice,
         multiplier: priority ? priorityMultiplier : undefined,
         method: isGroup ? 'Group Play' : (cfg?.soloLabel ?? 'Solo Piloted'),
@@ -180,6 +189,7 @@ export default function DeepDungeonPurchaseBox({ service, gameShort }: { service
         ...(isGroup && mountOn && groupMultiplier ? [groupMultiplier.label] : []),
         ...(!isGroup ? checked.map((id) => soloAddons.find((a) => a.id === id)!.label) : []),
         ...(unlockChecked && cfg?.unlock ? [cfg.unlock.label] : []),
+        ...drawerChecked.map((id) => cfg?.drawerAddons?.find((a) => a.id === id)!.label ?? ''),
         ...(stream ? ['Private Stream'] : []),
         ...(priority ? [`Priority (+${Math.round((priorityMultiplier - 1) * 100)}%)`] : []),
       ],
@@ -491,6 +501,19 @@ export default function DeepDungeonPurchaseBox({ service, gameShort }: { service
                     checked: unlockChecked,
                     onClick: () => setUnlockChecked((u) => !u),
                   }
+                : undefined
+            }
+            extraRows={
+              effMethod === 'group'
+                ? cfg?.drawerAddons?.map((a) => ({
+                    label: a.label,
+                    hint: `+${format(a.price)}`,
+                    checked: drawerChecked.includes(a.id),
+                    onClick: () =>
+                      setDrawerChecked((prev) =>
+                        prev.includes(a.id) ? prev.filter((x) => x !== a.id) : [...prev, a.id],
+                      ),
+                  }))
                 : undefined
             }
           />

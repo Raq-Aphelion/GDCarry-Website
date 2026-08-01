@@ -1,4 +1,4 @@
-import { ArrowUp, BadgeCheck, Coins, Gem, Medal, Package, ShieldCheck, Swords, Timer, Trophy, Undo2, type LucideIcon } from 'lucide-react';
+import { ArrowUp, BadgeCheck, Coins, Gem, Medal, Package, Shield, ShieldCheck, Swords, Timer, Trophy, Undo2, type LucideIcon } from 'lucide-react';
 
 export interface ServicePageReward {
   icon: LucideIcon;
@@ -541,6 +541,127 @@ SERVICE_PAGES['ffxiv-leveling-boost'] = {
   ],
 };
 
+/** Relic weapon/armour pages share one shape; requirement line differs per relic. */
+const relicPage = (
+  short: string,
+  kind: 'weapon' | 'armour',
+  expansion: string,
+  requirement: string,
+  rewardText: string,
+  rewardTitle?: string,
+): ServicePageContent => ({
+  short,
+  rewardsHeading: 'What you get',
+  rewards: [
+    {
+      icon: ArrowUp,
+      title: 'Any Step of the Relic Chain',
+      text: 'From the base stage to the final glow — pick exactly the steps you need, priced per step.',
+    },
+    {
+      icon: kind === 'weapon' ? Swords : Shield,
+      title: rewardTitle ?? (kind === 'weapon' ? 'Relic Weapon for Your Job' : 'Elemental Armour Set'),
+      text: rewardText,
+    },
+    {
+      icon: Gem,
+      title: 'All Materials Kept',
+      text: 'Tomestones, crystals and every material farmed along the way stays on your character.',
+    },
+    {
+      icon: Medal,
+      title: 'Achievement Unlocked',
+      text: 'Achievement unlocked upon completing the relic chain.',
+    },
+  ],
+  accordion: [
+    {
+      title: 'Requirements',
+      items: [`Own the ${expansion} Expansion`, requirement],
+    },
+    HOW_IT_WORKS,
+    PILOTED_BOOST,
+  ],
+});
+
+SERVICE_PAGES['ffxiv-cosmic-exploration'] = {
+  short: 'Cosmic Exploration',
+  rewardsHeading: 'What you get',
+  rewards: [
+    {
+      icon: ArrowUp,
+      title: 'Cosmic Tools at Any Stage',
+      text: 'Cosmic, Stellar, Hypertool or Stars tools for any DoH or DoL job — pick exactly the stages you need.',
+    },
+    {
+      icon: Trophy,
+      title: 'High Mobility Vacuum Suit Mount',
+      items: ['High Mobility Vacuum Suit'],
+      text: '— 500K Cosmic Tracker on all 11 DoH and DoL jobs.',
+    },
+    {
+      icon: Gem,
+      title: 'Cosmic Credits & Materials Kept',
+      text: 'Credits, scrips and every material earned along the way stays on your character.',
+    },
+    {
+      icon: Medal,
+      title: 'Achievement Unlocked',
+      text: 'Achievements unlocked upon completing the Cosmic Tool stages.',
+    },
+  ],
+  accordion: [
+    {
+      title: 'Requirements',
+      items: ['Have any DoH or DoL job at level 100', 'Own the Dawntrail Expansion', 'Cosmic Exploration unlocked (available as an additional service)'],
+    },
+    HOW_IT_WORKS,
+    PILOTED_BOOST,
+  ],
+};
+
+SERVICE_PAGES['ffxiv-phantom-weapon'] = relicPage('Phantom Weapon', 'weapon', 'Dawntrail', 'Occult Crescent unlocked (available as an additional service)', 'The Dawntrail Phantom Weapon for your chosen job — Penumbrae to Occultum.', 'BiS Relic Weapon for Your Job (ilvl 795)');
+SERVICE_PAGES['ffxiv-manderville-weapon'] = relicPage('Manderville Weapon', 'weapon', 'Endwalker', 'Manderville weapon questline unlocked (available as an additional service)', 'The Endwalker Manderville Weapon for your chosen job, at any stage.');
+SERVICE_PAGES['ffxiv-resistance-weapon'] = relicPage('Resistance Weapon', 'weapon', 'Shadowbringers', 'Bozjan Southern Front unlocked (available as an additional service)', 'The Shadowbringers Resistance Weapon for your chosen job, at any stage.');
+SERVICE_PAGES['ffxiv-eureka-weapon'] = relicPage('Eurekan Weapon', 'weapon', 'Stormblood', 'Eureka Anemos unlocked (available as an additional service)', 'The Stormblood Eurekan Weapon for your chosen job, at any stage.');
+SERVICE_PAGES['ffxiv-eurekan-elemental-armour'] = relicPage('Eurekan Armour', 'armour', 'Stormblood', 'Eureka Pyros unlocked (available as an additional service)', 'The full Elemental Armour set for your chosen role type.');
+SERVICE_PAGES['ffxiv-anima-weapon'] = relicPage('Anima Weapon', 'weapon', 'Heavensward', 'Anima weapon questline unlocked (available as an additional service)', 'The Heavensward Anima Weapon for your chosen job, at any stage.');
+SERVICE_PAGES['ffxiv-zodiac-weapon'] = relicPage('Zodiac Weapon', 'weapon', 'A Realm Reborn', 'Zodiac weapon questline unlocked (available as an additional service)', 'The A Realm Reborn Zodiac Weapon for your chosen job, at any stage.');
+
+SERVICE_PAGES['ffxiv-crafter-gatherer-leveling'] = {  short: 'Crafter & Gatherer Leveling',
+  rewardsHeading: 'What you get',
+  rewards: [
+    {
+      icon: ArrowUp,
+      title: 'Level Up!',
+      text: 'Any Disciple of the Hand or Land leveled to your chosen level.',
+    },
+    {
+      icon: BadgeCheck,
+      title: 'Crafting & Gathering Unlocked',
+      text: 'Higher-tier recipes, gathering nodes and job actions at your target level.',
+    },
+    {
+      icon: Gem,
+      title: 'Scrips & Materials Kept',
+      text: 'Every scrip, collectable and material earned along the way stays on your character.',
+    },
+    {
+      icon: Timer,
+      title: 'Time Saver',
+      text: 'Skip the leve and collectable grind — straight to endgame crafting and gathering.',
+    },
+  ],
+  accordion: [
+    {
+      title: 'Requirements',
+      items: ['Have the chosen job unlocked'],
+    },
+    HOW_IT_WORKS,
+    PILOTED_BOOST,
+  ],
+};
+
 SERVICE_PAGES['ffxiv-msq-skip'] = {
   short: 'MSQ Boost',
   rewardsHeading: 'What you get',
@@ -913,8 +1034,196 @@ SERVICE_PAGES['ffxiv-shishioji-mount'] = savageMountPage('Shishioji', 'Another M
 SERVICE_PAGES['ffxiv-burabura-chochin-mount'] = savageMountPage('Burabura Chochin', 'Variant: Mount Rokkon', 90, '/boosting/ffxiv/ffxiv-variant-mount-rokkon', '— all 12 routes required.');
 SERVICE_PAGES['ffxiv-sildihn-throne-mount'] = savageMountPage("Sil'dihn Throne", "Another Sil'dihn Subterrane", 90, '/boosting/ffxiv/ffxiv-another-sildihn-subterrane', "— random drop or 100 Sil'dihn Silver exchange.", { dropTitle: 'Mount Drop From' });
 SERVICE_PAGES['ffxiv-silkie-mount'] = savageMountPage('Silkie', "Variant: The Sil'dihn Subterrane", 90, '/boosting/ffxiv/ffxiv-variant-sildihn-subterrane', '— all 12 routes required.');
-SERVICE_PAGES['ffxiv-cerberus-mount'] = savageMountPage('Cerberus', 'Delubrum Reginae (Savage)', 80, '/boosting/ffxiv?cat=alliance-raids', undefined, { pilotedOnly: true });
-SERVICE_PAGES['ffxiv-demi-ozma'] = savageMountPage('Demi-Ozma', 'The Baldesion Arsenal', 70, '/boosting/ffxiv?cat=alliance-raids', undefined, {
+
+SERVICE_PAGES['ffxiv-forked-tower-blood'] = {
+  short: 'The Forked Tower: Blood',
+  rewardsHeading: 'What you get',
+  rewards: [
+    {
+      icon: Trophy,
+      title: 'Demon Haul Mount',
+      items: ['Demon Haul'],
+      text: '— guaranteed for your collection.',
+    },
+    {
+      icon: Gem,
+      title: 'All Loot Included',
+      text: 'Gear, fragments and every drop from the clear stays yours.',
+    },
+    {
+      icon: Swords,
+      title: '48-Player Field Operation Clear',
+      text: 'The Forked Tower: Blood completed — Normal or Extreme.',
+    },
+    {
+      icon: Medal,
+      title: 'Achievement Unlocked',
+      text: 'Achievement unlocked upon clearing The Forked Tower: Blood.',
+    },
+  ],
+  accordion: [
+    {
+      title: 'Requirements',
+      items: ['Have a level 100 Job', 'Own the Dawntrail Expansion', 'The Forked Tower: Blood unlocked (available as an additional service)'],
+    },
+    HOW_IT_WORKS,
+    PILOTED_ONLY,
+  ],
+};
+
+SERVICE_PAGES['ffxiv-forked-tower-magic'] = {
+  short: 'The Forked Tower: Magic',
+  rewardsHeading: 'What you get',
+  rewards: [
+    {
+      icon: Trophy,
+      title: 'Duck-billed Porter Mount',
+      items: ['Duck-billed Porter'],
+      text: '— random drop or 500 Arcane Amulets exchange.',
+    },
+    {
+      icon: Gem,
+      title: 'Arcane Amulets & Loot',
+      text: 'Arcane Amulets, gear and every drop from the clear stays yours.',
+    },
+    {
+      icon: Swords,
+      title: '48-Player Field Operation Clear',
+      text: 'The Forked Tower: Magic completed — Normal or Extreme.',
+    },
+    {
+      icon: Medal,
+      title: 'Achievement Unlocked',
+      text: 'Achievement unlocked upon clearing The Forked Tower: Magic.',
+    },
+  ],
+  accordion: [
+    {
+      title: 'Requirements',
+      items: ['Have a level 100 Job', 'Own the Dawntrail Expansion', 'The Forked Tower: Magic unlocked (available as an additional service)'],
+    },
+    HOW_IT_WORKS,
+    PILOTED_ONLY,
+  ],
+};
+
+SERVICE_PAGES['ffxiv-baldesion-arsenal'] = {
+  short: 'The Baldesion Arsenal',
+  rewardsHeading: 'What you get',
+  rewards: [
+    {
+      icon: Trophy,
+      title: 'Demi-Ozma Mount',
+      items: ['Demi-Ozma'],
+      text: '— guaranteed completion with a veteran group.',
+    },
+    {
+      icon: Gem,
+      title: 'Conditional Virtue (Minion)',
+      text: 'Minion drop chance, cryptic seals and Eureka fragments from every clear.',
+    },
+    {
+      icon: Swords,
+      title: '56-Player Field Operation Clear',
+      text: 'The Baldesion Arsenal completed.',
+    },
+    {
+      icon: Medal,
+      title: 'Achievement: "We\'re on Your Side I"',
+      text: 'Achievement unlocked upon clearing the Baldesion Arsenal.',
+    },
+  ],
+  accordion: [
+    {
+      title: 'Requirements',
+      items: ['Have a level 70 Job', 'Own the Stormblood Expansion', 'Eureka Hydatos story completed', 'Elemental level 50+'],
+    },
+    HOW_IT_WORKS,
+    PILOTED_ONLY,
+  ],
+};
+
+SERVICE_PAGES['ffxiv-delubrum-reginae-savage'] = {
+  short: 'Delubrum Reginae',
+  rewardsHeading: 'What you get',
+  rewards: [
+    {
+      icon: Trophy,
+      title: 'Cerberus Mount',
+      items: ['Cerberus'],
+      text: '— guaranteed via the Savage Queen of Swords achievement.',
+    },
+    {
+      icon: BadgeCheck,
+      title: 'Title: Savage Queen of Swords',
+      text: 'Exclusive title earned from the savage clear.',
+    },
+    {
+      icon: Swords,
+      title: '48-Player Savage Raid Clear',
+      text: 'Delubrum Reginae (Savage) completed with a veteran group.',
+    },
+    {
+      icon: Medal,
+      title: 'Achievement: "Savage Queen of Swords"',
+      text: 'Achievement unlocked upon clearing Delubrum Reginae (Savage).',
+    },
+  ],
+  accordion: [
+    {
+      title: 'Requirements',
+      items: ['Have a level 80 Job', 'Own the Shadowbringers Expansion', 'Delubrum Reginae (Normal) completed'],
+    },
+    HOW_IT_WORKS,
+    PILOTED_ONLY,
+  ],
+};
+
+SERVICE_PAGES['ffxiv-morbol-mount'] = {  short: 'Morbol',
+  rewardsHeading: 'What you get',
+  rewards: [
+    {
+      icon: Trophy,
+      title: 'Guaranteed Mount Drop From',
+      text: 'Completing the Blue Unchained and Masked Conqueror Achievements (Blue Mage).',
+    },
+    {
+      icon: Swords,
+      title: 'Savage Loot',
+      text: 'Savage specific loot from completing the Alexander and Bahamut fights as Blue Mage.',
+    },
+    {
+      icon: BadgeCheck,
+      title: 'Blue Justice & Unbound Blue',
+      text: 'Exclusive titles acquired from completing the Blue Mage fights.',
+    },
+    {
+      icon: Medal,
+      title: 'Achievement: "True Blue"',
+      text: 'Achievement unlocked upon obtaining the Blue Unchained and Masked Conqueror achievements.',
+    },
+  ],
+  accordion: [
+    {
+      title: 'Requirements',
+      items: [
+        'Have Blue Mage at lvl 70 or higher',
+        'Own the Dawntrail Expansion',
+        'Alexander & Bahamut fights unlocked',
+        'ilvl 270 or higher on Blue Mage',
+        'Specific Spells',
+      ],
+    },
+    {
+      title: 'Specific Spells',
+      items: ['Mimicry', 'Shock Strike', 'Whistle', 'Moon Flute', 'Nightbloom', 'Surpanakha', 'Phantom Flurry', 'The Rose of Destruction'],
+    },
+    HOW_IT_WORKS,
+    PILOTED_ONLY,
+  ],
+};
+SERVICE_PAGES['ffxiv-cerberus-mount'] = savageMountPage('Cerberus', 'Delubrum Reginae (Savage)', 80, '/boosting/ffxiv/ffxiv-delubrum-reginae-savage', undefined, { pilotedOnly: true });
+SERVICE_PAGES['ffxiv-demi-ozma'] = savageMountPage('Demi-Ozma', 'The Baldesion Arsenal', 70, '/boosting/ffxiv/ffxiv-baldesion-arsenal', undefined, {
   pilotedOnly: true,
   rows: [
     {
@@ -929,7 +1238,9 @@ SERVICE_PAGES['ffxiv-demi-ozma'] = savageMountPage('Demi-Ozma', 'The Baldesion A
     },
   ],
 });
-SERVICE_PAGES['ffxiv-demon-haul'] = savageMountPage('Demon Haul', 'The Forked Tower: Blood', 100, '/boosting/ffxiv?cat=alliance-raids', undefined, { pilotedOnly: true });
+SERVICE_PAGES['ffxiv-demon-haul'] = savageMountPage('Demon Haul', 'The Forked Tower: Blood', 100, '/boosting/ffxiv/ffxiv-forked-tower-blood', undefined, { pilotedOnly: true });
+SERVICE_PAGES['ffxiv-duck-billed-porter-mount'] = savageMountPage('Duck-billed Porter', 'The Forked Tower: Magic', 100, '/boosting/ffxiv/ffxiv-forked-tower-magic', '— random drop or 500 Arcane Amulets exchange.', { dropTitle: 'Mount Drop From' });
+SERVICE_PAGES['ffxiv-vacuum-suit-mount'] = savageMountPage('High Mobility Vacuum Suit', 'Cosmic Exploration', 100, '/boosting/ffxiv/ffxiv-cosmic-exploration', '— 500K Cosmic Tracker on all 11 DoH and DoL jobs.', { pilotedOnly: true });
 SERVICE_PAGES['ffxiv-dais-of-darkness-mount'] = savageMountPage('Dais of Darkness', 'The Cloud of Darkness (Chaotic)', 100, '/boosting/ffxiv/ffxiv-cloud-of-darkness');
 SERVICE_PAGES['ffxiv-shroud-of-darkness-mount'] = savageMountPage('Shroud of Darkness', 'The Cloud of Darkness (Chaotic)', 100, '/boosting/ffxiv/ffxiv-cloud-of-darkness');
 
@@ -961,6 +1272,11 @@ export const MOUNT_LINKS: Record<string, string> = {
   'Burabura Chochin': 'ffxiv-burabura-chochin-mount',
   "Sil'dihn Throne": 'ffxiv-sildihn-throne-mount',
   'Silkie': 'ffxiv-silkie-mount',
+  'Cerberus': 'ffxiv-cerberus-mount',
+  'Demi-Ozma': 'ffxiv-demi-ozma',
+  'Demon Haul': 'ffxiv-demon-haul',
+  'Duck-billed Porter': 'ffxiv-duck-billed-porter-mount',
+  'High Mobility Vacuum Suit': 'ffxiv-vacuum-suit-mount',
 };
 
 
@@ -1172,7 +1488,7 @@ SERVICE_PAGES['ffxiv-beast-tribes'] = {
 };
 
 SERVICE_PAGES['ffxiv-cloud-of-darkness'] = {
-  short: 'Cloud of Darkness',
+  short: 'The Cloud of Darkness',
   rewardsHeading: 'Rewards',
   rewards: [
     { icon: Trophy, title: 'Mount Drops (Guaranteed at minimum ilvl)', items: ['Dais of Darkness', 'Shroud of Darkness'] },
@@ -1349,7 +1665,7 @@ SERVICE_PAGES['ffxiv-another-sildihn-subterrane'] = criterionPage("Another Sil'd
 
 SERVICE_PAGES['ffxiv-potd-solo'] = deepDungeonPage(
   'Palace of the Dead',
-  ddRewards('Necromancer Title', { title: 'Achievement: “Pal-less Palace III”', text: 'Achievement unlocked upon clearing Palace of the Dead Floor 200 Solo.' }),
+  ddRewards('Necromancer Title (Solo Piloted Boost Method)', { title: 'Achievement: “Pal-less Palace III”', text: 'Achievement unlocked upon clearing Palace of the Dead Floor 200 Solo.' }),
   ['Have a level 100 Job', '95+ Aetherpool Weapon & Armour (available as an add-on)', 'ilvl 740 or higher gear'],
   GROUP_PLAY_VS_PILOTED,
 );

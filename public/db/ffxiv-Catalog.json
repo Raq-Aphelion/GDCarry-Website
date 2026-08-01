@@ -4,6 +4,7 @@
       "ffxiv-gil-pack",
       "ffxiv-arcadion-savage",
       "ffxiv-uwu",
+      "ffxiv-wings-of-mist",
       "ffxiv-potd-solo"
     ],
     "categories": [
@@ -32,7 +33,7 @@
           "ffxiv-occult-crescent",
           "ffxiv-windurst-third-walk",
           "ffxiv-forked-tower-magic",
-          "ffxiv-demon-haul",
+          "ffxiv-duck-billed-porter-mount",
           "ffxiv-crafter-gatherer-leveling",
           "ffxiv-cosmic-exploration"
         ]
@@ -66,6 +67,10 @@
         "name": "Mounts"
       },
       {
+        "id": "relics",
+        "name": "Relics"
+      },
+      {
         "id": "reputation",
         "name": "Reputation"
       },
@@ -80,10 +85,6 @@
       {
         "id": "pvp",
         "name": "PvP"
-      },
-      {
-        "id": "coaching",
-        "name": "Coaching"
       }
     ],
     "mountDutyGroups": {
@@ -254,8 +255,6 @@
       "ffxiv-cc-rank-boost": 1,
       "ffxiv-pvp-series-boost": 1,
       "ffxiv-wolf-marks": 1,
-      "ffxiv-raid-coaching": 0,
-      "ffxiv-pvp-coaching": 0,
       "ffxiv-dawntrail-trials-bundle": 1,
       "ffxiv-endwalker-trials-bundle": 1,
       "ffxiv-shadowbringers-trials-bundle": 1,
@@ -277,7 +276,17 @@
       "ffxiv-shishioji-mount": 1,
       "ffxiv-burabura-chochin-mount": 1,
       "ffxiv-sildihn-throne-mount": 1,
-      "ffxiv-silkie-mount": 1
+      "ffxiv-silkie-mount": 1,
+      "ffxiv-morbol-mount": 1,
+      "ffxiv-duck-billed-porter-mount": 1,
+      "ffxiv-vacuum-suit-mount": 1,
+      "ffxiv-phantom-weapon": 1,
+      "ffxiv-manderville-weapon": 1,
+      "ffxiv-resistance-weapon": 1,
+      "ffxiv-eureka-weapon": 1,
+      "ffxiv-eurekan-elemental-armour": 1,
+      "ffxiv-anima-weapon": 1,
+      "ffxiv-zodiac-weapon": 1
     }
   }
 }

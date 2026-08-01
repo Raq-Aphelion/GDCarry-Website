@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
-import { Check, ChevronRight, Clock, Minus, Plus, Settings2 } from 'lucide-react';
+import { Check, ChevronRight, Clock, Minus, Plus, Settings2, type LucideIcon } from 'lucide-react';
+import { JOB_GROUPS } from '@/data/jobs';
+import { splitParens } from '@/data/jobs';
 import FadeImage from './FadeImage';
 import FieldPopup from './FieldPopup';
 import { CustomSelect } from './PurchaseBox';
@@ -25,30 +27,6 @@ const DATA_CENTERS = [
   'Materia',
 ];
 
-const JOBS = [
-  'Paladin (PLD)',
-  'Warrior (WAR)',
-  'Dark Knight (DRK)',
-  'Gunbreaker (GNB)',
-  'White Mage (WHM)',
-  'Scholar (SCH)',
-  'Astrologian (AST)',
-  'Sage (SGE)',
-  'Monk (MNK)',
-  'Dragoon (DRG)',
-  'Ninja (NIN)',
-  'Samurai (SAM)',
-  'Reaper (RPR)',
-  'Viper (VPR)',
-  'Bard (BRD)',
-  'Machinist (MCH)',
-  'Dancer (DNC)',
-  'Black Mage (BLM)',
-  'Summoner (SMN)',
-  'Red Mage (RDM)',
-  'Pictomancer (PCT)',
-];
-
 /** Unified config for the level-range purchase box. The standard leveling
     box adds the job select; Blue Mage skips it and swaps the add-on. */
 export interface LevelBoxConfig {
@@ -59,8 +37,18 @@ export interface LevelBoxConfig {
   priceTiers: { min: number; max: number; pricePerLevel: number }[];
   completion: string;
   showJob: boolean;
+  /** Grouped jobs with role dividers in the dropdown (combat groups by
+      default; pass e.g. Crafters/Gatherers to override) */
+  jobGroups?: { label: string; icon: LucideIcon; jobs: string[] }[];
+  /** Per-job minimum levels (e.g. Viper starts at 80) — drives the slider
+      minimum when that job is selected */
+  jobMinLevels?: Record<string, number>;
+  /** Gear dropdown in Additional Options (shared purchaseBox.gearOptions) */
+  gearOptions?: boolean;
   /** Start-input label instead of 'Your level' (e.g. 'Your rank') */
   startLabel?: string;
+  /** End-input label instead of 'Desired level' (top range only) */
+  endLabel?: string;
   /** Main add-on in Additional Options (MSQ completion / All spells unlock) */
   addon?: PricingAddon;
   /** Lock the main add-on unless the desired level is the cap (Blue Mage) */
@@ -74,6 +62,10 @@ export interface LevelBoxConfig {
   /** Phantom-job style select: per-job level caps drive the slider max;
       optional per-job price tiers override the shared ones */
   jobs?: { label: string; max: number; priceTiers?: { min: number; max: number; pricePerLevel: number }[] }[];
+  /** Checkbox-gated Phantom Job leveling section: the top range becomes the
+      base service levels (cfg.priceTiers); the job select + job level range
+      hide under this checkmark option */
+  phantomToggle?: { label: string };
   /** Preselected job label (no error state) */
   defaultJob?: string;
   /** Private Stream add-on price, shown in Additional Options when set */
@@ -158,16 +150,27 @@ export default function LevelingPurchaseBox({
   const [end, setEnd] = useState(cfg.defaultEnd);
   const [job, setJob] = useState(cfg.defaultJob ?? '');
   const [dc, setDc] = useState('');
+  const [gearIdx, setGearIdx] = useState(0);
 
-  // Phantom-job variants: the selected job's cap drives the slider max
-  const levelMax = cfg.jobs?.length
+  // Phantom-job variants: the selected job's cap drives the slider max;
+  // jobMinLevels (combat jobs) drive the slider minimum
+  const isPhantomSplit = !!cfg.phantomToggle && !!cfg.jobs?.length;
+  const levelMax = !isPhantomSplit && cfg.jobs?.length
     ? (cfg.jobs.find((j) => j.label === job)?.max ?? cfg.levelMax)
     : cfg.levelMax;
+  const jobMin = cfg.jobMinLevels?.[job] ?? cfg.levelMin;
+  const [phantomOn, setPhantomOn] = useState(false);
+  const [pStart, setPStart] = useState(cfg.levelMin);
+  const [pEnd, setPEnd] = useState(cfg.levelMin + 1);
+  // Phantom section: the selected job's cap drives its range max
+  const phantomMax = cfg.jobs?.find((j) => j.label === job)?.max ?? cfg.levelMax;
   const selectJob = (label: string) => {
     setJob(label);
     setJobError(false);
     const max = cfg.jobs?.find((j) => j.label === label)?.max;
-    if (max) setRange(start, Math.min(end, max));
+    if (!max) return;
+    if (isPhantomSplit) setPhantomRange(pStart, Math.min(pEnd, max));
+    else setRange(start, Math.min(end, max));
   };
   const [addonChecked, setAddonChecked] = useState(false);
   const [addonsChecked, setAddonsChecked] = useState<string[]>([]);
@@ -186,11 +189,10 @@ export default function LevelingPurchaseBox({
   }, [optionsOpen]);
 
   const { rootRef, wrapRef, stick, overflowTop, fixedStyle, blockHpx } = usePurchaseFloat(
-    `${job}|${dc}|${optionsOpen}|${start}-${end}|${groupsChecked.length}|${Object.keys(groupSelections).length}`,
+    `${job}|${dc}|${optionsOpen}|${start}-${end}|${phantomOn}|${pStart}-${pEnd}|${groupsChecked.length}|${Object.keys(groupSelections).length}`,
   );
 
-  const clampLevels = (s: number, e: number): [number, number] => {
-    const min = cfg.levelMin;
+  const clampLevels = (s: number, e: number, min = jobMin): [number, number] => {
     const max = levelMax;
     s = Math.min(Math.max(s, min), max - 1);
     e = Math.min(Math.max(e, min + 1), max);
@@ -202,20 +204,51 @@ export default function LevelingPurchaseBox({
     setStart(cs);
     setEnd(ce);
   };
+  // Phantom section range (split mode): capped by the selected job's max
+  const clampPhantom = (s: number, e: number): [number, number] => {
+    const min = cfg.levelMin;
+    const max = phantomMax;
+    s = Math.min(Math.max(s, min), max - 1);
+    e = Math.min(Math.max(e, min + 1), max);
+    if (s >= e) s = e - 1;
+    return [s, e];
+  };
+  const setPhantomRange = (s: number, e: number) => {
+    const [cs, ce] = clampPhantom(s, e);
+    setPStart(cs);
+    setPEnd(ce);
+  };
+  const [phantomExpanded, setPhantomExpanded] = useState(false);
+  // Render-phase state adjustment — reset the overflow guard on retract
+  const [prevPhantomOn, setPrevPhantomOn] = useState(phantomOn);
+  if (prevPhantomOn !== phantomOn) {
+    setPrevPhantomOn(phantomOn);
+    if (!phantomOn) setPhantomExpanded(false);
+  }
+  useEffect(() => {
+    if (!phantomOn) return;
+    const t = setTimeout(() => setPhantomExpanded(true), 300);
+    return () => clearTimeout(t);
+  }, [phantomOn]);
 
   // Per-level price tiers: sum the per-level price of every level gained
-  // (job-specific tiers when the config provides them, e.g. phantom jobs)
-  const activeTiers = cfg.jobs?.length
+  // (job-specific tiers when the config provides them, e.g. phantom jobs —
+  // but not in split mode, where the top range is the base service levels)
+  const activeTiers = !isPhantomSplit && cfg.jobs?.length
     ? (cfg.jobs.find((j) => j.label === job)?.priceTiers ?? cfg.priceTiers)
     : cfg.priceTiers;
-  const levelPrice = (() => {
+  const sumLevels = (s: number, e: number, tiers: typeof activeTiers) => {
     let sum = 0;
-    for (let l = start + 1; l <= end; l++) {
-      const tier = activeTiers.find((t) => l >= t.min && l <= t.max);
+    for (let l = s + 1; l <= e; l++) {
+      const tier = tiers.find((t) => l >= t.min && l <= t.max);
       sum += tier?.pricePerLevel ?? 0;
     }
     return sum;
-  })();
+  };
+  const levelPrice = sumLevels(start, end, activeTiers);
+  // Phantom Job leveling section: own range priced from the job's tiers
+  const phantomTiers = cfg.jobs?.find((j) => j.label === job)?.priceTiers ?? cfg.priceTiers;
+  const phantomPrice = isPhantomSplit && phantomOn ? sumLevels(pStart, pEnd, phantomTiers) : 0;
   // Blue Mage: All spells unlock requires the desired level to be the cap —
   // greyed out, unchecked and excluded from the price at any lower target.
   // (Render-phase state adjustment — the sanctioned alternative to setState
@@ -250,17 +283,21 @@ export default function LevelingPurchaseBox({
     0,
   );
   const streamPrice = stream ? (cfg.stream ?? 10) : 0;
-  // Priority multiplies the level price only; add-ons/groups/stream stay flat
+  const gearOptions = cfg.gearOptions ? db.purchaseBox.gearOptions : [];
+  const gearPrice = gearOptions[gearIdx]?.price ?? 0;
+  // Priority multiplies the level prices only; add-ons/groups/gear/stream stay flat
   const total =
-    levelPrice * (priority ? priorityMultiplier : 1) +
+    (levelPrice + phantomPrice) * (priority ? priorityMultiplier : 1) +
     addonPrice +
     extrasPrice +
     groupsPrice +
+    gearPrice +
     streamPrice;
 
   const addToCart = () => {
     let ok = true;
-    if ((cfg.showJob || cfg.jobs?.length) && !job) {
+    // Phantom Job is required only while its section is visible and active
+    if ((cfg.showJob || (cfg.jobs?.length && (!isPhantomSplit || phantomOn))) && !job) {
       setJobError(true);
       ok = false;
     }
@@ -272,15 +309,16 @@ export default function LevelingPurchaseBox({
     addItem(
       {
         ...service,
-        id: `${service.id}::${cfg.showJob || cfg.jobs?.length ? job : 'blu'}|${dc}|${start}-${end}`,
+        id: `${service.id}::${cfg.showJob || (cfg.jobs?.length && (!isPhantomSplit || phantomOn)) ? job : 'x'}|${dc}|${start}-${end}${isPhantomSplit && phantomOn ? `|p${pStart}-${pEnd}` : ''}`,
         price: total,
         method: 'Piloted',
         qtyLocked: true,
       },
       gameShort,
       [
-        ...(job ? [`Job: ${job}`] : []),
+        ...(job && (!isPhantomSplit || phantomOn) ? [`Job: ${job}`] : []),
         `Level ${start} → ${end}`,
+        ...(isPhantomSplit && phantomOn && job ? [`${job} Level ${pStart} → ${pEnd}`] : []),
         `Data Center: ${dc}`,
         ...(addonChecked && addonEnabled && cfg.addon ? [cfg.addon.label] : []),
         ...addonsChecked.map((id) => cfg.addons!.find((a) => a.id === id)!.label),
@@ -290,6 +328,7 @@ export default function LevelingPurchaseBox({
           return sel ? `${a.label} — ${sel}` : a.label;
         }),
         ...(stream ? ['Private Stream'] : []),
+        ...(gearPrice > 0 ? [gearOptions[gearIdx].label] : []),
         ...(priority ? [`Priority (+${Math.round((priorityMultiplier - 1) * 100)}%)`] : []),
       ],
       1,
@@ -400,13 +439,13 @@ export default function LevelingPurchaseBox({
               </div>
               <ChevronRight className="mb-2.5 h-4 w-4 shrink-0 text-cyan-400" />
               <div className="flex-1">
-                <p className="pl-px text-sm font-semibold text-white [text-shadow:0_1px_4px_rgb(0_0_0/0.7)]">Desired level</p>
-                <div className="mt-2.5">{levelInput(end, (v) => setRange(start, v), 'Desired level')}</div>
+                <p className="pl-px text-sm font-semibold text-white [text-shadow:0_1px_4px_rgb(0_0_0/0.7)]">{cfg.endLabel ?? 'Desired level'}</p>
+                <div className="mt-2.5">{levelInput(end, (v) => setRange(start, v), cfg.endLabel ?? 'Desired level')}</div>
               </div>
             </div>
             <Slider
               className="mt-4"
-              min={cfg.levelMin}
+              min={jobMin}
               max={levelMax}
               step={1}
               minStepsBetweenThumbs={1}
@@ -417,8 +456,9 @@ export default function LevelingPurchaseBox({
           </div>
 
           {/* Job — hidden for single-job variants (Blue Mage); phantom-job
-              variants pick from config jobs with per-job level caps */}
-          {(cfg.showJob || cfg.jobs?.length) && (
+              variants pick from config jobs with per-job level caps. In split
+              mode it moves inside the Phantom Job leveling section */}
+          {(cfg.showJob || cfg.jobs?.length) && !isPhantomSplit && (
             <div>
               <p className="pl-px text-sm font-semibold text-white">
                 {cfg.jobs?.length ? 'Phantom Job' : 'Job'} <span className="text-xs font-normal text-slate-500">(required)</span>
@@ -431,18 +471,104 @@ export default function LevelingPurchaseBox({
                   options={
                     cfg.jobs?.length
                       ? cfg.jobs.map((j) => ({ label: j.label }))
-                      : JOBS.map((j) => ({ label: j }))
+                      : (cfg.jobGroups ?? JOB_GROUPS).flatMap((g) => [
+                          { label: g.label, icon: g.icon, divider: true as const },
+                          ...g.jobs.map((j) => {
+                            const [label, accent] = splitParens(j);
+                            return { label, accent };
+                          }),
+                        ])
                   }
                   onSelect={(i) => {
                     if (cfg.jobs?.length) selectJob(cfg.jobs[i].label);
                     else {
-                      setJob(JOBS[i]);
+                      const flat = (cfg.jobGroups ?? JOB_GROUPS).flatMap((g) => g.jobs);
+                      const label = flat[i];
+                      setJob(label);
                       setJobError(false);
+                      // Jobs with a starting level (e.g. Viper 80) lift the range
+                      const min = cfg.jobMinLevels?.[label] ?? cfg.levelMin;
+                      const [cs, ce] = clampLevels(Math.max(start, min), Math.max(end, min + 1), min);
+                      setStart(cs);
+                      setEnd(ce);
                     }
                   }}
                   ariaLabel="Select job"
                   invalid={jobError}
+                  blueParens
                 />
+              </div>
+            </div>
+          )}
+
+          {/* Phantom Job leveling — checkmark option gating the job select and
+              its own level range; expands/retracts with an animated height */}
+          {isPhantomSplit && (
+            <div>
+              <button
+                type="button"
+                onClick={() => setPhantomOn((p) => !p)}
+                aria-pressed={phantomOn}
+                className="flex w-full items-center gap-3 rounded-[5px] bg-navy-850 px-2.5 py-1.5 text-left transition-colors hover:bg-navy-800"
+              >
+                <span
+                  className={`flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-[3px] border transition-colors ${
+                    phantomOn ? 'border-cyan-600 bg-cyan-600 text-navy-900' : 'border-navy-600 text-transparent'
+                  }`}
+                >
+                  <Check className="h-3 w-3" strokeWidth={3.5} />
+                </span>
+                <span className="min-w-0 flex-1 truncate text-sm text-slate-300">{cfg.phantomToggle!.label}</span>
+              </button>
+              <div
+                className={`grid transition-all duration-300 ease-soft ${
+                  phantomOn ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
+                }`}
+              >
+                <div className={`min-h-0 ${phantomExpanded ? 'overflow-visible' : 'overflow-hidden'}`}>
+                  <div className="mt-4 space-y-4">
+                    <div>
+                      <p className="pl-px text-sm font-semibold text-white">
+                        Phantom Job <span className="text-xs font-normal text-slate-500">(required)</span>
+                      </p>
+                      <div className="relative mt-2.5">
+                        <FieldPopup message={jobError ? 'Select a job first.' : ''} />
+                        <CustomSelect
+                          value={job}
+                          placeholder="Select Phantom Job"
+                          options={cfg.jobs!.map((j) => ({ label: j.label }))}
+                          onSelect={(i) => selectJob(cfg.jobs![i].label)}
+                          ariaLabel="Select phantom job"
+                          invalid={jobError}
+                          blueParens
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <div className="flex items-end gap-2.5">
+                        <div className="flex-1">
+                          <p className="pl-px text-sm font-semibold text-white">Your level</p>
+                          <div className="mt-2.5">{levelInput(pStart, (v) => setPhantomRange(v, pEnd), 'Your level')}</div>
+                        </div>
+                        <ChevronRight className="mb-2.5 h-4 w-4 shrink-0 text-cyan-400" />
+                        <div className="flex-1">
+                          <p className="pl-px text-sm font-semibold text-white">Desired level</p>
+                          <div className="mt-2.5">{levelInput(pEnd, (v) => setPhantomRange(pStart, v), 'Desired level')}</div>
+                        </div>
+                      </div>
+                      <Slider
+                        className="mt-4"
+                        min={cfg.levelMin}
+                        max={phantomMax}
+                        step={1}
+                        minStepsBetweenThumbs={1}
+                        value={[pStart, pEnd]}
+                        onValueChange={([s, e]) => setPhantomRange(s, e)}
+                        aria-label="Phantom job level range"
+                      />
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           )}
@@ -503,6 +629,21 @@ export default function LevelingPurchaseBox({
             >
               <div className={`min-w-0 ${optionsExpanded ? 'overflow-visible' : 'overflow-hidden'}`}>
                 <div className="space-y-4 px-4 pb-3 pt-1">
+                  {cfg.gearOptions && (
+                    <div>
+                      <p className="mb-2 pl-px text-xs font-semibold text-slate-300">Gear</p>
+                      <CustomSelect
+                        value={gearOptions[gearIdx]?.label ?? ''}
+                        placeholder="Select gear"
+                        options={gearOptions.map((g) => ({
+                          label: g.label,
+                          hint: g.price > 0 ? `+${format(g.price)}` : undefined,
+                        }))}
+                        onSelect={setGearIdx}
+                        ariaLabel="Select gear"
+                      />
+                    </div>
+                  )}
                   <div>
                     <p className="mb-2 pl-px text-xs font-semibold text-slate-300">Add-ons</p>
                     <div className="space-y-1.5">

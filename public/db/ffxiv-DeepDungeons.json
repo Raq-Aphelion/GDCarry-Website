@@ -170,6 +170,11 @@
             "price": 70,
             "note": "Requires floors 1-100 cleared",
             "requiresOption": "farm"
+          },
+          {
+            "id": "final-verse",
+            "label": "The Final Verse (Quantum) Clear",
+            "price": 180
           }
         ]
       },
@@ -178,6 +183,13 @@
         "label": "Deep Dungeon Unlock",
         "price": 10
       },
+      "drawerAddons": [
+        {
+          "id": "offerings",
+          "label": "I need 40 offerings",
+          "price": 10
+        }
+      ],
       "soloHeading": "Upgrades"
     },
     "ffxiv-deep-dungeon-bundle": {

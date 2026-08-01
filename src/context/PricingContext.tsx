@@ -44,6 +44,8 @@ export function PricingProvider({ children }: { children: ReactNode }) {
     const ss = db.savageSeries?.[serviceId];
     if (ss) return Object.values(ss.piloted?.fights ?? {}).flat()[0]?.price ?? fallback;
     if (serviceId === db.leveling?.serviceId && db.leveling.fromPrice != null) return db.leveling.fromPrice;
+    if (serviceId === db.crafterLeveling?.serviceId && db.crafterLeveling.fromPrice != null)
+      return db.crafterLeveling.fromPrice;
     if (serviceId === db.bluLeveling?.serviceId && db.bluLeveling.fromPrice != null) return db.bluLeveling.fromPrice;
     if (serviceId === db.pvpSeries?.serviceId && db.pvpSeries.fromPrice != null) return db.pvpSeries.fromPrice;
     if (serviceId === db.ccRank?.serviceId && db.ccRank.fromPrice != null) return db.ccRank.fromPrice;
@@ -60,6 +62,8 @@ export function PricingProvider({ children }: { children: ReactNode }) {
     if (dd) return Math.min(dd.solo.price, ...(dd.group?.options.map((o) => o.price) ?? []));
     const cr = db.criterion?.[serviceId];
     if (cr) return cr.price;
+    const rl = db.relics?.[serviceId];
+    if (rl) return rl.fromPrice ?? rl.steps[0]?.price ?? 0;
     const fl = db.fieldLeveling?.[serviceId];
     if (fl) return fl.fromPrice ?? (fl.defaultEnd - fl.defaultStart) * (fl.priceTiers[0]?.pricePerLevel ?? 0);
     const rep = db.reputation?.[serviceId];

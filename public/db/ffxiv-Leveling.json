@@ -31,8 +31,54 @@
     "msqAddon": {
       "id": "msq",
       "label": "Dawntrail MSQ Completion",
-      "price": 30
+      "price": 80
     },
+    "gearOptions": true,
+    "jobMinLevels": {
+      "Dark Knight (DRK)": 30,
+      "Gunbreaker (GNB)": 60,
+      "Astrologian (AST)": 30,
+      "Sage (SGE)": 70,
+      "Samurai (SAM)": 50,
+      "Reaper (RPR)": 70,
+      "Viper (VPR)": 80,
+      "Machinist (MCH)": 30,
+      "Dancer (DNC)": 60,
+      "Red Mage (RDM)": 50,
+      "Pictomancer (PCT)": 80
+    },
+    "completion": "24 Hours"
+  },
+  "crafterLeveling": {
+    "serviceId": "ffxiv-crafter-gatherer-leveling",
+    "fromPrice": 50,
+    "levelMin": 1,
+    "levelMax": 100,
+    "defaultStart": 90,
+    "defaultEnd": 100,
+    "priceTiers": [
+      {
+        "min": 1,
+        "max": 50,
+        "pricePerLevel": 1.5
+      },
+      {
+        "min": 51,
+        "max": 80,
+        "pricePerLevel": 3
+      },
+      {
+        "min": 81,
+        "max": 90,
+        "pricePerLevel": 4
+      },
+      {
+        "min": 91,
+        "max": 100,
+        "pricePerLevel": 5
+      }
+    ],
+    "gearOptions": true,
     "completion": "24 Hours"
   },
   "bluLeveling": {

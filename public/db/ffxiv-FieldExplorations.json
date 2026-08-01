@@ -281,17 +281,22 @@
     },
     "ffxiv-occult-crescent": {
       "levelMin": 1,
-      "levelMax": 24,
+      "levelMax": 40,
       "defaultStart": 1,
       "defaultEnd": 2,
       "priceTiers": [
         {
           "min": 1,
-          "max": 24,
-          "pricePerLevel": 20
+          "max": 40,
+          "pricePerLevel": 10
         }
       ],
-      "fromPrice": 70,
+      "fromPrice": 10,
+      "startLabel": "Your Knowledge",
+      "endLabel": "Desired Knowledge",
+      "phantomToggle": {
+        "label": "Phantom Job leveling"
+      },
       "jobs": [
         {
           "label": "Freelancer",
@@ -903,7 +908,7 @@
             {
               "id": "weapon",
               "label": "Complete Phantom Weapon",
-              "price": 450,
+              "price": 1525,
               "selectOptions": {
                 "label": "Job",
                 "options": [

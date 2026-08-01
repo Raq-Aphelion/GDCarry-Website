@@ -40,7 +40,6 @@ import cardWow from '@/assets/images/game-cards/GameCard_WoW.webp';
 import cardLostArk from '@/assets/images/game-cards/GameCard_LostArk.webp';
 import cardWarframe from '@/assets/images/game-cards/GameCard_Warframe.webp';
 import cardOsrs from '@/assets/images/game-cards/GameCard_OSRS.webp';
-import scBlank from '@/assets/images/service-cards/ffxiv/ffxiv-blank.webp';
 import scGil from '@/assets/images/service-cards/ffxiv/gil-currency/ffxiv-gil.webp';
 import scDmu from '@/assets/images/service-cards/ffxiv/ultimate-raids/ffxiv-dmu.webp';
 import scFru from '@/assets/images/service-cards/ffxiv/ultimate-raids/ffxiv-fru.webp';
@@ -57,6 +56,7 @@ import scOmega from '@/assets/images/service-cards/ffxiv/savage-raids/ffxiv-omeg
 import scAlexander from '@/assets/images/service-cards/ffxiv/savage-raids/ffxiv-alexander.webp';
 import scLeveling from '@/assets/images/service-cards/ffxiv/leveling/ffxiv-leveling.webp';
 import scMsq from '@/assets/images/service-cards/ffxiv/leveling/ffxiv-msq.webp';
+import scCrafterGatherer from '@/assets/images/service-cards/ffxiv/leveling/ffxiv-crafter-gatherer-leveling.webp';
 import scBlu from '@/assets/images/service-cards/ffxiv/leveling/ffxiv-blue-mage.webp';
 import scPvpSeries from '@/assets/images/service-cards/ffxiv/pvp/ffxiv-pvp-series.webp';
 import scCcRank from '@/assets/images/service-cards/ffxiv/pvp/ffxiv-cc-rank.webp';
@@ -110,7 +110,7 @@ import scTheUnmaking from '@/assets/images/service-cards/ffxiv/extreme-trials/da
 import scDawntrailTrialsBundle from '@/assets/images/service-cards/ffxiv/extreme-trials/dawntrail-extreme-trials/ffxiv-dawntrail-extreme-bundle.webp';
 import scEndwalkerTrialsBundle from '@/assets/images/service-cards/ffxiv/extreme-trials/ffxiv-endwalker-extreme-bundle.webp';
 import scShadowbringersTrialsBundle from '@/assets/images/service-cards/ffxiv/extreme-trials/ffxiv-shadowbringers-extreme-bundle.webp';
-import scStormbloodTrialsBundle from '@/assets/images/service-cards/ffxiv/extreme-trials/dawntrail-extreme-trials/ffxiv-stormblood-extreme-bundle.webp';
+import scStormbloodTrialsBundle from '@/assets/images/service-cards/ffxiv/extreme-trials/ffxiv-stormblood-extreme-bundle.webp';
 import scHeavenswardTrialsBundle from '@/assets/images/service-cards/ffxiv/extreme-trials/ffxiv-heavensward-extreme-bundle.webp';
 import scMemoriaMisera from '@/assets/images/service-cards/ffxiv/extreme-trials/ffxiv-memoria-misera.webp';
 import scGreatHunt from '@/assets/images/service-cards/ffxiv/extreme-trials/ffxiv-the-great-hunt.webp';
@@ -131,6 +131,16 @@ import scWindurstThirdWalk from '@/assets/images/service-cards/ffxiv/24-player-r
 import scDaisOfDarkness from '@/assets/images/service-cards/ffxiv/mounts/ffxiv-dais-of-darkness.webp';
 import scShroudOfDarkness from '@/assets/images/service-cards/ffxiv/mounts/ffxiv-shroud-of-darkness.webp';
 import scAeturna from '@/assets/images/service-cards/ffxiv/mounts/ffxiv-aeturna.webp';
+import scMorbol from '@/assets/images/service-cards/ffxiv/mounts/ffxiv-morbol.webp';
+import scDuckBilledPorter from '@/assets/images/service-cards/ffxiv/mounts/ffxiv-duck-billed-porter.webp';
+import scVacuumSuit from '@/assets/images/service-cards/ffxiv/mounts/ffxiv-high-mobility-vacuum-suit.webp';
+import scPhantomWeapon from '@/assets/images/service-cards/ffxiv/relics/ffxiv-phantom-weapon.webp';
+import scMandervilleWeapon from '@/assets/images/service-cards/ffxiv/relics/ffxiv-manderville-weapon.webp';
+import scResistanceWeapon from '@/assets/images/service-cards/ffxiv/relics/ffxiv-resistance-weapon.webp';
+import scEurekanWeapon from '@/assets/images/service-cards/ffxiv/relics/ffxiv-eurekan-weapon.webp';
+import scEurekanArmour from '@/assets/images/service-cards/ffxiv/relics/ffxiv-eurekan-elemental-armour.webp';
+import scAnimaWeapon from '@/assets/images/service-cards/ffxiv/relics/ffxiv-anima-weapon.webp';
+import scZodiacWeapon from '@/assets/images/service-cards/ffxiv/relics/ffxiv-zodiac-weapon.webp';
 import scGenieOfTheLamp from '@/assets/images/service-cards/ffxiv/mounts/vc-dungeons/ffxiv-genie-of-the-lamp.webp';
 import scRoyalMagickedCarpet from '@/assets/images/service-cards/ffxiv/mounts/vc-dungeons/ffxiv-royal-magicked-carpet.webp';
 import scQuaqua from '@/assets/images/service-cards/ffxiv/mounts/vc-dungeons/ffxiv-quaqua.webp';
@@ -356,6 +366,61 @@ export const games: Game[] = [
         name: '24+ Player Raids',
         services: [
           {
+            id: 'ffxiv-forked-tower-magic',
+            name: 'The Forked Tower: Magic',
+            tag2: '1 - 48 Player Field Operation Clear',
+            price: 0,
+            tag1: 'Arcane Amulets & mount chance',
+            tag3: 'Piloted Service',
+            longDescription:
+              'Where the isle’s ley lines converge, a tower of pure arcanima hums with incantations no living mage has uttered in centuries. Every floor wrestles with another school of magic — and the answers sealed at its peak are worth every spell spent reaching it.',
+            image: scForkedTowerMagic,
+          },
+          {
+            id: 'ffxiv-forked-tower-blood',
+            name: 'The Forked Tower: Blood',
+            tag2: '24 - 48 Player Field Operation Clear',
+            price: 0,
+            tag1: 'Demon Haul mount & loot',
+            tag3: 'Piloted Service',
+            longDescription:
+              'An ominous tower looms on the horizon of the isle’s south horn, twisted spires shimmering in the haze. What revelations await within its uppermost chambers?',
+            image: scForkedTowerBlood,
+          },
+          {
+            id: 'ffxiv-windurst-third-walk',
+            name: 'Windurst: The Third Walk',
+            tag2: "Echoes of Vana'diel (Alliance Raid)",
+            price: 0,
+            tag1: 'Guaranteed gear',
+            tag3: 'Group Play or Piloted',
+            longDescription:
+              "The third walk of the Echoes of Vana'diel series in Windurst — a full 24-player alliance clear with a guaranteed gear upgrade token and all loot kept. Cleared piloted or alongside our raiders in group play.",
+            image: scWindurstThirdWalk,
+          },
+          {
+            id: 'ffxiv-san-doria-second-walk',
+            name: "San d'Oria: The Second Walk",
+            tag2: "Echoes of Vana'diel (Alliance Raid)",
+            price: 0,
+            tag1: 'Guaranteed gear',
+            tag3: 'Group Play or Piloted',
+            longDescription:
+              "The Echoes of Vana'diel continue in San d'Oria — a full 24-player alliance clear with a guaranteed gear upgrade token and all loot kept. Cleared piloted or alongside our raiders in group play.",
+            image: scSanDoriaSecondWalk,
+          },
+          {
+            id: 'ffxiv-jeuno-first-walk',
+            name: 'Jeuno: The First Walk',
+            tag2: "Echoes of Vana'diel (Alliance Raid)",
+            price: 0,
+            tag1: 'Guaranteed gear',
+            tag3: 'Group Play or Piloted',
+            longDescription:
+              "The first walk through the ruined streets of Jeuno — a 24-player trip back to Vana'diel with 720+ ilvl gear, the Nano Lord minion and every drop along the way. Cleared piloted or alongside our raiders in group play.",
+            image: scJeunoFirstWalk,
+          },
+          {
             id: 'ffxiv-cloud-of-darkness',
             name: 'The Cloud of Darkness (Chaotic)',
             tag2: '12 - 24 Player Chaotic Raid Clear',
@@ -370,67 +435,26 @@ export const games: Game[] = [
           {
             id: 'ffxiv-delubrum-reginae-savage',
             name: 'Delubrum Reginae (Savage)',
-            tag2: '48-man savage raid clear',
+            tag2: '24 - 48 Player Savage Raid Clear',
             price: 0,
-            tag1: 'Cerberus mount chance & title',
+            tag1: 'Cerberus mount & title',
+            tag3: 'Piloted Service',
+            longDescription:
+              "Bozja’s grandest stage: a 48-player savage gauntlet through the Queen’s halls. Our raiders clear Delubrum Reginae (Savage) — Cerberus and the Savage Queen of Swords title guaranteed.",
+
             image: scDelubrumReginae,
           },
           {
             id: 'ffxiv-baldesion-arsenal',
             name: 'The Baldesion Arsenal',
-            tag2: 'Full BA clear with a veteran group',
+            tag2: '24 - 56 Player Field Operation Clear',
             price: 0,
-            tag1: 'Demi-Ozma mount chance',
+            tag1: 'Demi-Ozma mount & minion chance',
+            tag3: 'Piloted Service',
+            longDescription:
+              "Eureka’s deepest challenge: 56 players, one fragile timeline, Ozma waiting at the end. Our veterans clear the full Arsenal — Demi-Ozma, minion and fragments along the way.",
+
             image: scBaldesionArsenal,
-          },
-          {
-            id: 'ffxiv-forked-tower-blood',
-            name: 'The Forked Tower: Blood',
-            tag2: 'Occult Crescent raid clear',
-            price: 0,
-            tag1: 'All loot included',
-            image: scForkedTowerBlood,
-          },
-          {
-            id: 'ffxiv-forked-tower-magic',
-            name: 'The Forked Tower: Magic',
-            tag2: 'Occult Crescent raid clear',
-            price: 0,
-            tag1: 'All loot included',
-            image: scForkedTowerMagic,
-          },
-          {
-            id: 'ffxiv-jeuno-first-walk',
-            name: 'Jeuno: The First Walk',
-            tag2: "Echoes of Vana'diel (Alliance Raid)",
-            price: 0,
-            tag1: 'Guaranteed gear',
-            tag3: 'Group Play or Piloted',
-            longDescription:
-              "The first walk through the ruined streets of Jeuno — a 24-player trip back to Vana'diel with 720+ ilvl gear, the Nano Lord minion and every drop along the way. Cleared piloted or alongside our raiders in group play.",
-            image: scJeunoFirstWalk,
-          },
-          {
-            id: 'ffxiv-san-doria-second-walk',
-            name: "San d'Oria: The Second Walk",
-            tag2: "Echoes of Vana'diel (Alliance Raid)",
-            price: 0,
-            tag1: 'Guaranteed gear',
-            tag3: 'Group Play or Piloted',
-            longDescription:
-              "The Echoes of Vana'diel continue in San d'Oria — a full 24-player alliance clear with a guaranteed gear upgrade token and all loot kept. Cleared piloted or alongside our raiders in group play.",
-            image: scSanDoriaSecondWalk,
-          },
-          {
-            id: 'ffxiv-windurst-third-walk',
-            name: 'Windurst: The Third Walk',
-            tag2: "Echoes of Vana'diel (Alliance Raid)",
-            price: 0,
-            tag1: 'Guaranteed gear',
-            tag3: 'Group Play or Piloted',
-            longDescription:
-              "The third walk of the Echoes of Vana'diel series in Windurst — a full 24-player alliance clear with a guaranteed gear upgrade token and all loot kept. Cleared piloted or alongside our raiders in group play.",
-            image: scWindurstThirdWalk,
           },
         ],
       },
@@ -446,7 +470,7 @@ export const games: Game[] = [
             tag1: 'Mount guaranteed option',
             tag3: 'Piloted or AFK Carry',
             longDescription:
-              'Every Dawntrail Extreme trial in one package — from Worqor Lar Dor to The Unmaking — with a mount guaranteed option for the Wings of Legacy.',
+              "All seven Dawntrail Extremes in one package — from the Skyruin’s tempest to Necron’s final stand, with the Wings of Legacy guaranteed along the way. Piloted or AFK, your totems and mounts included.",
             image: scDawntrailTrialsBundle,
           },
           {
@@ -457,7 +481,7 @@ export const games: Game[] = [
             tag1: 'Mount guaranteed option',
             tag3: 'Piloted or AFK Carry',
             longDescription:
-              'Every Endwalker Extreme trial in one package — from Zodiark’s Fall to the Abyssal Fracture — with a mount guaranteed option for the Apocryphal Bahamut.',
+              "From Hydaelyn’s final trial to the Endsinger’s song — all seven Endwalker Extremes in one package, with mounts and totems kept. Piloted or AFK Carry.",
             image: scEndwalkerTrialsBundle,
           },
           {
@@ -468,7 +492,7 @@ export const games: Game[] = [
             tag1: 'Mount guaranteed option',
             tag3: 'Piloted or AFK Carry',
             longDescription:
-              'Every Shadowbringers Extreme trial in one package — from the Dancing Plague to the Cloud Deck — with a mount guaranteed option for the Landerwaffe.',
+              "Crown the Shadowbringers Extremes — every trial from the dancing Hades to the Diamond Weapon, one package, every mount chance kept.",
             image: scShadowbringersTrialsBundle,
           },
           {
@@ -479,7 +503,7 @@ export const games: Game[] = [
             tag1: 'Mount guaranteed option',
             tag3: 'Piloted or AFK Carry',
             longDescription:
-              'Every Stormblood Extreme trial in one package — from the Pool of Tribute to the Wreath of Snakes — with a mount guaranteed option for the Kamuy of the Nine Tails.',
+              "The Stormblood Extremes in one package — Lakshmi’s dance to Tsukuyomi’s moonlight, with Kamuy mounts and totems along the way.",
             image: scStormbloodTrialsBundle,
           },
           {
@@ -490,7 +514,7 @@ export const games: Game[] = [
             tag1: 'Mount guaranteed option',
             tag3: 'Piloted or AFK Carry',
             longDescription:
-              'Every Heavensward Extreme trial in one package — from the Limitless Blue to Containment Bay Z1T9 — with a mount guaranteed option for the Firebird.',
+              "Every Heavensward Extreme in one package — from Bismarck’s back to Thordan’s knights, Lanners and totems included.",
             image: scHeavenswardTrialsBundle,
           },
           {
@@ -501,7 +525,7 @@ export const games: Game[] = [
             tag1: 'Totems & all loot included',
             tag3: 'Piloted or AFK Carry',
             longDescription:
-              'Enuo, the undoing of all things — our raiders clear it on Extreme for you, Piloted or AFK.',
+              "The last verse of Alexandria’s story, unmade before your eyes. Clear The Unmaking on Extreme with our raiders — Wings of Nihility and Totems of Naught kept.",
             image: scTheUnmaking,
             tag: 'New',
           },
@@ -514,7 +538,7 @@ export const games: Game[] = [
             tag1: 'Totems & all loot included',
             tag3: 'Piloted or AFK Carry',
             longDescription:
-              'The Doomtrain, harbinger of souls — our raiders clear it on Extreme for you, Piloted or AFK.',
+              "All aboard the doom train — a runaway locomotive of living lightning. Hell on Rails cleared on Extreme with our raiders, Wings of Mist and Runaway Totems included.",
             image: scHellOnRails,
             tag: 'Hot',
           },
@@ -527,7 +551,7 @@ export const games: Game[] = [
             tag1: 'Totems & all loot included',
             tag3: 'Piloted or AFK Carry',
             longDescription:
-              'Arkveld, the White Wraith from the forbidden lands — our raiders clear it on Extreme for you, Piloted or AFK.',
+              "Arkveld, the White Wraith, stalks the forbidden lands. Take it down on Extreme — the Felyne Support Team Cart mount and every drop along the way.",
             image: scWindwardWilds,
           },
 
@@ -539,7 +563,7 @@ export const games: Game[] = [
             tag1: 'Totems & all loot included',
             tag3: 'Piloted or AFK Carry',
             longDescription:
-              'Necron, the embodiment of death itself — our raiders clear it on Extreme for you, Piloted or AFK.',
+              "Death itself wears a crown in the depths of the Underkeep. Face Necron’s Embrace on Extreme — Wings of Death and Grave Totems, piloted or AFK.",
             image: scNecronsEmbrace,
           },
 
@@ -551,7 +575,7 @@ export const games: Game[] = [
             tag1: 'Totems & all loot included',
             tag3: 'Piloted or AFK Carry',
             longDescription:
-              'A treasured memory given terrible form — our raiders clear it on Extreme for you, Piloted or AFK.',
+              "A memory given form: the Arcadion’s champion reborn in crystal. Recollection clears on Extreme with our raiders — Wings of the Knighthood and Knight Totems kept.",
             image: scRecollection,
           },
 
@@ -563,7 +587,7 @@ export const games: Game[] = [
             tag1: 'Totems & all loot included',
             tag3: 'Piloted or AFK Carry',
             longDescription:
-              'Queen Sphene, eternal sovereign of Alexandria — our raiders clear it on Extreme for you, Piloted or AFK.',
+              "The Minstrel’s Ballad retells Sphene’s sorrow as a hymn of steel. Clear the ballad on Extreme with our raiders — Wings of Eternity and Totems Eternal along the way.",
             image: scSphenesBurden,
           },
 
@@ -575,7 +599,7 @@ export const games: Game[] = [
             tag1: 'Totems & all loot included',
             tag3: 'Piloted or AFK Carry',
             longDescription:
-              'Zoraal Ja, the Resilient King — our raiders clear it on Extreme for you, Piloted or AFK.',
+              "The Resilient King defends his throne to the last spark. Zoraal Ja falls on Extreme with our raiders — Wings of Resolve and Resilient Totems kept.",
             image: scEverkeep,
           },
 
@@ -587,7 +611,7 @@ export const games: Game[] = [
             tag1: 'Totems & all loot included',
             tag3: 'Piloted or AFK Carry',
             longDescription:
-              'Valigarmanda, the Skyruin — our raiders clear it on Extreme for you, Piloted or AFK.',
+              "Valigarmanda, the dread Skyruin, tears open the heavens above Urqopacha. Our raiders weather its calamities and bring home the Wings of Ruin — piloted or AFK.",
             image: scWorqorLarDor,
           },
 
@@ -613,7 +637,7 @@ export const games: Game[] = [
             tag1: 'Totems & all loot included',
             tag3: 'Piloted or AFK Carry',
             longDescription:
-              'Varis yae Galvus, relived through memory — our raiders clear it on Extreme for you, Piloted or AFK.',
+              "A misera memory of Bozja’s fall, replayed in crystal. Clear Memoria Misera on Extreme with our raiders — the mount chance is yours to keep.",
             image: scMemoriaMisera,
           },
 
@@ -641,7 +665,7 @@ export const games: Game[] = [
             tag1: 'Totems & all loot included',
             tag3: 'Piloted or AFK Carry',
             longDescription:
-              'Rathalos, the King of the Skies from another world — our raiders clear it on Extreme for you, Piloted or AFK.',
+              "Rathalos, King of the Skies, descends on Eorzea in the Monster Hunter crossover. Guaranteed clears on Extreme — Rathalos mount and scales included.",
             image: scGreatHunt,
           },
 
@@ -677,7 +701,7 @@ export const games: Game[] = [
           {
             id: 'ffxiv-pilgrims-traverse',
             name: 'Pilgrim\'s Traverse (Deep Dungeon)',
-            tag2: '1 - 100 Floors',
+            tag2: '1 - 100 Floors & The Final Verse (Quantum)',
             price: 0,
             tag1: 'The Enlightened title & loot',
             tag3: 'Group Play or Solo Piloted',
@@ -1180,6 +1204,17 @@ export const games: Game[] = [
             image: scCerberus,
           },
           {
+            id: 'ffxiv-duck-billed-porter-mount',
+            name: 'Duck-billed Porter (Mount)',
+            tag2: 'The Forked Tower: Magic',
+            price: 0,
+            tag1: 'Guaranteed mount drop',
+            tag3: 'Piloted Service',
+            longDescription:
+              'The amiable porter of the Occult Crescent — earned in The Forked Tower: Magic as a random drop or through 500 Arcane Amulets. Guaranteed with our raiders on your account.',
+            image: scDuckBilledPorter,
+          },
+          {
             id: 'ffxiv-demon-haul',
             name: 'Demon Haul (Mount)',
             tag2: 'The Forked Tower: Blood',
@@ -1333,6 +1368,113 @@ export const games: Game[] = [
               "The fluffy marmot of the Sil'dihn aqueducts — earned for unlocking every route of the subterrane. Piloted or alongside our raiders in group play.",
             image: scSilkie,
           },
+          {
+            id: 'ffxiv-morbol-mount',
+            name: 'Morbol (Mount)',
+            tag2: 'Alexander & Bahamut (Blue Mage)',
+            price: 0,
+            tag1: 'Guaranteed mount drop',
+            tag3: 'Piloted Service',
+            longDescription:
+              'Though all it has ever wanted is to help, this morbol was found to be “too sweet” to present a challenge at the Celestium, and was transferred to the Blue Mages’ Guild before it had even seen its first match─only for it to be deemed “insufficiently vile” there as well.',
+            image: scMorbol,
+            tag: 'New',
+          },
+          {
+            id: 'ffxiv-vacuum-suit-mount',
+            name: 'High Mobility Vacuum Suit (Mount)',
+            tag2: 'Cosmic Exploration',
+            price: 0,
+            tag1: 'Guaranteed mount acquisition',
+            tag3: 'Piloted Service',
+            longDescription:
+              'A suit built for the vacuum of space — earned through 500K Cosmic Tracker on all 11 DoH and DoL jobs in Cosmic Exploration. Guaranteed with our raiders on your account.',
+            image: scVacuumSuit,
+            tag: 'New',
+          },
+        ],
+      },
+      {
+        id: 'relics',
+        name: 'Relics',
+        services: [
+          {
+            id: 'ffxiv-phantom-weapon',
+            name: 'Phantom Relic Weapon',
+            tag2: 'Dawntrail Relic Weapon (ilvl 795)',
+            price: 0,
+            tag1: 'Any Job, Any Step',
+            tag3: 'Piloted Service',
+            longDescription:
+              "Gerolt’s latest commission hums with demiatma from the Occult Crescent — the Phantom line is Dawntrail’s relic, and every stage from Penumbrae to Occultum is ours to grind for you.",
+            image: scPhantomWeapon,
+          },
+          {
+            id: 'ffxiv-manderville-weapon',
+            name: 'Manderville Relic Weapon',
+            tag2: 'Endwalker Relic Weapon',
+            price: 0,
+            tag1: 'Any Job, Any Step',
+            tag3: 'Piloted Service',
+            longDescription:
+              "A Manderville weapon is never simply forged — it is dramatically unveiled. Every stage of the Endwalker relic chain, from the base blade to Mandervillous, completed on your account.",
+            image: scMandervilleWeapon,
+          },
+          {
+            id: 'ffxiv-resistance-weapon',
+            name: 'Resistance Relic Weapon',
+            tag2: 'Shadowbringers Relic Weapon',
+            price: 0,
+            tag1: 'Any Job, Any Step',
+            tag3: 'Piloted Service',
+            longDescription:
+              "The Bozjan resistance forges weapons fit for a queen’s guard. We take your Resistance relic from its humble base to its final Augmented Law’s Order form.",
+            image: scResistanceWeapon,
+          },
+          {
+            id: 'ffxiv-eureka-weapon',
+            name: 'Eurekan Relic Weapon',
+            tag2: 'Stormblood Relic Weapon',
+            price: 0,
+            tag1: 'Any Job, Any Step',
+            tag3: 'Piloted Service',
+            longDescription:
+              "Elemental magic seeps through every inch of Eureka — Antiquated to Physeos, our runners carry your Stormblood relic through every stage of the isles.",
+            image: scEurekanWeapon,
+          },
+          {
+            id: 'ffxiv-eurekan-elemental-armour',
+            name: 'Eurekan Elemental Armour',
+            tag2: 'Stormblood Relic Armour',
+            price: 0,
+            tag1: 'Any Job, Any Step',
+            tag3: 'Piloted Service',
+            longDescription:
+              "The elemental armour of Eureka Pyros — a full set for your role, from the base set to the glowing final stages, farmed while you keep every drop.",
+            image: scEurekanArmour,
+          },
+          {
+            id: 'ffxiv-anima-weapon',
+            name: 'Anima Relic Weapon',
+            tag2: 'Heavensward Relic Weapon',
+            price: 0,
+            tag1: 'Any Job, Any Step',
+            tag3: 'Piloted Service',
+            longDescription:
+              "Ardashir’s anima needs feeding — souls, aether oil and unidentifiable odds and ends. The full Heavensward anima chain, from Animated to Lux, done for you.",
+            image: scAnimaWeapon,
+          },
+          {
+            id: 'ffxiv-zodiac-weapon',
+            name: 'Zodiac Relic Weapon',
+            tag2: 'A Realm Reborn Relic Weapon',
+            price: 0,
+            tag1: 'Any Job, Any Step',
+            tag3: 'Piloted Service',
+            longDescription:
+              "The relic that started it all — atma, books, light and more books. Our veterans carry your Zodiac weapon from the Starter Relic to Zeta, no Atma farm required of you.",
+            image: scZodiacWeapon,
+          },
         ],
       },
       {
@@ -1346,6 +1488,9 @@ export const games: Game[] = [
             price: 0,
             tag1: 'Any society, any rank',
             tag3: 'Piloted Service',
+            longDescription:
+              "From Neutral to Allied, every tribe has a story — and a mount. Our raiders run the daily quests for you, capping any Allied Society in any expansion, or all of them at once.",
+
             image: scAlliedSociety,
           },
           {
@@ -1408,7 +1553,7 @@ export const games: Game[] = [
             tag3: 'Piloted Service',
             longDescription:
               'Crafters and gatherers level on their own track — leves, collectables and cosmic missions included. Our Crafter & Gatherer Leveling boost takes any Disciple of the Hand or Land to your target level while you keep every scrip, material and reward.',
-            image: scBlank,
+            image: scCrafterGatherer,
           },
         ],
       },
@@ -1430,10 +1575,12 @@ export const games: Game[] = [
           {
             id: 'ffxiv-cosmic-exploration',
             name: 'Cosmic Exploration Boost',
-            tag2: 'Cosmic tools & mech ops',
+            tag2: 'Zone-specific credits & more',
             price: 0,
-            tag1: 'All stellar missions done',
+            tag1: 'All Cosmic Tool steps',
             tag3: 'Piloted Service',
+            longDescription:
+              "Among the stars, every tool tells a story — from Cosmic to Stars, plus the 500K-tracker Vacuum Suit for those who master all eleven jobs. Piloted through every stellar mission.",
             image: scCosmicExploration,
             tag: 'New',
           },
@@ -1466,6 +1613,9 @@ export const games: Game[] = [
             price: 0,
             tag1: '1 - 20 Rank',
             tag3: 'Piloted Service',
+            longDescription:
+              "Your own island paradise awaits — crops, workshops and cowries without the daily chore loop. We raise your sanctuary rank from 1 to 20 while every Seafarer’s and Islander’s Cowrie stays in your pockets.",
+
             image: scIslandSanctuary,
           },
 
@@ -1511,28 +1661,6 @@ export const games: Game[] = [
             longDescription:
               "Wolf Marks are the PvP currency earned in Crystalline Conflict, Frontline, and Rival Wings. Players earn Wolf Marks by participating in matches, with additional marks for winning. They can be exchanged for PvP gear and other exclusive items such as emotes and hairstyles at the Mark Quartermaster in the Wolves' Den Pier.",
             image: scWolfMarks,
-          },
-        ],
-      },
-      {
-        id: 'coaching',
-        name: 'Coaching',
-        services: [
-          {
-            id: 'ffxiv-raid-coaching',
-            name: 'Raid Coaching Session',
-            tag2: 'Learn your job and mechanics from a world-class raider.',
-            price: 0,
-            tag1: '1-on-1 · 2 hours',
-            image: scBlank,
-          },
-          {
-            id: 'ffxiv-pvp-coaching',
-            name: 'PvP Coaching Session',
-            tag2: 'Crystalline Conflict VOD review and live coaching.',
-            price: 0,
-            tag1: '1-on-1 · 2 hours',
-            image: scBlank,
           },
         ],
       },

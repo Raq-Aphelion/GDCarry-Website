@@ -138,6 +138,25 @@ export interface PricingDb {
     defaultEnd: number;
     priceTiers: { min: number; max: number; pricePerLevel: number }[];
     msqAddon: PricingAddon;
+    /** Gear dropdown in Additional Options (shared purchaseBox.gearOptions) */
+    gearOptions?: boolean;
+    /** Per-job minimum levels (e.g. Viper starts at 80) — drives the slider
+        minimum when that job is selected */
+    jobMinLevels?: Record<string, number>;
+    completion: string;
+  };
+  /** Crafter & Gatherer leveling pricing (from ffxiv-Leveling) — same
+      per-level model as combat job leveling */
+  crafterLeveling?: {
+    serviceId: string;
+    fromPrice?: number;
+    levelMin: number;
+    levelMax: number;
+    defaultStart: number;
+    defaultEnd: number;
+    priceTiers: { min: number; max: number; pricePerLevel: number }[];
+    addon?: PricingAddon;
+    gearOptions?: boolean;
     completion: string;
   };
   /** MSQ Completion boost pricing (from ffxiv-Leveling): per-expansion prices.
@@ -310,6 +329,8 @@ export interface PricingDb {
       };
       /** Deep Dungeon Unlock add-on in the Additional Options block */
       unlock?: PricingAddon;
+      /** Extra flat add-on rows in the Additional Options drawer (e.g. offerings) */
+      drawerAddons?: PricingAddon[];
     }
   >;
   /** Variant & Criterion dungeons (from ffxiv-Criterion): base = Normal
@@ -331,11 +352,43 @@ export interface PricingDb {
       advancedPilotedPrice?: number;
       /** Custom labels for the difficulty toggle (default Normal / Savage) */
       difficulty?: { normal: string; advanced: string };
+      /** Single-method service — static Piloted pill instead of the method toggle */
+      pilotedOnly?: boolean;
+      /** Duty-unlock add-on row in the Additional Options drawer */
+      unlock?: PricingAddon;
       completion: string;
       /** Add-ons offered on the first (Normal) difficulty only */
       addons?: PricingAddon[];
       /** Add-ons offered on the second (Savage/Advanced) difficulty only */
       advancedAddons?: PricingAddon[];
+    }
+  >;
+  /** Relic weapons/armour (from ffxiv-Relics): per-step pricing with a
+      chained step selection; `select` overrides the default grouped Job
+      dropdown (e.g. Eurekan armour types) */
+  relics?: Record<
+    string,
+    {
+      completion: string;
+      /** Card "From" price (cheapest step) */
+      fromPrice?: number;
+      steps: { label: string; price: number }[];
+      /** Bundle option: pins all steps and overrides the total */
+      complete?: { label: string; price: number };
+      select?: { label: string; options?: string[] };
+      /** Job dropdown trimmed to this expansion's roster (relic weapons only
+          exist for jobs up to their series' expansion) */
+      jobsUpTo?: 'arr' | 'hw' | 'stb' | 'shb' | 'ew' | 'dt';
+      /** DoH/DoL job groups instead of combat jobs (Cosmic Exploration) */
+      crafterJobs?: boolean;
+      /** Select field label instead of 'Weapon Type' (e.g. 'Tool Type') */
+      selectLabel?: string;
+      /** Gear dropdown in the Additional Options drawer */
+      gearOptions?: boolean;
+      /** Mount checkmark row below the steps (additive flat price) */
+      mount?: { label: string; price: number };
+      /** Questline-unlock add-on row in the Additional Options drawer */
+      unlock?: PricingAddon;
     }
   >;
   /** Field exploration rank/level ranges (from ffxiv-FieldExplorations) —
@@ -350,6 +403,8 @@ export interface PricingDb {
       priceTiers: { min: number; max: number; pricePerLevel: number }[];
       /** Start-input label instead of 'Your level' (e.g. 'Your rank') */
       startLabel?: string;
+      /** End-input label instead of 'Desired level' (e.g. 'Desired Knowledge') */
+      endLabel?: string;
       /** Card "From" price override (defaults to the default range's cost) */
       fromPrice?: number;
       /** Main add-on in Additional Options */
@@ -364,6 +419,10 @@ export interface PricingDb {
       jobs?: { label: string; max: number; priceTiers?: { min: number; max: number; pricePerLevel: number }[] }[];
       /** Preselected job label (no error state) */
       defaultJob?: string;
+      /** Checkbox-gated Phantom Job leveling section: the top range becomes
+          the base service levels, the job select + job level range hide under
+          this checkmark option */
+      phantomToggle?: { label: string };
       /** Private Stream add-on price in Additional Options */
       stream?: number;
       completion: string;
@@ -451,6 +510,7 @@ const CATEGORY_FILES = [
   'ffxiv-DeepDungeons',
   'ffxiv-AllianceRaids',
   'ffxiv-Criterion',
+  'ffxiv-Relics',
   'ffxiv-FieldExplorations',
   'ffxiv-Catalog',
 ];
@@ -471,6 +531,7 @@ export async function loadPricing(): Promise<PricingDb> {
     let gil: PricingDb['gil'];
     let savageSeries: PricingDb['savageSeries'];
     let leveling: PricingDb['leveling'];
+    let crafterLeveling: PricingDb['crafterLeveling'];
     let msqBoost: PricingDb['msqBoost'];
     let bluLeveling: PricingDb['bluLeveling'];
     let pvpSeries: PricingDb['pvpSeries'];
@@ -481,6 +542,7 @@ export async function loadPricing(): Promise<PricingDb> {
     let trialBundles: PricingDb['trialBundles'];
     let deepDungeons: PricingDb['deepDungeons'];
     let criterion: PricingDb['criterion'];
+    let relics: PricingDb['relics'];
     let fieldLeveling: PricingDb['fieldLeveling'];
     let reputation: PricingDb['reputation'];
     let unlockAddon: PricingDb['unlockAddon'];
@@ -492,7 +554,7 @@ export async function loadPricing(): Promise<PricingDb> {
           if (!r.ok) return;
           const cat = (await r.json()) as Pick<
             PricingDb,
-            'methodPrices' | 'addonPrices' | 'serviceAddons' | 'purchaseBox' | 'gil' | 'savageSeries' | 'leveling' | 'msqBoost' | 'bluLeveling' | 'pvpSeries' | 'ccRank' | 'wolfMarks' | 'mounts' | 'trials' | 'trialBundles' | 'deepDungeons' | 'criterion' | 'fieldLeveling' | 'reputation' | 'unlockAddon' | 'catalog'
+            'methodPrices' | 'addonPrices' | 'serviceAddons' | 'purchaseBox' | 'gil' | 'savageSeries' | 'leveling' | 'crafterLeveling' | 'msqBoost' | 'bluLeveling' | 'pvpSeries' | 'ccRank' | 'wolfMarks' | 'mounts' | 'trials' | 'trialBundles' | 'deepDungeons' | 'criterion' | 'relics' | 'fieldLeveling' | 'reputation' | 'unlockAddon' | 'catalog'
           >;
           Object.assign(methodPrices, cat.methodPrices);
           Object.assign(addonPrices, cat.addonPrices);
@@ -501,6 +563,7 @@ export async function loadPricing(): Promise<PricingDb> {
           if (cat.gil) gil = cat.gil;
           if (cat.savageSeries) savageSeries = { ...savageSeries, ...cat.savageSeries };
           if (cat.leveling) leveling = cat.leveling;
+          if (cat.crafterLeveling) crafterLeveling = cat.crafterLeveling;
           if (cat.msqBoost) msqBoost = cat.msqBoost;
           if (cat.bluLeveling) bluLeveling = cat.bluLeveling;
           if (cat.pvpSeries) pvpSeries = cat.pvpSeries;
@@ -511,6 +574,7 @@ export async function loadPricing(): Promise<PricingDb> {
           if (cat.trialBundles) trialBundles = { ...trialBundles, ...cat.trialBundles };
           if (cat.deepDungeons) deepDungeons = { ...deepDungeons, ...cat.deepDungeons };
           if (cat.criterion) criterion = { ...criterion, ...cat.criterion };
+          if (cat.relics) relics = { ...relics, ...cat.relics };
           if (cat.fieldLeveling) fieldLeveling = { ...fieldLeveling, ...cat.fieldLeveling };
           if (cat.reputation) reputation = { ...reputation, ...cat.reputation };
           if (cat.unlockAddon) unlockAddon = cat.unlockAddon;
@@ -533,6 +597,7 @@ export async function loadPricing(): Promise<PricingDb> {
       gil,
       savageSeries,
       leveling,
+      crafterLeveling,
       msqBoost,
       bluLeveling,
       pvpSeries,
@@ -543,6 +608,7 @@ export async function loadPricing(): Promise<PricingDb> {
       trialBundles,
       deepDungeons,
       criterion,
+      relics,
       fieldLeveling,
       reputation,
       servicePrices: db.servicePrices ?? {},

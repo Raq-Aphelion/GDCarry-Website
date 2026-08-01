@@ -14,8 +14,10 @@ import {
 } from 'lucide-react';
 import { OverlayScrollbar } from './Scrollbar';
 import { allServices, games, serviceCount, type Game, type ServiceSearchResult } from '@/data/games';
+import { SERVICE_PAGES } from '@/data/servicePages';
 import { useCart } from '@/context/CartContext';
 import { useCurrency, type Currency } from '@/context/CurrencyContext';
+import { usePricing } from '@/context/PricingContext';
 import { useToast } from '@/context/ToastContext';
 
 import logoFfxiv from '@/assets/images/game-logos/ffxiv.png';
@@ -41,6 +43,36 @@ const CURRENCIES: { c: Currency; symbol: string; label: string; icon: LucideIcon
     (FFXIV). Every game aligns to this grid, even with a single column. */
 const CAT_COLS = Math.max(...games.map((g) => Math.ceil(g.subcategories.length / 5)));
 
+/** Searchable subpage text (rewards + accordions) per service — cached, since
+    content only changes with the build. */
+const contentCache = new Map<string, string>();
+const contentOf = (r: ServiceSearchResult): string => {
+  let c = contentCache.get(r.service.id);
+  if (c !== undefined) return c;
+  const page = SERVICE_PAGES[r.service.id];
+  const parts: string[] = [];
+  if (page) {
+    for (const rw of page.rewards) {
+      parts.push(rw.title, rw.text ?? '', ...(rw.items ?? []), rw.dutyButton?.label ?? '');
+    }
+    for (const a of page.accordion ?? []) {
+      parts.push(a.title, ...(a.items ?? []), ...(a.groups ?? []).flatMap((g) => [g.heading, ...g.items]));
+    }
+  }
+  c = parts.join(' ').toLowerCase();
+  contentCache.set(r.service.id, c);
+  return c;
+};
+
+/** A short fragment around the match for display in search results. */
+const matchSnippet = (content: string, q: string): string => {
+  const i = content.indexOf(q);
+  if (i < 0) return '';
+  const start = Math.max(0, i - 24);
+  const end = Math.min(content.length, i + q.length + 36);
+  return `${start > 0 ? '…' : ''}${content.slice(start, end)}${end < content.length ? '…' : ''}`;
+};
+
 /** Search input + results dropdown. Rendered twice (desktop nav and mobile
     menu), so it's a real component: each instance needs its own dropdown
     scrollbar state — a shared ref would point at the hidden instance. */
@@ -53,13 +85,14 @@ function SearchBox({
   onGoResult,
 }: {
   query: string;
-  results: ServiceSearchResult[];
+  results: (ServiceSearchResult & { matchNote?: string; fromPrice?: number })[];
   showResults: boolean;
   onQueryChange: (value: string) => void;
   onFocus: () => void;
   onGoResult: (gameId: string, subId: string) => void;
 }) {
   const [listEl, setListEl] = useState<HTMLElement | null>(null);
+  const { format } = useCurrency();
 
   return (
     <div className="relative w-full">
@@ -112,7 +145,19 @@ function SearchBox({
                         <span className="block truncate text-xs text-slate-400">
                           {r.game.short} · {r.subName}
                         </span>
+                        {r.matchNote && (
+                          <span className="block truncate text-xs text-cyan-500/80">{r.matchNote}</span>
+                        )}
                       </span>
+                      {/* From price — desktop dropdown only, styled like the
+                          service cards' From price; extra right padding so it
+                          clears the overlay scrollbar */}
+                      {r.fromPrice != null && r.fromPrice > 0 && (
+                        <span className="hidden shrink-0 items-baseline gap-1.5 text-xs text-slate-400 lg:flex lg:pr-4">
+                          From
+                          <span className="font-display text-lg font-bold text-white">{format(r.fromPrice)}</span>
+                        </span>
+                      )}
                     </button>
                   </li>
                 ))}
@@ -213,6 +258,7 @@ export default function Navbar() {
   const [titlePad, setTitlePad] = useState(140);
   const { count, openCart } = useCart();
   const { currency, setCurrency } = useCurrency();
+  const { priceOf } = usePricing();
   const { toast } = useToast();
   const location = useLocation();
   const navigate = useNavigate();
@@ -252,15 +298,30 @@ export default function Navbar() {
   const results = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (q.length < 2) return [];
-    return allServices
-      .filter(
-        (r) =>
+    const ranked = allServices
+      .map((r) => {
+        // Rank 0: name / game / category. Rank 1: card tags + subtext.
+        // Rank 2: subpage content (rewards, accordions).
+        const rank =
           r.service.name.toLowerCase().includes(q) ||
           r.game.name.toLowerCase().includes(q) ||
-          r.subName.toLowerCase().includes(q),
-      )
-      .slice(0, 8);
-  }, [query]);
+          r.subName.toLowerCase().includes(q)
+            ? 0
+            : [r.service.tag1, r.service.tag2, r.service.tag3, r.service.longDescription]
+                .filter(Boolean)
+                .join(' ')
+                .toLowerCase()
+                .includes(q)
+              ? 1
+              : contentOf(r).includes(q)
+                ? 2
+                : -1;
+        return { ...r, rank, matchNote: rank === 2 ? matchSnippet(contentOf(r), q) : undefined, fromPrice: priceOf(r.service.id, r.service.price) };
+      })
+      .filter((r) => r.rank >= 0)
+      .sort((a, b) => a.rank - b.rank);
+    return ranked.slice(0, 8);
+  }, [query, priceOf]);
 
   const showResults = searchFocused && query.trim().length >= 2;
 

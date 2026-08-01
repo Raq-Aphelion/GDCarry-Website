@@ -1,4 +1,4 @@
-import { ArrowUp, Coins, Gamepad2, Gem, Globe, Layers, Package, ShieldCheck, SquareCheck, Swords, Trophy, type LucideIcon } from 'lucide-react';
+import { ArrowUp, Coins, Gamepad2, Gem, Globe, Layers, Package, Shield, ShieldCheck, SquareCheck, Swords, Trophy, type LucideIcon } from 'lucide-react';
 
 /** Per-service tag icons — [tag1, tag2, tag3] — used on the service subpage
     pill row and on service cards (falling back to the default diamonds/icons
@@ -61,6 +61,13 @@ export const SERVICE_TAG_ICONS: Record<string, [LucideIcon, LucideIcon, LucideIc
   'ffxiv-burabura-chochin-mount': [ShieldCheck, Swords, Gamepad2],
   'ffxiv-sildihn-throne-mount': [ShieldCheck, Swords, Gamepad2],
   'ffxiv-silkie-mount': [ShieldCheck, Swords, Gamepad2],
+  'ffxiv-morbol-mount': [ShieldCheck, Swords, Gamepad2],
+  'ffxiv-vacuum-suit-mount': [ShieldCheck, Swords, Gamepad2],
+  'ffxiv-delubrum-reginae-savage': [Package, Swords, Gamepad2],
+  'ffxiv-baldesion-arsenal': [Package, Swords, Gamepad2],
+  'ffxiv-forked-tower-blood': [Package, Swords, Gamepad2],
+  'ffxiv-forked-tower-magic': [Package, Swords, Gamepad2],
+  'ffxiv-duck-billed-porter-mount': [ShieldCheck, Swords, Gamepad2],
   'ffxiv-cosmic-exploration': [ArrowUp, Gem, Gamepad2],
   'ffxiv-crafter-gatherer-leveling': [ArrowUp, SquareCheck, Gamepad2],
   'ffxiv-variant-merchants-tale': [Package, Swords, Gamepad2],
@@ -108,4 +115,11 @@ export const SERVICE_TAG_ICONS: Record<string, [LucideIcon, LucideIcon, LucideIc
   'ffxiv-eureka-leveling': [ArrowUp, Swords, Gamepad2],
   'ffxiv-occult-crescent': [ArrowUp, Gem, Gamepad2],
   'ffxiv-island-sanctuary': [ArrowUp, Coins, Gamepad2],
+  'ffxiv-phantom-weapon': [ArrowUp, Swords, Gamepad2],
+  'ffxiv-manderville-weapon': [ArrowUp, Swords, Gamepad2],
+  'ffxiv-resistance-weapon': [ArrowUp, Swords, Gamepad2],
+  'ffxiv-eureka-weapon': [ArrowUp, Swords, Gamepad2],
+  'ffxiv-eurekan-elemental-armour': [ArrowUp, Shield, Gamepad2],
+  'ffxiv-anima-weapon': [ArrowUp, Swords, Gamepad2],
+  'ffxiv-zodiac-weapon': [ArrowUp, Swords, Gamepad2],
 };

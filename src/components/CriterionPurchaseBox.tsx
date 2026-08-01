@@ -48,10 +48,11 @@ export default function CriterionPurchaseBox({ service, gameShort }: { service: 
   const [dc, setDc] = useState('');
   const [stream, setStream] = useState(false);
   const [priority, setPriority] = useState(false);
+  const [unlockChecked, setUnlockChecked] = useState(false);
   const [dcError, setDcError] = useState(false);
 
   const { rootRef, wrapRef, stick, overflowTop, fixedStyle, blockHpx } = usePurchaseFloat(
-    `${method}|${difficulty}|${dc}|${runs}|${checked.length}|${stream}|${priority}`,
+    `${method}|${difficulty}|${dc}|${runs}|${checked.length}|${stream}|${priority}|${unlockChecked}`,
   );
 
   const toggle = (id: string) =>
@@ -88,7 +89,9 @@ export default function CriterionPurchaseBox({ service, gameShort }: { service: 
   // display stays pinned to the path count, but the price is the add-on's own
   const core = forcedRuns > 0 ? 0 : base * effRuns;
   const total =
-    (core + addonsTotal) * (priority ? priorityMultiplier : 1) + (stream ? streamPrice : 0);
+    (core + addonsTotal) * (priority ? priorityMultiplier : 1) +
+    (unlockChecked ? (cfg?.unlock?.price ?? 0) : 0) +
+    (stream ? streamPrice : 0);
 
   const addToCart = () => {
     if (!dc) {
@@ -103,9 +106,12 @@ export default function CriterionPurchaseBox({ service, gameShort }: { service: 
     addItem(
       {
         ...service,
-        id: `${service.id}::${method}|${effDifficulty}|${dc}|${[...checked].sort().join(',')}${stream ? 's' : ''}${priority ? 'p' : ''}`,
+        id: `${service.id}::${method}|${effDifficulty}|${dc}|${[...checked].sort().join(',')}${stream ? 's' : ''}${priority ? 'p' : ''}${unlockChecked ? 'u' : ''}`,
         price: forcedRuns > 0 ? 0 : base,
-        flat: addonsTotal * (priority ? priorityMultiplier : 1) + (stream ? streamPrice : 0),
+        flat:
+          addonsTotal * (priority ? priorityMultiplier : 1) +
+          (unlockChecked ? (cfg?.unlock?.price ?? 0) : 0) +
+          (stream ? streamPrice : 0),
         multiplier: priority ? priorityMultiplier : undefined,
         method: methodLabel,
       },
@@ -114,6 +120,7 @@ export default function CriterionPurchaseBox({ service, gameShort }: { service: 
         `Data Center: ${dc}`,
         ...(hasDifficulty ? [effDifficulty === 'savage' ? advancedLabel : normalLabel] : []),
         ...checked.map((id) => activeAddons.find((a) => a.id === id)!.label),
+        ...(unlockChecked && cfg?.unlock ? [cfg.unlock.label] : []),
         ...(stream ? ['Private Stream'] : []),
         ...(priority ? [`Priority (+${Math.round((priorityMultiplier - 1) * 100)}%)`] : []),
       ],
@@ -158,13 +165,20 @@ export default function CriterionPurchaseBox({ service, gameShort }: { service: 
         <div className="h-28" />
 
         <div className="relative space-y-4 p-4">
-          {/* Boost method — Group Play first */}
+          {/* Boost method — Group Play first; static pill for piloted-only */}
           <div>
             <p className="pl-px text-sm font-semibold text-white [text-shadow:0_1px_4px_rgb(0_0_0/0.7)]">Boost Method</p>
-            <div className="mt-2.5 grid grid-cols-2 gap-2">
-              {pill('Group Play', Users, method === 'group', () => setMethod('group'))}
-              {pill('Piloted', Armchair, method === 'piloted', () => setMethod('piloted'))}
-            </div>
+            {cfg?.pilotedOnly ? (
+              <div className="mt-2.5 flex items-center justify-center gap-2 rounded-[5px] border border-navy-600 bg-navy-800 px-3 py-2.5 text-white cyan-glow">
+                <Armchair className="h-4 w-4 shrink-0 text-cyan-400" />
+                <span className="text-[11px] font-semibold uppercase tracking-wider text-cyan-400">Piloted</span>
+              </div>
+            ) : (
+              <div className="mt-2.5 grid grid-cols-2 gap-2">
+                {pill('Group Play', Users, method === 'group', () => setMethod('group'))}
+                {pill('Piloted', Armchair, method === 'piloted', () => setMethod('piloted'))}
+              </div>
+            )}
           </div>
 
           {/* Difficulty — only for dungeons with a second tier */}
@@ -278,13 +292,23 @@ export default function CriterionPurchaseBox({ service, gameShort }: { service: 
             </div>
           </div>
 
-          {/* Additional options — stream, priority */}
+          {/* Additional options — unlock (when offered), stream, priority */}
           <MountAddonsBlock
             stream={stream}
             setStream={setStream}
             priority={priority}
             setPriority={setPriority}
             streamPrice={streamPrice}
+            extraRow={
+              cfg?.unlock
+                ? {
+                    label: cfg.unlock.label,
+                    hint: `+${format(cfg.unlock.price)}`,
+                    checked: unlockChecked,
+                    onClick: () => setUnlockChecked((u) => !u),
+                  }
+                : undefined
+            }
           />
         </div>
       </div>

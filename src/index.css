@@ -172,6 +172,14 @@
     background-clip: text;
     color: transparent;
   }
+  /* Smooth blue-to-blue variant, no mid-word bright spot ("Experience the
+     difference" heading) */
+  .text-gradient-white-blue {
+    background: linear-gradient(100deg, rgb(var(--cyan-400)) 0%, rgb(var(--cyan-600)) 55%, rgb(var(--cyan-800)) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
   .card-surface {
     @apply bg-navy-850 backdrop-blur-sm;
   }

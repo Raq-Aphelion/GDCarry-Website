@@ -10,89 +10,17 @@ import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';
 
-// Keep in sync with src/App.tsx routes and public/sitemap.xml.
-const ROUTES = [
+/* Service subpage routes come straight from src/data/servicePages.ts
+   (SERVICE_PAGES['…'] keys), so they never drift out of sync; only static
+   routes are listed here. The same list also feeds dist/sitemap.xml. */
+const servicePagesSrc = fs.readFileSync('src/data/servicePages.ts', 'utf8');
+const SERVICE_ROUTES = [...servicePagesSrc.matchAll(/SERVICE_PAGES\['([^']+)'\]/g)].map(
+  (m) => `/boosting/ffxiv/${m[1]}`,
+);
+
+const STATIC_ROUTES = [
   '/',
   '/boosting/ffxiv',
-  '/boosting/ffxiv/ffxiv-dsr',
-  '/boosting/ffxiv/ffxiv-ucob',
-  '/boosting/ffxiv/ffxiv-uwu',
-  '/boosting/ffxiv/ffxiv-tea',
-  '/boosting/ffxiv/ffxiv-top',
-  '/boosting/ffxiv/ffxiv-fru',
-  '/boosting/ffxiv/ffxiv-dmu',
-  '/boosting/ffxiv/ffxiv-ultimate-bundle',
-  '/boosting/ffxiv/ffxiv-gil-pack',
-  '/boosting/ffxiv/ffxiv-pandaemonium-savage',
-  '/boosting/ffxiv/ffxiv-arcadion-savage',
-  '/boosting/ffxiv/ffxiv-leveling-boost',
-  '/boosting/ffxiv/ffxiv-msq-skip',
-  '/boosting/ffxiv/ffxiv-blu-leveling-boost',
-  '/boosting/ffxiv/ffxiv-pvp-series-boost',
-  '/boosting/ffxiv/ffxiv-cc-rank-boost',
-  '/boosting/ffxiv/ffxiv-wolf-marks',
-  '/boosting/ffxiv/ffxiv-kirin-mount',
-  '/boosting/ffxiv/ffxiv-firebird-mount',
-  '/boosting/ffxiv/ffxiv-kamuy-nine-tails',
-  '/boosting/ffxiv/ffxiv-landerwaffe',
-  '/boosting/ffxiv/ffxiv-apocryphal-bahamut',
-  '/boosting/ffxiv/ffxiv-wings-of-legacy',
-  '/boosting/ffxiv/ffxiv-wings-of-ruin',
-  '/boosting/ffxiv/ffxiv-wings-of-resolve',
-  '/boosting/ffxiv/ffxiv-wings-of-eternity',
-  '/boosting/ffxiv/ffxiv-wings-of-knighthood',
-  '/boosting/ffxiv/ffxiv-wings-of-death',
-  '/boosting/ffxiv/ffxiv-wings-of-mist',
-  '/boosting/ffxiv/ffxiv-wings-of-nihility',
-  '/boosting/ffxiv/ffxiv-monowheel-s1',
-  '/boosting/ffxiv/ffxiv-air-wheeler-c9',
-  '/boosting/ffxiv/ffxiv-lowrider-t1rant',
-  '/boosting/ffxiv/ffxiv-demi-phoinix',
-  '/boosting/ffxiv/ffxiv-sunforged',
-  '/boosting/ffxiv/ffxiv-megaloambystoma',
-  '/boosting/ffxiv/ffxiv-skyslipper',
-  '/boosting/ffxiv/ffxiv-ramuh',
-  '/boosting/ffxiv/ffxiv-eden-mount',
-  '/boosting/ffxiv/ffxiv-alte-roite',
-  '/boosting/ffxiv/ffxiv-air-force',
-  '/boosting/ffxiv/ffxiv-model-o',
-  '/boosting/ffxiv/ffxiv-gobwalker',
-  '/boosting/ffxiv/ffxiv-arrhidaeus',
-  '/boosting/ffxiv/ffxiv-juedi-mount',
-  '/boosting/ffxiv/ffxiv-cerberus-mount',
-  '/boosting/ffxiv/ffxiv-demi-ozma',
-  '/boosting/ffxiv/ffxiv-demon-haul',
-  '/boosting/ffxiv/ffxiv-great-hunt',
-  '/boosting/ffxiv/ffxiv-memoria-misera',
-  '/boosting/ffxiv/ffxiv-worqor-lar-dor',
-  '/boosting/ffxiv/ffxiv-dawntrail-trials-bundle',
-  '/boosting/ffxiv/ffxiv-endwalker-trials-bundle',
-  '/boosting/ffxiv/ffxiv-shadowbringers-trials-bundle',
-  '/boosting/ffxiv/ffxiv-stormblood-trials-bundle',
-  '/boosting/ffxiv/ffxiv-heavensward-trials-bundle',
-  '/boosting/ffxiv/ffxiv-everkeep',
-  '/boosting/ffxiv/ffxiv-sphenes-burden',
-  '/boosting/ffxiv/ffxiv-recollection',
-  '/boosting/ffxiv/ffxiv-necrons-embrace',
-  '/boosting/ffxiv/ffxiv-windward-wilds',
-  '/boosting/ffxiv/ffxiv-hell-on-rails',
-  '/boosting/ffxiv/ffxiv-the-unmaking',
-  '/boosting/ffxiv/ffxiv-rathalos-mount',
-  '/boosting/ffxiv/ffxiv-felyne-cart',
-  '/boosting/ffxiv/ffxiv-beast-tribes',
-  '/boosting/ffxiv/ffxiv-custom-deliveries',
-  '/boosting/ffxiv/ffxiv-potd-solo',
-  '/boosting/ffxiv/ffxiv-hoh',
-  '/boosting/ffxiv/ffxiv-orthos',
-  '/boosting/ffxiv/ffxiv-pilgrims-traverse',
-  '/boosting/ffxiv/ffxiv-deep-dungeon-bundle',
-  '/boosting/ffxiv/ffxiv-resistance-rank',
-  '/boosting/ffxiv/ffxiv-eureka-leveling',
-  '/boosting/ffxiv/ffxiv-occult-crescent',
-  '/boosting/ffxiv/ffxiv-island-sanctuary',
-  '/boosting/ffxiv/ffxiv-eden-savage',
-  '/boosting/ffxiv/ffxiv-omega-savage',
-  '/boosting/ffxiv/ffxiv-alexander-savage',
   '/boosting/wow',
   '/boosting/lost-ark',
   '/boosting/warframe',
@@ -114,6 +42,8 @@ const ROUTES = [
   '/legal/refund',
   '/checkout',
 ];
+
+const ROUTES = [...STATIC_ROUTES.slice(0, 2), ...SERVICE_ROUTES, ...STATIC_ROUTES.slice(2)];
 
 const DIST = path.resolve('dist');
 const MIME = {
@@ -214,3 +144,20 @@ if (failures > 0) {
   process.exit(1);
 }
 console.log('[prerender] all routes rendered');
+
+// Sitemap from the same route list — never drifts out of sync.
+const priority = (route) =>
+  route === '/' ? '1.0'
+    : route === '/boosting/ffxiv' ? '0.9'
+    : route.startsWith('/boosting/ffxiv/') ? '0.8'
+    : route.startsWith('/boosting/') ? '0.7'
+    : route.startsWith('/guides') || route === '/faq' ? '0.7'
+    : route === '/checkout' ? '0.1'
+    : '0.3';
+const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${ROUTES.map((r) => `  <url>\n    <loc>https://gdcarry.com${r}</loc>\n    <priority>${priority(r)}</priority>\n  </url>`).join('\n')}
+</urlset>
+`;
+fs.writeFileSync(path.join(DIST, 'sitemap.xml'), sitemap);
+console.log(`[prerender] sitemap.xml written (${ROUTES.length} routes)`);

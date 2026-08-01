@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Check, Clock, Minus, Plus, Settings2 } from 'lucide-react';
+import { JOB_GROUPS, splitParens } from '@/data/jobs';
 import FadeImage from './FadeImage';
 import FieldPopup from './FieldPopup';
 import { CustomSelect } from './PurchaseBox';
@@ -21,30 +22,6 @@ const DATA_CENTERS = [
   'Mana',
   'Meteor',
   'Materia',
-];
-
-const JOBS = [
-  'Paladin (PLD)',
-  'Warrior (WAR)',
-  'Dark Knight (DRK)',
-  'Gunbreaker (GNB)',
-  'White Mage (WHM)',
-  'Scholar (SCH)',
-  'Astrologian (AST)',
-  'Sage (SGE)',
-  'Monk (MNK)',
-  'Dragoon (DRG)',
-  'Ninja (NIN)',
-  'Samurai (SAM)',
-  'Reaper (RPR)',
-  'Viper (VPR)',
-  'Bard (BRD)',
-  'Machinist (MCH)',
-  'Dancer (DNC)',
-  'Black Mage (BLM)',
-  'Summoner (SMN)',
-  'Red Mage (RDM)',
-  'Pictomancer (PCT)',
 ];
 
 /** MSQ Completion purchase box: job and data center selects, a contiguous
@@ -180,13 +157,20 @@ export default function MsqPurchaseBox({ service, gameShort }: { service: Servic
               <CustomSelect
                 value={job}
                 placeholder="Select Job"
-                options={JOBS.map((j) => ({ label: j }))}
+                options={JOB_GROUPS.flatMap((g) => [
+                  { label: g.label, icon: g.icon, divider: true as const },
+                  ...g.jobs.map((j) => {
+                    const [label, accent] = splitParens(j);
+                    return { label, accent };
+                  }),
+                ])}
                 onSelect={(i) => {
-                  setJob(JOBS[i]);
+                  setJob(JOB_GROUPS.flatMap((g) => g.jobs)[i]);
                   setJobError(false);
                 }}
                 ariaLabel="Select job"
                 invalid={jobError}
+                blueParens
               />
             </div>
           </div>

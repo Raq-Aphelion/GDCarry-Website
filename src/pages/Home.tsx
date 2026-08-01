@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router';
-import { ArrowRight, Badge, ChevronDown, ChevronLeft, ChevronRight, ShieldCheck, Star, Timer, Users, Zap } from 'lucide-react';
+import { ArrowRight, Badge, ChevronDown, ChevronLeft, ChevronRight, HandCoins, ShieldCheck, Star, Users, Zap } from 'lucide-react';
 import CustomOrderCta from '@/components/CustomOrderCta';
 import PageMeta, { JsonLd, SITE_URL } from '@/components/PageMeta';
 import FadeImage from '@/components/FadeImage';
@@ -18,14 +18,15 @@ const FEATURED_IDS = [
   'ffxiv-gil-pack',
   'ffxiv-arcadion-savage',
   'ffxiv-uwu',
+  'ffxiv-wings-of-mist',
   'ffxiv-potd-solo',
 ];
 
 const PERKS = [
   {
-    icon: ShieldCheck,
-    title: 'Account safety first',
-    text: 'VPN-matched sessions, offline mode on request and zero third-party software. Your account never takes the risk — we do the rolling.',
+    icon: Users,
+    title: 'No outsourcing',
+    text: 'Every order is completed by our own vetted in-house team — your account never changes hands with third parties.',
   },
   {
     icon: Zap,
@@ -33,14 +34,14 @@ const PERKS = [
     text: 'Our own in-house team ensures that all orders are attended to within the 1st day of purchase.',
   },
   {
-    icon: Timer,
-    title: 'On-time, guaranteed',
-    text: 'Every order carries a delivery window. Run late and the difference comes back to your wallet — automatically.',
+    icon: HandCoins,
+    title: 'Shop with confidence',
+    text: 'Receive your items, services, or currency as promised, or we’ll refund you in full.',
   },
   {
-    icon: Users,
-    title: 'Verified pro roster',
-    text: 'Ultimate legends, gladiators, world-first raiders. Every Grand Dice booster is vetted, ranked and reviewed.',
+    icon: ShieldCheck,
+    title: 'Account safety first',
+    text: 'VPN-matched sessions, offline mode on request and zero third-party software. Your account never takes the risk.',
   },
 ];
 
@@ -245,6 +246,14 @@ export default function Home() {
               url: SITE_URL,
               name: 'GD Carry — Grand Dice',
               publisher: { '@id': `${SITE_URL}/#organization` },
+              potentialAction: {
+                '@type': 'SearchAction',
+                target: {
+                  '@type': 'EntryPoint',
+                  urlTemplate: `${SITE_URL}/?q={search_term_string}`,
+                },
+                'query-input': 'required name=search_term_string',
+              },
             },
           ],
         }}
@@ -457,20 +466,21 @@ export default function Home() {
           <div className="text-center">
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-cyan-500">Why Grand Dice</p>
             <h2 className="mt-2 font-display text-3xl font-extrabold text-white sm:text-4xl">
-              Experience <span className="text-gradient-blue">the difference</span>
+              Experience <span className="text-gradient-white-blue">the difference</span>
             </h2>
           </div>
         </Reveal>
-        <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:mt-12 lg:grid-cols-4">
+        <div className="mt-8 grid gap-5 min-[480px]:max-sm:gap-3 min-[480px]:grid-cols-2 lg:mt-12 lg:grid-cols-4">
           {PERKS.map((p, i) => (
             <Reveal key={p.title} delay={i * 90}>
-              <div className="card-surface h-full rounded-[5px] p-6 text-center">
-                <div className="relative mx-auto h-14 w-14">
-                  <Badge className="h-14 w-14 fill-navy-700 text-navy-700" strokeWidth={1.5} />
-                  <p.icon className="absolute inset-0 m-auto h-6 w-6 text-cyan-400" strokeWidth={1.75} />
+              {/* Contents scale down between 480-640px so the 2x2 grid fits */}
+              <div className="card-surface h-full rounded-[5px] p-6 pb-8 text-center min-[480px]:max-sm:p-4 min-[480px]:max-sm:pb-6">
+                <div className="relative mx-auto h-14 w-14 min-[480px]:max-sm:h-10 min-[480px]:max-sm:w-10">
+                  <Badge className="h-14 w-14 fill-navy-700 text-navy-700 min-[480px]:max-sm:h-10 min-[480px]:max-sm:w-10" strokeWidth={1.5} />
+                  <p.icon className="absolute inset-0 m-auto h-6 w-6 text-cyan-400 min-[480px]:max-sm:h-4 min-[480px]:max-sm:w-4" strokeWidth={1.75} />
                 </div>
-                <h3 className="mt-5 font-display text-lg font-bold text-white">{p.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-slate-400">{p.text}</p>
+                <h3 className="mt-5 font-display text-lg font-bold text-white min-[480px]:max-sm:mt-3 min-[480px]:max-sm:text-base">{p.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-slate-400 min-[480px]:max-sm:text-xs">{p.text}</p>
               </div>
             </Reveal>
           ))}

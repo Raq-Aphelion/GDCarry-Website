@@ -19,6 +19,7 @@ import TrialPurchaseBox from '@/components/TrialPurchaseBox';
 import TrialBundlePurchaseBox from '@/components/TrialBundlePurchaseBox';
 import DeepDungeonPurchaseBox from '@/components/DeepDungeonPurchaseBox';
 import CriterionPurchaseBox from '@/components/CriterionPurchaseBox';
+import RelicPurchaseBox from '@/components/RelicPurchaseBox';
 import ReputationPurchaseBox from '@/components/ReputationPurchaseBox';
 import Reveal from '@/components/Reveal';
 import ServiceCard from '@/components/ServiceCard';
@@ -28,6 +29,7 @@ import { usePricing } from '@/context/PricingContext';
 import { SERVICE_TAG_ICONS as POINT_ICONS } from '@/data/serviceIcons';
 import ffxivBg from '@/assets/images/backgrounds/ffxiv-bg.webp';
 import useDragScroll from '@/hooks/useDragScroll';
+import { CRAFTER_JOB_GROUPS } from '@/data/jobs';
 
 function Bullets({ items }: { items: string[] }) {
   return (
@@ -273,11 +275,13 @@ export default function ServicePage() {
               </Link>
             </div>
           </Reveal>
-          <div className="mt-5 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+          {/* Same responsive columns as the main service grids: 1 per row
+              below 400px, 2 from 400px, 3 from xl */}
+          <div className="mt-5 grid grid-cols-1 justify-items-center gap-5 min-[400px]:grid-cols-2 xl:grid-cols-3">
             {others.slice(0, 3).map((sv, i) => (
               // Keyed by the current service too: navigating between services
               // via these cards remounts the grid so the animation replays
-              <Reveal key={`${service.id}:${sv.id}`} delay={Math.min(i, 3) * 80} className={i === 1 ? 'hidden sm:block' : i === 2 ? 'hidden xl:block' : ''}>
+              <Reveal key={`${service.id}:${sv.id}`} delay={Math.min(i, 3) * 80} className={`w-full max-w-[280px] ${i === 1 ? 'hidden min-[400px]:block' : i === 2 ? 'hidden xl:block' : ''}`}>
                 <ServiceCard service={sv} />
               </Reveal>
             ))}
@@ -366,6 +370,12 @@ export default function ServicePage() {
               gameShort={game.short}
               config={{ ...db.leveling, showJob: true, addon: db.leveling.msqAddon }}
             />
+          ) : service.id === db.crafterLeveling?.serviceId ? (
+            <LevelingPurchaseBox
+              service={service}
+              gameShort={game.short}
+              config={{ ...db.crafterLeveling, showJob: true, jobGroups: CRAFTER_JOB_GROUPS, addon: db.crafterLeveling.addon }}
+            />
           ) : service.id === db.bluLeveling?.serviceId ? (
             <LevelingPurchaseBox
               service={service}
@@ -405,6 +415,8 @@ export default function ServicePage() {
             <DeepDungeonPurchaseBox key={service.id} service={service} gameShort={game.short} />
           ) : db.criterion?.[service.id] ? (
             <CriterionPurchaseBox key={service.id} service={service} gameShort={game.short} />
+          ) : db.relics?.[service.id] ? (
+            <RelicPurchaseBox key={service.id} service={service} gameShort={game.short} />
           ) : db.fieldLeveling?.[service.id] ? (
             <LevelingPurchaseBox
               key={service.id}

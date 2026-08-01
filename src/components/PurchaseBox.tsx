@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Armchair, Check, ChevronDown, Clock, Gamepad2, Minus, Plus, Settings2 } from 'lucide-react';
+import { Armchair, Check, ChevronDown, Clock, Gamepad2, Minus, Plus, Settings2, type LucideIcon } from 'lucide-react';
+import { splitParens } from '@/data/jobs';
 import FadeImage from './FadeImage';
 import FieldPopup from './FieldPopup';
 import { Slider } from '@/components/ui/slider';
@@ -38,6 +39,12 @@ const INCLUDED: Record<string, { piloted: string[]; afk: string[] }> = {
 interface SelectOption {
   label: string;
   hint?: string;
+  /** Section header row (e.g. job role groups) — not clickable and does not
+      consume a select index */
+  divider?: boolean;
+  icon?: LucideIcon;
+  /** Trailing part rendered in blue (e.g. job abbreviations in parens) */
+  accent?: string;
 }
 
 /** Custom dropdown: the panel unfolds seamlessly from the field and always
@@ -50,6 +57,7 @@ export function CustomSelect({
   ariaLabel,
   invalid = false,
   disabled = false,
+  blueParens = false,
 }: {
   value: string;
   placeholder?: string;
@@ -60,8 +68,11 @@ export function CustomSelect({
   invalid?: boolean;
   /** Greyed out and non-interactive (e.g. waiting on a parent selection) */
   disabled?: boolean;
+  /** Render parenthesized parts of the selected value in blue */
+  blueParens?: boolean;
 }) {
   const [open, setOpen] = useState(false);
+  const [valueMain, valueAccent] = blueParens ? splitParens(value) : [value];
 
   return (
     <div className={`relative ${open ? 'z-30' : ''}`}>
@@ -81,7 +92,16 @@ export function CustomSelect({
               : 'border-navy-700/70 hover:border-navy-600 disabled:hover:border-navy-700/70'
         } ${value ? 'text-slate-300' : 'text-slate-500'}`}
       >
-        <span className="min-w-0 flex-1 truncate">{value || placeholder}</span>
+        <span className="min-w-0 flex-1 truncate">
+          {value ? (
+            <>
+              {valueMain}
+              {valueAccent && <span className="text-cyan-400">{valueAccent}</span>}
+            </>
+          ) : (
+            placeholder
+          )}
+        </span>
         <ChevronDown
           className={`h-4 w-4 shrink-0 transition-transform duration-300 ${open ? 'rotate-180 text-slate-500' : 'text-cyan-400'}`}
         />
@@ -93,30 +113,50 @@ export function CustomSelect({
       >
         <div className="overflow-hidden">
           <div className="max-h-60 overflow-y-auto rounded-b-[5px] border border-t-0 border-navy-600 bg-navy-850 shadow-2xl">
-            {options.map((o, i) => {
-              const selected = value === o.label;
-              return (
-                <button
-                  key={o.label}
-                  onClick={() => {
-                    onSelect(i);
-                    setOpen(false);
-                  }}
-                  className={`flex w-full items-center justify-between gap-2 px-3.5 py-2 text-left text-sm transition-colors ${
-                    selected
-                      ? 'bg-navy-800 font-semibold text-cyan-400'
-                      : 'text-slate-300 hover:bg-navy-800 hover:text-white'
-                  }`}
-                >
-                  <span className="min-w-0 truncate">{o.label}</span>
-                  {o.hint ? (
-                    <span className="shrink-0 text-xs font-bold text-cyan-400">{o.hint}</span>
-                  ) : selected ? (
-                    <Check className="h-3.5 w-3.5 shrink-0 text-cyan-500" />
-                  ) : null}
-                </button>
-              );
-            })}
+            {(() => {
+              // Dividers render as static headers and skip the select index
+              let sel = -1;
+              return options.map((o) => {
+                if (o.divider) {
+                  return (
+                    <div
+                      key={`divider-${o.label}`}
+                      className="flex items-center gap-1.5 px-3.5 pb-1 pt-2 text-[11px] font-bold uppercase tracking-wider text-cyan-500"
+                    >
+                      {o.icon && <o.icon className="h-3 w-3" />}
+                      {o.label}
+                    </div>
+                  );
+                }
+                sel++;
+                const idx = sel;
+                const selected = value === o.label;
+                return (
+                  <button
+                    key={o.label}
+                    onClick={() => {
+                      onSelect(idx);
+                      setOpen(false);
+                    }}
+                    className={`flex w-full items-center justify-between gap-2 px-3.5 py-2 text-left text-sm transition-colors ${
+                      selected
+                        ? 'bg-navy-800 font-semibold text-cyan-400'
+                        : 'text-slate-300 hover:bg-navy-800 hover:text-white'
+                    }`}
+                  >
+                    <span className="min-w-0 truncate">
+                      {o.label}
+                      {o.accent && <span className="text-cyan-400">{o.accent}</span>}
+                    </span>
+                    {o.hint ? (
+                      <span className="shrink-0 text-xs font-bold text-cyan-400">{o.hint}</span>
+                    ) : selected ? (
+                      <Check className="h-3.5 w-3.5 shrink-0 text-cyan-500" />
+                    ) : null}
+                  </button>
+                );
+              });
+            })()}
           </div>
         </div>
       </div>

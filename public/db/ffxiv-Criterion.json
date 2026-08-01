@@ -67,12 +67,6 @@
       "completion": "24 Hours",
       "addons": [
         {
-          "id": "glamour",
-          "label": "Glamour Set",
-          "price": 70,
-          "pilotedPrice": 80
-        },
-        {
           "id": "mount",
           "label": "Mount",
           "price": 200,
@@ -87,12 +81,6 @@
       "savagePrice": 300,
       "completion": "24 Hours",
       "addons": [
-        {
-          "id": "glamour",
-          "label": "Glamour Set",
-          "price": 70,
-          "pilotedPrice": 80
-        },
         {
           "id": "mount",
           "label": "Mount",
@@ -110,12 +98,6 @@
       "completion": "24 Hours",
       "addons": [
         {
-          "id": "glamour",
-          "label": "Glamour Set",
-          "price": 70,
-          "pilotedPrice": 80
-        },
-        {
           "id": "mount",
           "label": "Mount",
           "price": 200,
@@ -132,12 +114,6 @@
       "completion": "24 Hours",
       "addons": [
         {
-          "id": "glamour",
-          "label": "Glamour Set",
-          "price": 70,
-          "pilotedPrice": 80
-        },
-        {
           "id": "mount",
           "label": "Mount",
           "price": 200,
@@ -147,6 +123,36 @@
       ],
       "pilotedPrice": 99,
       "advancedPilotedPrice": 330
+    },
+    "ffxiv-forked-tower-blood": {
+      "price": 120,
+      "savagePrice": 400,
+      "difficulty": {
+        "normal": "Normal",
+        "advanced": "Extreme"
+      },
+      "pilotedOnly": true,
+      "unlock": {
+        "id": "unlock",
+        "label": "Unlock The Forked Tower: Blood",
+        "price": 50
+      },
+      "completion": "24 Hours"
+    },
+    "ffxiv-forked-tower-magic": {
+      "price": 120,
+      "savagePrice": 400,
+      "difficulty": {
+        "normal": "Normal",
+        "advanced": "Extreme"
+      },
+      "pilotedOnly": true,
+      "unlock": {
+        "id": "unlock",
+        "label": "Unlock The Forked Tower: Magic",
+        "price": 90
+      },
+      "completion": "24 Hours"
     }
   }
 }

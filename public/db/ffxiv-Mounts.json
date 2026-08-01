@@ -462,6 +462,31 @@
         "trial": "Variant: The Sil'dihn Subterrane",
         "completion": "24 Hours"
       },
+      "ffxiv-morbol-mount": {
+        "price": 350,
+        "trial": "Alexander & Bahamut (Blue Mage)",
+        "completion": "5 Days",
+        "pilotedOnly": true,
+        "addons": [
+          {
+            "id": "no-spells",
+            "label": "I have no spells",
+            "price": 150
+          }
+        ]
+      },
+      "ffxiv-delubrum-reginae-savage": {
+        "price": 350,
+        "trial": "Delubrum Reginae (Savage)",
+        "completion": "24 Hours",
+        "pilotedOnly": true
+      },
+      "ffxiv-baldesion-arsenal": {
+        "price": 280,
+        "trial": "The Baldesion Arsenal",
+        "completion": "24 Hours",
+        "pilotedOnly": true
+      },
       "ffxiv-cerberus-mount": {
         "price": 350,
         "trial": "Delubrum Reginae (Savage)",
@@ -475,9 +500,21 @@
         "pilotedOnly": true
       },
       "ffxiv-demon-haul": {
-        "price": 350,
+        "price": 120,
         "trial": "The Forked Tower: Blood",
         "completion": "24 Hours",
+        "pilotedOnly": true
+      },
+      "ffxiv-duck-billed-porter-mount": {
+        "price": 150,
+        "trial": "The Forked Tower: Magic",
+        "completion": "24 Hours",
+        "pilotedOnly": true
+      },
+      "ffxiv-vacuum-suit-mount": {
+        "price": 2000,
+        "trial": "Cosmic Exploration",
+        "completion": "14 Days",
         "pilotedOnly": true
       },
       "ffxiv-dais-of-darkness-mount": {

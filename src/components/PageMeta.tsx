@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 
 export const SITE_URL = 'https://gdcarry.com';
 const SITE_NAME = 'GD Carry — Grand Dice';
-const DEFAULT_OG_IMAGE = `${SITE_URL}/images/gd_logo.png`;
+const DEFAULT_OG_IMAGE = `${SITE_URL}/images/og-image.png`;
 
 function setMeta(selector: string, attrs: Record<string, string>) {
   let el = document.head.querySelector<HTMLMetaElement | HTMLLinkElement>(selector);

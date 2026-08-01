@@ -42,8 +42,10 @@ export default function Footer() {
         </div>
 
         {/* Link columns: 2 on mobile (no Games), 3 from sm, 4 from xl. At lg the
-            group hugs the right side (ml-auto); from xl it stretches again. */}
-        <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 sm:gap-10 md:col-span-2 lg:ml-auto lg:gap-[clamp(1.5rem,3vw,3rem)] xl:ml-0 xl:flex-1 xl:grid-cols-4">
+            group hugs the right side (ml-auto); from xl it stretches again.
+            On mobile each column's block is centered in its cell, so the pair
+            sits balanced under the centered brand block */}
+        <div className="grid grid-cols-2 gap-6 max-md:justify-items-center sm:grid-cols-3 sm:gap-10 md:col-span-2 lg:ml-auto lg:gap-[clamp(1.5rem,3vw,3rem)] xl:ml-0 xl:flex-1 xl:grid-cols-4">
         <div className="hidden sm:block">
           <h3 className="font-display text-sm font-bold uppercase tracking-wider text-cyan-500 max-md:text-xs">Games</h3>
           <ul className="mt-4 space-y-2.5">
@@ -60,7 +62,7 @@ export default function Footer() {
           </ul>
         </div>
 
-        <div className="max-md:pl-6">
+        <div>
           <h3 className="font-display text-sm font-bold uppercase tracking-wider text-cyan-500 max-md:text-xs">Support</h3>
           <ul className="mt-4 space-y-2.5">
             {[
@@ -120,7 +122,7 @@ export default function Footer() {
         <div className="hidden xl:block">
           <h3 className="font-display text-sm font-bold uppercase tracking-wider text-cyan-500 max-md:text-xs">Why Grand Dice</h3>
           <ul className="mt-4 space-y-2.5 text-sm text-slate-500 max-md:text-xs">
-            {['Account safety first', 'Fast fullfilment', 'On-time, guaranteed', 'Verified pro roster'].map((perk) => (
+            {['No outsourcing', 'Fast fullfilment', 'Shop with confidence', 'Account safety first'].map((perk) => (
               <li key={perk} className="flex items-center gap-2">
                 <Check className="h-3.5 w-3.5 shrink-0 text-cyan-500" strokeWidth={3} />
                 {perk}

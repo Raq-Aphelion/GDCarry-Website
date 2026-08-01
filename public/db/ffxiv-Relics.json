@@ -1,0 +1,308 @@
+{
+  "relics": {
+    "ffxiv-phantom-weapon": {
+      "completion": "3-5 Days",
+      "fromPrice": 225,
+      "steps": [
+        {
+          "label": "Phantom Penumbrae (ilvl 745)",
+          "price": 250
+        },
+        {
+          "label": "Phantom Umbrae (ilvl 760)",
+          "price": 225
+        },
+        {
+          "label": "Phantom Obscurum (ilvl 775)",
+          "price": 350
+        },
+        {
+          "label": "Phantom Eclipticum (ilvl 790)",
+          "price": 350
+        },
+        {
+          "label": "Phantom Occultum (ilvl 795)",
+          "price": 350
+        }
+      ],
+      "complete": {
+        "label": "Complete Phantom Weapon",
+        "price": 1525
+      },
+      "unlock": {
+        "id": "questline",
+        "label": "Questline Unlock",
+        "price": 10
+      },
+      "jobsUpTo": "dt"
+    },
+    "ffxiv-manderville-weapon": {
+      "completion": "3-5 Days",
+      "fromPrice": 40,
+      "steps": [
+        {
+          "label": "Manderville (ilvl 615)",
+          "price": 50
+        },
+        {
+          "label": "Amazing Manderville (ilvl 630)",
+          "price": 40
+        },
+        {
+          "label": "Majestic Manderville (ilvl 645)",
+          "price": 40
+        },
+        {
+          "label": "Mandervillous (ilvl 665)",
+          "price": 50
+        }
+      ],
+      "complete": {
+        "label": "Complete Manderville Weapon",
+        "price": 180
+      },
+      "unlock": {
+        "id": "hildebrand",
+        "label": "Hildebrand Questline Unlock",
+        "price": 60
+      },
+      "jobsUpTo": "ew"
+    },
+    "ffxiv-resistance-weapon": {
+      "completion": "3-5 Days",
+      "fromPrice": 30,
+      "steps": [
+        {
+          "label": "Resistance (ilvl 485)",
+          "price": 30
+        },
+        {
+          "label": "Augmented Resistance (ilvl 500)",
+          "price": 60
+        },
+        {
+          "label": "Recollection (ilvl 500)",
+          "price": 100
+        },
+        {
+          "label": "Law's Order (ilvl 510)",
+          "price": 100
+        },
+        {
+          "label": "Augmented Law's Order (ilvl 515)",
+          "price": 140
+        }
+      ],
+      "complete": {
+        "label": "Complete Resistance Weapon",
+        "price": 450
+      },
+      "unlock": {
+        "id": "questline",
+        "label": "Questline Unlock",
+        "price": 10
+      },
+      "jobsUpTo": "shb"
+    },
+    "ffxiv-eureka-weapon": {
+      "completion": "3-5 Days",
+      "fromPrice": 30,
+      "steps": [
+        {
+          "label": "Antiquated",
+          "price": 30
+        },
+        {
+          "label": "Anemos",
+          "price": 90
+        },
+        {
+          "label": "Elemental",
+          "price": 90
+        },
+        {
+          "label": "Pyros",
+          "price": 120
+        },
+        {
+          "label": "Eureka",
+          "price": 90
+        },
+        {
+          "label": "Physeos",
+          "price": 75
+        }
+      ],
+      "complete": {
+        "label": "Complete Eureka Weapon",
+        "price": 400
+      },
+      "unlock": {
+        "id": "questline",
+        "label": "Questline Unlock",
+        "price": 10
+      },
+      "jobsUpTo": "stb"
+    },
+    "ffxiv-eurekan-elemental-armour": {
+      "completion": "3-5 Days",
+      "fromPrice": 50,
+      "select": {
+        "label": "Armour Type"
+      },
+      "steps": [
+        {
+          "label": "Elemental Armour",
+          "price": 350
+        },
+        {
+          "label": "Elemental Armour +1",
+          "price": 50
+        }
+      ],
+      "complete": {
+        "label": "Complete Eurekan Armour",
+        "price": 400
+      },
+      "unlock": {
+        "id": "questline",
+        "label": "Questline Unlock",
+        "price": 10
+      }
+    },
+    "ffxiv-anima-weapon": {
+      "completion": "3-5 Days",
+      "fromPrice": 30,
+      "steps": [
+        {
+          "label": "Animated (ilvl 170)",
+          "price": 30
+        },
+        {
+          "label": "Awoken (ilvl 200)",
+          "price": 30
+        },
+        {
+          "label": "Anima (ilvl 210)",
+          "price": 130
+        },
+        {
+          "label": "Hyperconductive (ilvl 230)",
+          "price": 60
+        },
+        {
+          "label": "Reconditioned (ilvl 240)",
+          "price": 150
+        },
+        {
+          "label": "Sharpened (ilvl 260)",
+          "price": 75
+        },
+        {
+          "label": "Complete Anima (ilvl 270)",
+          "price": 120
+        },
+        {
+          "label": "Lux (ilvl 275)",
+          "price": 60
+        }
+      ],
+      "complete": {
+        "label": "Complete Anima Weapon",
+        "price": 450
+      },
+      "unlock": {
+        "id": "questline",
+        "label": "Questline Unlock",
+        "price": 10
+      },
+      "jobsUpTo": "hw"
+    },
+    "ffxiv-zodiac-weapon": {
+      "completion": "3-5 Days",
+      "fromPrice": 20,
+      "steps": [
+        {
+          "label": "Starter Relic (ilvl 80)",
+          "price": 20
+        },
+        {
+          "label": "Zenith (ilvl 90)",
+          "price": 30
+        },
+        {
+          "label": "Atma (ilvl 100)",
+          "price": 60
+        },
+        {
+          "label": "Animus (ilvl 100)",
+          "price": 130
+        },
+        {
+          "label": "Novus (ilvl 110)",
+          "price": 75
+        },
+        {
+          "label": "Nexus (ilvl 115)",
+          "price": 60
+        },
+        {
+          "label": "Zodiac Braves (ilvl 125)",
+          "price": 130
+        },
+        {
+          "label": "Zodiac Zeta (ilvl 135)",
+          "price": 60
+        }
+      ],
+      "complete": {
+        "label": "Complete Zodiac Weapon",
+        "price": 400
+      },
+      "unlock": {
+        "id": "questline",
+        "label": "Questline Unlock",
+        "price": 10
+      },
+      "jobsUpTo": "arr"
+    },
+    "ffxiv-cosmic-exploration": {
+      "completion": "3-5 Days",
+      "fromPrice": 50,
+      "crafterJobs": true,
+      "selectLabel": "Tool Type",
+      "gearOptions": true,
+      "steps": [
+        {
+          "label": "Cosmic (ilvl 720)",
+          "price": 50
+        },
+        {
+          "label": "Stellar (ilvl 750)",
+          "price": 70
+        },
+        {
+          "label": "Hypertool (ilvl 765)",
+          "price": 90
+        },
+        {
+          "label": "Stars (ilvl 780)",
+          "price": 150
+        }
+      ],
+      "complete": {
+        "label": "Complete Cosmic Tools",
+        "price": 350
+      },
+      "mount": {
+        "label": "High Mobility Vacuum Suit (Mount)",
+        "price": 2000
+      },
+      "unlock": {
+        "id": "unlock",
+        "label": "Cosmic Exploration unlock",
+        "price": 10
+      }
+    }
+  }
+}
