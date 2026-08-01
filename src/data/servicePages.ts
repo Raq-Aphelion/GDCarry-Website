@@ -10,10 +10,22 @@ export interface ServicePageReward {
   dutyButton?: { label: string; to: string };
 }
 
+export interface ServicePageAccordionItem {
+  text: string;
+  /** Optional leading hyperlink rendered before the text (external) */
+  link?: { label: string; href: string };
+  /** Render as a plain dash line instead of the diamond pointer */
+  dash?: boolean;
+  /** Render with no marker at all */
+  plain?: boolean;
+  /** Darker text colour (slate-500) */
+  muted?: boolean;
+}
+
 export interface ServicePageAccordionSection {
   title: string;
-  items?: string[];
-  groups?: { heading: string; items: string[] }[];
+  items?: (string | ServicePageAccordionItem)[];
+  groups?: { heading: string; items: (string | ServicePageAccordionItem)[] }[];
 }
 
 export interface ServicePageContent {
@@ -285,8 +297,8 @@ SERVICE_PAGES['ffxiv-gil-pack'] = {
       title: 'Requirements',
       items: [
         'Have an active Final Fantasy XIV account subscription (Free Trial accounts cannot trade)',
-        'Reach level 10 or higher with unlocked access to residential zones',
-        'Be available for the trade at the agreed place and time',
+        'Be eligible to trade or have the requirements for a mannequin transaction',
+        'Be available for the trade at the agreed place and time if face to face trades',
       ],
     },
     HOW_IT_WORKS,
@@ -294,15 +306,30 @@ SERVICE_PAGES['ffxiv-gil-pack'] = {
       title: 'How is the gil delivered?',
       groups: [
         {
-          heading: 'Manual Trade',
+          heading: 'Safest Option (via a mannequin trade)',
+          items: [
+            {
+              link: { label: 'Mannequins', href: 'https://na.finalfantasyxiv.com/lodestone/playguide/db/item/ec327b876c4/' },
+              text: ' are housing items that use your retainers to sell off items',
+            },
+            { text: 'Mannequins can be placed in any of the following areas:', plain: true, muted: true },
+            { text: 'Apartments [Requires Second Lieutenant Grand Company Rank] + Lvl 50', dash: true, muted: true },
+            { text: 'FC House - If you have permissions', dash: true, muted: true },
+            { text: 'Personal House [Requires Second Lieutenant Grand Company Rank] + Lvl 50', dash: true, muted: true },
+            'Simply put an item up for the requested gil amount and open your housing estate for guest access',
+            'Let us know your mannequin location — e.g. Goblet Ward 7 Plot 44, Leviathan server',
+          ],
+        },
+        {
+          heading: 'Face to Face',
           items: [
             'A manager schedules the trade with you right after the order is confirmed',
-            'You meet our trader in-game and the gil is handed over face to face — the safest method, at no extra cost',
+            'You meet our trader in-game and the gil is handed over face to face',
             'You confirm the received amount and the order is marked complete',
           ],
         },
         {
-          heading: 'Piloted Trade',
+          heading: 'Manual Trade',
           items: [
             'A professional trader logs onto your account and completes the delivery for you (+10% fee)',
             'Delivery is scheduled around times you are not playing',

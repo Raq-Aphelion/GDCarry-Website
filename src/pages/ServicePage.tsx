@@ -31,13 +31,46 @@ import ffxivBg from '@/assets/images/backgrounds/ffxiv-bg.webp';
 import useDragScroll from '@/hooks/useDragScroll';
 import { CRAFTER_JOB_GROUPS } from '@/data/jobs';
 
-function Bullets({ items }: { items: string[] }) {
+function Bullets({
+  items,
+}: {
+  items: (string | { text: string; link?: { label: string; href: string }; dash?: boolean; plain?: boolean; muted?: boolean })[];
+}) {
   return (
     <ul className="space-y-2">
-      {items.map((item) => (
-        <li key={item} className="flex items-start gap-2.5 text-sm leading-relaxed text-slate-400 max-sm:text-xs">
-          <span className="mt-[7px] h-1.5 w-1.5 shrink-0 rotate-45 bg-cyan-500/70" />
-          {item}
+      {items.map((item, i) => (
+        <li
+          key={typeof item === 'string' ? item : i}
+          className={`flex items-start gap-2.5 text-sm leading-relaxed max-sm:text-xs ${
+            typeof item !== 'string' && item.muted ? 'text-slate-500' : 'text-slate-400'
+          }`}
+        >
+          {typeof item !== 'string' && item.plain ? (
+            <span>{item.text}</span>
+          ) : typeof item !== 'string' && item.dash ? (
+            <span>- {item.text}</span>
+          ) : (
+            <>
+              <span className="mt-[7px] h-1.5 w-1.5 shrink-0 rotate-45 bg-cyan-500/70" />
+              {typeof item === 'string' ? (
+                item
+              ) : (
+                <span>
+                  {item.link && (
+                    <a
+                      href={item.link.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-cyan-400 underline decoration-cyan-400/40 underline-offset-2 transition-colors hover:text-cyan-300"
+                    >
+                      {item.link.label}
+                    </a>
+                  )}
+                  {item.text}
+                </span>
+              )}
+            </>
+          )}
         </li>
       ))}
     </ul>

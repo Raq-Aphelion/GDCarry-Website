@@ -13,8 +13,8 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 import { OverlayScrollbar } from './Scrollbar';
-import { allServices, games, serviceCount, type Game, type ServiceSearchResult } from '@/data/games';
-import { SERVICE_PAGES } from '@/data/servicePages';
+import { allServices, games, serviceCount, serviceLink, type Game, type ServiceSearchResult } from '@/data/games';
+import { contentOf, matchSnippet, rankService } from '@/data/search';
 import { useCart } from '@/context/CartContext';
 import { useCurrency, type Currency } from '@/context/CurrencyContext';
 import { usePricing } from '@/context/PricingContext';
@@ -43,36 +43,6 @@ const CURRENCIES: { c: Currency; symbol: string; label: string; icon: LucideIcon
     (FFXIV). Every game aligns to this grid, even with a single column. */
 const CAT_COLS = Math.max(...games.map((g) => Math.ceil(g.subcategories.length / 5)));
 
-/** Searchable subpage text (rewards + accordions) per service — cached, since
-    content only changes with the build. */
-const contentCache = new Map<string, string>();
-const contentOf = (r: ServiceSearchResult): string => {
-  let c = contentCache.get(r.service.id);
-  if (c !== undefined) return c;
-  const page = SERVICE_PAGES[r.service.id];
-  const parts: string[] = [];
-  if (page) {
-    for (const rw of page.rewards) {
-      parts.push(rw.title, rw.text ?? '', ...(rw.items ?? []), rw.dutyButton?.label ?? '');
-    }
-    for (const a of page.accordion ?? []) {
-      parts.push(a.title, ...(a.items ?? []), ...(a.groups ?? []).flatMap((g) => [g.heading, ...g.items]));
-    }
-  }
-  c = parts.join(' ').toLowerCase();
-  contentCache.set(r.service.id, c);
-  return c;
-};
-
-/** A short fragment around the match for display in search results. */
-const matchSnippet = (content: string, q: string): string => {
-  const i = content.indexOf(q);
-  if (i < 0) return '';
-  const start = Math.max(0, i - 24);
-  const end = Math.min(content.length, i + q.length + 36);
-  return `${start > 0 ? '…' : ''}${content.slice(start, end)}${end < content.length ? '…' : ''}`;
-};
-
 /** Search input + results dropdown. Rendered twice (desktop nav and mobile
     menu), so it's a real component: each instance needs its own dropdown
     scrollbar state — a shared ref would point at the hidden instance. */
@@ -83,13 +53,15 @@ function SearchBox({
   onQueryChange,
   onFocus,
   onGoResult,
+  onGoSearch,
 }: {
   query: string;
   results: (ServiceSearchResult & { matchNote?: string; fromPrice?: number })[];
   showResults: boolean;
   onQueryChange: (value: string) => void;
   onFocus: () => void;
-  onGoResult: (gameId: string, subId: string) => void;
+  onGoResult: (serviceId: string) => void;
+  onGoSearch: (keyword: string) => void;
 }) {
   const [listEl, setListEl] = useState<HTMLElement | null>(null);
   const { format } = useCurrency();
@@ -102,7 +74,7 @@ function SearchBox({
         onChange={(e) => onQueryChange(e.target.value)}
         onFocus={onFocus}
         onKeyDown={(e) => {
-          if (e.key === 'Enter' && results.length > 0) onGoResult(results[0].game.id, results[0].subId);
+          if (e.key === 'Enter' && query.trim().length >= 2) onGoSearch(query.trim());
         }}
         placeholder="Search boosts, games, categories…"
         className="h-[42px] w-full cursor-pointer rounded-[3px] border border-navy-700/70 bg-navy-850/90 pl-10 pr-9 text-sm text-white placeholder:text-slate-500 outline-none transition-colors hover:border-navy-600 focus:border-navy-600"
@@ -128,39 +100,60 @@ function SearchBox({
           ) : (
             <>
               <ul ref={setListEl} className="no-scrollbar max-h-80 overflow-y-auto py-1.5">
-                {results.map((r) => (
-                  <li key={r.service.id}>
-                    <button
-                      onClick={() => onGoResult(r.game.id, r.subId)}
-                      className="flex w-full items-center gap-3 px-3.5 py-2.5 text-left transition-colors hover:bg-white/5"
-                    >
-                      <img
-                        src={r.service.image}
-                        alt=""
-                        className="h-9 w-9 shrink-0 rounded-[3px] object-cover object-top"
-                        loading="lazy"
-                      />
-                      <span className="min-w-0 flex-1">
-                        <span className="block truncate text-sm font-semibold text-white">{r.service.name}</span>
-                        <span className="block truncate text-xs text-slate-400">
-                          {r.game.short} · {r.subName}
-                        </span>
-                        {r.matchNote && (
-                          <span className="block truncate text-xs text-cyan-500/80">{r.matchNote}</span>
-                        )}
-                      </span>
-                      {/* From price — desktop dropdown only, styled like the
-                          service cards' From price; extra right padding so it
-                          clears the overlay scrollbar */}
-                      {r.fromPrice != null && r.fromPrice > 0 && (
-                        <span className="hidden shrink-0 items-baseline gap-1.5 text-xs text-slate-400 lg:flex lg:pr-4">
-                          From
-                          <span className="font-display text-lg font-bold text-white">{format(r.fromPrice)}</span>
-                        </span>
-                      )}
-                    </button>
-                  </li>
-                ))}
+                {(() => {
+                  // Group results by game — label above each game's group
+                  const groups: { game: (typeof results)[number]['game']; items: typeof results }[] = [];
+                  for (const r of results) {
+                    let g = groups.find((x) => x.game.id === r.game.id);
+                    if (!g) {
+                      g = { game: r.game, items: [] };
+                      groups.push(g);
+                    }
+                    g.items.push(r);
+                  }
+                  return groups.map((g, gi) => (
+                    <li key={g.game.id} className={gi > 0 ? 'mt-1 border-t border-navy-700/50 pt-1' : ''}>
+                      <p className="px-3.5 pb-1 pt-1 text-[11px] font-bold uppercase tracking-wider text-cyan-500">
+                        {g.game.name}
+                      </p>
+                      <ul>
+                        {g.items.map((r, ri) => (
+                          <li key={r.service.id} className={ri > 0 ? 'border-t border-navy-700/40' : ''}>
+                            <button
+                              onClick={() => onGoResult(r.service.id)}
+                              className="flex w-full items-center gap-3 px-3.5 py-2.5 text-left transition-colors hover:bg-white/5"
+                            >
+                              <img
+                                src={r.service.image}
+                                alt=""
+                                className="h-9 w-9 shrink-0 rounded-[3px] object-cover object-top"
+                                loading="lazy"
+                              />
+                              <span className="min-w-0 flex-1">
+                                <span className="block truncate text-sm font-semibold text-white">{r.service.name}</span>
+                                <span className="block truncate text-xs text-slate-400">
+                                  {r.game.short} · {r.subName}
+                                </span>
+                                {r.matchNote && (
+                                  <span className="block truncate text-xs text-cyan-500/80">{r.matchNote}</span>
+                                )}
+                              </span>
+                              {/* From price — desktop dropdown only, styled like the
+                                  service cards' From price; extra right padding so it
+                                  clears the overlay scrollbar */}
+                              {r.fromPrice != null && r.fromPrice > 0 && (
+                                <span className="hidden shrink-0 items-baseline gap-1.5 text-xs text-slate-400 lg:flex lg:pr-4">
+                                  From
+                                  <span className="font-display text-lg font-bold text-white">{format(r.fromPrice)}</span>
+                                </span>
+                              )}
+                            </button>
+                          </li>
+                        ))}
+                      </ul>
+                    </li>
+                  ));
+                })()}
               </ul>
               {/* Same overlay scrollbar as the page/cart — appears only when results overflow */}
               <OverlayScrollbar
@@ -300,23 +293,8 @@ export default function Navbar() {
     if (q.length < 2) return [];
     const ranked = allServices
       .map((r) => {
-        // Rank 0: name / game / category. Rank 1: card tags + subtext.
-        // Rank 2: subpage content (rewards, accordions).
-        const rank =
-          r.service.name.toLowerCase().includes(q) ||
-          r.game.name.toLowerCase().includes(q) ||
-          r.subName.toLowerCase().includes(q)
-            ? 0
-            : [r.service.tag1, r.service.tag2, r.service.tag3, r.service.longDescription]
-                .filter(Boolean)
-                .join(' ')
-                .toLowerCase()
-                .includes(q)
-              ? 1
-              : contentOf(r).includes(q)
-                ? 2
-                : -1;
-        return { ...r, rank, matchNote: rank === 2 ? matchSnippet(contentOf(r), q) : undefined, fromPrice: priceOf(r.service.id, r.service.price) };
+        const rank = rankService(r.service, q, { gameName: r.game.name, subName: r.subName });
+        return { ...r, rank, matchNote: rank === 2 ? matchSnippet(contentOf(r.service.id), q) : undefined, fromPrice: priceOf(r.service.id, r.service.price) };
       })
       .filter((r) => r.rank >= 0)
       .sort((a, b) => a.rank - b.rank);
@@ -325,11 +303,22 @@ export default function Navbar() {
 
   const showResults = searchFocused && query.trim().length >= 2;
 
-  const goToResult = (gameId: string, subId: string) => {
+  const goToResult = (serviceId: string) => {
     setQuery('');
     setSearchFocused(false);
     setMobileOpen(false);
-    navigate(`/boosting/${gameId}?cat=${subId}`);
+    navigate(serviceLink(serviceId));
+  };
+
+  // Enter = full search-results page on the top result's game (falls back to
+  // the route's game, then FFXIV)
+  const goToSearch = (keyword: string) => {
+    const routeGame = location.pathname.match(/^\/boosting\/([^/?]+)/)?.[1];
+    const g = results[0]?.game.id ?? routeGame ?? 'ffxiv';
+    setQuery('');
+    setSearchFocused(false);
+    setMobileOpen(false);
+    navigate(`/boosting/${g}?q=${encodeURIComponent(keyword)}`);
   };
 
   const pickCurrency = (c: Currency, label: string) => {
@@ -350,6 +339,7 @@ export default function Navbar() {
       onQueryChange={setQuery}
       onFocus={() => setSearchFocused(true)}
       onGoResult={goToResult}
+      onGoSearch={goToSearch}
     />
   );
 

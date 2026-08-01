@@ -78,7 +78,13 @@ export interface PricingAddon {
   afkPrice?: number;
   /** When the option is checked, show a dropdown of these choices
       (e.g. job or armour set) */
-  selectOptions?: { label: string; options: string[] };
+  selectOptions?: {
+    label: string;
+    options?: string[];
+    /** Render the dropdown as grouped job options (dividers + blue parens)
+        trimmed to this expansion's roster instead of flat `options` */
+    jobEra?: 'arr' | 'hw' | 'stb' | 'shb' | 'ew' | 'dt';
+  };
 }
 
 /** Pandaemonium per-method pricing (bundles, per-tier fights, unlocks, completion times) */

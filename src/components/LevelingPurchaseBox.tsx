@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Check, ChevronRight, Clock, Minus, Plus, Settings2, type LucideIcon } from 'lucide-react';
 import { JOB_GROUPS } from '@/data/jobs';
-import { splitParens } from '@/data/jobs';
+import { jobGroupsUpTo, splitParens } from '@/data/jobs';
 import FadeImage from './FadeImage';
 import FieldPopup from './FieldPopup';
 import { CustomSelect } from './PurchaseBox';
@@ -86,12 +86,17 @@ function OptionSelect({
   value,
   options,
   onSelect,
+  jobEra,
+  invalid = false,
 }: {
   show: boolean;
   label: string;
   value: string;
   options: string[];
   onSelect: (i: number) => void;
+  /** Render grouped job options (dividers + blue parens) for this era instead */
+  jobEra?: 'arr' | 'hw' | 'stb' | 'shb' | 'ew' | 'dt';
+  invalid?: boolean;
 }) {
   const [expanded, setExpanded] = useState(false);
   // Render-phase state adjustment — reset the overflow guard on retract
@@ -105,6 +110,7 @@ function OptionSelect({
     const t = setTimeout(() => setExpanded(true), 300);
     return () => clearTimeout(t);
   }, [show]);
+  const groups = jobEra ? jobGroupsUpTo(jobEra) : null;
   return (
     <div
       className={`grid transition-all duration-300 ease-soft ${
@@ -112,13 +118,26 @@ function OptionSelect({
       }`}
     >
       <div className={`min-h-0 ${expanded ? 'overflow-visible' : 'overflow-hidden'}`}>
-        <div className="mt-1.5">
+        <div className="relative mt-1.5">
+          <FieldPopup message={invalid ? `Select ${label} first.` : ''} />
           <CustomSelect
             value={value}
             placeholder={`Select ${label}`}
-            options={options.map((o) => ({ label: o }))}
+            options={
+              groups
+                ? groups.flatMap((g) => [
+                    { label: g.label, icon: g.icon, divider: true as const },
+                    ...g.jobs.map((j) => {
+                      const [jlabel, accent] = splitParens(j);
+                      return { label: jlabel, accent };
+                    }),
+                  ])
+                : options.map((o) => ({ label: o }))
+            }
             onSelect={onSelect}
             ariaLabel={`Select ${label}`}
+            invalid={invalid}
+            blueParens={!!groups}
           />
         </div>
       </div>
@@ -180,6 +199,8 @@ export default function LevelingPurchaseBox({
   const [priority, setPriority] = useState(false);
   const [jobError, setJobError] = useState(false);
   const [dcError, setDcError] = useState(false);
+  /** Option id whose required selectOptions dropdown was left unselected */
+  const [selError, setSelError] = useState<string | null>(null);
   const [optionsOpen, setOptionsOpen] = useState(false);
   const [optionsExpanded, setOptionsExpanded] = useState(false);
   useEffect(() => {
@@ -301,6 +322,15 @@ export default function LevelingPurchaseBox({
       setJobError(true);
       ok = false;
     }
+    // A picked option with a choice dropdown (e.g. Complete Eurekan Relic)
+    // requires that dropdown to be selected
+    const missing = groupsChecked.find(
+      (id) => groupOptions.find((a) => a.id === id)?.selectOptions && !groupSelections[id],
+    );
+    if (missing) {
+      setSelError(missing);
+      ok = false;
+    }
     if (!dc) {
       setDcError(true);
       ok = false;
@@ -403,10 +433,18 @@ export default function LevelingPurchaseBox({
             show={checked}
             label={a.selectOptions.label}
             value={groupSelections[a.id] ?? ''}
-            options={a.selectOptions.options}
-            onSelect={(i) =>
-              setGroupSelections((prev) => ({ ...prev, [a.id]: a.selectOptions!.options[i] }))
-            }
+            options={a.selectOptions.options ?? []}
+            jobEra={a.selectOptions.jobEra}
+            invalid={selError === a.id}
+            onSelect={(i) => {
+              setSelError((e) => (e === a.id ? null : e));
+              setGroupSelections((prev) => ({
+                ...prev,
+                [a.id]: a.selectOptions!.jobEra
+                  ? jobGroupsUpTo(a.selectOptions!.jobEra!).flatMap((g) => g.jobs)[i]
+                  : (a.selectOptions!.options ?? [])[i],
+              }));
+            }}
           />
         )}
       </div>

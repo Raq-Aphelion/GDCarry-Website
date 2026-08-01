@@ -38,8 +38,8 @@ const CHIPS = [5, 10, 20, 50, 100, 200];
 
 /** Trade methods: manual face-to-face trade (default) or piloted delivery (+10%). */
 const METHODS = [
-  { id: 'manual', label: 'Manual', icon: Gamepad2 },
-  { id: 'piloted', label: 'Piloted', icon: Armchair },
+  { id: 'manual', label: 'Face to Face', icon: Gamepad2 },
+  { id: 'piloted', label: 'Manual', icon: Armchair },
 ] as const;
 
 const fmt = (millions: number) => (millions * 1_000_000).toLocaleString('en-US');
@@ -126,7 +126,7 @@ export default function GilPurchaseBox({ service, gameShort }: { service: Servic
       gameShort,
       [
         `${fmt(millions)} Gil`,
-        `Trade: ${method === 'piloted' ? 'Piloted' : 'Manual'}`,
+        `Trade: ${method === 'piloted' ? 'Manual' : 'Face to Face'}`,
         `Region: ${REGIONS[region].label}`,
         `Data Center: ${dc}`,
         `Server: ${server}`,

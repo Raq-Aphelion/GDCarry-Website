@@ -184,7 +184,7 @@ export const games: Game[] = [
               'Gil is the most widely accepted form of in-game currency. The amount of gil you hold is indicated on the currency panel. The gil cap is 999,999,999 for the player and each retainer, while players on a Free Trial are capped at 300,000 gil.',
             price: 0,
             tag1: '5M - 900M Gil',
-            tag3: 'Manual or Piloted Trade',
+            tag3: 'Face to Face or Manual Trade',
             image: scGil,
             tag: 'Popular',
           },

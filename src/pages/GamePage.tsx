@@ -10,6 +10,7 @@ import PageMeta from '@/components/PageMeta';
 import ServiceCard from '@/components/ServiceCard';
 import { getGame, serviceCount, type Service } from '@/data/games';
 import { usePricing } from '@/context/PricingContext';
+import { rankService } from '@/data/search';
 import ffxivBg from '@/assets/images/backgrounds/ffxiv-bg-1.webp';
 import wowBg from '@/assets/images/backgrounds/wow-bg.jpg';
 import lostArkBg from '@/assets/images/backgrounds/lostark-bg.webp';
@@ -27,7 +28,7 @@ const GAME_BG: Record<string, string> = {
 
 export default function GamePage() {
   const { gameId } = useParams<{ gameId: string }>();
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { db } = usePricing();
   const game = gameId ? getGame(gameId) : undefined;
   const catParam = searchParams.get('cat');
@@ -116,6 +117,26 @@ export default function GamePage() {
       })
       .filter((sv): sv is NonNullable<typeof sv> => sv !== undefined),
   ];
+
+  // Search-results mode (?q=keyword from the navbar search): a flat grid of
+  // every matching service in the game, ranked like the dropdown. Changing
+  // category or page drops the param, clearing the search view.
+  const searchQ = (searchParams.get('q') ?? '').trim();
+  const searchResults =
+    searchQ.length >= 2
+      ? [
+          ...new Map(
+            game.subcategories
+              .filter((s) => s.id !== 'all')
+              .flatMap((s) => s.services)
+              .map((sv) => [sv.id, sv] as const),
+          ).values(),
+        ]
+          .map((sv) => ({ sv, rank: rankService(sv, searchQ.toLowerCase()) }))
+          .filter((r) => r.rank >= 0)
+          .sort((a, b) => a.rank - b.rank)
+          .map((r) => r.sv)
+      : null;
 
   // Category sub-sections from the database catalog: the Mounts category is
   // split by the duty each mount drops from (`mountDutyGroups`; leftovers
@@ -289,7 +310,11 @@ export default function GamePage() {
                   return (
                     <li key={sub.id}>
                       <button
-                        onClick={() => setActive(sub.id)}
+                        onClick={() => {
+                          setActive(sub.id);
+                          // Switching category from the sidebar clears a search-results view
+                          if (searchParams.get('q')) setSearchParams({ cat: sub.id });
+                        }}
                         aria-pressed={isActive}
                         className={`flex w-full items-center justify-between rounded-[5px] px-3 py-3 text-left text-sm transition-colors ${
                           isActive
@@ -326,6 +351,30 @@ export default function GamePage() {
 
         {/* Right: only the selected category's services */}
         <div key={activeSub.id}>
+          {searchResults !== null ? (
+            <>
+              <Reveal>
+                <div className="flex items-center gap-3 max-sm:justify-center">
+                  <h2 className="min-w-0 truncate font-display text-xl font-bold text-white sm:text-2xl">
+                    Search Results for <span className="text-cyan-400">{searchQ}</span>
+                  </h2>
+                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-navy-800 text-xs font-bold text-slate-400">
+                    {searchResults.length}
+                  </span>
+                  <div className="h-px flex-1 bg-gradient-to-r from-navy-700/70 to-transparent max-sm:hidden" />
+                </div>
+              </Reveal>
+              {searchResults.length === 0 ? (
+                // Matches the service card height (ServiceCard min-h)
+                <div className="mt-5 flex h-[380px] items-center justify-center rounded-[5px] bg-navy-850 px-6 text-sm text-slate-500">
+                  <span className="block max-w-full truncate">No services matching “{searchQ}”</span>
+                </div>
+              ) : (
+                renderServiceGrid(searchResults, true)
+              )}
+            </>
+          ) : (
+            <>
           <Reveal>
             <div className="flex items-center gap-3 max-sm:justify-center">
               <h2 className="font-display text-xl font-bold text-white sm:text-2xl">{activeSub.name}</h2>
@@ -385,6 +434,8 @@ export default function GamePage() {
             </div>
           ) : (
             renderServiceGrid(activeServices, true)
+          )}
+            </>
           )}
         </div>
       </div>
