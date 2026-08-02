@@ -115,24 +115,22 @@ body { background-color: #0f0f11 !important; }
   max-height: 100% !important;
 }
 
-/* Conversation area: scrollbar only when actually overflowing (stable gutter
-   reserves its lane either way — no layout shift, no empty bar). Left padding
-   (26px) matches right padding (16px) + gutter (~10px) so operator bubbles
-   and visitor bubbles sit the same distance from the window edges.
-   Glow background ONLY here (painting it on the inner scroller too produced
-   a visible seam with few messages). */
+/* Conversation area: scrollbar only when actually overflowing. Modest side
+   padding — the real bubble side spacing lives on the rows themselves so it
+   holds whatever container pads the list. Glow background ONLY here
+   (painting it on the inner scroller too produced a visible seam with few
+   messages). */
 #messagesBlock {
   overflow-y: auto !important;
   overflow-x: hidden !important;
   flex: 1 1 auto !important;
   min-height: 0 !important;
   max-width: 100% !important;
-  scrollbar-gutter: stable !important;
   background-color: #0f0f11 !important;
   background-image:
     radial-gradient(600px 300px at 85% -10%, rgba(96, 165, 250, 0.06), transparent 60%),
     radial-gradient(450px 250px at -10% 10%, rgba(96, 165, 250, 0.04), transparent 55%);
-  padding: 12px 16px 12px 26px !important;
+  padding: 12px 10px 12px 10px !important;
 }
 #messages-scroll {
   overflow-x: hidden !important;
@@ -302,13 +300,15 @@ body { background-color: #0f0f11 !important; }
 /* Operator strip — compact one-row badge: small round avatar + name,
    theme colors, tighter padding than the queue/pending strip. In the React
    widget #chat-status-container itself carries .operator-info; the classic
-   path injects .operator-info as a child (both covered) */
+   path injects .operator-info as a child (both covered). Left-aligned —
+   the name is injected by header_html when the widget renders a bare
+   centered avatar with no name. */
 #lhc-profile-body:has(.operator-info),
 #chat-status-container:has(.operator-info),
 #chat-status-container.operator-info {
   display: flex !important;
   align-items: center !important;
-  justify-content: center !important;
+  justify-content: flex-start !important;
   gap: 8px !important;
   padding: 8px 16px !important;
   text-align: left !important;
@@ -329,7 +329,8 @@ body { background-color: #0f0f11 !important; }
   margin: 0 !important;
 }
 .operator-info .fw-bold,
-.operator-profile-content {
+.operator-profile-content,
+.gdc-op-name {
   font-size: 12px !important;
   color: #f1f5f9 !important;
 }
@@ -355,7 +356,7 @@ body { background-color: #0f0f11 !important; }
   display: inline-flex !important;
   width: 26px !important;
   height: 26px !important;
-  margin: 0 6px 0 0 !important;
+  margin: 0 14px 0 0 !important;
   border-radius: 999px !important;
   overflow: hidden !important;
   vertical-align: bottom !important;
@@ -373,8 +374,25 @@ body { background-color: #0f0f11 !important; }
    hidden .chat-operators icon — re-show only the ones carrying an avatar */
 .chat-operators:has(.profile-msg-pic) {
   display: inline-flex !important;
-  margin: 0 6px 0 0 !important;
+  margin: 0 14px 0 0 !important;
   vertical-align: bottom !important;
+}
+
+/* Operator rows without the avatar (chain followers, or the first row after
+   the avatar was moved to the chain's last message) keep their bubble aligned
+   with the avatar row: 26px avatar + 14px gap */
+.message-row.message-admin:not(:has(.profile-msg-pic)) .msg-body {
+  margin-left: 40px !important;
+}
+
+/* No visitor avatar — the right lane belongs to the bubble alone */
+.message-row.response .profile-msg-pic,
+.message-row.response .chat-operators {
+  display: none !important;
+}
+.message-row.response { padding-right: 0 !important; }
+.message-row.response .msg-body {
+  margin-right: 0 !important;
 }
 
 /* Header — brand block left, close (X) right, one row, generous spacing */
@@ -469,8 +487,17 @@ body { background-color: #0f0f11 !important; }
   text-align: center !important;
 }
 
-/* Messages area base */
-.message-row { margin-bottom: 10px !important; }
+/* Messages area base — really narrow vertical rhythm between bubbles, in
+   both block (margin) and flex-column (gap) layouts; rows with inline
+   children get 4px between bubble and timestamp */
+.message-row { margin-bottom: 2px !important; gap: 4px !important; }
+#messages-scroll, #messages, #messagesBlock { gap: 2px !important; }
+
+/* Side spacing — row-level so it holds whatever container pads the list:
+   operator rows leave room for the avatar from the window's left edge,
+   visitor bubbles sit a comfortable step off the right edge */
+.message-row.message-admin { padding-left: 28px !important; }
+.message-row.response { padding-right: 6px !important; }
 
 /* Bubbles — smaller text, tight radius, capped width with real side
    margins, long words always wrap */
@@ -529,13 +556,29 @@ body { background-color: #0f0f11 !important; }
   color: #60a5fa !important;
 }
 
-/* Timestamps — small and quiet; shown only on the LAST message of each
-   sender's run (before the other person replies), plus the final message */
+/* Timestamps — small and quiet; exactly 4px under the bubble, aligned to
+   their sender's side, and shown only on the LAST message of each sender's
+   run (before the other person replies), plus the final message */
 .msg-date {
   font-size: 10px !important;
   color: #64748b !important;
   font-style: normal !important;
-  margin: 2px 2px 0 !important;
+  margin: 4px 2px 0 !important;
+  padding: 0 !important;
+  line-height: 1.3 !important;
+}
+.message-row.response .msg-date {
+  text-align: right !important;
+  align-self: flex-end !important;
+  margin-right: 4px !important;
+}
+.message-row.message-admin .msg-date {
+  text-align: left !important;
+  align-self: flex-start !important;
+}
+/* Timestamps under avatar-less operator rows line up with the bubble */
+.message-row.message-admin:not(:has(.profile-msg-pic)) .msg-date {
+  margin-left: 42px !important;
 }
 #messagesBlock .message-row .msg-date { display: none !important; }
 #messagesBlock .message-row.response:has(+ .message-row:not(.response)) .msg-date,
@@ -554,13 +597,14 @@ body { background-color: #0f0f11 !important; }
 
 /* Typing indicator — LHC renders it (white bg!) as a flex item INSIDE the
    send-area row, which squeezes/clips it. Repositioned as a floating strip
-   above the send area: transparent, small text, animated dots, fade-in on
-   appear (fade-out is the clone trick in header_html — React unmounts it
-   instantly, so CSS alone can't animate the exit). Scoped to .online-chat:
-   the start form reuses the same id for validation errors */
+   lifted 8px above the send area (clear of the input): transparent, small
+   text, animated dots, fade-in on appear (fade-out is the clone trick in
+   header_html — React unmounts it instantly, so CSS alone can't animate the
+   exit). Scoped to .online-chat: the start form reuses the same id for
+   validation errors */
 .online-chat #id-operator-typing {
   position: absolute !important;
-  bottom: 100% !important;
+  bottom: calc(100% + 8px) !important;
   left: 0 !important;
   right: 0 !important;
   background: transparent !important;
@@ -682,7 +726,13 @@ body { background-color: #0f0f11 !important; }
 #chat-dropdown-options-wrapper { display: none !important; }
 
 /* Message input — one line, grows to max 3 rows, then scrolls internally;
-   no resize handle. Enter sends (script in header_html), no line breaks. */
+   no resize handle. Enter sends (script in header_html), no line breaks.
+   Bottom corners square — the box meets the window's bottom edge flat. */
+.message-send-area > .mx-auto,
+#CSChatMessage {
+  border-bottom-left-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+}
 #CSChatMessage {
   background-color: transparent !important;
   color: #f1f5f9 !important;
@@ -699,6 +749,12 @@ body { background-color: #0f0f11 !important; }
   field-sizing: content;
 }
 #CSChatMessage::placeholder { color: #64748b !important; }
+
+/* No scrollbar on the message input, ever — it stays scrollable/draggable,
+   just with no native bar and no overlay thumb (excluded from the custom
+   scrollbar engine in header_html) */
+#CSChatMessage { scrollbar-width: none !important; }
+#CSChatMessage::-webkit-scrollbar { display: none !important; }
 
 /* Send button — theme-matching paper plane in its own outlined circle;
    dimmed + inert when LHC marks it unavailable (empty input / closed chat) */
@@ -1067,9 +1123,10 @@ document.addEventListener('click', function (e) {
 
 /* Custom overlay scrollbar — same look as the site's; native bars get
    hidden via html.gdc-cscroll (Windows Chrome Fluent scrollbars ignore
-   ::-webkit-scrollbar-button, so CSS alone can't remove their arrows) */
+   ::-webkit-scrollbar-button, so CSS alone can't remove their arrows).
+   The chat input is NOT a host — it must stay scrollable with no bar at all */
 (function () {
-  var hosts = ['#messagesBlock', '#CSChatMessage', '.start-chat textarea.form-control'];
+  var hosts = ['#messagesBlock', '#messages-scroll', '#messages', '.start-chat textarea.form-control'];
   function attach(host) {
     if (host.__gdcSb) return;
     host.__gdcSb = true;
@@ -1086,7 +1143,7 @@ document.addEventListener('click', function (e) {
       var ratio = r.height / sh;
       thumb.style.height = Math.max(r.height * ratio, 24) + 'px';
       thumb.style.top = (r.top + st * ratio) + 'px';
-      thumb.style.left = (r.right - 8) + 'px';
+      thumb.style.left = (r.right - 7) + 'px';
       thumb.classList.add('gdc-visible');
       clearTimeout(hideT);
       hideT = setTimeout(function () { thumb.classList.remove('gdc-visible'); }, 1200);
@@ -1205,6 +1262,57 @@ document.addEventListener('click', function (e) {
       last = null;
     }
   }).observe(document.documentElement, { childList: true, subtree: true });
+})();
+
+/* Live fixes — one observer (+ a slow interval safety net for anything the
+   observer misses):
+   1. Operator avatar pinned to the LAST message of each operator chain (LHC
+      renders it on the first). Rows left without the avatar stay aligned via
+      the .message-admin:not(:has(.profile-msg-pic)) indent in the CSS.
+   2. Timestamps trimmed to no year, no seconds, whatever LHC emits.
+   3. Operator strip: the React widget can render a bare centered avatar with
+      no name — inject the operator's name (first operator nick in the
+      conversation, else 'Grand Dice'). */
+(function () {
+  var moving = false;
+  function fixAvatars() {
+    if (moving) return;
+    document.querySelectorAll('#messagesBlock .message-row.message-admin').forEach(function (row) {
+      var pic = row.querySelector('.profile-msg-pic');
+      if (!pic) return;
+      var last = row;
+      while (last.nextElementSibling && last.nextElementSibling.matches('.message-row.message-admin')) {
+        last = last.nextElementSibling;
+      }
+      if (last === row) return;
+      var host = pic.closest('.chat-operators') || pic;
+      var anchor = last.querySelector('.msg-body');
+      moving = true;
+      last.insertBefore(host, anchor || last.firstChild);
+      moving = false;
+    });
+  }
+  function fixTimestamps() {
+    document.querySelectorAll('.msg-date').forEach(function (el) {
+      var t = el.textContent;
+      var nt = t.replace(/^\s*\d{4}[-/]/, '').replace(/(:\d{2}):\d{2}(\s*(?:[AP]M|am|pm))?\s*$/, '$1$2');
+      if (nt !== t) el.textContent = nt;
+    });
+  }
+  function fixStrip() {
+    var strip = document.querySelector('#chat-status-container.operator-info, #chat-status-container .operator-info, #lhc-profile-body .operator-info');
+    if (!strip || (strip.textContent || '').trim() !== '') return;
+    var nick = document.querySelector('.message-row.message-admin .op-nick-title, .op-nick-title');
+    var name = ((nick && nick.textContent) || 'Grand Dice').trim();
+    var span = document.createElement('span');
+    span.className = 'gdc-op-name';
+    span.textContent = name;
+    strip.appendChild(span);
+  }
+  function fix() { fixAvatars(); fixTimestamps(); fixStrip(); }
+  new MutationObserver(fix).observe(document.documentElement, { childList: true, subtree: true });
+  setInterval(fix, 1500);
+  fix();
 })();
 </script>`;
 

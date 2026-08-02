@@ -21,12 +21,7 @@
   },
   "criterion": {
     "ffxiv-forked-tower-blood": {
-      "price": 120,
-      "savagePrice": 400,
-      "difficulty": {
-        "normal": "Normal",
-        "advanced": "Extreme"
-      },
+      "price": 350,
       "pilotedOnly": true,
       "unlock": {
         "id": "unlock",

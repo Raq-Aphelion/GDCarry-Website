@@ -1153,7 +1153,7 @@ SERVICE_PAGES['ffxiv-forked-tower-blood'] = {
     {
       icon: Swords,
       title: '48-Player Field Operation Clear',
-      text: 'The Forked Tower: Blood completed — Normal or Extreme.',
+      text: 'The Forked Tower: Blood completed.',
     },
     {
       icon: Medal,
