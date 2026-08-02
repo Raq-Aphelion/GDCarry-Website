@@ -23,6 +23,9 @@ export default function LiveChatWidget() {
       domain: 'gdcarry.com',
       leaveamessage: true,
       check_messages: false,
+      // Default operator avatar beside operator messages (the theme's
+      // operator_image covers the classic server-rendered paths)
+      profile_pic: 'https://gdcarry.com/images/gd_favicon.png',
       // No proactive invitations — the widget only opens on explicit user action
       proactive: false,
     };

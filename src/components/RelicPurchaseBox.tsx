@@ -49,14 +49,13 @@ export default function RelicPurchaseBox({ service, gameShort }: { service: Serv
   const [stepsSel, setStepsSel] = useState<number[]>(() => steps.map((_, i) => i));
   const [mountOn, setMountOn] = useState(false);
   const [gearIdx, setGearIdx] = useState(0);
-  const [stream, setStream] = useState(false);
   const [priority, setPriority] = useState(false);
   const [unlockChecked, setUnlockChecked] = useState(false);
   const [choiceError, setChoiceError] = useState(false);
   const [dcError, setDcError] = useState(false);
 
   const { rootRef, wrapRef, stick, overflowTop, fixedStyle, blockHpx } = usePurchaseFloat(
-    `${choice}|${dc}|${stepsSel.join(',')}|${mountOn}|${stream}|${priority}|${unlockChecked}`,
+    `${choice}|${dc}|${stepsSel.join(',')}|${mountOn}|${priority}|${unlockChecked}`,
   );
 
   // Chain semantics (same as the MSQ boost): checking a step extends the
@@ -77,9 +76,8 @@ export default function RelicPurchaseBox({ service, gameShort }: { service: Serv
     });
   };
 
-  const streamPrice = stream ? 10 : 0;
-  // Priority multiplies the steps/bundle total; mount, unlock and stream stay
-  // flat. All steps enabled = the complete-bundle price replaces the sum.
+  // Priority multiplies the steps/bundle total; mount and unlock stay flat.
+  // All steps enabled = the complete-bundle price replaces the sum.
   const allSteps = cfg?.complete != null && stepsSel.length === steps.length;
   const stepsTotal = allSteps
     ? cfg!.complete!.price
@@ -91,8 +89,7 @@ export default function RelicPurchaseBox({ service, gameShort }: { service: Serv
     stepsTotal * (priority ? priorityMultiplier : 1) +
     mountPrice +
     gearPrice +
-    (unlockChecked ? (cfg?.unlock?.price ?? 0) : 0) +
-    streamPrice;
+    (unlockChecked ? (cfg?.unlock?.price ?? 0) : 0);
   // Nothing purchasable with no steps and no mount — CTA stays disabled
   const nothingSelected = stepsSel.length === 0 && !mountOn;
 
@@ -118,7 +115,7 @@ export default function RelicPurchaseBox({ service, gameShort }: { service: Serv
     addItem(
       {
         ...service,
-        id: `${service.id}::${choice}|${dc}|${allSteps ? 'complete' : sorted.join(',')}${mountOn ? 'm' : ''}${stream ? 's' : ''}${priority ? 'p' : ''}${unlockChecked ? 'u' : ''}`,
+        id: `${service.id}::${choice}|${dc}|${allSteps ? 'complete' : sorted.join(',')}${mountOn ? 'm' : ''}${priority ? 'p' : ''}${unlockChecked ? 'u' : ''}`,
         price: total,
         method: 'Piloted',
         qtyLocked: true,
@@ -131,7 +128,6 @@ export default function RelicPurchaseBox({ service, gameShort }: { service: Serv
         ...(gearPrice > 0 ? [gearOptions[gearIdx].label] : []),
         `Data Center: ${dc}`,
         ...(unlockChecked && cfg?.unlock ? [cfg.unlock.label] : []),
-        ...(stream ? ['Private Stream'] : []),
         ...(priority ? [`Priority (+${Math.round((priorityMultiplier - 1) * 100)}%)`] : []),
       ],
       1,
@@ -273,13 +269,10 @@ export default function RelicPurchaseBox({ service, gameShort }: { service: Serv
             </div>
           </div>
 
-          {/* Additional options — questline unlock (when offered), stream, priority */}
+          {/* Additional options — questline unlock (when offered), priority */}
           <MountAddonsBlock
-            stream={stream}
-            setStream={setStream}
             priority={priority}
             setPriority={setPriority}
-            streamPrice={10}
             extraRow={
               cfg?.unlock
                 ? {

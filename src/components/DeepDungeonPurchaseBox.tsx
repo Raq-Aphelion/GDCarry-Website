@@ -114,23 +114,33 @@ export default function DeepDungeonPurchaseBox({ service, gameShort }: { service
   };
 
   const streamPrice = stream ? 10 : 0;
-  const addonsTotal = checked.reduce((s, id) => s + (soloAddons.find((a) => a.id === id)?.price ?? 0), 0);
+  // perRun add-ons (e.g. Book Farm) replace the per-run core with their own
+  // price (multiplied by Amount of Runs) instead of adding on top
+  const perRunSolo = checked.map((id) => soloAddons.find((a) => a.id === id)).find((a) => a?.perRun);
+  const perRunGroup = groupChecked.map((id) => groupAddons.find((a) => a.id === id)).find((a) => a?.perRun);
+  const addonsTotal = checked.reduce((s, id) => {
+    const a = soloAddons.find((x) => x.id === id);
+    return a?.perRun ? s : s + (a?.price ?? 0);
+  }, 0);
   // Multiplier add-ons (e.g. Juedi 400%) apply to the solo base price only;
   // every other add-on stays additive on top of the multiplied price
   const soloTimes = checked.reduce(
     (t, id) => t * (soloAddons.find((a) => a.id === id)?.timesBase ?? 1),
     1,
   );
-  const groupAddonsTotal = groupChecked.reduce(
-    (s, id) => s + (groupAddons.find((a) => a.id === id)?.price ?? 0),
-    0,
-  );
+  const groupAddonsTotal = groupChecked.reduce((s, id) => {
+    const a = groupAddons.find((x) => x.id === id);
+    return a?.perRun ? s : s + (a?.price ?? 0);
+  }, 0);
   const selectedOption = groupOptions.find((o) => o.id === option) ?? groupOptions[0];
   // Amount of Runs multiplies the per-completion core only — upgrades/loot
   // (add-ons) stay static additions. An active Mount Juedi (group multiplier
   // or solo multiplier add-on) replaces the run count with its clear count
   // instead of multiplying the core, so it never double-counts.
-  const core = pricedMethod === 'group' ? (selectedOption?.price ?? 0) : (cfg?.solo.price ?? 0);
+  const core =
+    pricedMethod === 'group'
+      ? (perRunGroup?.price ?? selectedOption?.price ?? 0)
+      : (perRunSolo?.price ?? cfg?.solo.price ?? 0);
   const addonsPart = pricedMethod === 'group' ? groupAddonsTotal : addonsTotal;
   const forcedRuns =
     pricedMethod === 'group'
@@ -222,32 +232,40 @@ export default function DeepDungeonPurchaseBox({ service, gameShort }: { service
   );
 
   const groupAddonRow = (a: PricingAddon) => {
-    const locked = a.requiresOption != null && a.requiresOption !== option;
+    // Run-type-locked add-ons (e.g. Book Farm needs Farm) collapse away while
+    // another run type is selected (and auto-deselect on switch) — the
+    // grid-rows transition animates the block extending/retracting
+    const collapsed = a.requiresOption != null && a.requiresOption !== option;
     const active = groupChecked.includes(a.id);
     return (
-      <button
+      <div
         key={a.id}
-        type="button"
-        disabled={locked}
-        onClick={() => toggleGroupAddon(a.id)}
-        aria-pressed={active}
-        className={`flex w-full items-center gap-3 rounded-[5px] bg-navy-850 px-2.5 py-1.5 text-left transition-colors ${
-          locked ? 'cursor-not-allowed opacity-40' : 'hover:bg-navy-800'
+        className={`grid transition-all duration-300 ease-soft ${
+          collapsed ? 'pointer-events-none grid-rows-[0fr] opacity-0' : 'grid-rows-[1fr] opacity-100'
         }`}
       >
-        <span
-          className={`flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-[3px] border transition-colors ${
-            active ? 'border-cyan-600 bg-cyan-600 text-navy-900' : 'border-navy-600 text-transparent'
-          }`}
-        >
-          <Check className="h-3 w-3" strokeWidth={3.5} />
-        </span>
-        <span className="min-w-0 flex-1">
-          <span className="block truncate text-sm text-slate-300">{a.label}</span>
-          {a.note && <span className="block text-[11px] leading-snug text-slate-500">{a.note}</span>}
-        </span>
-        <span className="text-xs font-bold text-cyan-400">+{format(a.price)}</span>
-      </button>
+        <div className="min-h-0 overflow-hidden">
+          <button
+            type="button"
+            onClick={() => toggleGroupAddon(a.id)}
+            aria-pressed={active}
+            className="flex w-full items-center gap-3 rounded-[5px] bg-navy-850 px-2.5 py-1.5 text-left transition-colors hover:bg-navy-800"
+          >
+            <span
+              className={`flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-[3px] border transition-colors ${
+                active ? 'border-cyan-600 bg-cyan-600 text-navy-900' : 'border-navy-600 text-transparent'
+              }`}
+            >
+              <Check className="h-3 w-3" strokeWidth={3.5} />
+            </span>
+            <span className="min-w-0 flex-1">
+              <span className="block truncate text-sm text-slate-300">{a.label}</span>
+              {a.note && <span className="block text-[11px] leading-snug text-slate-500">{a.note}</span>}
+            </span>
+            <span className="text-xs font-bold text-cyan-400">+{format(a.price)}</span>
+          </button>
+        </div>
+      </div>
     );
   };
 

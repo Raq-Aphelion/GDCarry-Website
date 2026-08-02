@@ -4,9 +4,10 @@ import { useCurrency } from '@/context/CurrencyContext';
 import { usePricing } from '@/context/PricingContext';
 
 /** Shared Additional Options block for mount purchase boxes: Private Stream
-    (flat, from the mount service) and Priority (× priorityMultiplier).
-    `extraRow` prepends a custom row (e.g. Deep Dungeon Unlock); `extraRows`
-    prepends more rows after it (e.g. offerings). */
+    (flat, from the mount service — omitted when `setStream` isn't passed)
+    and Priority (× priorityMultiplier). `extraRow` prepends a custom row
+    (e.g. Deep Dungeon Unlock); `extraRows` prepends more rows after it
+    (e.g. offerings). */
 export default function MountAddonsBlock({
   stream,
   setStream,
@@ -19,11 +20,11 @@ export default function MountAddonsBlock({
   gearRow,
   hideStream = false,
 }: {
-  stream: boolean;
-  setStream: (v: boolean) => void;
+  stream?: boolean;
+  setStream?: (v: boolean) => void;
   priority: boolean;
   setPriority: (v: boolean) => void;
-  streamPrice: number;
+  streamPrice?: number;
   onToggle?: () => void;
   /** Custom first row (label, price hint, checked state, toggle) */
   extraRow?: { label: string; hint: string; checked: boolean; onClick: () => void };
@@ -31,7 +32,7 @@ export default function MountAddonsBlock({
   extraRows?: { label: string; hint: string; checked: boolean; onClick: () => void }[];
   /** Custom node rendered above the rows (e.g. a gear dropdown) */
   gearRow?: ReactNode;
-  /** Hide the Private Stream row (e.g. allied society) */
+  /** Hide the Private Stream row (e.g. allied society, variant dungeons) */
   hideStream?: boolean;
 }) {
   const { format } = useCurrency();
@@ -100,7 +101,7 @@ export default function MountAddonsBlock({
             {gearRow}
             {extraRow && row(extraRow.label, extraRow.hint, extraRow.checked, extraRow.onClick)}
             {extraRows?.map((r) => <Fragment key={r.label}>{row(r.label, r.hint, r.checked, r.onClick)}</Fragment>)}
-            {!hideStream && row('Private Stream', `+${format(streamPrice)}`, stream, () => setStream(!stream))}
+            {!hideStream && setStream && row('Private Stream', `+${format(streamPrice ?? 10)}`, stream ?? false, () => setStream(!(stream ?? false)))}
             {row('Priority', `+${Math.round((priorityMultiplier - 1) * 100)}%`, priority, () => setPriority(!priority))}
           </div>
         </div>

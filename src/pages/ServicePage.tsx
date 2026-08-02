@@ -419,7 +419,6 @@ export default function ServicePage() {
                 addon: db.bluLeveling.spellsAddon,
                 addonLocksToMax: true,
                 addons: db.bluLeveling.carnivaleAddon ? [db.bluLeveling.carnivaleAddon] : [],
-                stream: db.bluLeveling.streamPrice,
               }}
             />
           ) : service.id === db.msqBoost?.serviceId ? (
@@ -428,7 +427,7 @@ export default function ServicePage() {
             <LevelingPurchaseBox
               service={service}
               gameShort={game.short}
-              config={{ ...db.pvpSeries, showJob: false, addon: db.pvpSeries.streamAddon }}
+              config={{ ...db.pvpSeries, showJob: false }}
             />
           ) : service.id === db.ccRank?.serviceId ? (
             <CCRankPurchaseBox service={service} gameShort={game.short} />

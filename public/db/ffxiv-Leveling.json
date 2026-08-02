@@ -115,8 +115,7 @@
       "id": "carnivale",
       "label": "Masked Carnivale Completion (1-32)",
       "price": 405
-    },
-    "streamPrice": 10
+    }
   },
   "msqBoost": {
     "serviceId": "ffxiv-msq-skip",

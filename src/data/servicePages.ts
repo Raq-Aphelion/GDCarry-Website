@@ -77,6 +77,42 @@ const PILOTED_BOOST: ServicePageAccordionSection = {
   items: ['A Professional Booster will be logged onto your account and complete the content on your behalf'],
 };
 
+/** Method accordion for the four deep dungeons that offer group play —
+    same grouped layout as the ultimate-raid method accordions. */
+const GROUP_PLAY_VS_PILOTED: ServicePageAccordionSection = {
+  title: 'Group Play vs Piloted Boost',
+  groups: [
+    {
+      heading: 'Group Play',
+      items: [
+        "You'll be following 3 other raiders as they guide you through the deep dungeon until you complete it.",
+        "Speedrun — you'll be ignoring all loot to maximise efficiency and clear the run as fast as possible",
+        "Farm — you'll be collecting chests throughout the run to increase aetherpool and collect rewards",
+      ],
+    },
+    {
+      heading: 'Piloted Boost',
+      items: ['A Professional Booster will be logged onto your account and complete the content on your behalf'],
+    },
+  ],
+};
+
+/** Method accordion for the Echoes of Vana'diel alliance raids — same grouped
+    layout as the other Group Play pages. */
+const ALLIANCE_GROUP_VS_PILOTED: ServicePageAccordionSection = {
+  title: 'Group Play vs Piloted Boost',
+  groups: [
+    {
+      heading: 'Group Play',
+      items: ["You'll be raiding alongside our team on your own character"],
+    },
+    {
+      heading: 'Piloted Boost',
+      items: ['A professional raider will be logged onto your account and complete the content on your behalf'],
+    },
+  ],
+};
+
 /** Requirements shared by every Ultimate; `duty` is the unlock duty line,
     `job`/`expansion` default to the current-expansion requirements. */
 const requirements = (
@@ -951,7 +987,7 @@ const mountSeriesPage = (
       items: [requirement, 'Extreme trials unlocked (available as additional services)'],
     },
     HOW_IT_WORKS,
-    PILOTED_BOOST,
+    PILOTED_VS_AFK,
   ],
 });
 
@@ -991,7 +1027,7 @@ const wingPage = (short: string, trial: string, totem: string, to: string): Serv
       ],
     },
     HOW_IT_WORKS,
-    PILOTED_BOOST,
+    PILOTED_VS_AFK,
   ],
 });
 
@@ -1013,6 +1049,8 @@ SERVICE_PAGES['ffxiv-wings-of-nihility'] = wingPage('Wings of Nihility', 'The Un
 /** Savage raid mount pages share one shape; level varies by expansion.
     `note` appends plain text next to the duty button (e.g. clears required).
     `pilotedOnly` removes every AFK mention (method reward row + accordion);
+    `groupPlay` swaps AFK for group play (method reward row + accordion);
+    `methodAccordion` overrides the group-play accordion variant;
     `rows` replaces the bottom two reward rows;
     `dropTitle` overrides the 'Guaranteed Mount Drop From' reward title. */
 const savageMountPage = (
@@ -1021,7 +1059,7 @@ const savageMountPage = (
   level: number,
   dutyTo: string,
   note?: string,
-  opts?: { pilotedOnly?: boolean; rows?: ServicePageReward[]; dropTitle?: string },
+  opts?: { pilotedOnly?: boolean; groupPlay?: boolean; methodAccordion?: ServicePageAccordionSection; rows?: ServicePageReward[]; dropTitle?: string },
 ): ServicePageContent => ({
   short,
   rewardsHeading: 'What you get',
@@ -1038,11 +1076,17 @@ const savageMountPage = (
           title: 'Piloted Service',
           text: 'Cleared by a veteran raider on your account.',
         }
-      : {
-          icon: Swords,
-          title: 'Piloted or AFK Carry',
-          text: 'Cleared by a veteran raider on your account, or alongside you in the party.',
-        },
+      : opts?.groupPlay
+        ? {
+            icon: Swords,
+            title: 'Group Play or Piloted',
+            text: 'Cleared by a veteran raider on your account, or alongside our team on your own character.',
+          }
+        : {
+            icon: Swords,
+            title: 'Piloted or AFK Carry',
+            text: 'Cleared by a veteran raider on your account, or alongside you in the party.',
+          },
     ...(opts?.rows ?? [
       {
         icon: Gem,
@@ -1062,13 +1106,13 @@ const savageMountPage = (
       items: [`Have a level ${level} Job`, 'Duty unlocked (available as an additional service)'],
     },
     HOW_IT_WORKS,
-    opts?.pilotedOnly ? PILOTED_ONLY : PILOTED_VS_AFK,
+    opts?.methodAccordion ?? (opts?.pilotedOnly ? PILOTED_ONLY : opts?.groupPlay ? ALLIANCE_GROUP_VS_PILOTED : PILOTED_VS_AFK),
   ],
 });
 
 SERVICE_PAGES['ffxiv-monowheel-s1'] = savageMountPage('Monowheel S1', 'AAC Light-heavyweight M4 (Savage)', 100, '/boosting/ffxiv/ffxiv-arcadion-savage');
 SERVICE_PAGES['ffxiv-air-wheeler-c9'] = savageMountPage('Air-wheeler C9', 'AAC Cruiserweight M4 (Savage)', 100, '/boosting/ffxiv/ffxiv-arcadion-savage');
-SERVICE_PAGES['ffxiv-lowrider-t1rant'] = savageMountPage('Lowrider T1RANT', 'AAC Heavyweight M4 (Savage)', 100, '/boosting/ffxiv/ffxiv-arcadion-savage');
+SERVICE_PAGES['ffxiv-lowrider-t1rant'] = savageMountPage('Lowrider T1RANT', 'AAC Heavyweight M4 (Savage)', 100, '/boosting/ffxiv/ffxiv-arcadion-savage', undefined, { pilotedOnly: true });
 SERVICE_PAGES['ffxiv-demi-phoinix'] = savageMountPage('Demi-Phoinix', 'Asphodelos: The Fourth Circle (Savage)', 90, '/boosting/ffxiv/ffxiv-pandaemonium-savage');
 SERVICE_PAGES['ffxiv-sunforged'] = savageMountPage('Sunforged', 'Abyssos: The Eighth Circle (Savage)', 90, '/boosting/ffxiv/ffxiv-pandaemonium-savage');
 SERVICE_PAGES['ffxiv-megaloambystoma'] = savageMountPage('Megaloambystoma', 'Anabaseios: The Twelfth Circle (Savage)', 90, '/boosting/ffxiv/ffxiv-pandaemonium-savage');
@@ -1080,16 +1124,16 @@ SERVICE_PAGES['ffxiv-air-force'] = savageMountPage('Air Force', 'Sigmascape V4.0
 SERVICE_PAGES['ffxiv-model-o'] = savageMountPage('Model O', 'Alphascape V4.0 (Savage)', 70, '/boosting/ffxiv/ffxiv-omega-savage');
 SERVICE_PAGES['ffxiv-gobwalker'] = savageMountPage('Gobwalker', 'Alexander - The Burden of the Father (Savage)', 60, '/boosting/ffxiv/ffxiv-alexander-savage');
 SERVICE_PAGES['ffxiv-arrhidaeus'] = savageMountPage('Arrhidaeus', 'Alexander - The Soul of the Creator (Savage)', 60, '/boosting/ffxiv/ffxiv-alexander-savage');
-SERVICE_PAGES['ffxiv-juedi-mount'] = savageMountPage('Juedi', 'Heaven-on-High (Deep Dungeon)', 100, '/boosting/ffxiv/ffxiv-hoh', '— 4 full clears required.');
-SERVICE_PAGES['ffxiv-aeturna-mount'] = savageMountPage('Aeturna', 'Eureka Orthos (Deep Dungeon)', 100, '/boosting/ffxiv/ffxiv-orthos', '— 4 full clears required.');
-SERVICE_PAGES['ffxiv-genie-of-the-lamp-mount'] = savageMountPage('Genie of the Lamp', "Another Merchant's Tale", 100, '/boosting/ffxiv/ffxiv-another-merchants-tale', '— random drop or 100 Corvosi Manuscripts exchange.', { dropTitle: 'Mount Drop From' });
-SERVICE_PAGES['ffxiv-royal-magicked-carpet-mount'] = savageMountPage('Royal Magicked Carpet', "Variant: Merchant's Tale", 90, '/boosting/ffxiv/ffxiv-variant-merchants-tale', '— random drop or 100 Corvosi Brass exchange.', { dropTitle: 'Mount Drop From' });
-SERVICE_PAGES['ffxiv-quaqua-mount'] = savageMountPage('Quaqua', 'Another Aloalo Island', 90, '/boosting/ffxiv/ffxiv-another-aloalo-island', '— random drop or 100 Aloalo Coins exchange.', { dropTitle: 'Mount Drop From' });
-SERVICE_PAGES['ffxiv-spectral-statice-mount'] = savageMountPage('Spectral Statice', 'Variant: Aloalo Island', 90, '/boosting/ffxiv/ffxiv-variant-aloalo-island', '— all 12 routes required.');
-SERVICE_PAGES['ffxiv-shishioji-mount'] = savageMountPage('Shishioji', 'Another Mount Rokkon', 90, '/boosting/ffxiv/ffxiv-another-mount-rokkon', '— random drop or 100 Shishu Coin exchange.', { dropTitle: 'Mount Drop From' });
-SERVICE_PAGES['ffxiv-burabura-chochin-mount'] = savageMountPage('Burabura Chochin', 'Variant: Mount Rokkon', 90, '/boosting/ffxiv/ffxiv-variant-mount-rokkon', '— all 12 routes required.');
-SERVICE_PAGES['ffxiv-sildihn-throne-mount'] = savageMountPage("Sil'dihn Throne", "Another Sil'dihn Subterrane", 90, '/boosting/ffxiv/ffxiv-another-sildihn-subterrane', "— random drop or 100 Sil'dihn Silver exchange.", { dropTitle: 'Mount Drop From' });
-SERVICE_PAGES['ffxiv-silkie-mount'] = savageMountPage('Silkie', "Variant: The Sil'dihn Subterrane", 90, '/boosting/ffxiv/ffxiv-variant-sildihn-subterrane', '— all 12 routes required.');
+SERVICE_PAGES['ffxiv-juedi-mount'] = savageMountPage('Juedi', 'Heaven-on-High (Deep Dungeon)', 100, '/boosting/ffxiv/ffxiv-hoh', '— 4 full clears required.', { groupPlay: true, methodAccordion: GROUP_PLAY_VS_PILOTED });
+SERVICE_PAGES['ffxiv-aeturna-mount'] = savageMountPage('Aeturna', 'Eureka Orthos (Deep Dungeon)', 100, '/boosting/ffxiv/ffxiv-orthos', '— 4 full clears required.', { groupPlay: true, methodAccordion: GROUP_PLAY_VS_PILOTED });
+SERVICE_PAGES['ffxiv-genie-of-the-lamp-mount'] = savageMountPage('Genie of the Lamp', "Another Merchant's Tale", 100, '/boosting/ffxiv/ffxiv-another-merchants-tale', '— random drop or 100 Corvosi Manuscripts exchange.', { groupPlay: true, dropTitle: 'Mount Drop From' });
+SERVICE_PAGES['ffxiv-royal-magicked-carpet-mount'] = savageMountPage('Royal Magicked Carpet', "Variant: Merchant's Tale", 90, '/boosting/ffxiv/ffxiv-variant-merchants-tale', '— random drop or 100 Corvosi Brass exchange.', { groupPlay: true, dropTitle: 'Mount Drop From' });
+SERVICE_PAGES['ffxiv-quaqua-mount'] = savageMountPage('Quaqua', 'Another Aloalo Island', 90, '/boosting/ffxiv/ffxiv-another-aloalo-island', '— random drop or 100 Aloalo Coins exchange.', { groupPlay: true, dropTitle: 'Mount Drop From' });
+SERVICE_PAGES['ffxiv-spectral-statice-mount'] = savageMountPage('Spectral Statice', 'Variant: Aloalo Island', 90, '/boosting/ffxiv/ffxiv-variant-aloalo-island', '— all 12 routes required.', { groupPlay: true });
+SERVICE_PAGES['ffxiv-shishioji-mount'] = savageMountPage('Shishioji', 'Another Mount Rokkon', 90, '/boosting/ffxiv/ffxiv-another-mount-rokkon', '— random drop or 100 Shishu Coin exchange.', { groupPlay: true, dropTitle: 'Mount Drop From' });
+SERVICE_PAGES['ffxiv-burabura-chochin-mount'] = savageMountPage('Burabura Chochin', 'Variant: Mount Rokkon', 90, '/boosting/ffxiv/ffxiv-variant-mount-rokkon', '— all 12 routes required.', { groupPlay: true });
+SERVICE_PAGES['ffxiv-sildihn-throne-mount'] = savageMountPage("Sil'dihn Throne", "Another Sil'dihn Subterrane", 90, '/boosting/ffxiv/ffxiv-another-sildihn-subterrane', "— random drop or 100 Sil'dihn Silver exchange.", { groupPlay: true, dropTitle: 'Mount Drop From' });
+SERVICE_PAGES['ffxiv-silkie-mount'] = savageMountPage('Silkie', "Variant: The Sil'dihn Subterrane", 90, '/boosting/ffxiv/ffxiv-variant-sildihn-subterrane', '— all 12 routes required.', { groupPlay: true });
 
 SERVICE_PAGES['ffxiv-forked-tower-blood'] = {
   short: 'The Forked Tower: Blood',
@@ -1295,10 +1339,10 @@ SERVICE_PAGES['ffxiv-demi-ozma'] = savageMountPage('Demi-Ozma', 'The Baldesion A
   ],
 });
 SERVICE_PAGES['ffxiv-demon-haul'] = savageMountPage('Demon Haul', 'The Forked Tower: Blood', 100, '/boosting/ffxiv/ffxiv-forked-tower-blood', undefined, { pilotedOnly: true });
-SERVICE_PAGES['ffxiv-duck-billed-porter-mount'] = savageMountPage('Duck-billed Porter', 'The Forked Tower: Magic', 100, '/boosting/ffxiv/ffxiv-forked-tower-magic', '— random drop or 500 Arcane Amulets exchange.', { dropTitle: 'Mount Drop From' });
+SERVICE_PAGES['ffxiv-duck-billed-porter-mount'] = savageMountPage('Duck-billed Porter', 'The Forked Tower: Magic', 100, '/boosting/ffxiv/ffxiv-forked-tower-magic', '— random drop or 500 Arcane Amulets exchange.', { pilotedOnly: true, dropTitle: 'Mount Drop From' });
 SERVICE_PAGES['ffxiv-vacuum-suit-mount'] = savageMountPage('High Mobility Vacuum Suit', 'Cosmic Exploration', 100, '/boosting/ffxiv/ffxiv-cosmic-exploration', '— 500K Cosmic Tracker on all 11 DoH and DoL jobs.', { pilotedOnly: true });
-SERVICE_PAGES['ffxiv-dais-of-darkness-mount'] = savageMountPage('Dais of Darkness', 'The Cloud of Darkness (Chaotic)', 100, '/boosting/ffxiv/ffxiv-cloud-of-darkness');
-SERVICE_PAGES['ffxiv-shroud-of-darkness-mount'] = savageMountPage('Shroud of Darkness', 'The Cloud of Darkness (Chaotic)', 100, '/boosting/ffxiv/ffxiv-cloud-of-darkness');
+SERVICE_PAGES['ffxiv-dais-of-darkness-mount'] = savageMountPage('Dais of Darkness', 'The Cloud of Darkness (Chaotic)', 100, '/boosting/ffxiv/ffxiv-cloud-of-darkness', undefined, { groupPlay: true });
+SERVICE_PAGES['ffxiv-shroud-of-darkness-mount'] = savageMountPage('Shroud of Darkness', 'The Cloud of Darkness (Chaotic)', 100, '/boosting/ffxiv/ffxiv-cloud-of-darkness', undefined, { groupPlay: true });
 
 /** Mount buttons in the savage subpage reward blocks → their mount services. */
 export const MOUNT_LINKS: Record<string, string> = {
@@ -1470,26 +1514,6 @@ const deepDungeonPage = (
   ],
 });
 
-/** Method accordion for the four deep dungeons that offer group play —
-    same grouped layout as the ultimate-raid method accordions. */
-const GROUP_PLAY_VS_PILOTED: ServicePageContent['accordion'][number] = {
-  title: 'Group Play vs Piloted Boost',
-  groups: [
-    {
-      heading: 'Group Play',
-      items: [
-        "You'll be following 3 other raiders as they guide you through the deep dungeon until you complete it.",
-        "Speedrun — you'll be ignoring all loot to maximise efficiency and clear the run as fast as possible",
-        "Farm — you'll be collecting chests throughout the run to increase aetherpool and collect rewards",
-      ],
-    },
-    {
-      heading: 'Piloted Boost',
-      items: ['A Professional Booster will be logged onto your account and complete the content on your behalf'],
-    },
-  ],
-};
-
 const ddRewards = (
   title: string,
   achievement: { title: string; text: string },
@@ -1574,22 +1598,6 @@ SERVICE_PAGES['ffxiv-cloud-of-darkness'] = {
           items: ['A professional raider will be logged onto your account and complete the content on your behalf'],
         },
       ],
-    },
-  ],
-};
-
-/** Method accordion for the Echoes of Vana'diel alliance raids — same grouped
-    layout as the other Group Play pages. */
-const ALLIANCE_GROUP_VS_PILOTED: ServicePageContent['accordion'][number] = {
-  title: 'Group Play vs Piloted Boost',
-  groups: [
-    {
-      heading: 'Group Play',
-      items: ["You'll be raiding alongside our team on your own character"],
-    },
-    {
-      heading: 'Piloted Boost',
-      items: ['A professional raider will be logged onto your account and complete the content on your behalf'],
     },
   ],
 };

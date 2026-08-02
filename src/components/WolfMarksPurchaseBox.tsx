@@ -26,8 +26,8 @@ const DATA_CENTERS = [
 ];
 
 /** Wolf Marks purchase box: amount (input + slider) priced per mark, data
-    center select, Private Stream add-on and Priority multiplier — values
-    from the ffxiv-PvP database category. */
+    center select and Priority multiplier — values from the ffxiv-PvP
+    database category. */
 export default function WolfMarksPurchaseBox({ service, gameShort }: { service: Service; gameShort: string }) {
   const { addItem, openCart } = useCart();
   const { format } = useCurrency();
@@ -37,7 +37,6 @@ export default function WolfMarksPurchaseBox({ service, gameShort }: { service: 
 
   const [amount, setAmount] = useState(cfg?.defaultAmount ?? 5000);
   const [dc, setDc] = useState('');
-  const [stream, setStream] = useState(false);
   const [priority, setPriority] = useState(false);
   const [dcError, setDcError] = useState(false);
 
@@ -49,7 +48,7 @@ export default function WolfMarksPurchaseBox({ service, gameShort }: { service: 
     Math.min(Math.max(v, cfg?.amountMin ?? 5000), cfg?.amountMax ?? 20000);
 
   const base = amount * (cfg?.pricePerMark ?? 0);
-  const total = base * (priority ? priorityMultiplier : 1) + (stream ? cfg?.streamPrice ?? 0 : 0);
+  const total = base * (priority ? priorityMultiplier : 1);
 
   const addToCart = () => {
     if (!dc) {
@@ -68,7 +67,6 @@ export default function WolfMarksPurchaseBox({ service, gameShort }: { service: 
       [
         `${amount.toLocaleString('en-US')} Wolf Marks`,
         `Data Center: ${dc}`,
-        ...(stream ? ['Private Stream'] : []),
         ...(priority ? [`Priority (+${Math.round((priorityMultiplier - 1) * 100)}%)`] : []),
       ],
       1,
@@ -153,11 +151,8 @@ export default function WolfMarksPurchaseBox({ service, gameShort }: { service: 
 
           {/* Add-ons */}
           <MountAddonsBlock
-            stream={stream}
-            setStream={setStream}
             priority={priority}
             setPriority={setPriority}
-            streamPrice={cfg?.streamPrice ?? 10}
           />
         </div>
       </div>

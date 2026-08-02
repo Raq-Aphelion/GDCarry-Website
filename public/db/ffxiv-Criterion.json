@@ -2,6 +2,7 @@
   "criterion": {
     "ffxiv-variant-merchants-tale": {
       "price": 10,
+      "hideStream": true,
       "completion": "24 Hours",
       "pilotedPrice": 11,
       "difficulty": {
@@ -22,6 +23,7 @@
     },
     "ffxiv-variant-aloalo-island": {
       "price": 10,
+      "hideStream": true,
       "completion": "24 Hours",
       "addons": [
         {
@@ -36,6 +38,7 @@
     },
     "ffxiv-variant-mount-rokkon": {
       "price": 10,
+      "hideStream": true,
       "completion": "24 Hours",
       "addons": [
         {
@@ -50,6 +53,7 @@
     },
     "ffxiv-variant-sildihn-subterrane": {
       "price": 10,
+      "hideStream": true,
       "completion": "24 Hours",
       "addons": [
         {

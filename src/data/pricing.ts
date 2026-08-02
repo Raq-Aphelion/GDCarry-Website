@@ -64,9 +64,12 @@ export interface PricingAddon {
   disabled?: boolean;
   /** Small print under the option (e.g. a requirement) */
   note?: string;
-  /** Group-play add-on only selectable while this run-type option is active
-      (e.g. Book Farm requires Farm); greyed out and auto-deselected otherwise */
+  /** Group-play add-on only shown (and selectable) while this run-type option
+      is active (e.g. Book Farm requires Farm); hidden and auto-deselected otherwise */
   requiresOption?: string;
+  /** When checked, this add-on's price replaces the per-run core price (and is
+      multiplied by Amount of Runs) instead of being added on top */
+  perRun?: boolean;
   /** Multiplies the method's base price when checked (shown as a percentage);
       other add-ons stay additive on top of the multiplied price */
   timesBase?: number;
@@ -189,12 +192,10 @@ export interface PricingDb {
     spellsAddon: PricingAddon;
     /** Masked Carnivale add-on (Blue Mage) */
     carnivaleAddon?: PricingAddon;
-    /** Private Stream add-on price (Blue Mage) */
-    streamPrice?: number;
     completion: string;
   };
   /** PvP Series boost pricing (from ffxiv-PvP): series levels 1-30, flat per
-      level, with the Stream add-on */
+      level */
   pvpSeries?: {
     serviceId: string;
     /** Card "From" price */
@@ -204,7 +205,6 @@ export interface PricingDb {
     defaultStart: number;
     defaultEnd: number;
     priceTiers: { min: number; max: number; pricePerLevel: number }[];
-    streamAddon: PricingAddon;
     completion: string;
   };
   /** Crystalline Conflict rank boost pricing (from ffxiv-PvP): cumulative
@@ -218,7 +218,7 @@ export interface PricingDb {
     completion: string;
   };
   /** Wolf Marks farm pricing (from ffxiv-PvP): per-mark rate with amount
-      input + slider, stream add-on and priority multiplier */
+      input + slider and priority multiplier */
   wolfMarks?: {
     serviceId: string;
     /** Card "From" price */
@@ -228,7 +228,6 @@ export interface PricingDb {
     amountStep: number;
     defaultAmount: number;
     pricePerMark: number;
-    streamPrice: number;
     completion: { normal: string; priority: string };
   };
   /** Mount pricing (from ffxiv-Mounts): guaranteed Dawntrail wings at fixed
@@ -360,6 +359,8 @@ export interface PricingDb {
       difficulty?: { normal: string; advanced: string };
       /** Single-method service — static Piloted pill instead of the method toggle */
       pilotedOnly?: boolean;
+      /** Hide the Private Stream row in Additional Options (variant dungeons) */
+      hideStream?: boolean;
       /** Duty-unlock add-on row in the Additional Options drawer */
       unlock?: PricingAddon;
       completion: string;
@@ -429,8 +430,6 @@ export interface PricingDb {
           the base service levels, the job select + job level range hide under
           this checkmark option */
       phantomToggle?: { label: string };
-      /** Private Stream add-on price in Additional Options */
-      stream?: number;
       completion: string;
     }
   >;

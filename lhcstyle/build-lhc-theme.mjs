@@ -8,11 +8,16 @@
 // - All custom-HTML fields, custom_page_css, icons_order, wwidth/wheight live
 //   inside `bot_configuration`, which is a JSON-encoded STRING.
 
-import { writeFileSync } from 'node:fs';
+import { writeFileSync, readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
 const here = dirname(fileURLToPath(import.meta.url));
+
+// Default operator image (GD dice) — imported as the theme's operator_image,
+// shown in the profile strip and beside operator messages when the chatting
+// operator has no photo of their own
+const operatorImageData = readFileSync(join(here, '..', 'public', 'images', 'gd_favicon.png')).toString('base64');
 
 // ---------------------------------------------------------------- SVG icons
 
@@ -24,6 +29,9 @@ const svgSend = (color) =>
 
 const svgClose = (color) =>
   `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23${color}' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='18' y1='6' x2='6' y2='18'/%3E%3Cline x1='6' y1='6' x2='18' y2='18'/%3E%3C/svg%3E`;
+
+const svgSmile = (color) =>
+  `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23${color}' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M8 14s1.5 2 4 2 4-2 4-2'/%3E%3Cline x1='9' y1='9' x2='9.01' y2='9'/%3E%3Cline x1='15' y1='9' x2='15.01' y2='9'/%3E%3C/svg%3E`;
 
 // ---------------------------------------------------------------- CSS blocks
 
@@ -79,7 +87,7 @@ const customContainerCss =
   'border: none !important; border-radius: 12px !important; overflow: hidden !important; ' +
   'box-shadow: 0 0 0 1px rgba(59,130,246,.22), 0 24px 60px -24px rgba(59,130,246,.30), 0 25px 50px -12px rgba(0,0,0,.55) !important;';
 
-const customWidgetCss = `/* ===== GD Carry dark theme — widget interior v13 ===== */
+const customWidgetCss = `/* ===== GD Carry dark theme — widget interior v17 ===== */
 
 :root { --lhc-message-padding: 7px 10px; }
 
@@ -109,7 +117,7 @@ body { background-color: #0f0f11 !important; }
 
 /* Conversation area: scrollbar only when actually overflowing (stable gutter
    reserves its lane either way — no layout shift, no empty bar). Left padding
-   (22px) matches right padding (12px) + gutter (~10px) so operator bubbles
+   (26px) matches right padding (16px) + gutter (~10px) so operator bubbles
    and visitor bubbles sit the same distance from the window edges.
    Glow background ONLY here (painting it on the inner scroller too produced
    a visible seam with few messages). */
@@ -124,7 +132,7 @@ body { background-color: #0f0f11 !important; }
   background-image:
     radial-gradient(600px 300px at 85% -10%, rgba(96, 165, 250, 0.06), transparent 60%),
     radial-gradient(450px 250px at -10% 10%, rgba(96, 165, 250, 0.04), transparent 55%);
-  padding: 12px 12px 12px 22px !important;
+  padding: 12px 16px 12px 26px !important;
 }
 #messages-scroll {
   overflow-x: hidden !important;
@@ -206,16 +214,44 @@ body { background-color: #0f0f11 !important; }
   margin: 4px 0 10px !important;
 }
 
-/* The question column fills the middle; the composer is a snug one-line box
-   pinned to the bottom, growing line-by-line up to 3 rows, then scrolling */
-.start-chat form .row.pt-2 > [class*="col"]:has(.form-group textarea) {
-  flex: 1 1 auto !important;
+/* Name + e-mail fields stick to the top of the question field: the whole
+   field group packs to the bottom of the form. margin-top:auto on the first
+   column (not a growing question column) so the scroller can still reach
+   the top when the form overflows. The composer is a snug one-line box,
+   growing line-by-line up to 3 rows, then scrolling */
+.start-chat form .row.pt-2 > [class*="col"]:first-child,
+.offline-chat form .row.pt-2 > [class*="col"]:first-child {
+  margin-top: auto !important;
+}
+
+/* Submit button pinned to the bottom of the form — the question composer
+   grows upward (then scrolls at 3 rows), never pushes the button down */
+.start-chat form,
+.offline-chat form {
+  overflow: hidden !important;
+}
+.start-chat form .row.pt-2 > [class*="col"]:has([type="submit"]),
+.offline-chat form .row.pt-2 > [class*="col"]:has([type="submit"]) {
+  position: sticky !important;
+  bottom: 0 !important;
+  z-index: 5 !important;
+  background-color: #0f0f11 !important;
+}
+.start-chat form .row.pt-2 > [class*="col"]:has(.form-group textarea),
+.offline-chat form .row.pt-2 > [class*="col"]:has(.form-group textarea) {
+  flex: 0 0 auto !important;
   display: flex !important;
   flex-direction: column !important;
   min-height: 0 !important;
 }
-.start-chat .form-group:has(textarea) {
-  flex: 1 1 auto !important;
+/* The question group reserves the composer's full 3-row height up front
+   (label ~24px + 76px composer) and bottom-anchors its content — the
+   textarea grows into empty reserved space, so the total form height never
+   changes and the Start chat button never moves */
+.start-chat .form-group:has(textarea),
+.offline-chat .form-group:has(textarea) {
+  flex: 0 0 auto !important;
+  height: 100px !important;
   display: flex !important;
   flex-direction: column !important;
   justify-content: flex-end !important;
@@ -255,26 +291,90 @@ body { background-color: #0f0f11 !important; }
   display: none !important;
 }
 
-/* Operator/assistant profile block — gone entirely, version-proof: anything
-   in the profile strip that contains an image, avatar or assistant icon is
-   suppressed (the queue/pending text is text-only, so it survives), plus
-   sender avatars and rating thumbs */
-.operator-info,
+/* Rating thumbs stay hidden */
 .up-vote-action,
 .down-vote-action,
 .up-voted,
-.down-voted,
-.profile-msg-pic {
+.down-voted {
   display: none !important;
 }
+
+/* Operator strip — compact one-row badge: small round avatar + name,
+   theme colors, tighter padding than the queue/pending strip. In the React
+   widget #chat-status-container itself carries .operator-info; the classic
+   path injects .operator-info as a child (both covered) */
 #lhc-profile-body:has(.operator-info),
-#lhc-profile-body:has(.op-photo),
-#lhc-profile-body:has(.icon-assistant),
-#lhc-profile-body:has(img),
-#chat-status-container:has(img),
-#chat-status-container:has(.icon-assistant),
-#chat-status-container:has(.material-icons) {
-  display: none !important;
+#chat-status-container:has(.operator-info),
+#chat-status-container.operator-info {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  padding: 8px 16px !important;
+  text-align: left !important;
+}
+.operator-info {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  font-size: 12px !important;
+  color: #94a3b8 !important;
+}
+.operator-info img,
+.op-photo img {
+  width: 24px !important;
+  height: 24px !important;
+  border-radius: 999px !important;
+  object-fit: cover !important;
+  margin: 0 !important;
+}
+.operator-info .fw-bold,
+.operator-profile-content {
+  font-size: 12px !important;
+  color: #f1f5f9 !important;
+}
+
+/* No operator photo? LHC falls back to .icon-assistant — restyle it as a
+   small theme badge instead of hiding the whole strip */
+.operator-info .icon-assistant,
+.op-photo .icon-assistant {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 24px !important;
+  height: 24px !important;
+  border-radius: 999px !important;
+  background: #1b1b20 !important;
+  border: 1px solid #34343e !important;
+  color: #93c5fd !important;
+  font-size: 15px !important;
+}
+
+/* Operator avatar — small circle to the left of operator messages */
+.profile-msg-pic {
+  display: inline-flex !important;
+  width: 26px !important;
+  height: 26px !important;
+  margin: 0 6px 0 0 !important;
+  border-radius: 999px !important;
+  overflow: hidden !important;
+  vertical-align: bottom !important;
+  flex: 0 0 auto !important;
+  align-self: flex-end !important;
+}
+.profile-msg-pic img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  border-radius: 999px !important;
+}
+
+/* Classic server-rendered rows nest the avatar img inside the otherwise
+   hidden .chat-operators icon — re-show only the ones carrying an avatar */
+.chat-operators:has(.profile-msg-pic) {
+  display: inline-flex !important;
+  margin: 0 6px 0 0 !important;
+  vertical-align: bottom !important;
 }
 
 /* Header — brand block left, close (X) right, one row, generous spacing */
@@ -452,15 +552,60 @@ body { background-color: #0f0f11 !important; }
   color: #64748b !important;
 }
 
-/* Typing indicator — renamed (swap for display:none to disable entirely) */
-#id-operator-typing {
-  background: #0f0f11 !important;
+/* Typing indicator — LHC renders it (white bg!) as a flex item INSIDE the
+   send-area row, which squeezes/clips it. Repositioned as a floating strip
+   above the send area: transparent, small text, animated dots, fade-in on
+   appear (fade-out is the clone trick in header_html — React unmounts it
+   instantly, so CSS alone can't animate the exit). Scoped to .online-chat:
+   the start form reuses the same id for validation errors */
+.online-chat #id-operator-typing {
+  position: absolute !important;
+  bottom: 100% !important;
+  left: 0 !important;
+  right: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
   font-size: 0 !important;
+  height: auto !important;
+  max-height: none !important;
+  overflow: visible !important;
+  line-height: 1.4 !important;
+  padding: 4px 16px !important;
+  animation: gdc-typing-in 0.3s ease !important;
 }
-#id-operator-typing::before {
-  content: 'Support is typing now...';
-  font-size: 11px;
+.online-chat #id-operator-typing::before {
+  content: 'Support is typing now';
+  font-size: 10px;
   color: #94a3b8;
+}
+.online-chat #id-operator-typing::after {
+  content: '';
+  font-size: 10px;
+  color: #94a3b8;
+  animation: gdc-typing-dots 1.2s infinite;
+}
+@keyframes gdc-typing-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes gdc-typing-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+@keyframes gdc-typing-dots {
+  0% { content: ''; }
+  25% { content: '.'; }
+  50% { content: '..'; }
+  75% { content: '...'; }
+}
+
+/* Same id in the start/offline form = validation error — readable, no white bg */
+.start-chat #id-operator-typing,
+.offline-chat #id-operator-typing {
+  background: transparent !important;
+  color: #fca5a5 !important;
+  font-size: 12px !important;
 }
 
 /* Sender name — no italics, no icon, slightly smaller */
@@ -553,7 +698,7 @@ body { background-color: #0f0f11 !important; }
   margin: 0 !important;
   field-sizing: content;
 }
-#CSChatMessage::placeholder { color: #94a3b8 !important; }
+#CSChatMessage::placeholder { color: #64748b !important; }
 
 /* Send button — theme-matching paper plane in its own outlined circle;
    dimmed + inert when LHC marks it unavailable (empty input / closed chat) */
@@ -595,6 +740,53 @@ body { background-color: #0f0f11 !important; }
   color: #60a5fa !important;
 }
 
+/* Emoji button + picker (engine in header_html) — smiley left of the chat
+   input, panel pops above the send area */
+.gdc-emoji-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 34px !important;
+  height: 34px !important;
+  flex: 0 0 auto !important;
+  margin: 0 2px 0 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 999px !important;
+  cursor: pointer !important;
+}
+.gdc-emoji-btn img {
+  width: 20px !important;
+  height: 20px !important;
+  opacity: 0.75;
+}
+.gdc-emoji-btn:hover img { opacity: 1; }
+.gdc-emoji-panel {
+  position: fixed !important;
+  z-index: 90 !important;
+  display: grid !important;
+  grid-template-columns: repeat(6, 1fr) !important;
+  gap: 2px !important;
+  padding: 8px !important;
+  background: #1b1b20 !important;
+  border: 1px solid #26262e !important;
+  border-radius: 8px !important;
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.6) !important;
+}
+.gdc-emoji-panel button {
+  width: 32px !important;
+  height: 32px !important;
+  font-size: 18px !important;
+  line-height: 1 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 5px !important;
+  cursor: pointer !important;
+}
+.gdc-emoji-panel button:hover { background: #26262e !important; }
+
 /* Start-chat / offline form fields */
 .form-group { margin-bottom: 14px !important; }
 .control-label,
@@ -603,11 +795,14 @@ body { background-color: #0f0f11 !important; }
   font-size: 12px;
   margin-bottom: 6px !important;
 }
+/* Required-field asterisk (wrapped by the header_html observer) — theme blue */
+.gdc-req { color: #60a5fa !important; }
 .form-control,
 .form-select {
   background-color: #1b1b20 !important;
   border: 1px solid #34343e !important;
   color: #f1f5f9 !important;
+  font-size: 13px !important;
   border-radius: 5px !important;
 }
 textarea.form-control {
@@ -625,7 +820,7 @@ textarea.form-control {
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.22) !important;
   color: #f1f5f9 !important;
 }
-.form-control::placeholder { color: #94a3b8 !important; }
+.form-control::placeholder { color: #64748b !important; }
 .form-control.is-invalid { border-color: #dc2626 !important; }
 .offline-intro { color: #f1f5f9 !important; }
 
@@ -784,28 +979,18 @@ const customPageCss = `#lhc_container_v2 #lhc_status_widget_v2 {
 
 // ---------------------------------------------------------------- HTML blocks
 
-const chatBadgeIcon = `<div style="width:34px;height:34px;border-radius:999px;background:linear-gradient(135deg,#1b1b20 0%,#151519 100%);border:1px solid rgba(59,130,246,.35);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><img src="${svgChat('93c5fd')}" alt="" style="width:18px;height:18px;"></div>`;
-
-const introCardOperator = `<div style="margin:16px 0 0;padding:16px;border:1px solid #26262e;border-radius:8px;background:linear-gradient(180deg,rgba(38,38,46,.35),#151519 55%);box-shadow:0 0 0 1px rgba(59,130,246,.12);text-align:left;">
-  <div style="display:flex;align-items:center;justify-content:flex-start;gap:14px;">
-    ${chatBadgeIcon}
-    <div style="line-height:1.2;text-align:left;">
-      <div style="font-family:Sora,Inter,sans-serif;font-weight:700;font-size:15px;color:#f1f5f9;">Chat with Grand Dice</div>
-      <div style="font-size:12px;color:#93c5fd;margin-top:1px;">Average reply under 5 mins</div>
-    </div>
-  </div>
-  <p style="margin:10px 0 0;font-size:12px;line-height:1.5;color:#94a3b8;">Tell us your game and what you need.</p>
+// Intro block — centered, no card chrome: bare chat icon on top, tagline,
+// then the reply-time line
+const introCardOperator = `<div style="margin:16px 0 0;padding:8px 16px;text-align:center;">
+  <img src="${svgChat('93c5fd')}" alt="" style="width:28px;height:28px;display:inline-block;">
+  <p style="margin:10px 0 0;font-size:13px;line-height:1.5;color:#f1f5f9;">Tell us your personalized custom order</p>
+  <div style="font-size:12px;color:#93c5fd;margin-top:2px;">Average reply: under 5 mins</div>
 </div>`;
 
-const introCardBot = `<div style="margin:16px 0 0;padding:16px;border:1px solid #26262e;border-radius:8px;background:linear-gradient(180deg,rgba(38,38,46,.35),#151519 55%);box-shadow:0 0 0 1px rgba(59,130,246,.12);text-align:left;">
-  <div style="display:flex;align-items:center;justify-content:flex-start;gap:14px;">
-    ${chatBadgeIcon}
-    <div style="line-height:1.2;text-align:left;">
-      <div style="font-family:Sora,Inter,sans-serif;font-weight:700;font-size:15px;color:#f1f5f9;">Grand Dice Assistant</div>
-      <div style="font-size:12px;color:#93c5fd;margin-top:1px;">Instant answers, 24/7</div>
-    </div>
-  </div>
-  <p style="margin:10px 0 0;font-size:12px;line-height:1.5;color:#94a3b8;">Tell us your game and what you need.</p>
+const introCardBot = `<div style="margin:16px 0 0;padding:8px 16px;text-align:center;">
+  <img src="${svgChat('93c5fd')}" alt="" style="width:28px;height:28px;display:inline-block;">
+  <p style="margin:10px 0 0;font-size:13px;line-height:1.5;color:#f1f5f9;">Tell us your personalized custom order</p>
+  <div style="font-size:12px;color:#93c5fd;margin-top:2px;">Instant answers, 24/7</div>
 </div>`;
 
 const headerIdentity = `<div style="display:flex;align-items:center;gap:10px;">
@@ -851,6 +1036,22 @@ new MutationObserver(function () {
       lbl.textContent = 'Your name (or Discord username)*';
     }
   }
+  /* Required-field asterisks — wrapped in a span so CSS can paint them blue.
+     Idempotent: labels already containing .gdc-req are skipped */
+  document.querySelectorAll('.start-chat .control-label, .offline-chat .control-label').forEach(function (l) {
+    if (l.querySelector('.gdc-req') || l.textContent.indexOf('*') === -1) return;
+    var parts = l.textContent.split('*');
+    l.textContent = '';
+    parts.forEach(function (part, i) {
+      if (i > 0) {
+        var s = document.createElement('span');
+        s.className = 'gdc-req';
+        s.textContent = '*';
+        l.appendChild(s);
+      }
+      if (part) l.appendChild(document.createTextNode(part));
+    });
+  });
 }).observe(document.documentElement, { childList: true, subtree: true });
 
 /* Smooth scroll-to-bottom (capture phase, beats React's instant jump) */
@@ -916,6 +1117,95 @@ document.addEventListener('click', function (e) {
     });
   }).observe(document.documentElement, { childList: true, subtree: true });
 })();
+
+/* Emoji picker — smiley button left of the chat input, theme-matched panel.
+   Re-attached via observer (React re-renders the send area). The value is
+   set through the native setter so React actually picks the emoji up. */
+(function () {
+  var EMOJIS = ['\u{1F600}','\u{1F602}','\u{1F642}','\u{1F609}','\u{1F60D}','\u{1F60E}','\u{1F914}','\u{1F605}','\u{1F62D}','\u{1F44D}','\u{1F64F}','\u{1F44F}','\u{1F525}','\u{1F389}','\u{1F4AF}','\u{2764}\u{FE0F}','\u{2694}\u{FE0F}','\u{1F3C6}','\u{1F4B0}','\u{1F3AE}','\u{2705}','\u{1F680}','\u{1F4AA}','\u{1F91D}'];
+  var SMILE = "${svgSmile('94a3b8')}";
+  var panel = null;
+  function closePanel() { if (panel) { panel.remove(); panel = null; } }
+  function insertEmoji(ta, emoji) {
+    var s = ta.selectionStart == null ? ta.value.length : ta.selectionStart;
+    var e = ta.selectionEnd == null ? s : ta.selectionEnd;
+    var next = ta.value.slice(0, s) + emoji + ta.value.slice(e);
+    var proto = ta instanceof HTMLInputElement
+      ? window.HTMLInputElement.prototype
+      : window.HTMLTextAreaElement.prototype;
+    Object.getOwnPropertyDescriptor(proto, 'value').set.call(ta, next);
+    ta.dispatchEvent(new Event('input', { bubbles: true }));
+    ta.focus();
+    var pos = s + emoji.length;
+    try { ta.setSelectionRange(pos, pos); } catch (err) {}
+  }
+  function togglePanel(btn, ta) {
+    if (panel) { closePanel(); return; }
+    panel = document.createElement('div');
+    panel.className = 'gdc-emoji-panel';
+    EMOJIS.forEach(function (em) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.textContent = em;
+      b.addEventListener('click', function (ev) {
+        ev.preventDefault();
+        insertEmoji(ta, em);
+        closePanel();
+      });
+      panel.appendChild(b);
+    });
+    document.body.appendChild(panel);
+    var r = btn.getBoundingClientRect();
+    panel.style.left = Math.max(4, Math.min(r.left, window.innerWidth - panel.offsetWidth - 4)) + 'px';
+    panel.style.bottom = (window.innerHeight - r.top + 6) + 'px';
+  }
+  function attach() {
+    var ta = document.getElementById('CSChatMessage');
+    if (!ta) return;
+    var area = ta.closest('.message-send-area');
+    var row = area && area.querySelector('.mx-auto');
+    if (!row || row.querySelector('.gdc-emoji-btn')) return;
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'gdc-emoji-btn';
+    btn.setAttribute('aria-label', 'Insert emoji');
+    btn.innerHTML = '<img src="' + SMILE + '" alt="">';
+    btn.addEventListener('click', function (ev) {
+      ev.preventDefault();
+      ev.stopPropagation();
+      togglePanel(btn, ta);
+    });
+    row.insertBefore(btn, row.firstChild);
+  }
+  document.addEventListener('click', function (e) {
+    if (panel && !(e.target.closest && (e.target.closest('.gdc-emoji-panel') || e.target.closest('.gdc-emoji-btn')))) {
+      closePanel();
+    }
+  }, true);
+  new MutationObserver(attach).observe(document.documentElement, { childList: true, subtree: true });
+  attach();
+})();
+
+/* Typing indicator fade-out — React unmounts it instantly, which CSS can't
+   animate. When it disappears we drop a clone back in that fades out and
+   removes itself. */
+(function () {
+  var last = null;
+  new MutationObserver(function () {
+    var el = document.querySelector('.online-chat #id-operator-typing');
+    if (el) { last = el; return; }
+    if (last && !document.contains(last)) {
+      var area = document.querySelector('.online-chat .message-send-area');
+      if (area) {
+        var clone = last.cloneNode(true);
+        clone.style.animation = 'gdc-typing-out 0.3s ease forwards';
+        area.appendChild(clone);
+        setTimeout(function () { clone.remove(); }, 350);
+      }
+      last = null;
+    }
+  }).observe(document.documentElement, { childList: true, subtree: true });
+})();
 </script>`;
 
 // ---------------------------------------------------------------- Theme object
@@ -927,6 +1217,9 @@ const botConfiguration = {
   show_ts: '1',
   show_ts_below: '1',
   uprev: '1',
+  // Operator avatars inside message rows (classic rows read this; the React
+  // widget also gets profile_pic from the site's embed args)
+  bubble_style_profile: '1',
   custom_html_widget: introCardOperator,
   custom_html: introCardOperator,
   custom_html_widget_bot: introCardBot,
@@ -964,6 +1257,8 @@ const theme = {
   custom_container_css: customContainerCss,
   custom_widget_css: customWidgetCss,
   custom_popup_css: customPopupCss,
+  operator_image_data: operatorImageData,
+  operator_image_data_ext: 'png',
   bot_configuration: JSON.stringify(botConfiguration),
 };
 

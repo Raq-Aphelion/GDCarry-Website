@@ -292,13 +292,15 @@ export default function CriterionPurchaseBox({ service, gameShort }: { service: 
             </div>
           </div>
 
-          {/* Additional options — unlock (when offered), stream, priority */}
+          {/* Additional options — unlock (when offered), stream (unless the
+              service hides it, e.g. variant dungeons), priority */}
           <MountAddonsBlock
             stream={stream}
             setStream={setStream}
             priority={priority}
             setPriority={setPriority}
             streamPrice={streamPrice}
+            hideStream={cfg?.hideStream}
             extraRow={
               cfg?.unlock
                 ? {

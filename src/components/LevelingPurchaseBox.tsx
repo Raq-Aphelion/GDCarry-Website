@@ -28,8 +28,7 @@ const DATA_CENTERS = [
 ];
 
 /** Unified config for the level-range purchase box. The standard leveling
-    box adds the job select; Blue Mage skips it and swaps the add-on. */
-export interface LevelBoxConfig {
+    box adds the job select; Blue Mage skips it and swaps the add-on. */export interface LevelBoxConfig {
   levelMin: number;
   levelMax: number;
   defaultStart: number;
@@ -68,15 +67,13 @@ export interface LevelBoxConfig {
   phantomToggle?: { label: string };
   /** Preselected job label (no error state) */
   defaultJob?: string;
-  /** Private Stream add-on price, shown in Additional Options when set */
-  stream?: number;
 }
 
 /** Leveling purchase box: level range (inputs + dual slider), data center
     select, optional job select and add-ons — priced per level from the
     ffxiv-Leveling database category. The Additional Options drawer always
-    renders and carries Private Stream (when configured) and Priority
-    (× priorityMultiplier, applied to the level price only). */
+    renders and carries Priority (× priorityMultiplier, applied to the
+    level price only). */
 /** Animated expand/retract wrapper for the job/armour-set dropdown that
     appears when a relic/armour option is picked. Overflow switches to visible
     once the expand finishes so the open select isn't clipped. */
@@ -148,8 +145,8 @@ function OptionSelect({
 /** Leveling purchase box: level range (inputs + dual slider), data center
     select, optional job select and add-on — priced per level from the
     ffxiv-Leveling database category. The Additional Options drawer always
-    renders and carries Private Stream (when configured) and Priority
-    (× priorityMultiplier, applied to the level price only). */
+    renders and carries Priority (× priorityMultiplier, applied to the
+    level price only). */
 export default function LevelingPurchaseBox({
   service,
   gameShort,
@@ -195,7 +192,6 @@ export default function LevelingPurchaseBox({
   const [addonsChecked, setAddonsChecked] = useState<string[]>([]);
   const [groupsChecked, setGroupsChecked] = useState<string[]>([]);
   const [groupSelections, setGroupSelections] = useState<Record<string, string>>({});
-  const [stream, setStream] = useState(false);
   const [priority, setPriority] = useState(false);
   const [jobError, setJobError] = useState(false);
   const [dcError, setDcError] = useState(false);
@@ -303,17 +299,15 @@ export default function LevelingPurchaseBox({
     (s, id) => s + (groupOptions.find((a) => a.id === id)?.price ?? 0),
     0,
   );
-  const streamPrice = stream ? (cfg.stream ?? 10) : 0;
   const gearOptions = cfg.gearOptions ? db.purchaseBox.gearOptions : [];
   const gearPrice = gearOptions[gearIdx]?.price ?? 0;
-  // Priority multiplies the level prices only; add-ons/groups/gear/stream stay flat
+  // Priority multiplies the level prices only; add-ons/groups/gear stay flat
   const total =
     (levelPrice + phantomPrice) * (priority ? priorityMultiplier : 1) +
     addonPrice +
     extrasPrice +
     groupsPrice +
-    gearPrice +
-    streamPrice;
+    gearPrice;
 
   const addToCart = () => {
     let ok = true;
@@ -357,7 +351,6 @@ export default function LevelingPurchaseBox({
           const sel = groupSelections[id];
           return sel ? `${a.label} — ${sel}` : a.label;
         }),
-        ...(stream ? ['Private Stream'] : []),
         ...(gearPrice > 0 ? [gearOptions[gearIdx].label] : []),
         ...(priority ? [`Priority (+${Math.round((priorityMultiplier - 1) * 100)}%)`] : []),
       ],
@@ -640,7 +633,7 @@ export default function LevelingPurchaseBox({
             </div>
           </div>
 
-          {/* Additional options — always rendered (Private Stream / Priority) */}
+          {/* Additional options — always rendered (Priority) */}
           <div className={`aob rounded-[5px] border border-navy-700/70 bg-navy-850 ${optionsOpen ? 'expanded' : ''}`}>
             <button
               onClick={() => {
@@ -712,22 +705,6 @@ export default function LevelingPurchaseBox({
                           </button>
                         );
                       })}
-                      <button
-                        type="button"
-                        onClick={() => setStream((s) => !s)}
-                        aria-pressed={stream}
-                        className="flex w-full items-center gap-3 rounded-[5px] bg-navy-850 px-2.5 py-1.5 text-left transition-colors hover:bg-navy-800"
-                      >
-                        <span
-                          className={`flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-[3px] border transition-colors ${
-                            stream ? 'border-cyan-600 bg-cyan-600 text-navy-900' : 'border-navy-600 text-transparent'
-                          }`}
-                        >
-                          <Check className="h-3 w-3" strokeWidth={3.5} />
-                        </span>
-                        <span className="min-w-0 flex-1 truncate text-sm text-slate-300">Private Stream</span>
-                        <span className="text-xs font-bold text-cyan-400">+{format(cfg.stream ?? 10)}</span>
-                      </button>
                       <button
                         type="button"
                         onClick={() => setPriority((p) => !p)}

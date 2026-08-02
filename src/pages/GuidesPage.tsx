@@ -187,8 +187,10 @@ function GuideArticle({ guideId }: { guideId: string }) {
                 <section key={s.heading} className="mt-8">
                   <h2 className="font-display text-lg font-bold text-white sm:text-xl">{s.heading}</h2>
                   <Blocks blocks={s.blocks} />
+                  {/* Mobile shows a real horizontal scrollbar (pb-3 keeps it off the
+                      table edge); desktop keeps the scrollbar hidden */}
                   {s.table && (
-                    <div className="no-scrollbar mt-4 overflow-x-auto">
+                    <div className="mt-4 overflow-x-auto pb-3 sm:no-scrollbar sm:pb-0">
                       <table className="w-full min-w-[720px] text-left text-xs">
                         <thead>
                           <tr>

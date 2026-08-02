@@ -143,8 +143,9 @@
           {
             "id": "book-farm",
             "label": "Book Farm (Floors 71-100)",
-            "price": 70,
-            "note": "Requires floors 1-100 cleared"
+            "price": 85,
+            "note": "Requires floors 1-100 cleared",
+            "perRun": true
           }
         ]
       },
@@ -169,12 +170,8 @@
             "label": "Book Farm (Floors 71-100)",
             "price": 70,
             "note": "Requires floors 1-100 cleared",
-            "requiresOption": "farm"
-          },
-          {
-            "id": "final-verse",
-            "label": "The Final Verse (Quantum) Clear",
-            "price": 180
+            "requiresOption": "farm",
+            "perRun": true
           }
         ]
       },

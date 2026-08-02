@@ -39,9 +39,13 @@ const CURRENCIES: { c: Currency; symbol: string; label: string; icon: LucideIcon
   { c: 'USD', symbol: '$', label: 'US Dollar', icon: DollarSign },
 ];
 
+/** Categories listed in the games dropdown/menu — 'All services' is omitted;
+    the game art button already links to it. */
+const dropdownCats = (g: Game) => g.subcategories.filter((s) => s.id !== 'all');
+
 /** Category column count in the games dropdown — set by the biggest game
     (FFXIV). Every game aligns to this grid, even with a single column. */
-const CAT_COLS = Math.max(...games.map((g) => Math.ceil(g.subcategories.length / 5)));
+const CAT_COLS = Math.max(...games.map((g) => Math.ceil(dropdownCats(g).length / 5)));
 
 /** Search input + results dropdown. Rendered twice (desktop nav and mobile
     menu), so it's a real component: each instance needs its own dropdown
@@ -170,7 +174,8 @@ function SearchBox({
 
 /** Mobile menu category list for one game: capped height, scrolls with the
     site's overlay scrollbar when it overflows — the service counts shift left
-    (pr-3) only while the scrollbar is visible. */
+    (pr-3) only while the scrollbar is visible. The cap grows with the viewport
+    (15rem floor) so tall phones show more categories at once. */
 function MobileCategoryList({ game, expanded }: { game: Game; expanded: boolean }) {
   const [listEl, setListEl] = useState<HTMLUListElement | null>(null);
   const [overflows, setOverflows] = useState(false);
@@ -200,9 +205,9 @@ function MobileCategoryList({ game, expanded }: { game: Game; expanded: boolean 
         <div className="relative my-1.5 ml-3 border-l border-navy-700/60">
           <ul
             ref={setListEl}
-            className={`no-scrollbar max-h-60 space-y-0.5 overflow-y-auto pl-3 ${overflows ? 'pr-3' : ''}`}
+            className={`no-scrollbar max-h-[max(15rem,calc(100svh_-_28rem))] space-y-0.5 overflow-y-auto pl-3 ${overflows ? 'pr-3' : ''}`}
           >
-            {game.subcategories.map((s) => {
+            {dropdownCats(game).map((s) => {
               const onCat = onGame && catParam === s.id;
               return (
                 <li key={s.id}>
@@ -402,9 +407,10 @@ export default function Navbar() {
                     const expanded = desktopGameCat === g.id;
                     const onGame = location.pathname === `/boosting/${g.id}`;
                     // Category columns: max 5 entries each, rail line between them
+                    const cats = dropdownCats(g);
                     const chunks = [];
-                    for (let i = 0; i < g.subcategories.length; i += 5) {
-                      chunks.push(g.subcategories.slice(i, i + 5));
+                    for (let i = 0; i < cats.length; i += 5) {
+                      chunks.push(cats.slice(i, i + 5));
                     }
                     return (
                     <li key={g.id}>
@@ -474,7 +480,7 @@ export default function Navbar() {
                             {g.name}
                           </span>
                           <span className="min-w-0 flex-1 truncate px-6 text-xs text-slate-600">
-                            {g.subcategories.map((s) => s.name).join(' • ')}
+                            {cats.map((s) => s.name).join(' • ')}
                           </span>
                         </button>
                       </div>

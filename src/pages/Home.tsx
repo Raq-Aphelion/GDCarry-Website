@@ -91,9 +91,9 @@ const REVIEWS = [
 ];
 
 const STEPS = [
-  { n: '01', title: 'Pick your boost', text: 'Browse the catalog, choose a game and a service, and drop it in the cart.' },
-  { n: '02', title: 'We roll out', text: 'A verified pro claims your order, schedules around you and gets to work.' },
-  { n: '03', title: 'Claim the rewards', text: 'Track progress live and log back in to loot, titles and ratings — done deal.' },
+  { n: '01', title: 'Pick your boost', text: 'Browse the catalog, choose a service, drop it in the cart and place an order.' },
+  { n: '02', title: 'We roll out', text: 'A verified booster claims your order, schedules around you and gets to work.' },
+  { n: '03', title: 'Claim the rewards', text: 'Track progress live and log back in to enjoy your loot once the service is fulfilled.' },
 ];
 
 export default function Home() {
@@ -301,7 +301,7 @@ export default function Home() {
           <div className="w-full max-w-3xl text-center">
             <Reveal>
               <span className="inline-flex items-center rounded-full border border-cyan-600/40 bg-cyan-600/10 px-4 py-1.5 text-xs font-bold uppercase leading-none tracking-[0.18em] text-cyan-400 backdrop-blur-sm">
-                #1 EU's boosting services
+                The EU's best-rated boosting services
               </span>
             </Reveal>
             <Reveal delay={120}>
@@ -323,8 +323,17 @@ export default function Home() {
                     <Star key={i} className="h-3.5 w-3.5 fill-cyan-400 text-cyan-400" />
                   ))}
                 </span>
-                <span className="font-semibold text-white">Excellent</span>
-                <span className="text-slate-400"><span className="max-sm:hidden">— </span>1,100+ verified player reviews</span>
+                <span className="text-slate-400">
+                  <span className="font-semibold text-white">100%</span> from <span className="font-semibold text-white">170+</span> verified ratings on{' '}
+                  <a
+                    href="https://www.epicnpc.com/members/grand-dice.1661988/#feedback"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-semibold text-cyan-400 underline-offset-2 transition-colors hover:text-cyan-300 hover:underline"
+                  >
+                    EpicNPC
+                  </a>
+                </span>
               </div>
             </Reveal>
           </div>
@@ -503,7 +512,15 @@ export default function Home() {
                   ))}
                 </div>
                 <span className="text-sm text-slate-400">
-                  <span className="font-semibold text-white">4.9 / 5</span> from 1,100+ verified orders
+                  <span className="font-semibold text-white">100%</span> from <span className="font-semibold text-white">170+</span> verified ratings on{' '}
+                  <a
+                    href="https://www.epicnpc.com/members/grand-dice.1661988/#feedback"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-semibold text-cyan-400 underline-offset-2 transition-colors hover:text-cyan-300 hover:underline"
+                  >
+                    EpicNPC
+                  </a>
                 </span>
               </div>
             </div>
@@ -560,7 +577,7 @@ export default function Home() {
                 <span className="pointer-events-none absolute right-2 top-1 font-display text-7xl font-extrabold tabular-nums text-navy-700/50">
                   {s.n}
                 </span>
-                <span className="font-display text-sm font-extrabold text-gradient-blue">{s.n}</span>
+                <span className="font-display text-sm font-extrabold text-cyan-400">{s.n}</span>
                 <h3 className="mt-2 font-display text-lg font-bold text-white">{s.title}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-slate-400">{s.text}</p>
               </div>

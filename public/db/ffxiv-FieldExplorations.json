@@ -126,7 +126,6 @@
           ]
         }
       ],
-      "stream": 10,
       "completion": "1-2 Weeks"
     },
     "ffxiv-island-sanctuary": {
@@ -878,7 +877,6 @@
         "label": "Unlock Occult Crescent",
         "price": 35
       },
-      "stream": 10,
       "completion": "3 Days",
       "optionGroups": [
         {

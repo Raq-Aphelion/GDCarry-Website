@@ -184,7 +184,7 @@ export const games: Game[] = [
               'Gil is the most widely accepted form of in-game currency. The amount of gil you hold is indicated on the currency panel. The gil cap is 999,999,999 for the player and each retainer, while players on a Free Trial are capped at 300,000 gil.',
             price: 0,
             tag1: '5M - 900M Gil',
-            tag3: 'Face to Face or Manual Trade',
+            tag3: 'Mannequin or Face to Face Trade',
             image: scGil,
             tag: 'Popular',
           },
@@ -368,7 +368,7 @@ export const games: Game[] = [
           {
             id: 'ffxiv-forked-tower-magic',
             name: 'The Forked Tower: Magic',
-            tag2: '1 - 48 Player Field Operation Clear',
+            tag2: '12 - 48 Player Field Operation Clear',
             price: 0,
             tag1: 'Arcane Amulets & mount chance',
             tag3: 'Piloted Service',
@@ -701,7 +701,7 @@ export const games: Game[] = [
           {
             id: 'ffxiv-pilgrims-traverse',
             name: 'Pilgrim\'s Traverse (Deep Dungeon)',
-            tag2: '1 - 100 Floors & The Final Verse (Quantum)',
+            tag2: '1 - 100 Floors',
             price: 0,
             tag1: 'The Enlightened title & loot',
             tag3: 'Group Play or Solo Piloted',
@@ -1044,7 +1044,7 @@ export const games: Game[] = [
             tag2: 'AAC Heavyweight M4 (Savage)',
             price: 0,
             tag1: 'Guaranteed mount drop',
-            tag3: 'Piloted or AFK Carry',
+            tag3: 'Piloted Service',
             longDescription:
               'Lindwurm’s muscle-car lowrider from AAC Heavyweight M4 on Savage, complete with a feline passenger — guaranteed, no matter the runs.',
             image: scLowriderT1rant,
