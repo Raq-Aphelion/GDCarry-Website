@@ -50,7 +50,9 @@ export default function WingPurchaseBox({ service, gameShort }: { service: Servi
   );
 
   const streamPrice = 10;
-  const total = (cfg?.price ?? 0) * (method === 'afk' ? afkMultiplier : 1) * (priority ? priorityMultiplier : 1) + (stream ? streamPrice : 0);
+  // AFK price is explicit per wing (afkPrice), falling back to the multiplier
+  const base = method === 'afk' ? (cfg?.afkPrice ?? (cfg?.price ?? 0) * afkMultiplier) : (cfg?.price ?? 0);
+  const total = base * (priority ? priorityMultiplier : 1) + (stream ? streamPrice : 0);
 
   const addToCart = () => {
     if (!dc) {

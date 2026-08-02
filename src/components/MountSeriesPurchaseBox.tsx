@@ -32,8 +32,9 @@ const METHODS = [
 /** Mount series purchase box (Kirin, Firebird, Nine Tails, Landerwaffe,
     Apocryphal Bahamut, Wings of Legacy): checklist of the mounts required
     for the series' combined mount — all checked applies the bundle price,
-    a partial selection sums the individual prices. Separate-selection row
-    prices follow the method: +10% (afkMultiplier) under AFK Carry. */
+    a partial selection sums the individual prices. Separate-selection and
+    bundle prices follow the method: explicit afkPrice / afkBundlePrice when
+    the DB provides them, otherwise +10% (afkMultiplier) under AFK Carry. */
 export default function MountSeriesPurchaseBox({ service, gameShort }: { service: Service; gameShort: string }) {
   const { addItem, openCart } = useCart();
   const { format } = useCurrency();
@@ -58,16 +59,23 @@ export default function MountSeriesPurchaseBox({ service, gameShort }: { service
     setChecked((prev) => (prev.includes(id) ? prev.filter((c) => c !== id) : [...prev, id]));
 
   const allChecked = cfg ? checked.length === cfg.mounts.length : false;
+  // Separate-selection prices follow the method: explicit afkPrice when the
+  // DB provides one, otherwise the afkMultiplier (+10%)
+  const displayPrice = (m: { price: number; afkPrice?: number }) =>
+    method === 'afk' ? (m.afkPrice ?? Number((m.price * afkMultiplier).toFixed(2))) : m.price;
+  // Bundle price follows the method the same way (afkBundlePrice override)
+  const bundleTotal = (c: { bundlePrice: number; afkBundlePrice?: number }) =>
+    method === 'afk' ? (c.afkBundlePrice ?? Number((c.bundlePrice * afkMultiplier).toFixed(2))) : c.bundlePrice;
   const mountsTotal = allChecked
-    ? cfg!.bundlePrice
-    : checked.reduce((s, id) => s + (cfg?.mounts.find((m) => m.id === id)?.price ?? 0), 0);
-  // Displayed separate-selection prices follow the method (AFK = +10%)
-  const displayPrice = (price: number) =>
-    Number((price * (method === 'afk' ? afkMultiplier : 1)).toFixed(2));
+    ? bundleTotal(cfg!)
+    : checked.reduce((s, id) => {
+        const m = cfg?.mounts.find((x) => x.id === id);
+        return s + (m ? displayPrice(m) : 0);
+      }, 0);
   const addonPrice = addonChecked ? cfg?.addon?.price ?? 0 : 0;
   const streamPrice = 10;
   const total =
-    (mountsTotal + addonPrice) * (method === 'afk' ? afkMultiplier : 1) * (priority ? priorityMultiplier : 1) +
+    (mountsTotal + addonPrice * (method === 'afk' ? afkMultiplier : 1)) * (priority ? priorityMultiplier : 1) +
     (stream ? streamPrice : 0);
 
   const addToCart = () => {
@@ -175,12 +183,12 @@ export default function MountSeriesPurchaseBox({ service, gameShort }: { service
             <p className="pl-px text-sm font-semibold text-white [text-shadow:0_1px_4px_rgb(0_0_0/0.7)]">
               Missing Mounts{' '}
               <span className="text-xs font-normal text-slate-300 [text-shadow:0_1px_4px_rgb(0_0_0/0.7)]">
-                (all {cfg?.mounts.length} = {format(cfg?.bundlePrice ?? 0)} bundle)
+                (all {cfg?.mounts.length} = {format(cfg ? bundleTotal(cfg) : 0)} bundle)
               </span>
             </p>
             <div className="mt-2.5 space-y-1.5">
               {cfg?.mounts.map((m) =>
-                row(m.id, m.label, displayPrice(m.price), checked.includes(m.id), () => toggle(m.id)),
+                row(m.id, m.label, displayPrice(m), checked.includes(m.id), () => toggle(m.id)),
               )}
             </div>
           </div>

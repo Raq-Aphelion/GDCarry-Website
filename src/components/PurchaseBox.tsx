@@ -3,6 +3,7 @@ import { Armchair, Check, ChevronDown, Clock, Gamepad2, Minus, Plus, Settings2, 
 import { splitParens } from '@/data/jobs';
 import FadeImage from './FadeImage';
 import FieldPopup from './FieldPopup';
+import MethodFadeBlock from './MethodFadeBlock';
 import { Slider } from '@/components/ui/slider';
 import { usePurchaseFloat } from '@/hooks/usePurchaseFloat';
 import { useCart } from '@/context/CartContext';
@@ -226,8 +227,20 @@ export default function PurchaseBox({ service, gameShort }: { service: Service; 
     : ADDONS;
   const effLogIdx = isAfk ? 0 : logIdx;
   const effectiveAddons = isAfk ? addons.filter((a) => a !== 'stream') : addons;
-  // Per-service addon price overrides from the DB (e.g. DSR duty unlock)
-  const addonPriceOf = (a: (typeof ADDONS)[number]) => db.addonPrices?.[service.id]?.[a.id] ?? a.price;
+  // Per-service addon price overrides from the DB (e.g. DSR duty unlock).
+  // A `{ ref: 'series:tier:fight' }` override pulls the savage fight's price
+  // for the active method — AFK fight price when offered, piloted otherwise.
+  const addonPriceOf = (a: (typeof ADDONS)[number]) => {
+    const override = db.addonPrices?.[service.id]?.[a.id];
+    if (override == null) return a.price;
+    if (typeof override === 'number') return override;
+    const [seriesId, tier, fightId] = override.ref.split(':');
+    const series = db.savageSeries?.[seriesId];
+    const pilotedFight = series?.piloted?.fights?.[tier]?.find((f) => f.id === fightId);
+    const afkFight = series?.afk?.fights?.[tier]?.find((f) => f.id === fightId);
+    if (isAfk && afkFight && !afkFight.disabled) return afkFight.price;
+    return pilotedFight?.price ?? afkFight?.price ?? a.price;
+  };
   const priority = effectiveAddons.includes('priority');
   const logsPercent = LOG_OPTIONS[effLogIdx].percent ?? 0;
   const flatAddons = ADDON_LIST.filter((a) => a.id !== 'priority' && effectiveAddons.includes(a.id)).reduce(
@@ -441,7 +454,9 @@ export default function PurchaseBox({ service, gameShort }: { service: Service; 
                       ariaLabel="Gear options"
                     />
                   </div>
-                  {!isAfk && (
+                  {/* FFXIV Logs — piloted only; extends/retracts with the
+                      method crossfade while the drawer is open */}
+                  <MethodFadeBlock show={!isAfk}>
                     <div>
                       <p className="mb-2 pl-px text-xs font-semibold text-slate-300">FFXIV Logs</p>
                       <CustomSelect
@@ -454,13 +469,13 @@ export default function PurchaseBox({ service, gameShort }: { service: Service; 
                         ariaLabel="FFXIV Logs options"
                       />
                     </div>
-                  )}
+                  </MethodFadeBlock>
                   <div>
                     <p className="mb-2 pl-px text-xs font-semibold text-slate-300">Add-ons</p>
                     <div className="space-y-1.5">
-                      {ADDON_LIST.filter((a) => !(isAfk && a.id === 'stream')).map((a) => {
+                      {ADDON_LIST.map((a) => {
                         const checked = addons.includes(a.id);
-                        return (
+                        const button = (
                           <button
                             key={a.id}
                             onClick={() => toggleAddon(a.id)}
@@ -483,6 +498,15 @@ export default function PurchaseBox({ service, gameShort }: { service: Service; 
                                 : `+${format(addonPriceOf(a))}`}
                             </span>
                           </button>
+                        );
+                        // Private Stream is piloted-only — collapse the row
+                        // with the method crossfade instead of dropping it
+                        return a.id === 'stream' ? (
+                          <MethodFadeBlock key={a.id} show={!isAfk}>
+                            {button}
+                          </MethodFadeBlock>
+                        ) : (
+                          button
                         );
                       })}
                     </div>

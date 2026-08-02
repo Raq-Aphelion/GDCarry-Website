@@ -236,11 +236,13 @@ export interface PricingDb {
   mounts?: {
     /** AFK Carry price multiplier applied to every mount service (10% more) */
     afkMultiplier?: number;
-    wings?: Record<string, { price: number; trial: string; totem: string; completion: string }>;
+    wings?: Record<string, { price: number; /** AFK Carry price when it differs from price × afkMultiplier */ afkPrice?: number; trial: string; totem: string; completion: string }>;
     series?: Record<
       string,
       {
         bundlePrice: number;
+        /** AFK Carry bundle price when it differs from bundlePrice × afkMultiplier */
+        afkBundlePrice?: number;
         bundleLabel: string;
         mounts: PricingAddon[];
         addon?: PricingAddon;
@@ -287,8 +289,9 @@ export interface PricingDb {
   /** Extreme trial bundle pricing (from ffxiv-Trials): a checklist of the
       expansion's trials with per-trial AFK prices and a bundle price when
       all are checked. The Mount Guaranteed option forces 1 run + all trials
-      and charges the tied series mount's cost (bundlePrice × afkMultiplier
-      from ffxiv-Mounts, looked up via mountServiceId). */
+      and charges the tied series mount's cost (afkBundlePrice, falling back
+      to bundlePrice × afkMultiplier from ffxiv-Mounts, looked up via
+      mountServiceId). */
   trialBundles?: Record<
     string,
     {
@@ -433,8 +436,12 @@ export interface PricingDb {
       completion: string;
     }
   >;
-  /** Service id -> addon id -> per-service addon price override */
-  addonPrices?: Record<string, Record<string, number>>;
+  /** Service id -> addon id -> per-service addon price override. A `{ ref }`
+      instead of a number pulls the price from a savage-series fight
+      ('seriesId:tier:fightId') — resolved per selected boost method (the
+      AFK fight price when offered, the piloted price otherwise), so editing
+      the fight reprices the add-on too (e.g. FRU's M4S completion). */
+  addonPrices?: Record<string, Record<string, number | { ref: string }>>;
   /** Service id -> per-method addon lists that REPLACE the global 'unlock'
       addon (stream/priority stay). Used by bundles whose unlocks differ per
       method and differ from the single duty unlock. */

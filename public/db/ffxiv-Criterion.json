@@ -1,10 +1,10 @@
 {
   "criterion": {
     "ffxiv-variant-merchants-tale": {
-      "price": 10,
+      "price": 20,
       "hideStream": true,
+      "pilotedOnly": true,
       "completion": "24 Hours",
-      "pilotedPrice": 11,
       "difficulty": {
         "normal": "Normal",
         "advanced": "Advanced"
@@ -13,120 +13,108 @@
         {
           "id": "mount",
           "label": "Mount",
-          "price": 200,
-          "forcedRuns": 1,
-          "pilotedPrice": 220
+          "price": 70,
+          "forcedRuns": 1
         }
       ],
-      "advancedPrice": 20,
-      "advancedPilotedPrice": 22
+      "advancedPrice": 90
     },
     "ffxiv-variant-aloalo-island": {
-      "price": 10,
+      "price": 20,
       "hideStream": true,
+      "pilotedOnly": true,
       "completion": "24 Hours",
       "addons": [
         {
           "id": "mount",
           "label": "Mount (All 12 Paths)",
-          "price": 70,
-          "pilotedPrice": 80,
+          "price": 160,
           "forcedRuns": 12
         }
-      ],
-      "pilotedPrice": 11
+      ]
     },
     "ffxiv-variant-mount-rokkon": {
-      "price": 10,
+      "price": 20,
       "hideStream": true,
+      "pilotedOnly": true,
       "completion": "24 Hours",
       "addons": [
         {
           "id": "mount",
           "label": "Mount (All 12 Paths)",
-          "price": 70,
-          "pilotedPrice": 80,
+          "price": 160,
           "forcedRuns": 12
         }
-      ],
-      "pilotedPrice": 11
+      ]
     },
     "ffxiv-variant-sildihn-subterrane": {
-      "price": 10,
+      "price": 20,
       "hideStream": true,
+      "pilotedOnly": true,
       "completion": "24 Hours",
       "addons": [
         {
           "id": "mount",
           "label": "Mount (All 12 Paths)",
-          "price": 70,
-          "pilotedPrice": 80,
+          "price": 160,
           "forcedRuns": 12
         }
-      ],
-      "pilotedPrice": 11
+      ]
     },
     "ffxiv-another-merchants-tale": {
-      "price": 90,
+      "price": 300,
+      "pilotedOnly": true,
       "completion": "24 Hours",
       "addons": [
         {
           "id": "mount",
           "label": "Mount",
-          "price": 200,
-          "forcedRuns": 1,
-          "pilotedPrice": 220
+          "price": 70,
+          "forcedRuns": 1
         }
-      ],
-      "pilotedPrice": 99
+      ]
     },
     "ffxiv-another-aloalo-island": {
-      "price": 90,
+      "price": 300,
       "savagePrice": 300,
+      "pilotedOnly": true,
       "completion": "24 Hours",
       "addons": [
         {
           "id": "mount",
           "label": "Mount",
-          "price": 200,
-          "forcedRuns": 1,
-          "pilotedPrice": 220
+          "price": 70,
+          "forcedRuns": 1
         }
-      ],
-      "pilotedPrice": 99,
-      "advancedPilotedPrice": 330
+      ]
     },
     "ffxiv-another-mount-rokkon": {
-      "price": 90,
+      "price": 300,
       "savagePrice": 300,
+      "pilotedOnly": true,
       "completion": "24 Hours",
       "addons": [
         {
           "id": "mount",
           "label": "Mount",
-          "price": 200,
-          "forcedRuns": 1,
-          "pilotedPrice": 220
+          "price": 70,
+          "forcedRuns": 1
         }
-      ],
-      "pilotedPrice": 99,
-      "advancedPilotedPrice": 330
+      ]
     },
     "ffxiv-another-sildihn-subterrane": {
-      "price": 90,
+      "price": 300,
       "savagePrice": 300,
+      "pilotedOnly": true,
       "completion": "24 Hours",
       "addons": [
         {
           "id": "mount",
           "label": "Mount",
-          "price": 200,
-          "forcedRuns": 1,
-          "pilotedPrice": 220
+          "price": 70,
+          "forcedRuns": 1
         }
-      ],
-      "pilotedPrice": 99,
-      "advancedPilotedPrice": 330
+      ]
     }
   }
 }

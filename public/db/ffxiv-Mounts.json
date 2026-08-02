@@ -2,43 +2,50 @@
   "mounts": {
     "wings": {
       "ffxiv-wings-of-ruin": {
-        "price": 490,
+        "price": 175,
+        "afkPrice": 490,
         "trial": "Worqor Lar Dor (Extreme)",
         "totem": "Skyruin Totems",
         "completion": "24 Hours"
       },
       "ffxiv-wings-of-resolve": {
-        "price": 490,
+        "price": 175,
+        "afkPrice": 490,
         "trial": "Everkeep (Extreme)",
         "totem": "Resilient Totems",
         "completion": "24 Hours"
       },
       "ffxiv-wings-of-eternity": {
-        "price": 735,
+        "price": 250,
+        "afkPrice": 735,
         "trial": "The Minstrel's Ballad: Sphene's Burden",
         "totem": "Totems Eternal",
         "completion": "24 Hours"
       },
       "ffxiv-wings-of-knighthood": {
-        "price": 735,
+        "price": 300,
+        "afkPrice": 735,
         "trial": "Recollection (Extreme)",
         "totem": "Knight Totems",
         "completion": "24 Hours"
       },
       "ffxiv-wings-of-death": {
-        "price": 980,
+        "price": 400,
+        "afkPrice": 980,
         "trial": "The Minstrel's Ballad: Necron's Embrace",
         "totem": "Grave Totems",
         "completion": "24 Hours"
       },
       "ffxiv-wings-of-mist": {
-        "price": 980,
+        "price": 450,
+        "afkPrice": 980,
         "trial": "Hell on Rails (Extreme)",
         "totem": "Runaway Totems",
         "completion": "24 Hours"
       },
       "ffxiv-wings-of-nihility": {
-        "price": 980,
+        "price": 700,
+        "afkPrice": 980,
         "trial": "The Unmaking (Extreme)",
         "totem": "Totems of Naught",
         "completion": "24 Hours"
@@ -262,42 +269,50 @@
       },
       "ffxiv-wings-of-legacy": {
         "bundlePrice": 2200,
+        "afkBundlePrice": 4312,
         "bundleLabel": "All 7 Wing mounts",
         "mounts": [
           {
             "id": "wings-of-ruin",
             "label": "Wings of Ruin",
-            "price": 490
+            "price": 175,
+            "afkPrice": 490
           },
           {
             "id": "wings-of-resolve",
             "label": "Wings of Resolve",
-            "price": 490
+            "price": 175,
+            "afkPrice": 490
           },
           {
             "id": "wings-of-eternity",
             "label": "Wings of Eternity",
-            "price": 735
+            "price": 250,
+            "afkPrice": 735
           },
           {
             "id": "wings-of-knighthood",
             "label": "Wings of the Knighthood",
-            "price": 735
+            "price": 300,
+            "afkPrice": 735
           },
           {
             "id": "wings-of-death",
             "label": "Wings of Death",
-            "price": 980
+            "price": 400,
+            "afkPrice": 980
           },
           {
             "id": "wings-of-mist",
             "label": "Wings of Mist",
-            "price": 980
+            "price": 450,
+            "afkPrice": 980
           },
           {
             "id": "wings-of-nihility",
             "label": "Wings of Nihility",
-            "price": 980
+            "price": 700,
+            "afkPrice": 980
           }
         ],
         "completion": "5-7 Days",
@@ -307,16 +322,16 @@
     "afkMultiplier": 1.1,
     "savageMounts": {
       "ffxiv-monowheel-s1": {
-        "price": 70,
+        "price": 45,
         "trial": "AAC Light-heavyweight M4 (Savage)",
         "completion": "24 Hours",
         "afkPrice": 70
       },
       "ffxiv-air-wheeler-c9": {
-        "price": 105,
+        "price": 70,
         "trial": "AAC Cruiserweight M4 (Savage)",
         "completion": "24 Hours",
-        "afkPrice": 105
+        "afkPrice": 140
       },
       "ffxiv-lowrider-t1rant": {
         "price": 178,
@@ -325,13 +340,13 @@
         "afkDisabled": true
       },
       "ffxiv-demi-phoinix": {
-        "price": 44,
+        "price": 35,
         "trial": "Asphodelos: The Fourth Circle (Savage)",
         "completion": "24 Hours",
-        "afkPrice": 55
+        "afkPrice": 35
       },
       "ffxiv-sunforged": {
-        "price": 55,
+        "price": 70,
         "trial": "Abyssos: The Eighth Circle (Savage)",
         "completion": "24 Hours",
         "afkPrice": 70
@@ -345,42 +360,50 @@
       "ffxiv-skyslipper": {
         "price": 14,
         "trial": "Eden's Gate: Sepulture (Savage)",
-        "completion": "24 Hours"
+        "completion": "24 Hours",
+        "afkPrice": 14
       },
       "ffxiv-ramuh": {
         "price": 14,
         "trial": "Eden's Verse: Refulgence (Savage)",
-        "completion": "24 Hours"
+        "completion": "24 Hours",
+        "afkPrice": 14
       },
       "ffxiv-eden-mount": {
         "price": 14,
         "trial": "Eden's Promise: Eternity (Savage)",
-        "completion": "24 Hours"
+        "completion": "24 Hours",
+        "afkPrice": 14
       },
       "ffxiv-alte-roite": {
         "price": 14,
         "trial": "Deltascape V4.0 (Savage)",
-        "completion": "24 Hours"
+        "completion": "24 Hours",
+        "afkPrice": 14
       },
       "ffxiv-air-force": {
         "price": 14,
         "trial": "Sigmascape V4.0 (Savage)",
-        "completion": "24 Hours"
+        "completion": "24 Hours",
+        "afkPrice": 14
       },
       "ffxiv-model-o": {
         "price": 14,
         "trial": "Alphascape V4.0 (Savage)",
-        "completion": "24 Hours"
+        "completion": "24 Hours",
+        "afkPrice": 14
       },
       "ffxiv-gobwalker": {
         "price": 10,
         "trial": "Alexander - The Burden of the Father (Savage)",
-        "completion": "24 Hours"
+        "completion": "24 Hours",
+        "afkPrice": 10
       },
       "ffxiv-arrhidaeus": {
         "price": 10,
         "trial": "Alexander - The Soul of the Creator (Savage)",
-        "completion": "24 Hours"
+        "completion": "24 Hours",
+        "afkPrice": 10
       },
       "ffxiv-juedi-mount": {
         "price": 380,
@@ -399,66 +422,50 @@
         "completion": "24 Hours"
       },
       "ffxiv-genie-of-the-lamp-mount": {
-        "price": 200,
-        "afkPrice": 200,
-        "afkLabel": "Group Play",
-        "groupFirst": true,
+        "price": 70,
+        "pilotedOnly": true,
         "trial": "Another Merchant's Tale",
         "completion": "24 Hours"
       },
       "ffxiv-royal-magicked-carpet-mount": {
-        "price": 200,
-        "afkPrice": 200,
-        "afkLabel": "Group Play",
-        "groupFirst": true,
+        "price": 70,
+        "pilotedOnly": true,
         "trial": "Variant: Merchant's Tale",
         "completion": "24 Hours"
       },
       "ffxiv-quaqua-mount": {
-        "price": 200,
-        "afkPrice": 200,
-        "afkLabel": "Group Play",
-        "groupFirst": true,
+        "price": 70,
+        "pilotedOnly": true,
         "trial": "Another Aloalo Island",
         "completion": "24 Hours"
       },
       "ffxiv-spectral-statice-mount": {
-        "price": 80,
-        "afkPrice": 70,
-        "afkLabel": "Group Play",
-        "groupFirst": true,
+        "price": 160,
+        "pilotedOnly": true,
         "trial": "Variant: Aloalo Island",
         "completion": "24 Hours"
       },
       "ffxiv-shishioji-mount": {
-        "price": 200,
-        "afkPrice": 200,
-        "afkLabel": "Group Play",
-        "groupFirst": true,
+        "price": 70,
+        "pilotedOnly": true,
         "trial": "Another Mount Rokkon",
         "completion": "24 Hours"
       },
       "ffxiv-burabura-chochin-mount": {
-        "price": 80,
-        "afkPrice": 70,
-        "afkLabel": "Group Play",
-        "groupFirst": true,
+        "price": 160,
+        "pilotedOnly": true,
         "trial": "Variant: Mount Rokkon",
         "completion": "24 Hours"
       },
       "ffxiv-sildihn-throne-mount": {
-        "price": 200,
-        "afkPrice": 200,
-        "afkLabel": "Group Play",
-        "groupFirst": true,
+        "price": 70,
+        "pilotedOnly": true,
         "trial": "Another Sil'dihn Subterrane",
         "completion": "24 Hours"
       },
       "ffxiv-silkie-mount": {
-        "price": 80,
-        "afkPrice": 70,
-        "afkLabel": "Group Play",
-        "groupFirst": true,
+        "price": 160,
+        "pilotedOnly": true,
         "trial": "Variant: The Sil'dihn Subterrane",
         "completion": "24 Hours"
       },
@@ -506,24 +513,20 @@
         "pilotedOnly": true
       },
       "ffxiv-dais-of-darkness-mount": {
-        "price": 850,
-        "afkPrice": 850,
-        "afkLabel": "Group Play",
-        "groupFirst": true,
+        "price": 150,
+        "pilotedOnly": true,
         "trial": "The Cloud of Darkness (Chaotic)",
         "completion": "24 Hours"
       },
       "ffxiv-shroud-of-darkness-mount": {
         "price": 1100,
-        "afkPrice": 1100,
-        "afkLabel": "Group Play",
-        "groupFirst": true,
+        "pilotedOnly": true,
         "trial": "The Cloud of Darkness (Chaotic)",
         "completion": "24 Hours"
       },
       "ffxiv-rathalos-mount": {
-        "price": 50,
-        "afkPrice": 55,
+        "price": 168,
+        "afkPrice": 190,
         "trial": "The Great Hunt (Extreme)",
         "completion": "24 Hours"
       },

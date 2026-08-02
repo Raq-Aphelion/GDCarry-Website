@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Armchair, Check, Clock, Gamepad2, Layers, Minus, Plus, Settings2, Swords } from 'lucide-react';
 import FadeImage from './FadeImage';
 import FieldPopup from './FieldPopup';
+import MethodFadeBlock from './MethodFadeBlock';
 import { CustomSelect } from './PurchaseBox';
 import { Slider } from '@/components/ui/slider';
 import { useCart } from '@/context/CartContext';
@@ -462,8 +463,9 @@ export default function SavageSeriesPurchaseBox({ service, gameShort }: { servic
                     </div>
                   )}
 
-                  {/* FFXIV Logs — piloted only */}
-                  {method === 'piloted' && (
+                  {/* FFXIV Logs — piloted only; extends/retracts with the
+                      method crossfade while the drawer is open */}
+                  <MethodFadeBlock show={method === 'piloted'}>
                     <div>
                       <p className="mb-2 pl-px text-xs font-semibold text-slate-300">FFXIV Logs</p>
                       <CustomSelect
@@ -477,7 +479,7 @@ export default function SavageSeriesPurchaseBox({ service, gameShort }: { servic
                         disabled={!hasSelection}
                       />
                     </div>
-                  )}
+                  </MethodFadeBlock>
 
                   {/* Additional services */}
                   <div>
@@ -511,7 +513,9 @@ export default function SavageSeriesPurchaseBox({ service, gameShort }: { servic
                           </button>
                         );
                       })}
-                      {method === 'piloted' && (
+                      {/* Private Stream — piloted only, collapses with the
+                          method crossfade */}
+                      <MethodFadeBlock show={method === 'piloted'}>
                         <button
                           type="button"
                           onClick={() => setStream((s) => !s)}
@@ -530,7 +534,7 @@ export default function SavageSeriesPurchaseBox({ service, gameShort }: { servic
                           <span className="min-w-0 flex-1 truncate text-sm text-slate-300">Private Stream</span>
                           <span className="text-xs font-bold text-cyan-400">+{format(cfg?.stream ?? 0)}</span>
                         </button>
-                      )}
+                      </MethodFadeBlock>
                       <button
                         type="button"
                         onClick={() => setPriority((p) => !p)}

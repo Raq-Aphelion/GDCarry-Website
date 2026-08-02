@@ -1126,14 +1126,14 @@ SERVICE_PAGES['ffxiv-gobwalker'] = savageMountPage('Gobwalker', 'Alexander - The
 SERVICE_PAGES['ffxiv-arrhidaeus'] = savageMountPage('Arrhidaeus', 'Alexander - The Soul of the Creator (Savage)', 60, '/boosting/ffxiv/ffxiv-alexander-savage');
 SERVICE_PAGES['ffxiv-juedi-mount'] = savageMountPage('Juedi', 'Heaven-on-High (Deep Dungeon)', 100, '/boosting/ffxiv/ffxiv-hoh', '— 4 full clears required.', { groupPlay: true, methodAccordion: GROUP_PLAY_VS_PILOTED });
 SERVICE_PAGES['ffxiv-aeturna-mount'] = savageMountPage('Aeturna', 'Eureka Orthos (Deep Dungeon)', 100, '/boosting/ffxiv/ffxiv-orthos', '— 4 full clears required.', { groupPlay: true, methodAccordion: GROUP_PLAY_VS_PILOTED });
-SERVICE_PAGES['ffxiv-genie-of-the-lamp-mount'] = savageMountPage('Genie of the Lamp', "Another Merchant's Tale", 100, '/boosting/ffxiv/ffxiv-another-merchants-tale', '— random drop or 100 Corvosi Manuscripts exchange.', { groupPlay: true, dropTitle: 'Mount Drop From' });
-SERVICE_PAGES['ffxiv-royal-magicked-carpet-mount'] = savageMountPage('Royal Magicked Carpet', "Variant: Merchant's Tale", 90, '/boosting/ffxiv/ffxiv-variant-merchants-tale', '— random drop or 100 Corvosi Brass exchange.', { groupPlay: true, dropTitle: 'Mount Drop From' });
-SERVICE_PAGES['ffxiv-quaqua-mount'] = savageMountPage('Quaqua', 'Another Aloalo Island', 90, '/boosting/ffxiv/ffxiv-another-aloalo-island', '— random drop or 100 Aloalo Coins exchange.', { groupPlay: true, dropTitle: 'Mount Drop From' });
-SERVICE_PAGES['ffxiv-spectral-statice-mount'] = savageMountPage('Spectral Statice', 'Variant: Aloalo Island', 90, '/boosting/ffxiv/ffxiv-variant-aloalo-island', '— all 12 routes required.', { groupPlay: true });
-SERVICE_PAGES['ffxiv-shishioji-mount'] = savageMountPage('Shishioji', 'Another Mount Rokkon', 90, '/boosting/ffxiv/ffxiv-another-mount-rokkon', '— random drop or 100 Shishu Coin exchange.', { groupPlay: true, dropTitle: 'Mount Drop From' });
-SERVICE_PAGES['ffxiv-burabura-chochin-mount'] = savageMountPage('Burabura Chochin', 'Variant: Mount Rokkon', 90, '/boosting/ffxiv/ffxiv-variant-mount-rokkon', '— all 12 routes required.', { groupPlay: true });
-SERVICE_PAGES['ffxiv-sildihn-throne-mount'] = savageMountPage("Sil'dihn Throne", "Another Sil'dihn Subterrane", 90, '/boosting/ffxiv/ffxiv-another-sildihn-subterrane', "— random drop or 100 Sil'dihn Silver exchange.", { groupPlay: true, dropTitle: 'Mount Drop From' });
-SERVICE_PAGES['ffxiv-silkie-mount'] = savageMountPage('Silkie', "Variant: The Sil'dihn Subterrane", 90, '/boosting/ffxiv/ffxiv-variant-sildihn-subterrane', '— all 12 routes required.', { groupPlay: true });
+SERVICE_PAGES['ffxiv-genie-of-the-lamp-mount'] = savageMountPage('Genie of the Lamp', "Another Merchant's Tale", 100, '/boosting/ffxiv/ffxiv-another-merchants-tale', '— random drop or 100 Corvosi Manuscripts exchange.', { pilotedOnly: true, dropTitle: 'Mount Drop From' });
+SERVICE_PAGES['ffxiv-royal-magicked-carpet-mount'] = savageMountPage('Royal Magicked Carpet', "Variant: Merchant's Tale", 90, '/boosting/ffxiv/ffxiv-variant-merchants-tale', '— random drop or 100 Corvosi Brass exchange.', { pilotedOnly: true, dropTitle: 'Mount Drop From' });
+SERVICE_PAGES['ffxiv-quaqua-mount'] = savageMountPage('Quaqua', 'Another Aloalo Island', 90, '/boosting/ffxiv/ffxiv-another-aloalo-island', '— random drop or 100 Aloalo Coins exchange.', { pilotedOnly: true, dropTitle: 'Mount Drop From' });
+SERVICE_PAGES['ffxiv-spectral-statice-mount'] = savageMountPage('Spectral Statice', 'Variant: Aloalo Island', 90, '/boosting/ffxiv/ffxiv-variant-aloalo-island', '— all 12 routes required.', { pilotedOnly: true });
+SERVICE_PAGES['ffxiv-shishioji-mount'] = savageMountPage('Shishioji', 'Another Mount Rokkon', 90, '/boosting/ffxiv/ffxiv-another-mount-rokkon', '— random drop or 100 Shishu Coin exchange.', { pilotedOnly: true, dropTitle: 'Mount Drop From' });
+SERVICE_PAGES['ffxiv-burabura-chochin-mount'] = savageMountPage('Burabura Chochin', 'Variant: Mount Rokkon', 90, '/boosting/ffxiv/ffxiv-variant-mount-rokkon', '— all 12 routes required.', { pilotedOnly: true });
+SERVICE_PAGES['ffxiv-sildihn-throne-mount'] = savageMountPage("Sil'dihn Throne", "Another Sil'dihn Subterrane", 90, '/boosting/ffxiv/ffxiv-another-sildihn-subterrane', "— random drop or 100 Sil'dihn Silver exchange.", { pilotedOnly: true, dropTitle: 'Mount Drop From' });
+SERVICE_PAGES['ffxiv-silkie-mount'] = savageMountPage('Silkie', "Variant: The Sil'dihn Subterrane", 90, '/boosting/ffxiv/ffxiv-variant-sildihn-subterrane', '— all 12 routes required.', { pilotedOnly: true });
 
 SERVICE_PAGES['ffxiv-forked-tower-blood'] = {
   short: 'The Forked Tower: Blood',
@@ -1341,8 +1341,8 @@ SERVICE_PAGES['ffxiv-demi-ozma'] = savageMountPage('Demi-Ozma', 'The Baldesion A
 SERVICE_PAGES['ffxiv-demon-haul'] = savageMountPage('Demon Haul', 'The Forked Tower: Blood', 100, '/boosting/ffxiv/ffxiv-forked-tower-blood', undefined, { pilotedOnly: true });
 SERVICE_PAGES['ffxiv-duck-billed-porter-mount'] = savageMountPage('Duck-billed Porter', 'The Forked Tower: Magic', 100, '/boosting/ffxiv/ffxiv-forked-tower-magic', '— random drop or 500 Arcane Amulets exchange.', { pilotedOnly: true, dropTitle: 'Mount Drop From' });
 SERVICE_PAGES['ffxiv-vacuum-suit-mount'] = savageMountPage('High Mobility Vacuum Suit', 'Cosmic Exploration', 100, '/boosting/ffxiv/ffxiv-cosmic-exploration', '— 500K Cosmic Tracker on all 11 DoH and DoL jobs.', { pilotedOnly: true });
-SERVICE_PAGES['ffxiv-dais-of-darkness-mount'] = savageMountPage('Dais of Darkness', 'The Cloud of Darkness (Chaotic)', 100, '/boosting/ffxiv/ffxiv-cloud-of-darkness', undefined, { groupPlay: true });
-SERVICE_PAGES['ffxiv-shroud-of-darkness-mount'] = savageMountPage('Shroud of Darkness', 'The Cloud of Darkness (Chaotic)', 100, '/boosting/ffxiv/ffxiv-cloud-of-darkness', undefined, { groupPlay: true });
+SERVICE_PAGES['ffxiv-dais-of-darkness-mount'] = savageMountPage('Dais of Darkness', 'The Cloud of Darkness (Chaotic)', 100, '/boosting/ffxiv/ffxiv-cloud-of-darkness', undefined, { pilotedOnly: true });
+SERVICE_PAGES['ffxiv-shroud-of-darkness-mount'] = savageMountPage('Shroud of Darkness', 'The Cloud of Darkness (Chaotic)', 100, '/boosting/ffxiv/ffxiv-cloud-of-darkness', undefined, { pilotedOnly: true });
 
 /** Mount buttons in the savage subpage reward blocks → their mount services. */
 export const MOUNT_LINKS: Record<string, string> = {
@@ -1582,23 +1582,7 @@ SERVICE_PAGES['ffxiv-cloud-of-darkness'] = {
       items: ['Have a level 100 Job', 'Own the Dawntrail Expansion', 'Normal Mode Completion / Fight Unlocked', 'ilvl 740 or higher gear'],
     },
     HOW_IT_WORKS,
-    {
-      title: 'Group Play vs Piloted Boost',
-      groups: [
-        {
-          heading: 'Group Play',
-          items: [
-            "You'll be raiding alongside our team on your own character",
-            'RNG Loot — roll on all dropped loot alongside the party (per clear)',
-            'Full Loot — every mount, armour and minion drop is yours (per clear)',
-          ],
-        },
-        {
-          heading: 'Piloted Boost',
-          items: ['A professional raider will be logged onto your account and complete the content on your behalf'],
-        },
-      ],
-    },
+    PILOTED_ONLY,
   ],
 };
 
@@ -1659,7 +1643,7 @@ const variantPage = (
       items: [`Have a level ${level} Job`, `Own the ${expansion} Expansion`, 'Dungeon unlocked (available as an additional service)'],
     },
     HOW_IT_WORKS,
-    ALLIANCE_GROUP_VS_PILOTED,
+    PILOTED_ONLY,
   ],
 });
 
@@ -1693,7 +1677,7 @@ const criterionPage = (
       items: [`Have a level ${level} Job`, `Own the ${expansion} Expansion`, 'Criterion unlocked (variant completion available as an additional service)'],
     },
     HOW_IT_WORKS,
-    ALLIANCE_GROUP_VS_PILOTED,
+    PILOTED_ONLY,
   ],
 });
 

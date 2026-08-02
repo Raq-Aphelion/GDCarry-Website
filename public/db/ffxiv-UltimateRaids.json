@@ -96,25 +96,25 @@
   },
   "addonPrices": {
     "ffxiv-dsr": {
-      "unlock": 35
+      "unlock": { "ref": "ffxiv-pandaemonium-savage:asphodelos:p4s" }
     },
     "ffxiv-top": {
-      "unlock": 54
+      "unlock": { "ref": "ffxiv-pandaemonium-savage:abyssos:p8s" }
     },
     "ffxiv-ucob": {
-      "unlock": 7
+      "unlock": { "ref": "ffxiv-omega-savage:deltascape:o4s" }
     },
     "ffxiv-uwu": {
-      "unlock": 7
+      "unlock": { "ref": "ffxiv-omega-savage:sigmascape:o8s" }
     },
     "ffxiv-tea": {
-      "unlock": 7
+      "unlock": { "ref": "ffxiv-eden-savage:gate:e4s" }
     },
     "ffxiv-fru": {
-      "unlock": 70
+      "unlock": { "ref": "ffxiv-arcadion-savage:lhw:m4s" }
     },
     "ffxiv-dmu": {
-      "unlock": 105
+      "unlock": { "ref": "ffxiv-arcadion-savage:hw:m12s" }
     }
   },
   "serviceAddons": {

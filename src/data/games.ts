@@ -168,7 +168,7 @@ export const games: Game[] = [
     short: 'FFXIV',
     tagline: 'Eorzea’s most trusted carry crew',
     description:
-      'Our flagship category. Ultimate raiders, Savage speed-runners and Deep Dungeon veterans — the sharpest Grand Dice rollers in Eorzea handle your order.',
+      'Content ranging from Trials to Ultimates done by verified professionals with decades of experience & part of world race teams.',
     cardImage: cardFfxiv,
     main: true,
     subcategories: [
@@ -426,7 +426,7 @@ export const games: Game[] = [
             tag2: '12 - 24 Player Chaotic Raid Clear',
             price: 0,
             tag1: 'Darkness mounts and gear',
-            tag3: 'Group Play or Piloted',
+            tag3: 'Piloted Service',
             longDescription:
               'The dread cloud looms over the AAC — a chaotic alliance raid where one mistake cascades into wipe after wipe. Our raiders clear it piloted, with demimateria and the rare mount chance on top.',
             image: scCloudOfDarkness,
@@ -767,7 +767,7 @@ export const games: Game[] = [
             tag2: 'Criterion: Normal mode',
             price: 0,
             tag1: 'Exclusive Loot + Tokens',
-            tag3: 'Group Play or Piloted',
+            tag3: 'Piloted Service',
             longDescription:
               "The Merchant's Tale depicts a Corvos from before the Garlean occupation, made even more wondrous by the flourishes of countless storytellers throughout the ages. As you relate the details of your time within its pages to Osmon, he continues the timeless storytelling tradition by adding his own embellishments to an already fantastic fable, and you feel yourself drawn back in to the beautiful but increasingly dangerous world of folklore...",
             image: scAnotherMerchantsTale,
@@ -779,7 +779,7 @@ export const games: Game[] = [
             tag2: 'Criterion: Normal & Savage',
             price: 0,
             tag1: 'Exclusive Loot + Tokens',
-            tag3: 'Group Play or Piloted',
+            tag3: 'Piloted Service',
             longDescription:
               'Inspired by your tale, Osmon rejoices as his imagination soars to heights untold. Visions of the glorious civilizations the peoples of Aloalo built take shape in his mind, populating the island with beasts imbued by esoteric magicks. Drawn into this tide of fantasy and swept to its remotest edge, you must now do battle with the mundane made legendary.',
             image: scAnotherAloaloIsland,
@@ -790,7 +790,7 @@ export const games: Game[] = [
             tag2: 'Criterion: Normal & Savage',
             price: 0,
             tag1: 'Exclusive Loot + Tokens',
-            tag3: 'Group Play or Piloted',
+            tag3: 'Piloted Service',
             longDescription:
               'Delighted beyond measure to hear tell of the mononoke haunting Mount Rokkon, Osmon cannot help but speculate upon the nature of spirits—and what should result were they to grow more powerful than nature is wont to allow...',
             image: scAnotherMountRokkon,
@@ -801,7 +801,7 @@ export const games: Game[] = [
             tag2: 'Criterion: Normal & Savage',
             price: 0,
             tag1: 'Exclusive Loot + Tokens',
-            tag3: 'Group Play or Piloted',
+            tag3: 'Piloted Service',
             longDescription:
               "The retelling of your adventures has set Osmon's imagination aflame with visions of perilous passages and mighty sentinels. He wonders, however, if dwelling in the damp has weakened the guardians; if, before rust and decay set in, that they had once been far more powerful. You cannot help but ponder the possibilities, your thoughts drifting as Osmon's hypothetical scenario plays out in your mind...",
             image: scAnotherSildihnSubterrane,
@@ -812,7 +812,7 @@ export const games: Game[] = [
             tag2: 'Variant: All 13 routes & Advanced',
             price: 0,
             tag1: 'Exclusive Loot + Tokens',
-            tag3: 'Group Play or Piloted',
+            tag3: 'Piloted Service',
             longDescription:
               "Your latest odd job commission brings you together with one Y'nazqha, a gleaner who finds herself in possession of an unusual book inherited from her father and mentor. It contains a rendition of The Merchant's Tale, a fable passed down through generations in Corvos. While the beautifully illuminated pages of the manuscript set it apart from common storybooks, its most singular feature is the enchantment which can pull the very mind of its readers into the story.",
             image: scVariantMerchantsTale,
@@ -824,7 +824,7 @@ export const games: Game[] = [
             tag2: 'Variant: All 12 routes',
             price: 0,
             tag1: 'Exclusive Loot + Tokens',
-            tag3: 'Group Play or Piloted',
+            tag3: 'Piloted Service',
             longDescription:
               "In a seldom-traveled corner of the south sea isles lies Aloalo, an island filled with lush vegetation and teeming with vibrant wildlife. Yet the survival of this paradise hinges on a delicate natural balance which has only grown more precarious since the island's stewards departed a century ago. Answering the plea of a messenger most peculiar, you must join Matsya on a journey to restore order to Aloalo, and in the process uncover secrets long forgotten.",
             image: scVariantAloaloIsland,
@@ -835,7 +835,7 @@ export const games: Game[] = [
             tag2: 'Variant: All 12 routes',
             price: 0,
             tag1: 'Exclusive Loot + Tokens',
-            tag3: 'Group Play or Piloted',
+            tag3: 'Piloted Service',
             longDescription:
               "On Hingashi's westernmost isle of Shishu lies the long-venerated Mount Rokkon. Once refuge for humble monks and weary pilgrims, the holy site lately fell to a host of malevolent mononoke, spurring the local liege lord to take the unprecedented step of inviting ijin to assist in reclaiming its slopes. As in his wont, Hancock has secured the promise of valuable rewards in exchange for his—and your—assistance, but each of these treasures has a life of its own...",
             image: scVariantMountRokkon,
@@ -846,7 +846,7 @@ export const games: Game[] = [
             tag2: 'Variant: All 12 routes',
             price: 0,
             tag1: 'Exclusive Loot + Tokens',
-            tag3: 'Group Play or Piloted',
+            tag3: 'Piloted Service',
             longDescription:
               'An extensive warren of tunnels and waterways stretches beneath the barren lands of Thanalan, but none come now to marvel at this remnant of fallen Sil\'dih. Its memories lie undisturbed, festering silently in the dark and the damp. Yet not for much longer. You have come at the personal behest of Nanamo Ul Namo, and together will you throw open the gate to the desert nation\'s troubled past.',
             image: scVariantSildihnSubterrane,
@@ -1231,9 +1231,9 @@ export const games: Game[] = [
             tag2: 'The Cloud of Darkness (Chaotic)',
             price: 0,
             tag1: 'Guaranteed mount drop',
-            tag3: 'Group Play or Piloted',
+            tag3: 'Piloted Service',
             longDescription:
-              'A swirling throne of umbral energy from The Cloud of Darkness (Chaotic) — guaranteed at minimum ilvl, piloted or alongside our raiders in group play.',
+              'A swirling throne of umbral energy from The Cloud of Darkness (Chaotic) — guaranteed at minimum ilvl with our raiders on your account.',
             image: scDaisOfDarkness,
           },
           {
@@ -1242,9 +1242,9 @@ export const games: Game[] = [
             tag2: 'The Cloud of Darkness (Chaotic)',
             price: 0,
             tag1: 'Guaranteed mount drop',
-            tag3: 'Group Play or Piloted',
+            tag3: 'Piloted Service',
             longDescription:
-              'Wings woven from pure darkness, earned in The Cloud of Darkness (Chaotic) — guaranteed at minimum ilvl, piloted or alongside our raiders in group play.',
+              'Wings woven from pure darkness, earned in The Cloud of Darkness (Chaotic) — guaranteed at minimum ilvl with our raiders on your account.',
             image: scShroudOfDarkness,
           },
           {
@@ -1286,9 +1286,9 @@ export const games: Game[] = [
             tag2: "Another Merchant's Tale",
             price: 0,
             tag1: 'Guaranteed (any number of runs)',
-            tag3: 'Group Play or Piloted',
+            tag3: 'Piloted Service',
             longDescription:
-              "The lamp-dwelling spirit of Corvos — an imitation of legend that still carries you wherever you wish to go. Guaranteed from Another Merchant's Tale, piloted or alongside our raiders in group play.",
+              "The lamp-dwelling spirit of Corvos — an imitation of legend that still carries you wherever you wish to go. Guaranteed from Another Merchant's Tale with our raiders on your account.",
             image: scGenieOfTheLamp,
           },
           {
@@ -1297,9 +1297,9 @@ export const games: Game[] = [
             tag2: "Variant: Merchant's Tale (Advanced)",
             price: 0,
             tag1: 'Guaranteed (any number of runs)',
-            tag3: 'Group Play or Piloted',
+            tag3: 'Piloted Service',
             longDescription:
-              "The sole survivor of the pari's blaze — a flying carpet of Corvosi legend, yours for unlocking every route of the Merchant's Tale. Piloted or alongside our raiders in group play.",
+              "The sole survivor of the pari's blaze — a flying carpet of Corvosi legend, yours for unlocking every route of the Merchant's Tale. Piloted by our raiders on your account.",
             image: scRoyalMagickedCarpet,
           },
           {
@@ -1308,9 +1308,9 @@ export const games: Game[] = [
             tag2: 'Another Aloalo Island',
             price: 0,
             tag1: 'Guaranteed (any number of runs)',
-            tag3: 'Group Play or Piloted',
+            tag3: 'Piloted Service',
             longDescription:
-              'A wooden familiar of ancient arcanima from Aloalo Island — guaranteed from the criterion clear, piloted or alongside our raiders in group play.',
+              'A wooden familiar of ancient arcanima from Aloalo Island — guaranteed from the criterion clear with our raiders on your account.',
             image: scQuaqua,
           },
           {
@@ -1319,9 +1319,9 @@ export const games: Game[] = [
             tag2: 'Variant: Aloalo Island',
             price: 0,
             tag1: 'Guaranteed mount drop',
-            tag3: 'Group Play or Piloted',
+            tag3: 'Piloted Service',
             longDescription:
-              'The mischief-loving faerie of Aloalo — earned for unlocking every conservation record on the island. Piloted or alongside our raiders in group play.',
+              'The mischief-loving faerie of Aloalo — earned for unlocking every conservation record on the island. Piloted by our raiders on your account.',
             image: scSpectralStatice,
           },
           {
@@ -1330,9 +1330,9 @@ export const games: Game[] = [
             tag2: 'Another Mount Rokkon',
             price: 0,
             tag1: 'Guaranteed (any number of runs)',
-            tag3: 'Group Play or Piloted',
+            tag3: 'Piloted Service',
             longDescription:
-              'The lion-dog guardian of Mount Rokkon — guaranteed from the criterion clear, piloted or alongside our raiders in group play.',
+              'The lion-dog guardian of Mount Rokkon — guaranteed from the criterion clear with our raiders on your account.',
             image: scShishioji,
           },
           {
@@ -1341,9 +1341,9 @@ export const games: Game[] = [
             tag2: 'Variant: Mount Rokkon',
             price: 0,
             tag1: 'Guaranteed mount drop',
-            tag3: 'Group Play or Piloted',
+            tag3: 'Piloted Service',
             longDescription:
-              'The swaying paper lantern of Mount Rokkon — earned for unlocking every route through the temple paths. Piloted or alongside our raiders in group play.',
+              'The swaying paper lantern of Mount Rokkon — earned for unlocking every route through the temple paths. Piloted by our raiders on your account.',
             image: scBuraburaChochin,
           },
           {
@@ -1352,9 +1352,9 @@ export const games: Game[] = [
             tag2: "Another Sil'dihn Subterrane",
             price: 0,
             tag1: 'Guaranteed (any number of runs)',
-            tag3: 'Group Play or Piloted',
+            tag3: 'Piloted Service',
             longDescription:
-              "The seat of Sil'dihn royalty, raised from the sunken city — guaranteed from the criterion clear, piloted or alongside our raiders in group play.",
+              "The seat of Sil'dihn royalty, raised from the sunken city — guaranteed from the criterion clear with our raiders on your account.",
             image: scSildihnThrone,
           },
           {
@@ -1363,9 +1363,9 @@ export const games: Game[] = [
             tag2: "Variant: The Sil'dihn Subterrane",
             price: 0,
             tag1: 'Guaranteed mount drop',
-            tag3: 'Group Play or Piloted',
+            tag3: 'Piloted Service',
             longDescription:
-              "The fluffy marmot of the Sil'dihn aqueducts — earned for unlocking every route of the subterrane. Piloted or alongside our raiders in group play.",
+              "The fluffy marmot of the Sil'dihn aqueducts — earned for unlocking every route of the subterrane. Piloted by our raiders on your account.",
             image: scSilkie,
           },
           {
@@ -1672,7 +1672,7 @@ export const games: Game[] = [
     short: 'WoW',
     tagline: 'Azeroth, handled',
     description:
-      'Mythic raiding rosters, MDI-level key pushers and gladiator-ranked PvPers across US and EU realms.',
+      'Content ranging from Mythic+ keys to Mythic raid clears done by verified professionals with decades of experience & part of world race teams.',
     cardImage: cardWow,
     subcategories: [
       {
@@ -1703,7 +1703,7 @@ export const games: Game[] = [
     short: 'Lost Ark',
     tagline: 'Arkesia without the homework',
     description:
-      'Legion Raid veterans and bus drivers with thousands of clears. Skip the gatekeeping, keep the loot.',
+      'Content ranging from Abyssal Dungeons to Legion Raids done by verified professionals with thousands of clears & part of world-first race teams.',
     cardImage: cardLostArk,
     subcategories: [
       {
@@ -1734,7 +1734,7 @@ export const games: Game[] = [
     short: 'Warframe',
     tagline: 'Tenno, we lift the grind',
     description:
-      'Veteran Tenno who run Eidolons in their sleep. Farming, mastery and endgame clears at speed.',
+      'Content ranging from Mastery ranks to endgame bosses done by verified professionals with decades of experience & thousands of hours in the Origin System.',
     cardImage: cardWarframe,
     subcategories: [
       {
@@ -1765,7 +1765,7 @@ export const games: Game[] = [
     short: 'RuneScape',
     tagline: 'Gielinor’s finest mercenaries',
     description:
-      'Inferno-certified pvmers and maxed skillers for both OSRS and RS3. No bots, no shortcuts — just clicks.',
+      'Content ranging from Skilling to the Inferno done by verified professionals with decades of experience & maxed accounts across OSRS and RS3.',
     cardImage: cardOsrs,
     subcategories: [
       {

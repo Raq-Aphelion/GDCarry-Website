@@ -36,7 +36,8 @@ const METHODS = [
     checked applies the bundle price, a partial selection sums the individual
     prices — multiplied by the number of runs. The Mount Guaranteed option
     forces 1 run and every trial checked, and reprices to the tied series
-    mount's cost for the selected method (bundlePrice, ×afkMultiplier AFK). */
+    mount's cost for the selected method (afkBundlePrice, falling back to
+    bundlePrice ×afkMultiplier AFK). */
 export default function TrialBundlePurchaseBox({ service, gameShort }: { service: Service; gameShort: string }) {
   const { addItem, openCart } = useCart();
   const { format } = useCurrency();
@@ -81,8 +82,13 @@ export default function TrialBundlePurchaseBox({ service, gameShort }: { service
   const priceOf = (t: { price: number; afkPrice?: number }) =>
     method === 'afk' ? (t.afkPrice ?? t.price) : t.price;
   // Mount Guaranteed price = the combined mount's cost for this method
-  const mountBase = cfg ? (db.mounts?.series?.[cfg.mountServiceId]?.bundlePrice ?? 0) : 0;
-  const mountPrice = Number((mountBase * (method === 'afk' ? afkMultiplier : 1)).toFixed(2));
+  // (explicit afkBundlePrice, falling back to bundlePrice × afkMultiplier)
+  const mountSeries = cfg ? db.mounts?.series?.[cfg.mountServiceId] : undefined;
+  const mountPrice = mountSeries
+    ? method === 'afk'
+      ? (mountSeries.afkBundlePrice ?? Number((mountSeries.bundlePrice * afkMultiplier).toFixed(2)))
+      : mountSeries.bundlePrice
+    : 0;
 
   const allChecked = cfg ? checked.length === cfg.trials.length : false;
   const afkBundleTotal = cfg?.trials.reduce((s, t) => s + (t.afkPrice ?? t.price), 0) ?? 0;

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Armchair, Clock, Gamepad2 } from 'lucide-react';
+import { Armchair, Check, Clock, Gamepad2 } from 'lucide-react';
 import FadeImage from './FadeImage';
 import FieldPopup from './FieldPopup';
 import DiscountTag from './DiscountTag';
@@ -10,7 +10,7 @@ import { useCart } from '@/context/CartContext';
 import { useCurrency } from '@/context/CurrencyContext';
 import { usePricing } from '@/context/PricingContext';
 import { usePurchaseFloat } from '@/hooks/usePurchaseFloat';
-import type { Service } from '@/data/games';
+import { games, type Service } from '@/data/games';
 
 const DATA_CENTERS = [
   'Aether',
@@ -32,13 +32,17 @@ const METHODS = [
 ] as const;
 
 /** Extreme trial purchase box: boost method with per-method prices from the
-    ffxiv-Trials database, runs, data center, and stream/priority add-ons. */
+    ffxiv-Trials database, runs, data center, and stream/priority add-ons.
+    Trials with a linked mount service (cfg.mount) also offer a Guaranteed
+    Mount option: it pins runs to 1 and reprices to the mount's cost for the
+    selected method (explicit afkPrice, falling back to ×afkMultiplier). */
 export default function TrialPurchaseBox({ service, gameShort }: { service: Service; gameShort: string }) {
   const { addItem, openCart } = useCart();
   const { format } = useCurrency();
   const { db } = usePricing();
   const cfg = db.trials?.[service.id];
   const priorityMultiplier = db.purchaseBox.priorityMultiplier;
+  const afkMultiplier = db.mounts?.afkMultiplier ?? 1.1;
 
   // Pilot discount vs AFK Carry — shown as a "Save X%" tag on the Piloted pill
   const pilotSave =
@@ -48,18 +52,47 @@ export default function TrialPurchaseBox({ service, gameShort }: { service: Serv
 
   const [method, setMethod] = useState<(typeof METHODS)[number]['id']>('piloted');
   const [runs, setRuns] = useState(1);
+  const [guaranteed, setGuaranteed] = useState(false);
   const [dc, setDc] = useState('');
   const [stream, setStream] = useState(false);
   const [priority, setPriority] = useState(false);
   const [dcError, setDcError] = useState(false);
 
   const { rootRef, wrapRef, stick, overflowTop, fixedStyle, blockHpx } = usePurchaseFloat(
-    `${method}|${dc}|${stream}|${priority}|${runs}`,
+    `${method}|${dc}|${stream}|${priority}|${runs}|${guaranteed}`,
   );
+
+  // Guaranteed Mount — the trial's linked mount service (wing or savage
+  // mount), priced per method
+  const mountWing = cfg?.mount ? db.mounts?.wings?.[cfg.mount] : undefined;
+  const mountSavage = cfg?.mount ? db.mounts?.savageMounts?.[cfg.mount] : undefined;
+  const mountService = cfg?.mount
+    ? games.flatMap((g) => g.subcategories).flatMap((s) => s.services ?? []).find((sv) => sv.id === cfg.mount)
+    : undefined;
+  const mountLabel = mountService?.name.replace(/ \(Mount\)$/, '') ?? '';
+  const mountPrice = mountWing
+    ? method === 'afk'
+      ? (mountWing.afkPrice ?? Number((mountWing.price * afkMultiplier).toFixed(2)))
+      : mountWing.price
+    : mountSavage
+      ? method === 'afk'
+        ? (mountSavage.afkPrice ?? Number((mountSavage.price * afkMultiplier).toFixed(2)))
+        : mountSavage.price
+      : 0;
+  const hasMount = !!cfg?.mount && !!mountLabel && mountPrice > 0;
+
+  // Guaranteed Mount: pin runs to 1 while checked
+  const toggleGuaranteed = () =>
+    setGuaranteed((g) => {
+      if (!g) setRuns(1);
+      return !g;
+    });
 
   const streamPrice = 10;
   const methodBase = method === 'afk' ? (cfg?.afkPrice ?? cfg?.price ?? 0) : (cfg?.price ?? 0);
-  const total = methodBase * runs * (priority ? priorityMultiplier : 1) + (stream ? streamPrice : 0);
+  const total = guaranteed
+    ? mountPrice + (stream ? streamPrice : 0)
+    : methodBase * runs * (priority ? priorityMultiplier : 1) + (stream ? streamPrice : 0);
 
   const addToCart = () => {
     if (!dc) {
@@ -72,19 +105,20 @@ export default function TrialPurchaseBox({ service, gameShort }: { service: Serv
     addItem(
       {
         ...service,
-        id: `${service.id}::${method}|${dc}`,
-        price: methodBase,
+        id: `${service.id}::${method}|${dc}${guaranteed ? '|guaranteed' : ''}`,
+        price: guaranteed ? mountPrice : methodBase,
         method: methodLabel,
         flat: stream ? streamPrice : undefined,
-        multiplier: priority ? priorityMultiplier : undefined,
+        ...(guaranteed ? { qtyLocked: true } : { multiplier: priority ? priorityMultiplier : undefined }),
       },
       gameShort,
       [
+        ...(guaranteed ? [`${mountLabel} Guaranteed`] : []),
         `Data Center: ${dc}`,
         ...(stream ? ['Private Stream'] : []),
-        ...(priority ? [`Priority (+${Math.round((priorityMultiplier - 1) * 100)}%)`] : []),
+        ...(!guaranteed && priority ? [`Priority (+${Math.round((priorityMultiplier - 1) * 100)}%)`] : []),
       ],
-      runs,
+      guaranteed ? 1 : runs,
     );
     openCart();
   };
@@ -135,14 +169,15 @@ export default function TrialPurchaseBox({ service, gameShort }: { service: Serv
             </div>
           </div>
 
-          {/* Runs */}
-          <div>
+          {/* Runs — pinned to 1 while Guaranteed Mount is on */}
+          <div className={guaranteed ? 'pointer-events-none opacity-50' : ''}>
             <p className="pl-px text-sm font-semibold text-white">Amount of Runs</p>
             <input
               type="text"
               inputMode="numeric"
               value={String(runs)}
               aria-label="Runs"
+              disabled={guaranteed}
               onChange={(e) => {
                 const v = parseInt(e.target.value.replace(/[^0-9]/g, ''), 10);
                 if (!Number.isNaN(v)) setRuns(Math.min(Math.max(v, 1), 99));
@@ -159,6 +194,31 @@ export default function TrialPurchaseBox({ service, gameShort }: { service: Serv
               aria-label="Runs slider"
             />
           </div>
+
+          {/* Guaranteed Mount — farmed until it drops, at the mount's price */}
+          {hasMount && (
+            <div>
+              <p className="pl-px text-sm font-semibold text-white">Guaranteed Mount</p>
+              <div className="mt-2.5">
+                <button
+                  type="button"
+                  onClick={toggleGuaranteed}
+                  aria-pressed={guaranteed}
+                  className="flex w-full items-center gap-3 rounded-[5px] bg-navy-850 px-2.5 py-1.5 text-left transition-colors hover:bg-navy-800"
+                >
+                  <span
+                    className={`flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-[3px] border transition-colors ${
+                      guaranteed ? 'border-cyan-600 bg-cyan-600 text-navy-900' : 'border-navy-600 text-transparent'
+                    }`}
+                  >
+                    <Check className="h-3 w-3" strokeWidth={3.5} />
+                  </span>
+                  <span className="min-w-0 flex-1 truncate text-sm text-slate-300">{mountLabel} Guaranteed</span>
+                  <span className="text-xs font-bold text-cyan-400">{format(mountPrice)}</span>
+                </button>
+              </div>
+            </div>
+          )}
 
           {/* Data center */}
           <div>
