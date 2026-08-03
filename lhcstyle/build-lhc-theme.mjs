@@ -297,12 +297,12 @@ body { background-color: #0f0f11 !important; }
   display: none !important;
 }
 
-/* Operator strip — compact one-row badge: small round avatar + name,
-   theme colors, tighter padding than the queue/pending strip. In the React
-   widget #chat-status-container itself carries .operator-info; the classic
-   path injects .operator-info as a child (both covered). Left-aligned —
-   the name is injected by header_html when the widget renders a bare
-   centered avatar with no name. */
+/* Operator strip — compact one-row badge in the site's cyan accent: small
+   round avatar + name over a cyan-tinted bar (crank the rgba alphas up for
+   a more solid look). In the React widget #chat-status-container itself
+   carries .operator-info; the classic path injects .operator-info as a
+   child (both covered). Left-aligned — the name is injected by header_html
+   when the widget renders a bare centered avatar with no name. */
 #lhc-profile-body:has(.operator-info),
 #chat-status-container:has(.operator-info),
 #chat-status-container.operator-info {
@@ -312,13 +312,15 @@ body { background-color: #0f0f11 !important; }
   gap: 8px !important;
   padding: 8px 16px !important;
   text-align: left !important;
+  background: rgba(59, 130, 246, 0.14) !important;
+  border-bottom: 1px solid rgba(59, 130, 246, 0.35) !important;
 }
 .operator-info {
   display: inline-flex !important;
   align-items: center !important;
   gap: 8px !important;
   font-size: 12px !important;
-  color: #94a3b8 !important;
+  color: #93c5fd !important;
 }
 .operator-info img,
 .op-photo img {
@@ -332,7 +334,7 @@ body { background-color: #0f0f11 !important; }
 .operator-profile-content,
 .gdc-op-name {
   font-size: 12px !important;
-  color: #f1f5f9 !important;
+  color: #60a5fa !important;
 }
 
 /* No operator photo? LHC falls back to .icon-assistant — restyle it as a
@@ -356,7 +358,7 @@ body { background-color: #0f0f11 !important; }
   display: inline-flex !important;
   width: 26px !important;
   height: 26px !important;
-  margin: 0 14px 0 0 !important;
+  margin: 0 22px 0 0 !important;
   border-radius: 999px !important;
   overflow: hidden !important;
   vertical-align: bottom !important;
@@ -374,15 +376,15 @@ body { background-color: #0f0f11 !important; }
    hidden .chat-operators icon — re-show only the ones carrying an avatar */
 .chat-operators:has(.profile-msg-pic) {
   display: inline-flex !important;
-  margin: 0 14px 0 0 !important;
+  margin: 0 22px 0 0 !important;
   vertical-align: bottom !important;
 }
 
 /* Operator rows without the avatar (chain followers, or the first row after
    the avatar was moved to the chain's last message) keep their bubble aligned
-   with the avatar row: 26px avatar + 14px gap */
+   with the avatar row: 26px avatar + 22px gap */
 .message-row.message-admin:not(:has(.profile-msg-pic)) .msg-body {
-  margin-left: 40px !important;
+  margin-left: 48px !important;
 }
 
 /* No visitor avatar — the right lane belongs to the bubble alone */
@@ -487,16 +489,16 @@ body { background-color: #0f0f11 !important; }
   text-align: center !important;
 }
 
-/* Messages area base — really narrow vertical rhythm between bubbles, in
-   both block (margin) and flex-column (gap) layouts; rows with inline
-   children get 4px between bubble and timestamp */
-.message-row { margin-bottom: 2px !important; gap: 4px !important; }
+/* Messages area base — flush vertical rhythm: 2px between rows in both
+   block (margin) and flex-column (gap) layouts, nothing between a bubble
+   and its timestamp */
+.message-row { margin-bottom: 2px !important; gap: 0 !important; }
 #messages-scroll, #messages, #messagesBlock { gap: 2px !important; }
 
 /* Side spacing — row-level so it holds whatever container pads the list:
    operator rows leave room for the avatar from the window's left edge,
    visitor bubbles sit a comfortable step off the right edge */
-.message-row.message-admin { padding-left: 28px !important; }
+.message-row.message-admin { padding-left: 12px !important; }
 .message-row.response { padding-right: 6px !important; }
 
 /* Bubbles — smaller text, tight radius, capped width with real side
@@ -525,7 +527,7 @@ body { background-color: #0f0f11 !important; }
   border-radius: 6px;
 }
 
-/* Visitor bubble — site CTA gradient */
+/* Visitor bubble — the site's blue accent gradient (#3b82f6 family) */
 .message-row.response .msg-body {
   background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%) !important;
   color: #ffffff !important;
@@ -556,18 +558,21 @@ body { background-color: #0f0f11 !important; }
   color: #60a5fa !important;
 }
 
-/* Timestamps — small and quiet; exactly 4px under the bubble, aligned to
+/* Timestamps — small and quiet; flush (2px) under the bubble, aligned to
    their sender's side, and shown only on the LAST message of each sender's
    run (before the other person replies), plus the final message */
 .msg-date {
   font-size: 10px !important;
   color: #64748b !important;
   font-style: normal !important;
-  margin: 4px 2px 0 !important;
+  margin: 2px 2px 0 !important;
   padding: 0 !important;
   line-height: 1.3 !important;
 }
-.message-row.response .msg-date {
+.message-row.response .msg-date,
+#messagesBlock .message-row.response .msg-date {
+  display: block !important;
+  width: 100% !important;
   text-align: right !important;
   align-self: flex-end !important;
   margin-right: 4px !important;
@@ -578,7 +583,7 @@ body { background-color: #0f0f11 !important; }
 }
 /* Timestamps under avatar-less operator rows line up with the bubble */
 .message-row.message-admin:not(:has(.profile-msg-pic)) .msg-date {
-  margin-left: 42px !important;
+  margin-left: 50px !important;
 }
 #messagesBlock .message-row .msg-date { display: none !important; }
 #messagesBlock .message-row.response:has(+ .message-row:not(.response)) .msg-date,
@@ -597,17 +602,17 @@ body { background-color: #0f0f11 !important; }
 
 /* Typing indicator — LHC renders it (white bg!) as a flex item INSIDE the
    send-area row, which squeezes/clips it. Repositioned as a floating strip
-   lifted 8px above the send area (clear of the input): transparent, small
-   text, animated dots, fade-in on appear (fade-out is the clone trick in
-   header_html — React unmounts it instantly, so CSS alone can't animate the
-   exit). Scoped to .online-chat: the start form reuses the same id for
-   validation errors */
+   lifted just above the send area so it overlaps the lowest timestamp:
+   solid chat-window background so it covers what sits beneath, smooth
+   half-second fades (fade-out is the clone trick in header_html — React
+   unmounts it instantly, so CSS alone can't animate the exit). Scoped to
+   .online-chat: the start form reuses the same id for validation errors */
 .online-chat #id-operator-typing {
   position: absolute !important;
-  bottom: calc(100% + 8px) !important;
+  bottom: calc(100% + 10px) !important;
   left: 0 !important;
   right: 0 !important;
-  background: transparent !important;
+  background: #0f0f11 !important;
   border: none !important;
   box-shadow: none !important;
   font-size: 0 !important;
@@ -615,19 +620,13 @@ body { background-color: #0f0f11 !important; }
   max-height: none !important;
   overflow: visible !important;
   line-height: 1.4 !important;
-  padding: 4px 16px !important;
-  animation: gdc-typing-in 0.3s ease !important;
+  padding: 6px 16px !important;
+  animation: gdc-typing-in 0.5s ease !important;
 }
 .online-chat #id-operator-typing::before {
   content: 'Support is typing now';
   font-size: 10px;
   color: #94a3b8;
-}
-.online-chat #id-operator-typing::after {
-  content: '';
-  font-size: 10px;
-  color: #94a3b8;
-  animation: gdc-typing-dots 1.2s infinite;
 }
 @keyframes gdc-typing-in {
   from { opacity: 0; }
@@ -636,12 +635,6 @@ body { background-color: #0f0f11 !important; }
 @keyframes gdc-typing-out {
   from { opacity: 1; }
   to { opacity: 0; }
-}
-@keyframes gdc-typing-dots {
-  0% { content: ''; }
-  25% { content: '.'; }
-  50% { content: '..'; }
-  75% { content: '...'; }
 }
 
 /* Same id in the start/offline form = validation error — readable, no white bg */
@@ -1255,7 +1248,7 @@ document.addEventListener('click', function (e) {
       var area = document.querySelector('.online-chat .message-send-area');
       if (area) {
         var clone = last.cloneNode(true);
-        clone.style.animation = 'gdc-typing-out 0.3s ease forwards';
+        clone.style.animation = 'gdc-typing-out 0.5s ease forwards';
         area.appendChild(clone);
         setTimeout(function () { clone.remove(); }, 350);
       }
@@ -1293,10 +1286,22 @@ document.addEventListener('click', function (e) {
     });
   }
   function fixTimestamps() {
+    // Trim year/seconds, then collapse runs of identical timestamps: only
+    // the first message of a same-minute run keeps its stamp (inline
+    // !important so it beats the per-run display rules in the CSS)
+    var lastText = null;
     document.querySelectorAll('.msg-date').forEach(function (el) {
       var t = el.textContent;
       var nt = t.replace(/^\s*\d{4}[-/]/, '').replace(/(:\d{2}):\d{2}(\s*(?:[AP]M|am|pm))?\s*$/, '$1$2');
       if (nt !== t) el.textContent = nt;
+      var visible = el.offsetParent !== null;
+      if (!visible) { lastText = null; return; }
+      if (nt.trim() !== '' && nt.trim() === lastText) {
+        el.style.setProperty('display', 'none', 'important');
+      } else {
+        el.style.removeProperty('display');
+        lastText = nt.trim();
+      }
     });
   }
   function fixStrip() {
