@@ -393,9 +393,9 @@ export const games: Game[] = [
             tag2: "Echoes of Vana'diel (Alliance Raid)",
             price: 0,
             tag1: 'Guaranteed gear',
-            tag3: 'Group Play or Piloted',
+            tag3: 'Piloted Service',
             longDescription:
-              "The third walk of the Echoes of Vana'diel series in Windurst — a full 24-player alliance clear with a guaranteed gear upgrade token and all loot kept. Cleared piloted or alongside our raiders in group play.",
+              "The third walk of the Echoes of Vana'diel series in Windurst — a full 24-player alliance clear with a guaranteed gear upgrade token and all loot kept. Cleared piloted by our veteran raiders.",
             image: scWindurstThirdWalk,
           },
           {
@@ -404,9 +404,9 @@ export const games: Game[] = [
             tag2: "Echoes of Vana'diel (Alliance Raid)",
             price: 0,
             tag1: 'Guaranteed gear',
-            tag3: 'Group Play or Piloted',
+            tag3: 'Piloted Service',
             longDescription:
-              "The Echoes of Vana'diel continue in San d'Oria — a full 24-player alliance clear with a guaranteed gear upgrade token and all loot kept. Cleared piloted or alongside our raiders in group play.",
+              "The Echoes of Vana'diel continue in San d'Oria — a full 24-player alliance clear with a guaranteed gear upgrade token and all loot kept. Cleared piloted by our veteran raiders.",
             image: scSanDoriaSecondWalk,
           },
           {
@@ -415,9 +415,9 @@ export const games: Game[] = [
             tag2: "Echoes of Vana'diel (Alliance Raid)",
             price: 0,
             tag1: 'Guaranteed gear',
-            tag3: 'Group Play or Piloted',
+            tag3: 'Piloted Service',
             longDescription:
-              "The first walk through the ruined streets of Jeuno — a 24-player trip back to Vana'diel with 720+ ilvl gear, the Nano Lord minion and every drop along the way. Cleared piloted or alongside our raiders in group play.",
+              "The first walk through the ruined streets of Jeuno — a 24-player trip back to Vana'diel with 720+ ilvl gear, the Nano Lord minion and every drop along the way. Cleared piloted by our veteran raiders.",
             image: scJeunoFirstWalk,
           },
           {

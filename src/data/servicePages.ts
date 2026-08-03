@@ -1,4 +1,10 @@
-import { ArrowUp, BadgeCheck, Coins, Gem, Medal, Package, Shield, ShieldCheck, Swords, Timer, Trophy, Undo2, type LucideIcon } from 'lucide-react';
+import { ArrowUp, BadgeCheck, Coins, Gem, Medal, NotebookText, Package, Shield, ShieldCheck, Swords, Timer, Trophy, Undo2, createLucideIcon, type LucideIcon } from 'lucide-react';
+
+/** Single coin — lucide only ships `Coins` (two coins); keeps the same stroke style. */
+const SingleCoin = createLucideIcon('SingleCoin', [
+  ['circle', { cx: '12', cy: '12', r: '8', key: 'c' }],
+  ['path', { d: 'M10.5 9.5h1.5v5', key: 'p' }],
+]);
 
 export interface ServicePageReward {
   icon: LucideIcon;
@@ -641,6 +647,7 @@ const relicPage = (
   requirement: string,
   rewardText: string,
   rewardTitle?: string,
+  achievementRow?: ServicePageReward,
 ): ServicePageContent => ({
   short,
   rewardsHeading: 'What you get',
@@ -660,7 +667,7 @@ const relicPage = (
       title: 'All Materials Kept',
       text: 'Tomestones, crystals and every material farmed along the way stays on your character.',
     },
-    {
+    achievementRow ?? {
       icon: Medal,
       title: 'Achievement Unlocked',
       text: 'Achievement unlocked upon completing the relic chain.',
@@ -718,7 +725,11 @@ SERVICE_PAGES['ffxiv-resistance-weapon'] = relicPage('Resistance Weapon', 'weapo
 SERVICE_PAGES['ffxiv-eureka-weapon'] = relicPage('Eurekan Weapon', 'weapon', 'Stormblood', 'Eureka Anemos unlocked (available as an additional service)', 'The Stormblood Eurekan Weapon for your chosen job, at any stage.');
 SERVICE_PAGES['ffxiv-eurekan-elemental-armour'] = relicPage('Eurekan Armour', 'armour', 'Stormblood', 'Eureka Pyros unlocked (available as an additional service)', 'The full Elemental Armour set for your chosen role type.');
 SERVICE_PAGES['ffxiv-anima-weapon'] = relicPage('Anima Weapon', 'weapon', 'Heavensward', 'Anima weapon questline unlocked (available as an additional service)', 'The Heavensward Anima Weapon for your chosen job, at any stage.');
-SERVICE_PAGES['ffxiv-zodiac-weapon'] = relicPage('Zodiac Weapon', 'weapon', 'A Realm Reborn', 'Zodiac weapon questline unlocked (available as an additional service)', 'The A Realm Reborn Zodiac Weapon for your chosen job, at any stage.');
+SERVICE_PAGES['ffxiv-zodiac-weapon'] = relicPage('Zodiac Weapon', 'weapon', 'A Realm Reborn', 'Zodiac weapon questline unlocked (available as an additional service)', 'The A Realm Reborn Zodiac Weapon for your chosen job, at any stage.', undefined, {
+  icon: Medal,
+  title: 'Achievements & Titles based on the weapon chosen',
+  text: 'Achievement & Titles unlocked upon completing the relic chain depending on the job chosen.',
+});
 
 SERVICE_PAGES['ffxiv-crafter-gatherer-leveling'] = {  short: 'Crafter & Gatherer Leveling',
   rewardsHeading: 'What you get',
@@ -1148,16 +1159,16 @@ SERVICE_PAGES['ffxiv-forked-tower-blood'] = {
     {
       icon: Gem,
       title: 'All Loot Included',
-      text: 'Gear, fragments and every drop from the clear stays yours.',
+      text: 'Gear, sanguinites and every drop from the clear stays yours.',
     },
     {
-      icon: Swords,
-      title: '48-Player Field Operation Clear',
-      text: 'The Forked Tower: Blood completed.',
+      icon: NotebookText,
+      title: 'Notes & Records',
+      text: 'Multiple Notes & Records for the Occult Crescent record collection',
     },
     {
       icon: Medal,
-      title: 'Achievement Unlocked',
+      title: 'Achievement Unlocked: "A Fork to Be Reckoned With I"',
       text: 'Achievement unlocked upon clearing The Forked Tower: Blood.',
     },
   ],
@@ -1193,7 +1204,7 @@ SERVICE_PAGES['ffxiv-forked-tower-magic'] = {
     },
     {
       icon: Medal,
-      title: 'Achievement Unlocked',
+      title: 'Achievement Unlocked: "Tour de Fork I" & Title "Of the Two Towers"',
       text: 'Achievement unlocked upon clearing The Forked Tower: Magic.',
     },
   ],
@@ -1285,7 +1296,7 @@ SERVICE_PAGES['ffxiv-morbol-mount'] = {  short: 'Morbol',
     {
       icon: Trophy,
       title: 'Guaranteed Mount Drop From',
-      text: 'Completing the Blue Unchained and Masked Conqueror Achievements (Blue Mage).',
+      text: 'Completing the "Blue Unchained" and "Masked Conqueror" Achievements (Blue Mage).',
     },
     {
       icon: Swords,
@@ -1300,7 +1311,7 @@ SERVICE_PAGES['ffxiv-morbol-mount'] = {  short: 'Morbol',
     {
       icon: Medal,
       title: 'Achievement: "True Blue"',
-      text: 'Achievement unlocked upon obtaining the Blue Unchained and Masked Conqueror achievements.',
+      text: 'Achievement unlocked upon obtaining the "Blue Unchained" and "Masked Conqueror" achievements.',
     },
   ],
   accordion: [
@@ -1574,7 +1585,7 @@ SERVICE_PAGES['ffxiv-cloud-of-darkness'] = {
     { icon: Trophy, title: 'Mount Drops (Guaranteed at minimum ilvl)', items: ['Dais of Darkness', 'Shroud of Darkness'] },
     { icon: Package, title: 'Clouddark Armours & Wisp of Darkness Minion', text: 'Exclusive Clouddark demimateria earned for completing the encounter.' },
     { icon: Swords, title: 'Chaotic Alliance Raid Completion', text: 'The Cloud of Darkness (Chaotic) completed.' },
-    { icon: BadgeCheck, title: 'Achievement: "Cloud Strife"', text: 'Achievement unlocked upon defeating The Cloud of Darkness (Chaotic).' },
+    { icon: Medal, title: 'Achievement: "Cloud Strife"', text: 'Achievement unlocked upon defeating The Cloud of Darkness (Chaotic).' },
   ],
   accordion: [
     {
@@ -1588,29 +1599,31 @@ SERVICE_PAGES['ffxiv-cloud-of-darkness'] = {
 
 const allianceRaidPage = (
   short: string,
-  token: string,
+  ilvl: number,
+  coin: string,
+  achievement: string,
 ): ServicePageContent => ({
   short,
   rewardsHeading: 'Rewards',
   rewards: [
-    { icon: Package, title: token, text: 'High item level gear from every clear, straight to your armoury.' },
-    { icon: Gem, title: 'All Loot Kept', text: 'Minions, orchestrion rolls, cards and tomestones — every drop from the run stays on your character.' },
-    { icon: Swords, title: 'Alliance Raid Completion', text: `${short} completed.` },
-    { icon: Medal, title: 'Achievement Unlocked', text: `Achievement unlocked upon completing ${short}.` },
+    { icon: Package, title: `High ilvl Gear - ${ilvl} ilvl`, text: 'Chance of High item level gear from every clear, straight to your armoury.' },
+    { icon: Gem, title: 'Chance of items below:', text: 'Minions, orchestrion rolls, triple triad cards have a chance of being obtained.' },
+    { icon: SingleCoin, title: `${coin} Coin`, text: 'Currency that can be exchanged for tomestone gear upgrades' },
+    { icon: Medal, title: `Achievement Unlocked: "${achievement}"`, text: `Achievement unlocked upon completing ${short}.` },
   ],
   accordion: [
     {
       title: 'Requirements',
-      items: ['Have a level 100 Job', 'Own the Dawntrail Expansion', 'Duty unlocked (available as an additional service)'],
+      items: ['Have a level 100 Job', 'Own the Dawntrail Expansion', 'Duty unlocked'],
     },
     HOW_IT_WORKS,
-    ALLIANCE_GROUP_VS_PILOTED,
+    PILOTED_ONLY,
   ],
 });
 
-SERVICE_PAGES['ffxiv-jeuno-first-walk'] = allianceRaidPage('Jeuno: The First Walk', 'Guaranteed Gear');
-SERVICE_PAGES['ffxiv-san-doria-second-walk'] = allianceRaidPage("San d'Oria: The Second Walk", 'Guaranteed Gear Upgrade Token');
-SERVICE_PAGES['ffxiv-windurst-third-walk'] = allianceRaidPage('Windurst: The Third Walk', 'Guaranteed Gear Upgrade Token');
+SERVICE_PAGES['ffxiv-jeuno-first-walk'] = allianceRaidPage('Jeuno: The First Walk', 720, 'Ordelle', 'Home Away from Home');
+SERVICE_PAGES['ffxiv-san-doria-second-walk'] = allianceRaidPage("San d'Oria: The Second Walk", 750, 'Montiont', 'O Brother, Where Zilart Thou');
+SERVICE_PAGES['ffxiv-windurst-third-walk'] = allianceRaidPage('Windurst: The Third Walk', 780, 'Ranperre', 'The Pursuit of Emptiness');
 
 /** Variant dungeon pages share one shape; level/expansion differ per dungeon.
     `mount` replaces the generic cosmetics row (2nd spot) with a mount button;
@@ -1654,6 +1667,7 @@ const criterionPage = (
   level: number,
   expansion: string,
   extra: ServicePageReward,
+  achievement: string,
   mount?: { name: string; note?: string },
 ): ServicePageContent => ({
   short,
@@ -1669,7 +1683,7 @@ const criterionPage = (
         } satisfies ServicePageReward]
       : [{ icon: Coins, title: '4 Dungeon Coins per Clear', text: 'Coins trade for materia, orchestrion rolls and the exclusive mount (100 coins).' } satisfies ServicePageReward]),
     extra,
-    { icon: Medal, title: 'Achievement Unlocked', text: `Achievement unlocked upon completing ${short}.` },
+    { icon: Medal, title: `Achievement Unlocked: "${achievement}"`, text: `Achievement unlocked upon completing ${short}.` },
   ],
   accordion: [
     {
@@ -1692,24 +1706,24 @@ SERVICE_PAGES['ffxiv-variant-sildihn-subterrane'] = variantPage("Variant: The Si
 
 SERVICE_PAGES['ffxiv-another-merchants-tale'] = criterionPage("Another Merchant's Tale", 100, 'Dawntrail', {
   icon: BadgeCheck,
-  title: 'Exclusive Title & Rewards',
+  title: 'Exclusive "Literary Cannon" Title & Rewards',
   text: 'Title and dungeon-specific rewards from the criterion clear.',
-}, { name: 'Genie of the Lamp', note: '— random drop or 100 Corvosi Manuscripts exchange.' });
+}, 'One Thousand and One Fights', { name: 'Genie of the Lamp', note: '— random drop or 100 Corvosi Manuscripts exchange.' });
 SERVICE_PAGES['ffxiv-another-aloalo-island'] = criterionPage('Another Aloalo Island', 90, 'Endwalker', {
-  icon: Coins,
-  title: '4 Aloalo Coins per Clear',
-  text: 'Coins trade for materia, orchestrion rolls and the Quaqua mount (100 coins).',
-}, { name: 'Quaqua', note: '— random drop or 100 Aloalo Coins exchange.' });
+  icon: BadgeCheck,
+  title: 'Exclusive Title "Force of Nature"',
+  text: 'Title achieved from clearing the hardest difficulty version.',
+}, 'Charting the Savage Unknown', { name: 'Quaqua', note: '— random drop or 100 Aloalo Coins exchange.' });
 SERVICE_PAGES['ffxiv-another-mount-rokkon'] = criterionPage('Another Mount Rokkon', 90, 'Endwalker', {
-  icon: Coins,
-  title: '4 Rokkon Coins per Clear',
-  text: 'Coins trade for materia, orchestrion rolls and the Shishioji mount (100 coins).',
-}, { name: 'Shishioji', note: '— random drop or 100 Shishu Coin exchange.' });
+  icon: BadgeCheck,
+  title: 'Exclusive Title "Ascendant Ascetic"',
+  text: 'Title achieved from clearing the hardest difficulty version.',
+}, 'Moving a Savage Mountain', { name: 'Shishioji', note: '— random drop or 100 Shishu Coin exchange.' });
 SERVICE_PAGES['ffxiv-another-sildihn-subterrane'] = criterionPage("Another Sil'dihn Subterrane", 90, 'Endwalker', {
   icon: BadgeCheck,
-  title: 'Title: Infamy of Sil\'dih',
+  title: 'Exclusive Title: "Infamy of Sil\'dih"',
   text: 'Exclusive title from the criterion clear.',
-}, { name: "Sil'dihn Throne", note: "— random drop or 100 Sil'dihn Silver exchange." });
+}, "Infamy of Sil'dih", { name: "Sil'dihn Throne", note: "— random drop or 100 Sil'dihn Silver exchange." });
 
 SERVICE_PAGES['ffxiv-potd-solo'] = deepDungeonPage(
   'Palace of the Dead',

@@ -1,22 +1,24 @@
 {
   "methodPrices": {
     "ffxiv-jeuno-first-walk": {
-      "piloted": 120,
-      "afk": 105,
-      "afkLabel": "Group Play",
-      "groupFirst": true
+      "piloted": 45
     },
     "ffxiv-san-doria-second-walk": {
-      "piloted": 120,
-      "afk": 105,
-      "afkLabel": "Group Play",
-      "groupFirst": true
+      "piloted": 45
     },
     "ffxiv-windurst-third-walk": {
-      "piloted": 120,
-      "afk": 105,
-      "afkLabel": "Group Play",
-      "groupFirst": true
+      "piloted": 45
+    }
+  },
+  "serviceAddons": {
+    "ffxiv-jeuno-first-walk": {
+      "piloted": []
+    },
+    "ffxiv-san-doria-second-walk": {
+      "piloted": []
+    },
+    "ffxiv-windurst-third-walk": {
+      "piloted": []
     }
   },
   "criterion": {

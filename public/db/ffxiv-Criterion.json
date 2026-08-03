@@ -17,7 +17,7 @@
           "forcedRuns": 1
         }
       ],
-      "advancedPrice": 90
+      "advancedPrice": 50
     },
     "ffxiv-variant-aloalo-island": {
       "price": 20,
@@ -62,7 +62,7 @@
       ]
     },
     "ffxiv-another-merchants-tale": {
-      "price": 300,
+      "price": 90,
       "pilotedOnly": true,
       "completion": "24 Hours",
       "addons": [
@@ -75,7 +75,7 @@
       ]
     },
     "ffxiv-another-aloalo-island": {
-      "price": 300,
+      "price": 90,
       "savagePrice": 300,
       "pilotedOnly": true,
       "completion": "24 Hours",
@@ -89,7 +89,7 @@
       ]
     },
     "ffxiv-another-mount-rokkon": {
-      "price": 300,
+      "price": 90,
       "savagePrice": 300,
       "pilotedOnly": true,
       "completion": "24 Hours",
@@ -103,7 +103,7 @@
       ]
     },
     "ffxiv-another-sildihn-subterrane": {
-      "price": 300,
+      "price": 90,
       "savagePrice": 300,
       "pilotedOnly": true,
       "completion": "24 Hours",
