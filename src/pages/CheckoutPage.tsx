@@ -268,8 +268,9 @@ export default function CheckoutPage() {
         : null;
     setPurchased(items);
     setStage('processing');
-    // Order logging via the proxy — fire and forget, it never blocks the order
-    logOrder(orderId).catch(() => {});
+    // Order logging via the proxy — only for Discord-contact orders (live
+    // chat orders already land in LHC). Fire and forget, never blocks.
+    if (contactVia === 'discord') logOrder(orderId).catch(() => {});
     window.setTimeout(() => {
       clear();
       setStage('done');
