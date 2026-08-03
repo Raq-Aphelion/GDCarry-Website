@@ -113,7 +113,7 @@ export function CustomSelect({
         }`}
       >
         <div className="overflow-hidden">
-          <div className="max-h-60 overflow-y-auto rounded-b-[5px] border border-t-0 border-navy-600 bg-navy-850 shadow-2xl">
+          <div data-lenis-prevent className="max-h-60 overflow-y-auto rounded-b-[5px] border border-t-0 border-navy-600 bg-navy-850 shadow-2xl">
             {(() => {
               // Dividers render as static headers and skip the select index
               let sel = -1;

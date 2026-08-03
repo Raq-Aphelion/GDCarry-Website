@@ -28,6 +28,9 @@ export function usePurchaseFloat(watchKey?: unknown) {
   // Render-side copy of blockH (refs must not be read during render)
   const [blockHpx, setBlockHpx] = useState(0);
   const [fixedStyle, setFixedStyle] = useState<CSSProperties | null>(null);
+  // Last applied fixedStyle as a comparable key — lets `update` skip state
+  // writes when the computed pin hasn't moved (see below)
+  const lastFixedKey = useRef('');
 
   const update = useCallback(() => {
     const w = wrapRef.current;
@@ -40,29 +43,32 @@ export function usePurchaseFloat(watchKey?: unknown) {
       setBlockHpx(h); // React bails out when unchanged — no re-render churn
     }
     const vh = window.innerHeight;
+    let next: CSSProperties | null = null;
     if (stickRef.current && window.innerWidth >= 1024) {
       // Sticky box: keep the price block reachable before the box pins, then
       // let it ride with the box (never detach near the CTA).
       if (r.bottom > vh + 1) {
-        setFixedStyle({ position: 'fixed', top: vh - h, left: r.left, width: r.width, zIndex: 20 });
-      } else {
-        setFixedStyle(null);
+        next = { position: 'fixed', top: vh - h, left: r.left, width: r.width, zIndex: 20 };
       }
-      return;
+    } else if (r.top < 96 || r.bottom > vh + 1) {
+      let top: number;
+      if (r.top < 96) top = Math.min(96, vh - h); // scrolled past: pin like categories, sink only if overflowing
+      else top = vh - h; // below the fold: touch the bottom of the screen
+      const aside = w.closest('aside');
+      if (aside) {
+        const cb = aside.getBoundingClientRect().bottom;
+        if (top + h > cb) top = cb - h; // stop before the custom-order CTA
+      }
+      next = { position: 'fixed', top, left: r.left, width: r.width, zIndex: 20 };
     }
-    if (r.top >= 96 && r.bottom <= vh + 1) {
-      setFixedStyle(null);
-      return;
+    // Runs on every scroll frame. The computed pin is usually stable while
+    // scrolling, so compare before writing state — a fresh object each frame
+    // would re-render the whole purchase box 60x/s and hitch smooth scrolling.
+    const key = next ? `${next.top}|${next.left}|${next.width}` : '';
+    if (key !== lastFixedKey.current) {
+      lastFixedKey.current = key;
+      setFixedStyle(next);
     }
-    let top: number;
-    if (r.top < 96) top = Math.min(96, vh - h); // scrolled past: pin like categories, sink only if overflowing
-    else top = vh - h; // below the fold: touch the bottom of the screen
-    const aside = w.closest('aside');
-    if (aside) {
-      const cb = aside.getBoundingClientRect().bottom;
-      if (top + h > cb) top = cb - h; // stop before the custom-order CTA
-    }
-    setFixedStyle({ position: 'fixed', top, left: r.left, width: r.width, zIndex: 20 });
   }, []);
 
   useEffect(() => {

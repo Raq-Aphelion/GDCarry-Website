@@ -76,10 +76,18 @@ const customStatusCss = `#lhc_status_container {
 }
 
 #unread-msg-number {
-  background: linear-gradient(90deg, #60a5fa, #2563eb) !important;
-  color: #0f0f11 !important;
+  background: #dc2626 !important;
+  color: #ffffff !important;
   font-weight: 700 !important;
+  font-style: normal !important;
+  font-size: 12px !important;
+  line-height: 22px !important;
+  min-width: 22px !important;
+  height: 22px !important;
+  padding: 0 !important;
+  text-align: center !important;
   border: none !important;
+  border-radius: 999px !important;
 }`;
 
 // Raw declarations — applied directly to the chat iframe element.
@@ -593,6 +601,33 @@ body { background-color: #0f0f11 !important; }
   display: block !important;
 }
 
+/* Per-message stamps LHC renders on every run-follower (.msg-date-vi /
+   .msg-date-op, absolute at the row's top edge) — collapse them to the same
+   last-of-run rule as .msg-date, statically placed below the bubble */
+#messagesBlock .message-row .msg-date-vi,
+#messagesBlock .message-row .msg-date-op {
+  display: none !important;
+  position: static !important;
+  left: auto !important;
+  right: auto !important;
+  margin: 2px 2px 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  font-size: 10px !important;
+  color: #64748b !important;
+}
+#messagesBlock .message-row.response:has(+ .message-row:not(.response)) .msg-date-vi,
+#messagesBlock .message-row.response:last-child .msg-date-vi,
+#messagesBlock .message-row.message-admin:has(+ .message-row:not(.message-admin)) .msg-date-op,
+#messagesBlock .message-row.message-admin:last-child .msg-date-op {
+  display: block !important;
+}
+#messagesBlock .message-row.response .msg-date-vi {
+  text-align: right !important;
+  margin-right: 4px !important;
+}
+
 /* System messages */
 .system-response,
 .system-response .msg-date,
@@ -600,41 +635,10 @@ body { background-color: #0f0f11 !important; }
   color: #64748b !important;
 }
 
-/* Typing indicator — LHC renders it (white bg!) as a flex item INSIDE the
-   send-area row, which squeezes/clips it. Repositioned as a floating strip
-   lifted just above the send area so it overlaps the lowest timestamp:
-   solid chat-window background so it covers what sits beneath, smooth
-   half-second fades (fade-out is the clone trick in header_html — React
-   unmounts it instantly, so CSS alone can't animate the exit). Scoped to
+/* Typing indicator — fully suppressed, never rendered. Scoped to
    .online-chat: the start form reuses the same id for validation errors */
 .online-chat #id-operator-typing {
-  position: absolute !important;
-  bottom: calc(100% + 10px) !important;
-  left: 0 !important;
-  right: 0 !important;
-  background: #0f0f11 !important;
-  border: none !important;
-  box-shadow: none !important;
-  font-size: 0 !important;
-  height: auto !important;
-  max-height: none !important;
-  overflow: visible !important;
-  line-height: 1.4 !important;
-  padding: 6px 16px !important;
-  animation: gdc-typing-in 0.5s ease !important;
-}
-.online-chat #id-operator-typing::before {
-  content: 'Support is typing now';
-  font-size: 10px;
-  color: #94a3b8;
-}
-@keyframes gdc-typing-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-@keyframes gdc-typing-out {
-  from { opacity: 1; }
-  to { opacity: 0; }
+  display: none !important;
 }
 
 /* Same id in the start/offline form = validation error — readable, no white bg */
@@ -1236,27 +1240,6 @@ document.addEventListener('click', function (e) {
   attach();
 })();
 
-/* Typing indicator fade-out — React unmounts it instantly, which CSS can't
-   animate. When it disappears we drop a clone back in that fades out and
-   removes itself. */
-(function () {
-  var last = null;
-  new MutationObserver(function () {
-    var el = document.querySelector('.online-chat #id-operator-typing');
-    if (el) { last = el; return; }
-    if (last && !document.contains(last)) {
-      var area = document.querySelector('.online-chat .message-send-area');
-      if (area) {
-        var clone = last.cloneNode(true);
-        clone.style.animation = 'gdc-typing-out 0.5s ease forwards';
-        area.appendChild(clone);
-        setTimeout(function () { clone.remove(); }, 350);
-      }
-      last = null;
-    }
-  }).observe(document.documentElement, { childList: true, subtree: true });
-})();
-
 /* Live fixes — one observer (+ a slow interval safety net for anything the
    observer misses):
    1. Operator avatar pinned to the LAST message of each operator chain (LHC
@@ -1333,10 +1316,15 @@ const botConfiguration = {
   // Operator avatars inside message rows (classic rows read this; the React
   // widget also gets profile_pic from the site's embed args)
   bubble_style_profile: '1',
-  custom_html_widget: introCardOperator,
-  custom_html: introCardOperator,
-  custom_html_widget_bot: introCardBot,
-  custom_html_bot: introCardBot,
+  // The script rides along inside the raw-rendered custom HTML fields:
+  // header_html is only served to the React (v2) widget, which injects it
+  // via innerHTML — inert. In the CLASSIC widget (theme option "Use a new
+  // widget look for old embed code" = load_w2 OFF) these custom_html fields
+  // are echoed unescaped into the chat iframe, where the script executes.
+  custom_html_widget: introCardOperator + headerHtml,
+  custom_html: introCardOperator + headerHtml,
+  custom_html_widget_bot: introCardBot + headerHtml,
+  custom_html_bot: introCardBot + headerHtml,
   custom_html_header: '',
   custom_html_header_body: headerIdentity,
   custom_html_footer: footerHtml,

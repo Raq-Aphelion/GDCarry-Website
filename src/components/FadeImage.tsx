@@ -22,6 +22,7 @@ export default function FadeImage({ src, alt, className = '', imgClassName = '' 
           src={src}
           alt={alt}
           loading="lazy"
+          decoding="async"
           onLoad={() => setLoaded(true)}
           onError={() => setFailed(true)}
           className={`h-full w-full object-cover transition-all duration-700 ${

@@ -535,6 +535,7 @@ export default function CheckoutPage() {
               <div className="relative mt-5 flex min-h-0 flex-1 flex-col">
                 <ul
                   ref={setOrderListEl}
+                  data-lenis-prevent
                   className={`no-scrollbar min-h-0 flex-1 divide-y divide-navy-700/50 overflow-y-auto ${orderOverflows ? 'pr-4' : ''}`}
                 >
                   {orderItems.map((item) => (

@@ -9,6 +9,7 @@ import { OverlayScrollbar } from '@/components/Scrollbar';
 import PageMeta from '@/components/PageMeta';
 import ServiceCard from '@/components/ServiceCard';
 import { getGame, serviceCount, type Service } from '@/data/games';
+import { lenisRef } from '@/lib/lenis';
 import { usePricing } from '@/context/PricingContext';
 import { rankService } from '@/data/search';
 import ffxivBg from '@/assets/images/backgrounds/ffxiv-bg-1.webp';
@@ -96,7 +97,12 @@ export default function GamePage() {
       // natural top = section top + the section's padding-top
       top += parseFloat(getComputedStyle(el).paddingTop) - 32;
     }
-    scroller.scrollTo({ top, behavior: 'smooth' });
+    // Scroll through Lenis when it's running so the animation uses the same
+    // easing and isn't fighting Lenis's own scroll loop. Short duration so
+    // the snap starts instantly instead of ramping up slowly via lerp.
+    const lenis = lenisRef.current;
+    if (lenis) lenis.scrollTo(top, { duration: 0.4 });
+    else scroller.scrollTo({ top, behavior: 'smooth' });
   }, [active]);
 
   useEffect(() => {
@@ -312,6 +318,7 @@ export default function GamePage() {
               {/* pr-3 (only while overflowing) keeps the buttons/counts clear of the overlay scrollbar pill */}
               <ul
                 ref={setCatListEl}
+                data-lenis-prevent
                 className={`no-scrollbar min-h-0 flex-1 divide-y divide-navy-700/50 overflow-y-auto ${catOverflows ? 'pr-3' : ''}`}
               >
                 {game.subcategories.map((sub) => {

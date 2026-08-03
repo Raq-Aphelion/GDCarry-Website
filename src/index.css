@@ -82,6 +82,17 @@
     overflow-anchor: none;
   }
 
+  /* lenis.css traps wheel scroll on data-lenis-prevent elements
+     (overscroll-behavior: contain) — that rule is meant for modals. Our
+     prevented elements are in-page lists (category sidebar, dropdowns,
+     order summary), so keep native scroll chaining: wheeling over one that
+     can't scroll (further) falls through to the page, as before Lenis.
+     ID selector beats lenis.css's .lenis [data-lenis-prevent] regardless
+     of bundle order or Lenis's state classes. */
+  #page-scroll [data-lenis-prevent] {
+    overscroll-behavior: auto;
+  }
+
   /* Inner scrollers (dropdowns, cart item list): thin, transparent track,
      no arrow buttons, no corner block. */
   * {
