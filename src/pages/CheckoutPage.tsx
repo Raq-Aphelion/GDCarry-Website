@@ -20,10 +20,17 @@ const RETURN_COUNTDOWN_S = 10;
 /** Right column's order box matches the left column's height only side-by-side. */
 const TWO_COL_QUERY = '(min-width: 1024px)';
 
-/** Paste your Discord channel webhook URL here — every placed order is posted
-    as a Discord embed for the bot to log. While empty, webhook logging is
-    skipped (the live chat flow still works). */
-const DISCORD_WEBHOOK_URL = '';
+/** Order log proxy (Cloudflare Worker) — rebuilds the Discord embed
+    server-side, so the webhook URL never ships in this bundle. Paste the
+    ORDER_KEY secret here; while empty, order logging is skipped (the live
+    chat flow still works). */
+const ORDER_LOG_URL = 'https://orders-proxy.cluwners.workers.dev';
+const ORDER_KEY = 'GUtdJw87nUC2gtX7ximpY6QRyFBcv0';
+
+/** Order reference linking the chat message to the Discord bot log — the
+    operator can verify a quoted order against the logged record by ID. */
+const generateOrderId = () =>
+  `GD-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).slice(2, 6).toUpperCase()}`;
 
 type Stage = 'idle' | 'processing' | 'done';
 type ContactVia = 'chat' | 'discord';
@@ -185,7 +192,7 @@ export default function CheckoutPage() {
       the live chat message field. Per item: bold title, game · qty · price
       meta line, diamond config bullets, then the thumbnail (re-arranged into
       a thumbnail-left row by openLiveChatPrefill once the message lands). */
-  const buildOrderMessage = () => {
+  const buildOrderMessage = (orderId: string) => {
     const itemBlocks = orderItems
       .slice(0, 5)
       .map((item, n) => {
@@ -202,6 +209,7 @@ export default function CheckoutPage() {
       .join('\n');
     return [
       '[b]NEW GRAND DICE ORDER[/b]',
+      `[b]Order ID:[/b] ${orderId}`,
       '',
       `[b]Contact via:[/b] ${contactVia === 'chat' ? 'Live chat' : 'Discord'}`,
       `[b]${contactVia === 'chat' ? 'Name' : 'Discord'}:[/b] ${contact.trim()}`,
@@ -215,37 +223,28 @@ export default function CheckoutPage() {
     ].join('\n');
   };
 
-  /** Posts the order to the Discord webhook for the bot to log. */
-  const logOrderToDiscord = async () => {
-    if (!DISCORD_WEBHOOK_URL) return;
-    const itemLines = orderItems
-      .map((item) => {
-        const details = item.details?.length ? `\n· ${item.details.join('\n· ')}` : '';
-        return `**${item.name}** (${item.gameShort}) ×${item.qty} — ${format(lineTotal(item))}${details}`;
-      })
-      .join('\n');
-    const firstImage = orderItems[0] ? new URL(orderItems[0].image, SITE_URL).href : undefined;
-    await fetch(DISCORD_WEBHOOK_URL, {
+  /** Posts the order to the logging proxy as raw fields — the worker
+      validates them, rebuilds the Discord embed server-side and forwards it.
+      The client never sees the webhook URL and can't inject embed content. */
+  const logOrder = async (orderId: string) => {
+    if (!ORDER_KEY) return;
+    await fetch(ORDER_LOG_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'X-Order-Key': ORDER_KEY },
       body: JSON.stringify({
-        username: 'Grand Dice Orders',
-        embeds: [
-          {
-            title: 'New order placed',
-            color: 0x22d3ee,
-            timestamp: new Date().toISOString(),
-            ...(firstImage ? { thumbnail: { url: firstImage } } : {}),
-            fields: [
-              { name: 'Contact via', value: contactVia === 'chat' ? 'Live chat' : 'Discord', inline: true },
-              { name: contactVia === 'chat' ? 'Name' : 'Discord', value: contact.trim(), inline: true },
-              { name: 'E-mail', value: email.trim() || '—', inline: true },
-              { name: 'Payment', value: methodLabel, inline: true },
-              { name: 'Total', value: format(orderTotal), inline: true },
-              { name: 'Items', value: itemLines.slice(0, 1024), inline: false },
-            ],
-          },
-        ],
+        orderId,
+        contactVia: contactVia === 'chat' ? 'Live chat' : 'Discord',
+        contact: contact.trim(),
+        email: email.trim(),
+        payment: methodLabel,
+        total: format(orderTotal),
+        items: orderItems.map((item) => ({
+          name: item.name,
+          gameShort: item.gameShort,
+          qty: item.qty,
+          price: format(lineTotal(item)),
+          details: item.details ?? [],
+        })),
       }),
     });
   };
@@ -259,15 +258,18 @@ export default function CheckoutPage() {
       }
       return;
     }
-    const message = buildOrderMessage();
+    // Links the chat message and the Discord log — the operator can verify
+    // the order in chat against the bot-logged record by ID.
+    const orderId = generateOrderId();
+    const message = buildOrderMessage(orderId);
     const prefill =
       contactVia === 'chat'
         ? { username: contact.trim(), email: email.trim(), question: message }
         : null;
     setPurchased(items);
     setStage('processing');
-    // Discord bot logging — fire and forget, it never blocks the order
-    logOrderToDiscord().catch(() => {});
+    // Order logging via the proxy — fire and forget, it never blocks the order
+    logOrder(orderId).catch(() => {});
     window.setTimeout(() => {
       clear();
       setStage('done');

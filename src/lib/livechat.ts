@@ -55,21 +55,22 @@ const ORDER_CSS = `
 .gd-item-text { flex: 1 1 auto !important; min-width: 0 !important; }
 `;
 
-/** Prefills the LHC start-chat form fields, auto-starts the chat and reveals
-    the widget only once the order message has landed — the customer never
-    sees the start form at all.
+/** Starts an LHC chat directly with the order as the first message and
+    reveals the widget only once the message has landed — the customer never
+    sees the start form at all, and nothing is pasted into an editable form
+    field.
 
     Mechanics (all verified against the live widget):
-    - The start form fills from `attr_prefill` (array of state objects);
-      `api_data` additionally feeds the submitted fields. An already-mounted
-      form NEVER re-applies attr_prefill, so the child is rebooted
-      (reloadWidget) and the sets are queued behind the reload, landing
-      before the fresh form mounts.
+    - `api_data` carries the submitted fields (Username/Email/Question) and
+      `startChat` begins the chat with them directly — LHC docs: "Set custom
+      content and start a chat". The child is rebooted first (reloadWidget)
+      so a stale session/form never interferes; the attr_set queues behind
+      the reload.
     - The widget iframe element is kept at opacity 0 + pointer-events none
-      from before showWidget until the chat screen renders — no flash.
-    - The auto submit is done by clicking the form's own Start button (the
-      iframe is about:blank, so it inherits our origin and we can drive its
-      DOM; LHC's own auto_start flag is unreliable). */
+      until the chat screen renders the order message — no flash.
+    - `startChat` is emitted on a retry schedule because the child app boots
+      asynchronously after the reload; once the chat exists, extra startChat
+      emits are no-ops. */
 export function openLiveChatPrefill(data: LiveChatPrefill, attemptsLeft = 10) {
   const w = window as unknown as {
     $_LHC?: {
@@ -95,12 +96,9 @@ export function openLiveChatPrefill(data: LiveChatPrefill, attemptsLeft = 10) {
   if (data.username) fields.Username = data.username;
   if (data.email) fields.Email = data.email;
   if (data.question) fields.Question = data.question;
-  const setPrefill = () => {
+  const setOrderData = () => {
     emit('sendChildEvent', [
-      { cmd: 'attr_set', arg: { type: 'attr_set', attr: ['attr_prefill'], data: [fields] } },
-    ]);
-    emit('sendChildEvent', [
-      { cmd: 'attr_set', arg: { type: 'attr_set', attr: ['api_data'], data: fields } },
+      { cmd: 'attr_set', arg: { type: 'attr_set', attr: ['api_data'], data: { ...fields } } },
     ]);
   };
 
@@ -162,14 +160,20 @@ export function openLiveChatPrefill(data: LiveChatPrefill, attemptsLeft = 10) {
     doc.head?.appendChild(style);
   };
 
-  /** Drives the hidden widget: click Start when the form is ready, then
-      style the landed order message and fade the widget in. */
-  const driveWidgetForm = () => {
+  /** Drives the hidden widget: retries startChat until the chat comes up,
+      styles the landed order message and fades the widget in. */
+  const driveWidget = () => {
     const marker = (fields.Question ?? '')
       .split('\n')[0]
       .replace(/\[\/?[a-z]+(?:=[^\]]*)?\]/gi, '')
       .trim();
-    let clicked = false;
+    let landed = false;
+    // attr_set is async and the child boots after the reload, so a single
+    // startChat can arrive before the app is ready — retry on a schedule.
+    // Once the order message is on screen, further emits are suppressed.
+    const startChat = () => {
+      if (!landed) emit('sendChildEvent', [{ cmd: 'startChat' }]);
+    };
     let ticks = 0;
     const tick = () => {
       ticks++;
@@ -190,30 +194,19 @@ export function openLiveChatPrefill(data: LiveChatPrefill, attemptsLeft = 10) {
         doc = undefined; // cross-origin — give up below
       }
 
-      let done = false;
       if (doc) {
-        if (!clicked) {
-          const btn = ([...doc.querySelectorAll('button, input[type="submit"]')] as HTMLElement[]).find(
-            (b) => /start/i.test(b.innerText ?? (b as unknown as HTMLInputElement).value ?? ''),
-          );
-          if (btn) {
-            btn.click();
-            clicked = true;
-          }
-        } else {
-          const orderRow = [...doc.querySelectorAll('.message-row')].find(
-            (r) => marker && r.textContent?.includes(marker),
-          );
-          if (orderRow) {
-            styleOrderRow(doc, orderRow);
-            done = true;
-          }
+        const orderRow = [...doc.querySelectorAll('.message-row')].find(
+          (r) => marker && r.textContent?.includes(marker),
+        );
+        if (orderRow) {
+          styleOrderRow(doc, orderRow);
+          landed = true;
         }
       }
 
-      if (done || ticks >= 28) {
+      if (landed || ticks >= 28) {
         // Fade in — either with the styled order message, or (fallback) with
-        // the prefilled form so the user can finish manually
+        // whatever the widget shows so the user can finish manually
         if (el) {
           delete el.dataset.gdOrderFlow;
           el.style.opacity = '1';
@@ -224,16 +217,17 @@ export function openLiveChatPrefill(data: LiveChatPrefill, attemptsLeft = 10) {
       setTimeout(tick, 500);
     };
     setTimeout(tick, 250);
+    [800, 1800, 3200, 5000].forEach((ms) => setTimeout(startChat, ms));
   };
 
   // Hide the chat bubble so it can't be clicked while the data is swapped in
   setStatusHidden(true);
-  // Close if open, then reboot the child — our attr_sets queue behind the
-  // reload and land before the fresh start form mounts
+  // Close if open, then reboot the child — the api_data set queues behind
+  // the reload and lands before the fresh app mounts
   emit('closeWidget');
   emit('reloadWidget');
-  driveWidgetForm();
-  setTimeout(setPrefill, 300);
+  driveWidget();
+  setTimeout(setOrderData, 300);
   setTimeout(() => {
     setStatusHidden(false);
     emit('showWidget');
