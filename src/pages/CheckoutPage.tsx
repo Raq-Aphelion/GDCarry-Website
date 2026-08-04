@@ -216,7 +216,7 @@ export default function CheckoutPage() {
       })
       .join('\n');
     return [
-      '[b]NEW GRAND DICE ORDER[/b]',
+      '[b]ORDER DETAILS[/b]',
       `[b]Order ID:[/b] ${orderId}`,
       '',
       `[b]${contactVia === 'chat' ? 'Name' : 'Discord'}:[/b] ${contact.trim()}`,
@@ -226,7 +226,7 @@ export default function CheckoutPage() {
       '[b]Items:[/b]',
       itemBlocks,
       '',
-      `[b]Total: ${format(orderTotal)}[/b]`,
+      `Total: [b]${format(orderTotal)}[/b]`,
     ].join('\n');
   };
 
@@ -533,7 +533,7 @@ export default function CheckoutPage() {
                 list pads right so the pill doesn't crowd the entries */}
             <section
               style={{ maxHeight: orderMaxH }}
-              className="flex flex-col rounded-[5px] bg-navy-850 p-5 shadow-2xl sm:p-6"
+              className="flex flex-col rounded-[5px] bg-navy-850 p-5 shadow-2xl transition-[max-height] duration-500 ease-in-out sm:p-6"
             >
               <h2 className="flex shrink-0 items-center gap-2 border-b border-navy-700/60 pb-4 font-display text-lg font-bold text-white">
                 Your order
@@ -621,7 +621,7 @@ export default function CheckoutPage() {
                 Average response time: within an hour of the order placement.
               </p>
             {stage === 'done' ? (
-              <div className="mt-4 rounded-[5px] border border-cyan-600/40 bg-navy-850 p-6 text-center shadow-2xl">
+              <div className="confirm-in mt-4 rounded-[5px] border border-cyan-600/40 bg-navy-850 p-6 text-center shadow-2xl">
                 <CheckCircle2 className="mx-auto h-10 w-10 text-cyan-400" />
                 <p className="mt-3 font-display text-lg font-bold text-white">Thank you for your order.</p>
                 <p className="mt-1 text-sm text-slate-400">

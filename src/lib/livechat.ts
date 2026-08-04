@@ -26,8 +26,10 @@ export interface LiveChatPrefill {
    diamond bullets right, left-aligned on the plain dark widget background
    (no chat bubble). The theme styles visitor bubbles with !important +
    high-specificity selectors and right-aligns visitor rows, so these must
-   out-specify and override it. Blue accent = the site's link blue (#60a5fa,
-   same as the gdcarry.com link in the widget footer). */
+   out-specify and override it. Bold accents use the site's light blue
+   (#93c5fd); the header keeps the link blue (#60a5fa).
+   The body rules are scoped to DIRECT children — a width:100% media box
+   inside the flex .gd-item crushes the text column to zero width. */
 const ORDER_CSS = `
 #messagesBlock .message-row.gd-order {
   max-width: 100% !important;
@@ -37,8 +39,8 @@ const ORDER_CSS = `
   justify-content: flex-start !important;
   text-align: left !important;
 }
-#messagesBlock .message-row.gd-order .msg-body,
-#messagesBlock .message-row.gd-order .msg-body-media {
+#messagesBlock .message-row.gd-order > .msg-body,
+#messagesBlock .message-row.gd-order > .msg-body-media {
   background: none !important;
   border: none !important;
   box-shadow: none !important;
@@ -51,7 +53,20 @@ const ORDER_CSS = `
   padding: 2px 0 2px 14px !important;
   text-align: left !important;
 }
-.gd-order .msg-body strong { color: #60a5fa !important; letter-spacing: .04em; }
+.gd-order .msg-body strong { color: #93c5fd !important; letter-spacing: .04em; }
+/* Header — bigger, keeps the site's link blue */
+.gd-order > .msg-body:first-of-type > strong:first-child {
+  color: #60a5fa !important;
+  font-size: 16px !important;
+  letter-spacing: .06em !important;
+}
+/* Total — muted label, bold white price (the site's "From X €" style) */
+.gd-order > .msg-body:last-of-type { color: #94a3b8 !important; }
+.gd-order > .msg-body:last-of-type strong {
+  color: #ffffff !important;
+  font-size: 15px !important;
+  letter-spacing: 0 !important;
+}
 .gd-item {
   display: flex !important;
   align-items: flex-start !important;
@@ -65,6 +80,7 @@ const ORDER_CSS = `
 .gd-item .msg-body-media {
   flex: 0 0 auto !important;
   align-self: flex-start !important;
+  width: auto !important;
   margin: 0 !important;
   padding: 0 !important;
 }
@@ -75,15 +91,16 @@ const ORDER_CSS = `
   height: 56px !important;
   max-height: 56px !important;
   object-fit: cover !important;
+  object-position: top !important;
   border-radius: 6px !important;
-  border: 1px solid rgba(96, 165, 250, .4) !important;
+  border: 1px solid rgba(147, 197, 253, .4) !important;
   margin: 0 !important;
 }
 .gd-item-text { flex: 1 1 auto !important; min-width: 0 !important; padding: 0 !important; }
 `;
 
 /** First line of every order message — used to spot order rows in the chat. */
-const ORDER_MARKER = 'NEW GRAND DICE ORDER';
+const ORDER_MARKER = 'ORDER DETAILS';
 
 /** Rebuilds an order message row: LHC renders text as one .msg-body per
     paragraph block and each [img] as its own .msg-body-media. For every
@@ -141,21 +158,33 @@ const styleOrderRow = (doc: Document, row: Element) => {
     wrap.appendChild(textCol);
     if (consumedWholeBody) textBody.remove();
   });
-  if (!doc.getElementById('gd-order-css')) {
-    const style = doc.createElement('style');
-    style.id = 'gd-order-css';
-    style.textContent = ORDER_CSS;
-    doc.head?.appendChild(style);
-  }
+  ensureOrderCss(doc);
+};
+
+/** Injects the order styles into the widget document (once per document). */
+const ensureOrderCss = (doc: Document) => {
+  if (doc.getElementById('gd-order-css')) return;
+  const style = doc.createElement('style');
+  style.id = 'gd-order-css';
+  style.textContent = ORDER_CSS;
+  doc.head?.appendChild(style);
 };
 
 /** Order-message styler that survives page reloads. The order handoff styles
     the message when it lands, but after a reload LHC re-renders the chat
-    history from the server and the raw BBCode layout returns — this sweep
-    (re)styles every unprocessed order message it finds in the widget
-    document. Called once from LiveChatWidget. */
+    history from the server and the raw BBCode layout returns. A
+    MutationObserver on the widget document styles rows the moment they
+    render — no unstyled flash. LHC swaps the iframe document on
+    reloadWidget, so the observer re-attaches on a slow tick.
+    Called once from LiveChatWidget. */
 export function initOrderMessageStyler() {
-  const sweep = () => {
+  const process = (doc: Document) => {
+    doc.querySelectorAll('.message-row').forEach((row) => {
+      if (row.textContent?.includes(ORDER_MARKER)) styleOrderRow(doc, row);
+    });
+  };
+  let observedDoc: Document | null = null;
+  const ensureObserver = () => {
     const el = document.getElementById('lhc_widget_v2') as HTMLIFrameElement | null;
     let doc: Document | null | undefined;
     try {
@@ -163,13 +192,14 @@ export function initOrderMessageStyler() {
     } catch {
       return; // cross-origin — nothing we can do
     }
-    if (!doc) return;
-    doc.querySelectorAll('.message-row').forEach((row) => {
-      if (row.textContent?.includes(ORDER_MARKER)) styleOrderRow(doc, row);
-    });
+    if (!doc || doc === observedDoc) return;
+    observedDoc = doc;
+    ensureOrderCss(doc); // styles in place before any row can render
+    process(doc);
+    new MutationObserver(() => process(doc)).observe(doc, { childList: true, subtree: true });
   };
-  sweep();
-  setInterval(sweep, 1000);
+  ensureObserver();
+  setInterval(ensureObserver, 500);
 }
 
 /** Starts an LHC chat with the order as the first message and reveals the
@@ -178,18 +208,20 @@ export function initOrderMessageStyler() {
 
     Mechanics (verified against the react.app.js build served by
     chat.gdcarry.com):
-    - `api_data` carries the submitted fields (Username/Email/Question).
-    - This LHC build has NO command that starts a chat from the start form
-      (its only `startChat` listener sits on the message-input box of an
-      already-open chat), so we first try `chat_ui.auto_start` — the start
-      form auto-submits with the api_data fields as soon as it mounts. The
-      flag is always reset afterwards so later widget opens don't auto-fire.
-    - Fallback: if no chat has materialised after ~4s (auto_start conditions
-      not met), the form's own Start button is clicked — the old, proven
-      path. Either way the iframe stays at opacity 0 + pointer-events none
-      until the order message renders, so the form paste is never visible.
-    - The child is rebooted first (reloadWidget) so a stale session/form
-      never interferes; the attr_sets queue behind the reload. */
+    - The start form's visible fields fill from `attr_prefill` (array of
+      state objects); `api_data` additionally feeds the submitted values.
+      An already-mounted form NEVER re-applies attr_prefill, so the child is
+      rebooted first (reloadWidget) and the sets queue behind the reload,
+      landing before the fresh form mounts.
+    - This LHC build has NO command that starts a chat from the start form,
+      and its `chat_ui.auto_start` flag double-submits (every order created
+      TWO chats), so the form's own Start button is clicked exactly once —
+      and only after the prefilled order text is present in the form, so an
+      empty form is never submitted. The click is also guarded by LHC's
+      'chatStarted' event (LiveChatWidget loadcb): if a chat already
+      exists, nothing is clicked.
+    - The widget iframe stays at opacity 0 + pointer-events none until the
+      order message renders, so the form paste is never visible. */
 export function openLiveChatPrefill(data: LiveChatPrefill, attemptsLeft = 10) {
   const w = window as unknown as {
     $_LHC?: {
@@ -203,33 +235,26 @@ export function openLiveChatPrefill(data: LiveChatPrefill, attemptsLeft = 10) {
     return;
   }
   const emit = (event: string, payload?: unknown) => lhc.eventListener!.emitEvent!(event, payload);
-  const setStatusHidden = (hidden: boolean) => {
-    try {
-      lhc.attributes?.shidden?.next(hidden);
-    } catch {
-      /* older wrapper without shidden — cosmetic only */
-    }
-  };
 
   const fields: Record<string, string> = {};
   if (data.username) fields.Username = data.username;
   if (data.email) fields.Email = data.email;
   if (data.question) fields.Question = data.question;
-  const setAutoStart = (on: boolean) => {
-    emit('sendChildEvent', [
-      { cmd: 'attr_set', arg: { type: 'attr_set', attr: ['chat_ui', 'auto_start'], data: on } },
-    ]);
-  };
   const setOrderData = () => {
+    // attr_prefill fills the visible form fields; api_data feeds the
+    // submitted values. Both queue behind the reload and land before the
+    // fresh form mounts (a mounted form never re-applies attr_prefill).
+    emit('sendChildEvent', [
+      { cmd: 'attr_set', arg: { type: 'attr_set', attr: ['attr_prefill'], data: [fields] } },
+    ]);
     emit('sendChildEvent', [
       { cmd: 'attr_set', arg: { type: 'attr_set', attr: ['api_data'], data: { ...fields } } },
     ]);
-    setAutoStart(true);
   };
 
-  /** Drives the hidden widget: waits for the auto-started chat, falls back
-      to clicking the form's Start button, styles the landed order message
-      and fades the widget in. */
+  /** Drives the hidden widget: clicks the form's Start button once (never if
+      a chat already exists), styles the landed order message and fades the
+      widget in. */
   const driveWidget = () => {
     const marker = (fields.Question ?? '')
       .split('\n')[0]
@@ -241,8 +266,10 @@ export function openLiveChatPrefill(data: LiveChatPrefill, attemptsLeft = 10) {
       ticks++;
       const el = document.getElementById('lhc_widget_v2') as HTMLIFrameElement | null;
       // Tell the fx watcher to leave this element alone while the order
-      // handoff controls its visibility
-      if (el && el.style.opacity !== '1') {
+      // handoff controls its visibility. Guard on the dataset flag (not the
+      // opacity value): after earlier normal use the iframe sits at
+      // opacity 1, and the fill would be visible while the form mounts.
+      if (el && !el.dataset.gdOrderFlow) {
         el.dataset.gdOrderFlow = '1';
         el.style.transition = 'opacity .45s ease';
         el.style.opacity = '0';
@@ -264,23 +291,33 @@ export function openLiveChatPrefill(data: LiveChatPrefill, attemptsLeft = 10) {
         if (orderRow) {
           styleOrderRow(doc, orderRow);
           done = true;
-        } else if (!clicked && ticks >= 8) {
-          // auto_start didn't fire — submit the start form ourselves
-          // (proven path; the form is invisible to the visitor regardless)
-          const btn = ([...doc.querySelectorAll('button, input[type="submit"]')] as HTMLElement[]).find(
-            (b) => /start/i.test(b.innerText ?? (b as unknown as HTMLInputElement).value ?? ''),
-          );
-          if (btn) {
-            btn.click();
+        } else if (!clicked) {
+          // Never submit if a chat already exists — a second submit starts a
+          // second chat and the LHC bot prints the order twice. Checked via
+          // LHC's own 'chatStarted' event AND the rendered chat screen.
+          const chatUp =
+            (window as unknown as { __gdChatStarted?: boolean }).__gdChatStarted ||
+            doc.querySelector('#CSChatMessage, #messagesBlock .message-row');
+          if (chatUp) {
             clicked = true;
+          } else {
+            // Click only once the prefilled order text is in the form —
+            // submitting an empty form just bounces off validation
+            const filled = [...doc.querySelectorAll('textarea')].some((t) => t.value.includes(marker));
+            const btn = filled
+              ? ([...doc.querySelectorAll('button, input[type="submit"]')] as HTMLElement[]).find(
+                  (b) => /start/i.test(b.innerText ?? (b as unknown as HTMLInputElement).value ?? ''),
+                )
+              : undefined;
+            if (btn) {
+              btn.click();
+              clicked = true;
+            }
           }
         }
       }
 
       if (done || ticks >= 28) {
-        // Always disarm auto_start so a later manual widget open doesn't
-        // auto-submit a stale order
-        setAutoStart(false);
         // Fade in — either with the styled order message, or (fallback) with
         // whatever the widget shows so the user can finish manually
         if (el) {
@@ -295,18 +332,25 @@ export function openLiveChatPrefill(data: LiveChatPrefill, attemptsLeft = 10) {
     setTimeout(tick, 250);
   };
 
-  // Hide the chat bubble so it can't be clicked while the data is swapped in
-  setStatusHidden(true);
+  // Arm the chat-started detector for this flow (set by the loadcb listener
+  // in LiveChatWidget) — the double-submit guard reads it
+  (window as unknown as { __gdChatStarted?: boolean }).__gdChatStarted = false;
+  // Hide the widget iframe immediately — the tick guard keeps it hidden
+  // until the order message lands (or the fallback reveals it)
+  const iframe = document.getElementById('lhc_widget_v2') as HTMLIFrameElement | null;
+  if (iframe) {
+    iframe.dataset.gdOrderFlow = '1';
+    iframe.style.transition = 'opacity .45s ease';
+    iframe.style.opacity = '0';
+    iframe.style.pointerEvents = 'none';
+  }
   // Close if open, then reboot the child — the api_data set queues behind
   // the reload and lands before the fresh app mounts
   emit('closeWidget');
   emit('reloadWidget');
   driveWidget();
   setTimeout(setOrderData, 300);
-  setTimeout(() => {
-    setStatusHidden(false);
-    emit('showWidget');
-  }, 3000);
+  setTimeout(() => emit('showWidget'), 3000);
   // Slow-boot safety net — showing an already-open widget is harmless
   setTimeout(() => emit('showWidget'), 6000);
 }

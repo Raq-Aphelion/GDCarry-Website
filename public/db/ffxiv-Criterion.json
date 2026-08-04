@@ -13,8 +13,7 @@
         {
           "id": "mount",
           "label": "Mount",
-          "price": 70,
-          "forcedRuns": 1
+          "price": 70
         }
       ],
       "advancedPrice": 50
@@ -69,8 +68,7 @@
         {
           "id": "mount",
           "label": "Mount",
-          "price": 70,
-          "forcedRuns": 1
+          "price": 70
         }
       ]
     },
@@ -83,8 +81,7 @@
         {
           "id": "mount",
           "label": "Mount",
-          "price": 70,
-          "forcedRuns": 1
+          "price": 70
         }
       ]
     },
@@ -97,8 +94,7 @@
         {
           "id": "mount",
           "label": "Mount",
-          "price": 70,
-          "forcedRuns": 1
+          "price": 70
         }
       ]
     },
@@ -111,8 +107,7 @@
         {
           "id": "mount",
           "label": "Mount",
-          "price": 70,
-          "forcedRuns": 1
+          "price": 70
         }
       ]
     }

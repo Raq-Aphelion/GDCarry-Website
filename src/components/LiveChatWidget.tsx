@@ -29,6 +29,13 @@ export default function LiveChatWidget() {
       profile_pic: 'https://gdcarry.com/images/gd_favicon.png',
       // No proactive invitations — the widget only opens on explicit user action
       proactive: false,
+      // Flags when a chat has actually started — the order handoff uses this
+      // as its double-submit guard (reliable, unlike DOM sniffing)
+      loadcb: (l: { eventEmitter?: { addListener?: (event: string, cb: () => void) => void } }) => {
+        l.eventEmitter?.addListener?.('chatStarted', () => {
+          (window as unknown as { __gdChatStarted?: boolean }).__gdChatStarted = true;
+        });
+      },
     };
     const po = document.createElement('script');
     po.id = 'lhc-loader';

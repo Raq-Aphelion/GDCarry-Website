@@ -98,7 +98,9 @@ export default function CriterionPurchaseBox({ service, gameShort }: { service: 
       setDcError(true);
       return;
     }
-    const methodLabel = method === 'group' ? 'Group Play' : 'Piloted';
+    // pilotedOnly services show a static Piloted pill (no toggle) — `method`
+    // keeps its 'group' default, so derive the label from the config first
+    const methodLabel = cfg?.pilotedOnly ? 'Piloted' : method === 'group' ? 'Group Play' : 'Piloted';
     // Per-run cart model: price is the per-run base (0 when a forcedRuns
     // add-on zeroes the core), qty the run count, flat the one-off extras
     // (add-ons are inside the priority multiplication in the box formula, so

@@ -722,10 +722,21 @@ body { background-color: #0f0f11 !important; }
 }
 #chat-dropdown-options-wrapper { display: none !important; }
 
+/* Widget body bottom corners square — LHC's default rounds .desktop-body
+   10px, which shows below the send area at the window's bottom edge */
+.widget-body,
+.desktop-body {
+  border-bottom-left-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+}
+
 /* Message input — one line, grows to max 3 rows, then scrolls internally;
    no resize handle. Enter sends (script in header_html), no line breaks.
-   Bottom corners square — the box meets the window's bottom edge flat. */
-.message-send-area > .mx-auto,
+   Bottom corners square — the box meets the window's bottom edge flat.
+   Covers the send-area container itself and the inner wrapper at any depth —
+   LHC's default rounded box is what shows below the textarea. */
+.message-send-area,
+.message-send-area .mx-auto,
 #CSChatMessage {
   border-bottom-left-radius: 0 !important;
   border-bottom-right-radius: 0 !important;

@@ -289,6 +289,21 @@ input[type='number'] {
   animation: toast-in 0.28s cubic-bezier(0.21, 1.02, 0.73, 1) both;
 }
 
+/* Checkout: order-confirmation block entrance (replaces the Place Order button) */
+@keyframes confirm-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+.confirm-in {
+  animation: confirm-in 0.45s ease-out both;
+}
+
 /* Infinite review marquee */
 @keyframes marquee {
   from {

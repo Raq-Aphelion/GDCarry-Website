@@ -329,7 +329,7 @@ export default function Home() {
                     href="https://www.epicnpc.com/members/grand-dice.1661988/#feedback"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="font-semibold text-cyan-400 underline-offset-2 transition-colors hover:text-cyan-300 hover:underline"
+                    className="font-semibold text-cyan-400 underline-offset-2 transition-colors hover:text-cyan-300"
                   >
                     EpicNPC
                   </a>
@@ -517,7 +517,7 @@ export default function Home() {
                     href="https://www.epicnpc.com/members/grand-dice.1661988/#feedback"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="font-semibold text-cyan-400 underline-offset-2 transition-colors hover:text-cyan-300 hover:underline"
+                    className="font-semibold text-cyan-400 underline-offset-2 transition-colors hover:text-cyan-300"
                   >
                     EpicNPC
                   </a>
