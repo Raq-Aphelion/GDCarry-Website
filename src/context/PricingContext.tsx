@@ -59,7 +59,11 @@ export function PricingProvider({ children }: { children: ReactNode }) {
     const tb = db.trialBundles?.[serviceId];
     if (tb) return tb.bundlePrice;
     const dd = db.deepDungeons?.[serviceId];
-    if (dd) return Math.min(dd.solo.price, ...(dd.group?.options.map((o) => o.price) ?? []));
+    if (dd)
+      return Math.min(
+        ...(dd.modes?.length ? dd.modes.map((m) => m.price) : [dd.solo.price]),
+        ...(dd.group?.options.map((o) => o.price) ?? []),
+      );
     const cr = db.criterion?.[serviceId];
     if (cr) return cr.price;
     const rl = db.relics?.[serviceId];

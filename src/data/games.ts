@@ -95,6 +95,7 @@ import scWingsOfDeath from '@/assets/images/service-cards/ffxiv/mounts/extreme-t
 import scWingsOfMist from '@/assets/images/service-cards/ffxiv/mounts/extreme-trial-mounts/ffxiv-wings-of-mist.webp';
 import scWingsOfNihility from '@/assets/images/service-cards/ffxiv/mounts/extreme-trial-mounts/ffxiv-wings-of-nihility.webp';
 import scPilgrimsTraverse from '@/assets/images/service-cards/ffxiv/deep-dungeons/ffxiv-pilgrims-traverse.webp';
+import scFinalVerse from '@/assets/images/service-cards/ffxiv/deep-dungeons/ffxiv-final-verse.webp';
 import scHeavenOnHigh from '@/assets/images/service-cards/ffxiv/deep-dungeons/ffxiv-heaven-on-high.webp';
 import scEurekaOrthos from '@/assets/images/service-cards/ffxiv/deep-dungeons/ffxiv-eureka-orthos.webp';
 import scPalaceOfTheDead from '@/assets/images/service-cards/ffxiv/deep-dungeons/ffxiv-palace-of-the-dead.webp';
@@ -698,6 +699,17 @@ export const games: Game[] = [
         id: 'deep-dungeon',
         name: 'Deep Dungeons',
         services: [
+          {
+            id: 'ffxiv-final-verse',
+            name: 'The Final Verse (Deep Dungeon)',
+            tag2: 'Floor 100: Normal & Quantum',
+            price: 0,
+            tag1: 'The Mourner of Light title',
+            tag3: 'Piloted Service',
+            longDescription:
+              'Shaped by your offerings, a deep anguish burgeons from the sleepless abyss. The Final Verse (Quantum) waits beyond Pilgrim’s Traverse floor 100 — an aberration of Light and Darkness whose strength scales with every sacramental offering, up to a 40-offering battle on par with savage’s hardest floors, with an exclusive title for those who overcome it.',
+            image: scFinalVerse,
+          },
           {
             id: 'ffxiv-pilgrims-traverse',
             name: 'Pilgrim\'s Traverse (Deep Dungeon)',

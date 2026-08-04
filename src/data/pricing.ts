@@ -79,6 +79,9 @@ export interface PricingAddon {
   pilotedPrice?: number;
   /** Second-method (AFK Carry) price when it differs from `price` */
   afkPrice?: number;
+  /** Only shown and priced while this deep-dungeon mode is selected
+      (e.g. 40 Offerings is Quantum-only) */
+  mode?: string;
   /** When the option is checked, show a dropdown of these choices
       (e.g. job or armour set) */
   selectOptions?: {
@@ -326,6 +329,10 @@ export interface PricingDb {
           and reset while Group Play is selected */
       streamPilotedOnly?: boolean;
       solo: { price: number; addons: PricingAddon[] };
+      /** Mode pills for piloted-only services (e.g. The Final Verse Normal /
+          Quantum): the selected mode's price replaces solo.price and its
+          unlock replaces the shared one in the drawer */
+      modes?: { id: string; label: string; price: number; unlock?: PricingAddon }[];
       group?: {
         options: PricingAddon[];
         addons?: PricingAddon[];
@@ -433,6 +440,10 @@ export interface PricingDb {
           the base service levels, the job select + job level range hide under
           this checkmark option */
       phantomToggle?: { label: string };
+      /** Extra checkmark above the Phantom Job leveling one: levels every
+          phantom job to its cap; mutually exclusive with phantomToggle,
+          priced as the sum of every job's full leveling price */
+      phantomAll?: { label: string };
       completion: string;
     }
   >;

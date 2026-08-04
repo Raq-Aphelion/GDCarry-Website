@@ -180,14 +180,45 @@
         "label": "Deep Dungeon Unlock",
         "price": 10
       },
+      "soloHeading": "Upgrades"
+    },
+    "ffxiv-final-verse": {
+      "completion": "1 Day",
+      "soloLabel": "Piloted",
+      "solo": {
+        "price": 300,
+        "addons": []
+      },
+      "modes": [
+        {
+          "id": "normal",
+          "label": "Normal",
+          "price": 150,
+          "unlock": {
+            "id": "unlock-normal",
+            "label": "The Final Verse Unlock",
+            "price": 500
+          }
+        },
+        {
+          "id": "quantum",
+          "label": "Quantum",
+          "price": 300,
+          "unlock": {
+            "id": "unlock-quantum",
+            "label": "Quantum Unlock",
+            "price": 650
+          }
+        }
+      ],
       "drawerAddons": [
         {
           "id": "offerings",
-          "label": "I need 40 offerings",
-          "price": 10
+          "label": "40 Offerings",
+          "price": 15,
+          "mode": "quantum"
         }
-      ],
-      "soloHeading": "Upgrades"
+      ]
     },
     "ffxiv-deep-dungeon-bundle": {
       "completion": "14 Days",

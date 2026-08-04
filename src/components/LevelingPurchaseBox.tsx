@@ -65,6 +65,10 @@ const DATA_CENTERS = [
       base service levels (cfg.priceTiers); the job select + job level range
       hide under this checkmark option */
   phantomToggle?: { label: string };
+  /** Extra checkmark above the Phantom Job leveling one: levels every phantom
+      job to its cap; mutually exclusive with phantomToggle, priced as the sum
+      of every job's full leveling price */
+  phantomAll?: { label: string };
   /** Preselected job label (no error state) */
   defaultJob?: string;
 }
@@ -176,6 +180,7 @@ export default function LevelingPurchaseBox({
     : cfg.levelMax;
   const jobMin = cfg.jobMinLevels?.[job] ?? cfg.levelMin;
   const [phantomOn, setPhantomOn] = useState(false);
+  const [allOn, setAllOn] = useState(false);
   const [pStart, setPStart] = useState(cfg.levelMin);
   const [pEnd, setPEnd] = useState(cfg.levelMin + 1);
   // Phantom section: the selected job's cap drives its range max
@@ -206,7 +211,7 @@ export default function LevelingPurchaseBox({
   }, [optionsOpen]);
 
   const { rootRef, wrapRef, stick, overflowTop, fixedStyle, blockHpx } = usePurchaseFloat(
-    `${job}|${dc}|${optionsOpen}|${start}-${end}|${phantomOn}|${pStart}-${pEnd}|${groupsChecked.length}|${Object.keys(groupSelections).length}`,
+    `${job}|${dc}|${optionsOpen}|${start}-${end}|${phantomOn}|${allOn}|${pStart}-${pEnd}|${groupsChecked.length}|${Object.keys(groupSelections).length}`,
   );
 
   const clampLevels = (s: number, e: number, min = jobMin): [number, number] => {
@@ -266,6 +271,13 @@ export default function LevelingPurchaseBox({
   // Phantom Job leveling section: own range priced from the job's tiers
   const phantomTiers = cfg.jobs?.find((j) => j.label === job)?.priceTiers ?? cfg.priceTiers;
   const phantomPrice = isPhantomSplit && phantomOn ? sumLevels(pStart, pEnd, phantomTiers) : 0;
+  // All Phantom Jobs leveled: sum of every job's full leveling price
+  // (levelMin -> that job's cap, on its own tiers)
+  const allJobsSum = (cfg.jobs ?? []).reduce(
+    (s, j) => s + sumLevels(cfg.levelMin, j.max, j.priceTiers ?? cfg.priceTiers),
+    0,
+  );
+  const allPrice = isPhantomSplit && allOn ? allJobsSum : 0;
   // Blue Mage: All spells unlock requires the desired level to be the cap —
   // greyed out, unchecked and excluded from the price at any lower target.
   // (Render-phase state adjustment — the sanctioned alternative to setState
@@ -303,7 +315,7 @@ export default function LevelingPurchaseBox({
   const gearPrice = gearOptions[gearIdx]?.price ?? 0;
   // Priority multiplies the level prices only; add-ons/groups/gear stay flat
   const total =
-    (levelPrice + phantomPrice) * (priority ? priorityMultiplier : 1) +
+    (levelPrice + phantomPrice + allPrice) * (priority ? priorityMultiplier : 1) +
     addonPrice +
     extrasPrice +
     groupsPrice +
@@ -333,7 +345,7 @@ export default function LevelingPurchaseBox({
     addItem(
       {
         ...service,
-        id: `${service.id}::${cfg.showJob || (cfg.jobs?.length && (!isPhantomSplit || phantomOn)) ? job : 'x'}|${dc}|${start}-${end}${isPhantomSplit && phantomOn ? `|p${pStart}-${pEnd}` : ''}`,
+        id: `${service.id}::${cfg.showJob || (cfg.jobs?.length && (!isPhantomSplit || phantomOn)) ? job : 'x'}|${dc}|${start}-${end}${isPhantomSplit && phantomOn ? `|p${pStart}-${pEnd}` : ''}${isPhantomSplit && allOn ? '|all' : ''}`,
         price: total,
         method: 'Piloted',
         qtyLocked: true,
@@ -343,6 +355,7 @@ export default function LevelingPurchaseBox({
         ...(job && (!isPhantomSplit || phantomOn) ? [`Job: ${job}`] : []),
         `Level ${start} → ${end}`,
         ...(isPhantomSplit && phantomOn && job ? [`${job} Level ${pStart} → ${pEnd}`] : []),
+        ...(isPhantomSplit && allOn && cfg.phantomAll ? [cfg.phantomAll.label] : []),
         `Data Center: ${dc}`,
         ...(addonChecked && addonEnabled && cfg.addon ? [cfg.addon.label] : []),
         ...addonsChecked.map((id) => cfg.addons!.find((a) => a.id === id)!.label),
@@ -536,9 +549,35 @@ export default function LevelingPurchaseBox({
               its own level range; expands/retracts with an animated height */}
           {isPhantomSplit && (
             <div>
+              {/* All Phantom Jobs leveled — mutually exclusive with the
+                  single-job Phantom Job leveling section below */}
+              {cfg.phantomAll && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setAllOn((a) => !a);
+                    setPhantomOn(false);
+                  }}
+                  aria-pressed={allOn}
+                  className="mb-1.5 flex w-full items-center gap-3 rounded-[5px] bg-navy-850 px-2.5 py-1.5 text-left transition-colors hover:bg-navy-800"
+                >
+                  <span
+                    className={`flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-[3px] border transition-colors ${
+                      allOn ? 'border-cyan-600 bg-cyan-600 text-navy-900' : 'border-navy-600 text-transparent'
+                    }`}
+                  >
+                    <Check className="h-3 w-3" strokeWidth={3.5} />
+                  </span>
+                  <span className="min-w-0 flex-1 truncate text-sm text-slate-300">{cfg.phantomAll.label}</span>
+                  <span className="text-xs font-bold text-cyan-400">+{format(allJobsSum)}</span>
+                </button>
+              )}
               <button
                 type="button"
-                onClick={() => setPhantomOn((p) => !p)}
+                onClick={() => {
+                  setPhantomOn((p) => !p);
+                  setAllOn(false);
+                }}
                 aria-pressed={phantomOn}
                 className="flex w-full items-center gap-3 rounded-[5px] bg-navy-850 px-2.5 py-1.5 text-left transition-colors hover:bg-navy-800"
               >

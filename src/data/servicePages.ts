@@ -1749,6 +1749,17 @@ SERVICE_PAGES['ffxiv-pilgrims-traverse'] = deepDungeonPage(
   ['Have a level 100 Job', '95+ Aetherpool Weapon & Armour (available as an add-on)', 'ilvl 740 or higher gear'],
   GROUP_PLAY_VS_PILOTED,
 );
+SERVICE_PAGES['ffxiv-final-verse'] = deepDungeonPage(
+  'The Final Verse',
+  [
+    { icon: Swords, title: 'The Final Verse (Quantum) Cleared', text: 'The quantum encounter defeated at the maximum 40 sacramental offerings.' },
+    { icon: Gem, title: 'Sacks of First Light', text: 'Every reward coffer from the clear stays on your character.' },
+    { icon: BadgeCheck, title: '“The Mourner of Light” Title', text: 'Exclusive title earned for clearing with the maximum amount of sacramental offerings.' },
+    { icon: Medal, title: 'Achievement: “Unholy Devotion”', text: 'Achievement unlocked upon completing The Final Verse (Quantum) with 40 offerings.' },
+  ],
+  ['Have a level 100 Job', 'Own the Dawntrail Expansion', 'The Final Verse (Quantum) unlocked (available as an add-on)'],
+  PILOTED_ONLY,
+);
 SERVICE_PAGES['ffxiv-deep-dungeon-bundle'] = deepDungeonPage(
   'DD Bundle',
   [

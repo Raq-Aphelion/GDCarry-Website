@@ -24,29 +24,7 @@
               "price": 450,
               "selectOptions": {
                 "label": "Job",
-                "options": [
-                  "Paladin (PLD)",
-                  "Warrior (WAR)",
-                  "Dark Knight (DRK)",
-                  "Gunbreaker (GNB)",
-                  "White Mage (WHM)",
-                  "Scholar (SCH)",
-                  "Astrologian (AST)",
-                  "Sage (SGE)",
-                  "Monk (MNK)",
-                  "Dragoon (DRG)",
-                  "Ninja (NIN)",
-                  "Samurai (SAM)",
-                  "Reaper (RPR)",
-                  "Viper (VPR)",
-                  "Bard (BRD)",
-                  "Machinist (MCH)",
-                  "Dancer (DNC)",
-                  "Black Mage (BLM)",
-                  "Summoner (SMN)",
-                  "Red Mage (RDM)",
-                  "Pictomancer (PCT)"
-                ]
+                "jobEra": "shb"
               }
             }
           ]
@@ -274,6 +252,9 @@
       "endLabel": "Desired Knowledge",
       "phantomToggle": {
         "label": "Phantom Job leveling"
+      },
+      "phantomAll": {
+        "label": "All Phantom Jobs leveled"
       },
       "jobs": [
         {
@@ -888,29 +869,7 @@
               "price": 1525,
               "selectOptions": {
                 "label": "Job",
-                "options": [
-                  "Paladin (PLD)",
-                  "Warrior (WAR)",
-                  "Dark Knight (DRK)",
-                  "Gunbreaker (GNB)",
-                  "White Mage (WHM)",
-                  "Scholar (SCH)",
-                  "Astrologian (AST)",
-                  "Sage (SGE)",
-                  "Monk (MNK)",
-                  "Dragoon (DRG)",
-                  "Ninja (NIN)",
-                  "Samurai (SAM)",
-                  "Reaper (RPR)",
-                  "Viper (VPR)",
-                  "Bard (BRD)",
-                  "Machinist (MCH)",
-                  "Dancer (DNC)",
-                  "Black Mage (BLM)",
-                  "Summoner (SMN)",
-                  "Red Mage (RDM)",
-                  "Pictomancer (PCT)"
-                ]
+                "jobEra": "dt"
               }
             }
           ]
