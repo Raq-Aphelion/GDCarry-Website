@@ -245,7 +245,7 @@ export function initOrderMessageStyler() {
       exists, nothing is clicked.
     - The widget iframe stays at opacity 0 + pointer-events none until the
       order message renders, so the form paste is never visible. */
-export function openLiveChatPrefill(data: LiveChatPrefill, attemptsLeft = 10) {
+export function openLiveChatPrefill(data: LiveChatPrefill, attemptsLeft = 10, forceRestart = false) {
   const w = window as unknown as {
     $_LHC?: {
       eventListener?: { emitEvent?: (event: string, payload?: unknown) => void };
@@ -367,6 +367,10 @@ export function openLiveChatPrefill(data: LiveChatPrefill, attemptsLeft = 10) {
     iframe.style.opacity = '0';
     iframe.style.pointerEvents = 'none';
   }
+  // A stale closed chat blocks the start form — kill its session first so
+  // the widget boots back to a fresh form (server-side injection reported
+  // the chat as closed)
+  if (forceRestart) emit('endChatCookies', [{ force: true }]);
   // Close if open, then reboot the child — the api_data set queues behind
   // the reload and lands before the fresh app mounts
   emit('closeWidget');

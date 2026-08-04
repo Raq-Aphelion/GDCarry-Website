@@ -235,7 +235,7 @@ export default function CheckoutPage() {
       chat message server-side, logs the order and (for chat orders) injects
       it into the visitor's LHC chat: addmsguser when a chat is open
       (chatId/chatHash), submitonline to start one otherwise (vid). */
-  const sendOrderToProxy = async (orderId: string): Promise<{ ok: boolean; injected?: boolean }> => {
+  const sendOrderToProxy = async (orderId: string): Promise<{ ok: boolean; injected?: boolean; reason?: string }> => {
     if (!ORDER_KEY) return { ok: false };
     const session = contactVia === 'chat' ? getLhcSession() : null;
     const res = await fetch(ORDER_LOG_URL, {
@@ -263,7 +263,7 @@ export default function CheckoutPage() {
         })),
       }),
     });
-    return (await res.json()) as { ok: boolean; injected?: boolean };
+    return (await res.json()) as { ok: boolean; injected?: boolean; reason?: string };
   };
 
   const purchase = (e: FormEvent) => {
@@ -289,7 +289,7 @@ export default function CheckoutPage() {
       // Server-side injection first: the worker posts the order into the
       // visitor's LHC chat (or starts one via their vid). The local
       // start-form flow is the fallback when the proxy can't deliver.
-      const proxyResult = sendOrderToProxy(orderId).catch((): { ok: boolean; injected?: boolean } => ({ ok: false }));
+      const proxyResult = sendOrderToProxy(orderId).catch((): { ok: boolean; injected?: boolean; reason?: string } => ({ ok: false }));
       window.setTimeout(() => {
         clear();
         setStage('done');
@@ -300,7 +300,9 @@ export default function CheckoutPage() {
         });
         proxyResult.then((r) => {
           if (r.injected) openLiveChat();
-          else openLiveChatPrefill(prefill);
+          // A stale closed chat can't be injected into NOR shown as a form —
+          // force-reset its session so the local flow boots a fresh one
+          else openLiveChatPrefill(prefill, 10, r.reason === 'chat_closed');
         });
       }, PROCESSING_MS);
     } else {
