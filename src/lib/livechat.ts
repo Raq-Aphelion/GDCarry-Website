@@ -12,6 +12,29 @@ export function openLiveChat(attemptsLeft = 10) {
   }
 }
 
+export interface LhcSession {
+  /** Visitor tracking id — always present once the widget wrapper loaded */
+  vid?: string;
+  /** Chat id + hash — present only while a chat is active */
+  id?: number;
+  hash?: string;
+}
+
+/** Reads the LHC visitor session from the widget wrapper (null when the
+    wrapper hasn't loaded yet). Used by the server-side order injection:
+    id+hash let the worker post into the open chat, vid lets it start one
+    attached to this visitor. */
+export function getLhcSession(): LhcSession | null {
+  const w = window as unknown as {
+    $_LHC?: { attributes?: { userSession?: { getSessionAttributes?: () => LhcSession } } };
+  };
+  try {
+    return w.$_LHC?.attributes?.userSession?.getSessionAttributes?.() ?? null;
+  } catch {
+    return null;
+  }
+}
+
 export interface LiveChatPrefill {
   /** Start-form Username field */
   username?: string;

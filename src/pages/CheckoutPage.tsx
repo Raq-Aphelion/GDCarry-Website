@@ -10,7 +10,7 @@ import { useCart, type CartItem } from '@/context/CartContext';
 import { cartMeta, displayDetails, lineTotal } from '@/lib/cart';
 import { useCurrency } from '@/context/CurrencyContext';
 import { useToast } from '@/context/ToastContext';
-import { openLiveChatPrefill } from '@/lib/livechat';
+import { getLhcSession, openLiveChat, openLiveChatPrefill } from '@/lib/livechat';
 import { serviceLink } from '@/data/games';
 import ffxivBg from '@/assets/images/backgrounds/ffxiv-bg.webp';
 
@@ -230,30 +230,40 @@ export default function CheckoutPage() {
     ].join('\n');
   };
 
-  /** Posts the order to the logging proxy as raw fields — the worker
-      validates them, rebuilds the Discord embed server-side and forwards it.
-      The client never sees the webhook URL and can't inject embed content. */
-  const logOrder = async (orderId: string) => {
-    if (!ORDER_KEY) return;
-    await fetch(ORDER_LOG_URL, {
+  /** Posts the order to the proxy (Cloudflare Worker) as raw fields — the
+      worker validates them, rebuilds both the Discord embed and the BBCode
+      chat message server-side, logs the order and (for chat orders) injects
+      it into the visitor's LHC chat: addmsguser when a chat is open
+      (chatId/chatHash), submitonline to start one otherwise (vid). */
+  const sendOrderToProxy = async (orderId: string): Promise<{ ok: boolean; injected?: boolean }> => {
+    if (!ORDER_KEY) return { ok: false };
+    const session = contactVia === 'chat' ? getLhcSession() : null;
+    const res = await fetch(ORDER_LOG_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'X-Order-Key': ORDER_KEY },
       body: JSON.stringify({
         orderId,
+        channel: contactVia,
         contactVia: contactVia === 'chat' ? 'Live chat' : 'Discord',
         contact: contact.trim(),
         email: email.trim(),
         payment: methodLabel,
         total: format(orderTotal),
-        items: orderItems.map((item) => ({
+        vid: session?.vid,
+        chatId: session?.id,
+        chatHash: session?.hash,
+        items: orderItems.slice(0, 5).map((item) => ({
           name: item.name,
+          meta: cartMeta(item),
           gameShort: item.gameShort,
           qty: item.qty,
           price: format(lineTotal(item)),
           details: item.details ?? [],
+          image: new URL(item.image, SITE_URL).href,
         })),
       }),
     });
+    return (await res.json()) as { ok: boolean; injected?: boolean };
   };
 
   const purchase = (e: FormEvent) => {
@@ -275,28 +285,37 @@ export default function CheckoutPage() {
         : null;
     setPurchased(items);
     setStage('processing');
-    // Order logging via the proxy — only for Discord-contact orders (live
-    // chat orders already land in LHC). Fire and forget, never blocks.
-    if (contactVia === 'discord') logOrder(orderId).catch(() => {});
-    window.setTimeout(() => {
-      clear();
-      setStage('done');
-      if (prefill) {
-        // The helper sets the start-form fields first, then opens the widget
-        openLiveChatPrefill(prefill);
+    if (contactVia === 'chat' && prefill) {
+      // Server-side injection first: the worker posts the order into the
+      // visitor's LHC chat (or starts one via their vid). The local
+      // start-form flow is the fallback when the proxy can't deliver.
+      const proxyResult = sendOrderToProxy(orderId).catch((): { ok: boolean; injected?: boolean } => ({ ok: false }));
+      window.setTimeout(() => {
+        clear();
+        setStage('done');
         toast({
           title: 'Order placed',
           description: 'Opening the live chat with your order details — a manager will take it from there.',
           variant: 'blue',
         });
-      } else {
+        proxyResult.then((r) => {
+          if (r.injected) openLiveChat();
+          else openLiveChatPrefill(prefill);
+        });
+      }, PROCESSING_MS);
+    } else {
+      // Discord contact — proxy logs the order for the bot. Fire and forget.
+      sendOrderToProxy(orderId).catch(() => {});
+      window.setTimeout(() => {
+        clear();
+        setStage('done');
         toast({
           title: 'Order placed',
           description: 'A Grand Dice manager will contact you on Discord within minutes.',
           variant: 'blue',
         });
-      }
-    }, PROCESSING_MS);
+      }, PROCESSING_MS);
+    }
   };
 
   return (
