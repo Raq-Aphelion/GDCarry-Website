@@ -28,10 +28,8 @@ export default function MountAddonsBlock({
   onToggle?: () => void;
   /** Custom first row (label, price hint, checked state, toggle) */
   extraRow?: { label: string; hint: string; checked: boolean; onClick: () => void };
-  /** Additional custom rows after `extraRow` (e.g. offerings); `hidden`
-      collapses the row with the standard grid-rows animation instead of
-      unmounting it, so the drawer height transitions smoothly */
-  extraRows?: { label: string; hint: string; checked: boolean; onClick: () => void; hidden?: boolean }[];
+  /** Additional custom rows after `extraRow` (e.g. offerings) */
+  extraRows?: { label: string; hint: string; checked: boolean; onClick: () => void }[];
   /** Custom node rendered above the rows (e.g. a gear dropdown) */
   gearRow?: ReactNode;
   /** Hide the Private Stream row (e.g. allied society, variant dungeons) */
@@ -102,18 +100,7 @@ export default function MountAddonsBlock({
           <div className="space-y-1.5 px-4 pb-3 pt-1">
             {gearRow}
             {extraRow && row(extraRow.label, extraRow.hint, extraRow.checked, extraRow.onClick)}
-            {extraRows?.map((r) => (
-              <div
-                key={r.label}
-                className={`grid transition-all duration-300 ease-soft ${
-                  r.hidden
-                    ? 'pointer-events-none !mt-0 grid-rows-[0fr] opacity-0'
-                    : 'grid-rows-[1fr] opacity-100'
-                }`}
-              >
-                <div className="min-h-0 overflow-hidden">{row(r.label, r.hint, r.checked, r.onClick)}</div>
-              </div>
-            ))}
+            {extraRows?.map((r) => <div key={r.label}>{row(r.label, r.hint, r.checked, r.onClick)}</div>)}
             {!hideStream && setStream && row('Private Stream', `+${format(streamPrice ?? 10)}`, stream ?? false, () => setStream(!(stream ?? false)))}
             {row('Priority', `+${Math.round((priorityMultiplier - 1) * 100)}%`, priority, () => setPriority(!priority))}
           </div>

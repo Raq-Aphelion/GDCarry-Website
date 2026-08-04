@@ -273,6 +273,46 @@ input[type='number'] {
 .dropdown-in {
   animation: dropdown-in 0.18s ease-out both;
 }
+/* Exit twin of dropdown-in — same distance/duration, reversed */
+@keyframes dropdown-out {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
+.dropdown-out {
+  animation: dropdown-out 0.18s ease-in both;
+}
+
+/* Dim/blur veil behind the games dropdown — same look as the cart drawer's */
+@keyframes overlay-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.overlay-in {
+  animation: overlay-in 0.18s ease-out both;
+}
+/* Own keyframes (not overlay-in reversed): browsers won't restart an
+   animation whose name is unchanged, so the fade-out would never play */
+@keyframes overlay-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+.overlay-out {
+  animation: overlay-out 0.18s ease-in both;
+}
 
 /* Toast entrance */
 @keyframes toast-in {

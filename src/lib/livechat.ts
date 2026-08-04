@@ -44,16 +44,22 @@ export interface LiveChatPrefill {
   question?: string;
 }
 
-/* Styles for the order message once it lands in the chat. Mirrors the
-   checkout order list: square thumbnail top-left, bold title + meta +
-   diamond bullets right, left-aligned on the plain dark widget background
-   (no chat bubble). The theme styles visitor bubbles with !important +
-   high-specificity selectors and right-aligns visitor rows, so these must
-   out-specify and override it. Bold accents use the site's light blue
-   (#93c5fd); the header keeps the link blue (#60a5fa).
+/* Styles for the order message once it lands in the chat. Mirrors the site's
+   cart drawer + service card: square 64px thumbnail top-left, white Sora
+   title, uppercase cyan meta, cyan-diamond slate detail lines, and the card's
+   "From PRICE" line (small slate label + big white Sora price), left-aligned
+   on the plain dark widget background (no chat bubble). The theme styles
+   visitor bubbles with !important + high-specificity selectors and
+   right-aligns visitor rows, so these must out-specify and override it. Bold
+   accents in the contact block use the site's light blue (#93c5fd); the
+   header keeps the link blue (#60a5fa). Sora/Inter are imported so the widget
+   uses the same fonts as the site.
    The body rules are scoped to DIRECT children — a width:100% media box
-   inside the flex .gd-item crushes the text column to zero width. */
+   inside the flex .gd-item crushes the text column to zero width.
+   Images are made non-interactive (pointer-events none + anchors unwrapped in
+   styleOrderRow) so visitors can't click them open in full view. */
 const ORDER_CSS = `
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600&display=swap');
 #messagesBlock .message-row.gd-order {
   max-width: 100% !important;
   width: 100% !important;
@@ -75,6 +81,7 @@ const ORDER_CSS = `
   margin: 0 !important;
   padding: 2px 0 2px 14px !important;
   text-align: left !important;
+  font-family: 'Inter', sans-serif !important;
 }
 .gd-order .msg-body strong { color: #93c5fd !important; letter-spacing: .04em; }
 /* Header — bigger, keeps the site's link blue */
@@ -82,19 +89,22 @@ const ORDER_CSS = `
   color: #60a5fa !important;
   font-size: 16px !important;
   letter-spacing: .06em !important;
+  font-family: 'Sora', sans-serif !important;
 }
-/* Total — muted label, bold white price (the site's "From X €" style) */
-.gd-order > .msg-body:last-of-type { color: #94a3b8 !important; }
+/* Total — muted label, big bold white price (the service card's price style) */
+.gd-order > .msg-body:last-of-type { color: #94a3b8 !important; font-size: 12px !important; }
 .gd-order > .msg-body:last-of-type strong {
   color: #ffffff !important;
-  font-size: 15px !important;
+  font-size: 18px !important;
+  font-weight: 700 !important;
   letter-spacing: 0 !important;
+  font-family: 'Sora', sans-serif !important;
 }
 .gd-item {
   display: flex !important;
   align-items: flex-start !important;
-  gap: 10px !important;
-  margin-top: 10px !important;
+  gap: 12px !important;
+  margin-top: 12px !important;
   clear: both !important;
   width: 100% !important;
   box-sizing: border-box !important;
@@ -108,29 +118,107 @@ const ORDER_CSS = `
   padding: 0 !important;
 }
 .gd-item .img_embed { display: block !important; }
+/* Cart drawer thumbnail: 64px square, slight rounding, no border */
 .gd-item .img_embed img {
   display: block !important;
-  width: 56px !important;
-  height: 56px !important;
-  max-height: 56px !important;
+  width: 64px !important;
+  height: 64px !important;
+  max-height: 64px !important;
   object-fit: cover !important;
   object-position: top !important;
-  border-radius: 6px !important;
-  border: 1px solid rgba(147, 197, 253, .4) !important;
+  border-radius: 5px !important;
+  border: none !important;
   margin: 0 !important;
 }
+/* Visitors must not be able to click an order image open in full view */
+.gd-order .msg-body-media a,
+.gd-order .msg-body-media img {
+  pointer-events: none !important;
+  cursor: default !important;
+}
 .gd-item-text { flex: 1 1 auto !important; min-width: 0 !important; padding: 0 !important; }
+/* Item name — cart drawer / service card title: white, semibold, Sora 14px */
+.gd-item-text .gd-name strong {
+  color: #ffffff !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0 !important;
+  font-family: 'Sora', sans-serif !important;
+}
+/* Meta line — cart drawer: uppercase cyan, 12px */
+.gd-item-text .gd-meta {
+  color: rgba(34, 211, 238, .8) !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  text-transform: uppercase !important;
+  letter-spacing: .05em !important;
+  margin-top: 2px !important;
+}
+/* Detail lines — cart drawer: slate 12px behind a small cyan diamond */
+.gd-item-text .gd-detail {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  color: #94a3b8 !important;
+  font-size: 12px !important;
+  margin-top: 3px !important;
+}
+.gd-item-text .gd-detail::before {
+  content: '';
+  flex: 0 0 auto;
+  width: 4px;
+  height: 4px;
+  transform: rotate(45deg);
+  background: rgba(6, 182, 212, .7);
+}
+/* "From PRICE" — service card: small slate label + big bold white Sora price */
+.gd-item-text .gd-price {
+  display: flex !important;
+  align-items: baseline !important;
+  gap: 6px !important;
+  margin-top: 10px !important;
+  color: #94a3b8 !important;
+  font-size: 12px !important;
+}
+.gd-item-text .gd-price strong {
+  color: #ffffff !important;
+  font-size: 18px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0 !important;
+  font-family: 'Sora', sans-serif !important;
+}
 `;
 
 /** First line of every order message — used to spot order rows in the chat. */
 const ORDER_MARKER = 'ORDER DETAILS';
 
+/** Wraps each line of an item's text body in a typed div (name / meta /
+    detail / price) so ORDER_CSS can style them like the site's cart drawer
+    and service card. Detail markers (◆/🔹) are stripped — the CSS ::before
+    diamond replaces them. Tolerates the older message format (numbered
+    names, "meta — price" line, 🔹 markers) that the server-side worker or
+    stored chat history may still render. */
+const wrapItemLines = (html: string) =>
+  html
+    .split(/<br\s*\/?>/i)
+    .map((l) => l.trim())
+    .filter(Boolean)
+    .map((l) => {
+      if (/^(?:◆|🔹)/.test(l)) return `<div class="gd-detail">${l.replace(/^(?:◆|🔹)\s*/, '')}</div>`;
+      if (/^From[:\s]/i.test(l)) return `<div class="gd-price">${l}</div>`;
+      if (/^<strong>[\s\S]*<\/strong>$/.test(l)) return `<div class="gd-name">${l}</div>`;
+      return `<div class="gd-meta">${l}</div>`;
+    })
+    .join('');
+
 /** Rebuilds an order message row: LHC renders text as one .msg-body per
     paragraph block and each [img] as its own .msg-body-media. For every
     image we wrap it with the text body above it into a thumbnail-left flex
     row (the first one is split at the "Items:" marker so the contact block
-    stays put), then injects the order styles. Idempotent — processed rows
-    are tagged, so the reload styler can sweep freely. */
+    stays put), classify the text lines for styling, strip the image's
+    full-view link so visitors can't open it, then inject the order styles.
+    Idempotent — processed rows are tagged, so the reload styler can sweep
+    freely. */
 const styleOrderRow = (doc: Document, row: Element) => {
   if ((row as HTMLElement).dataset.gdStyled) return;
   (row as HTMLElement).dataset.gdStyled = '1';
@@ -158,6 +246,9 @@ const styleOrderRow = (doc: Document, row: Element) => {
       textBody = textBody.previousElementSibling;
     }
     if (!textBody) return;
+    // Strip the full-view link around the image — visitors get a static
+    // thumbnail (pointer-events are also cut in ORDER_CSS as a fallback)
+    media.querySelectorAll('a').forEach((a) => a.replaceWith(...a.childNodes));
     let itemHtml = textBody.innerHTML;
     let consumedWholeBody = true;
     if (i === 0) {
@@ -174,7 +265,7 @@ const styleOrderRow = (doc: Document, row: Element) => {
     wrap.className = 'gd-item';
     const textCol = doc.createElement('div');
     textCol.className = 'gd-item-text msg-body';
-    textCol.innerHTML = itemHtml;
+    textCol.innerHTML = wrapItemLines(itemHtml);
     resetBubble(textCol); // created after the reset sweep above
     media.before(wrap);
     wrap.appendChild(media);

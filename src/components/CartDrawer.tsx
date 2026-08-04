@@ -7,6 +7,7 @@ import { useCurrency } from '@/context/CurrencyContext';
 import { OverlayScrollbar } from '@/components/Scrollbar';
 import { serviceLink } from '@/data/games';
 import { setLhcCartOffset } from '@/lib/lhcWidgetFx';
+import { useSmoothScroller } from '@/hooks/useSmoothScroller';
 
 /** Editable quantity field: shows the committed qty, but while focused the
     user can type a number directly — committed on blur/Enter (setQty clamps
@@ -43,11 +44,21 @@ export default function CartDrawer() {
   const [listEl, setListEl] = useState<HTMLDivElement | null>(null);
   // The wider right padding exists only to make room for the overlay scrollbar
   const [overflows, setOverflows] = useState(false);
+  // Edge fades on the sides the list content overflows (same as checkout's order box)
+  const [fadeTop, setFadeTop] = useState(false);
+  const [fadeBottom, setFadeBottom] = useState(false);
+  // Same smooth scrolling as the page
+  useSmoothScroller(listEl);
 
   useEffect(() => {
     if (!listEl) return;
-    const check = () => setOverflows(listEl.scrollHeight > listEl.clientHeight + 1);
+    const check = () => {
+      setOverflows(listEl.scrollHeight > listEl.clientHeight + 1);
+      setFadeTop(listEl.scrollTop > 4);
+      setFadeBottom(listEl.scrollTop < listEl.scrollHeight - listEl.clientHeight - 4);
+    };
     check();
+    listEl.addEventListener('scroll', check, { passive: true });
     const ro = new ResizeObserver(check);
     ro.observe(listEl);
     Array.from(listEl.children).forEach((c) => ro.observe(c));
@@ -55,6 +66,7 @@ export default function CartDrawer() {
     const mo = new MutationObserver(check);
     mo.observe(listEl, { childList: true, subtree: true });
     return () => {
+      listEl.removeEventListener('scroll', check);
       ro.disconnect();
       mo.disconnect();
     };
@@ -142,7 +154,10 @@ export default function CartDrawer() {
         ) : (
           <>
             <div className="relative min-h-0 flex-1">
-              <div ref={setListEl} className={`cart-items-scroll h-full space-y-3 overflow-y-auto py-4 pl-5 ${overflows ? 'pr-8' : 'pr-5'}`}>
+              <div ref={setListEl} className={`cart-items-scroll h-full overflow-y-auto py-4 pl-5 ${overflows ? 'pr-8' : 'pr-5'}`}>
+              {/* Single content child: Lenis (useSmoothScroller) measures this
+                  wrapper to size the scroll range */}
+              <div className="space-y-3">
               {items.map((item) => (
                 <div
                   key={item.id}
@@ -220,6 +235,21 @@ export default function CartDrawer() {
                 Clear cart
               </button>
               </div>
+              </div>
+              {/* Edge fades where the list content overflows — same look as the
+                  checkout order box, in the panel's navy-900 */}
+              <div
+                className={`pointer-events-none absolute inset-x-0 top-0 z-10 h-4 bg-gradient-to-b from-navy-900 via-navy-900/40 to-transparent transition-opacity duration-300 ${
+                  fadeTop ? 'opacity-100' : 'opacity-0'
+                }`}
+                aria-hidden
+              />
+              <div
+                className={`pointer-events-none absolute inset-x-0 bottom-0 z-10 h-4 bg-gradient-to-t from-navy-900 via-navy-900/40 to-transparent transition-opacity duration-300 ${
+                  fadeBottom ? 'opacity-100' : 'opacity-0'
+                }`}
+                aria-hidden
+              />
               {/* Same overlay scrollbar as the main page — floats over the
                   items, no gutter, no arrows. */}
               <OverlayScrollbar

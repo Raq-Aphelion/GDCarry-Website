@@ -390,7 +390,7 @@ export default function Home() {
                       {game.name}
                     </h3>
                     <p className="mt-0.5 text-[11px] font-semibold uppercase tracking-wider text-slate-400">
-                      {serviceCount(game)} services
+                      {serviceCount(game) > 0 ? `${serviceCount(game)} services` : 'Coming soon'}
                     </p>
                   </div>
                 </Link>

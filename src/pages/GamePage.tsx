@@ -48,6 +48,7 @@ export default function GamePage() {
   // The services grid section — smooth-scroll target on category change
   const gridRef = useRef<HTMLDivElement>(null);
   const prevActive = useRef(active);
+  const prevGameId = useRef(gameId);
   // Collapsed mount/trial sections, keyed by section title
   const [collapsedSections, setCollapsedSections] = useState<ReadonlySet<string>>(new Set());
   const toggleSection = (title: string) =>
@@ -77,9 +78,19 @@ export default function GamePage() {
   // On category change, smooth-scroll so the grid's top edge (where the header
   // background ends and the content segment starts) lands right below the
   // navbar — on mobile, below the sticky category chips bar instead.
-  // Only scrolls when the category actually CHANGES (never on first open, so
-  // the title block / background is what you see when the page loads).
+  // Only scrolls when the category actually CHANGES within the same game:
+  // never on first open, and never when switching games (a new game page is a
+  // fresh open — ScrollToTop owns the scroll position there, and the new
+  // game's default category would otherwise look like a "change").
   useEffect(() => {
+    if (prevGameId.current !== gameId) {
+      prevGameId.current = gameId;
+      // Record the category the URL-sync effect above is about to switch to —
+      // NOT the stale one from the previous game, or that sync would look
+      // like an in-game category pick and trigger the scroll
+      prevActive.current = validCat(catParam) ?? game?.subcategories[0]?.id ?? '';
+      return;
+    }
     if (prevActive.current === active) return;
     prevActive.current = active;
     const el = gridRef.current;
@@ -103,7 +114,8 @@ export default function GamePage() {
     const lenis = lenisRef.current;
     if (lenis) lenis.scrollTo(top, { duration: 0.4 });
     else scroller.scrollTo({ top, behavior: 'smooth' });
-  }, [active]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- validCat is stable (pure lookup)
+  }, [active, gameId, catParam, game]);
 
   useEffect(() => {
     if (!catListEl) return;

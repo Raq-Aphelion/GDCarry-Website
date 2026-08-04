@@ -25,8 +25,13 @@ export default function Reveal({ children, delay = 0, className = '', instant = 
     const el = ref.current;
     if (!el) return;
     const io = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
+      (entries) => {
+        // Check EVERY entry, not just the first: when a layout shift (e.g. an
+        // ancestor's max-height transition) moves the element into view in the
+        // same frame batch as the initial observation, the callback gets both
+        // the stale not-intersecting entry AND the intersecting one — reading
+        // only [0] would miss the reveal and leave the section hidden forever.
+        if (entries.some((e) => e.isIntersecting)) {
           setVisible(true);
           io.disconnect();
         }

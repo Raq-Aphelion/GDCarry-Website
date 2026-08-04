@@ -61,7 +61,7 @@ export function PricingProvider({ children }: { children: ReactNode }) {
     const dd = db.deepDungeons?.[serviceId];
     if (dd)
       return Math.min(
-        ...(dd.modes?.length ? dd.modes.map((m) => m.price) : [dd.solo.price]),
+        dd.solo.price,
         ...(dd.group?.options.map((o) => o.price) ?? []),
       );
     const cr = db.criterion?.[serviceId];

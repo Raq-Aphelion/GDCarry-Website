@@ -11,6 +11,7 @@ import { cartMeta, displayDetails, lineTotal } from '@/lib/cart';
 import { useCurrency } from '@/context/CurrencyContext';
 import { useToast } from '@/context/ToastContext';
 import { getLhcSession, openLiveChat, openLiveChatPrefill } from '@/lib/livechat';
+import { useSmoothScroller } from '@/hooks/useSmoothScroller';
 import { serviceLink } from '@/data/games';
 import ffxivBg from '@/assets/images/backgrounds/ffxiv-bg.webp';
 
@@ -100,8 +101,10 @@ export default function CheckoutPage() {
   const [actionEl, setActionEl] = useState<HTMLDivElement | null>(null);
   const [orderMaxH, setOrderMaxH] = useState<number | undefined>(undefined);
   // Order list scroller + overflow state (drives the overlay scrollbar inset)
-  const [orderListEl, setOrderListEl] = useState<HTMLUListElement | null>(null);
+  const [orderListEl, setOrderListEl] = useState<HTMLElement | null>(null);
   const [orderOverflows, setOrderOverflows] = useState(false);
+  // Same smooth scrolling as the page
+  useSmoothScroller(orderListEl);
   // Edge fades on the sides the list content overflows
   const [orderFadeTop, setOrderFadeTop] = useState(false);
   const [orderFadeBottom, setOrderFadeBottom] = useState(false);
@@ -197,18 +200,20 @@ export default function CheckoutPage() {
   const methodLabel = PAYMENT_METHODS.find((m) => m.id === method)?.label ?? method;
 
   /** Full order as BBCode (LHC renders [b]/[img]/[url] in chat) — used for
-      the live chat message field. Per item: bold title, game · qty · price
-      meta line, diamond config bullets, then the thumbnail (re-arranged into
-      a thumbnail-left row by openLiveChatPrefill once the message lands). */
+      the live chat message field. Per item: bold title, game · qty meta line,
+      diamond config bullets, "From" unit price (styled like the service card
+      once it lands), then the thumbnail (re-arranged into a thumbnail-left
+      row by styleOrderRow once the message lands). */
   const buildOrderMessage = (orderId: string) => {
     const itemBlocks = orderItems
       .slice(0, 5)
-      .map((item, n) => {
-        const details = (item.details ?? []).map((d) => `🔹 ${d}`).join('\n');
+      .map((item) => {
+        const details = displayDetails(item).map((d) => `◆ ${d}`).join('\n');
         return [
-          `[b]${n + 1}. ${item.name}[/b]`,
-          `${cartMeta(item)} — ${format(lineTotal(item))}`,
+          `[b]${item.name}[/b]`,
+          cartMeta(item),
           details,
+          `From [b]${format(item.price)}[/b]`,
           `[img]${new URL(item.image, SITE_URL).href}[/img]`,
         ]
           .filter(Boolean)
@@ -258,7 +263,8 @@ export default function CheckoutPage() {
           gameShort: item.gameShort,
           qty: item.qty,
           price: format(lineTotal(item)),
-          details: item.details ?? [],
+          unitPrice: format(item.price),
+          details: displayDetails(item),
           image: new URL(item.image, SITE_URL).href,
         })),
       }),
@@ -329,8 +335,8 @@ export default function CheckoutPage() {
           <FadeImage
             src={ffxivBg}
             alt=""
-            className="h-full w-full"
-            imgClassName="opacity-50 lg:object-[50%_35%]"
+            className="h-full w-full opacity-50"
+            imgClassName="lg:object-[50%_35%]"
           />
         </div>
         <div className="absolute inset-0 bg-gradient-to-r from-navy-900/95 via-navy-900/75 to-navy-900/40" />
@@ -564,11 +570,14 @@ export default function CheckoutPage() {
                 </span>
               </h2>
               <div className="relative mt-5 flex min-h-0 flex-1 flex-col">
-                <ul
+                {/* Single content child (the ul): Lenis (useSmoothScroller)
+                    measures it to size the scroll range */}
+                <div
                   ref={setOrderListEl}
                   data-lenis-prevent
-                  className={`no-scrollbar min-h-0 flex-1 divide-y divide-navy-700/50 overflow-y-auto ${orderOverflows ? 'pr-4' : ''}`}
+                  className={`no-scrollbar min-h-0 flex-1 overflow-y-auto ${orderOverflows ? 'pr-4' : ''}`}
                 >
+                <ul className="divide-y divide-navy-700/50">
                   {orderItems.map((item) => (
                     <li key={item.id} className="flex gap-3 py-3 first:pt-0 last:pb-0">
                       {/* Configured services carry a ::config suffix — strip it for the link */}
@@ -606,15 +615,16 @@ export default function CheckoutPage() {
                     </li>
                   ))}
                 </ul>
+                </div>
                 {/* Edge fades where the list content overflows */}
                 <div
-                  className={`pointer-events-none absolute inset-x-0 top-0 z-10 h-6 bg-gradient-to-b from-navy-850 to-transparent transition-opacity duration-300 ${
+                  className={`pointer-events-none absolute inset-x-0 top-0 z-10 h-4 bg-gradient-to-b from-navy-850 via-navy-850/40 to-transparent transition-opacity duration-300 ${
                     orderFadeTop ? 'opacity-100' : 'opacity-0'
                   }`}
                   aria-hidden
                 />
                 <div
-                  className={`pointer-events-none absolute inset-x-0 bottom-0 z-10 h-6 bg-gradient-to-t from-navy-850 to-transparent transition-opacity duration-300 ${
+                  className={`pointer-events-none absolute inset-x-0 bottom-0 z-10 h-4 bg-gradient-to-t from-navy-850 via-navy-850/40 to-transparent transition-opacity duration-300 ${
                     orderFadeBottom ? 'opacity-100' : 'opacity-0'
                   }`}
                   aria-hidden

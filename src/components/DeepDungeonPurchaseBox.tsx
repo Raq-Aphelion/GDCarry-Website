@@ -32,8 +32,6 @@ const OPTION_ICONS: Record<string, LucideIcon> = {
   farm: Gem,
   'rng-loot': Dices,
   'full-loot': Gem,
-  normal: Gem,
-  quantum: Zap,
 };
 
 /** Deep dungeon purchase box: two methods — Group Play (run-type pills:
@@ -55,16 +53,8 @@ export default function DeepDungeonPurchaseBox({ service, gameShort }: { service
 
   const [method, setMethod] = useState<'solo' | 'group'>('group');
   const [option, setOption] = useState(groupOptions[0]?.id ?? '');
-  // Piloted-only services may offer mode pills (e.g. The Final Verse Normal /
-  // Quantum); the selected mode drives the price and the unlock add-on
-  const modes = cfg?.modes ?? [];
-  const [mode, setMode] = useState(modes[0]?.id ?? '');
-  const selectedMode = modes.find((m) => m.id === mode) ?? modes[0];
-  const activeUnlock = selectedMode?.unlock ?? cfg?.unlock;
-  // Drawer add-ons can be gated to a mode (e.g. 40 Offerings is Quantum-only)
-  const visibleDrawerAddons = (cfg?.drawerAddons ?? []).filter(
-    (a) => !a.mode || a.mode === selectedMode?.id,
-  );
+  const activeUnlock = cfg?.unlock;
+  const drawerAddons = cfg?.drawerAddons ?? [];
   const [groupChecked, setGroupChecked] = useState<string[]>([]);
   const [mountOn, setMountOn] = useState(false);
   const [checked, setChecked] = useState<string[]>([]);
@@ -106,7 +96,7 @@ export default function DeepDungeonPurchaseBox({ service, gameShort }: { service
   const pricedMethod: 'solo' | 'group' = hasGroup ? shown : 'solo';
 
   const { rootRef, wrapRef, stick, overflowTop, fixedStyle, blockHpx } = usePurchaseFloat(
-    `${dc}|${effMethod}|${mode}|${option}|${groupChecked.length}|${mountOn}|${checked.length}|${stream}|${priority}|${unlockChecked}|${drawerChecked.length}|${runs}`,
+    `${dc}|${effMethod}|${option}|${groupChecked.length}|${mountOn}|${checked.length}|${stream}|${priority}|${unlockChecked}|${drawerChecked.length}|${runs}`,
   );
 
   const toggle = (id: string) =>
@@ -153,7 +143,7 @@ export default function DeepDungeonPurchaseBox({ service, gameShort }: { service
   const core =
     pricedMethod === 'group'
       ? (perRunGroup?.price ?? selectedOption?.price ?? 0)
-      : (perRunSolo?.price ?? selectedMode?.price ?? cfg?.solo.price ?? 0);
+      : (perRunSolo?.price ?? cfg?.solo.price ?? 0);
   const addonsPart = pricedMethod === 'group' ? groupAddonsTotal : addonsTotal;
   const forcedRuns =
     pricedMethod === 'group'
@@ -169,11 +159,14 @@ export default function DeepDungeonPurchaseBox({ service, gameShort }: { service
           : 0;
   // pricedMethod (not effMethod) keeps the total in sync with the panel that
   // is actually rendering during the cross-fade, so the price flips once
-  const effRuns = forcedRuns > 0 ? forcedRuns : pricedMethod === 'solo' ? 1 : runs;
-  const drawerAddonsTotal = drawerChecked.reduce(
-    (s, id) => s + (visibleDrawerAddons.find((a) => a.id === id)?.price ?? 0),
-    0,
-  );
+  const runsControls = !hasGroup && cfg?.runs === true;
+  const effRuns = forcedRuns > 0 ? forcedRuns : pricedMethod === 'solo' ? (runsControls ? runs : 1) : runs;
+  // Drawer add-ons are flat — except timesRuns ones (e.g. 40 Offerings),
+  // which price per run like the core
+  const drawerAddonsTotal = drawerChecked.reduce((s, id) => {
+    const a = drawerAddons.find((x) => x.id === id);
+    return s + (a?.price ?? 0) * (a?.timesRuns ? effRuns : 1);
+  }, 0);
   // Priority multiplies the method total × runs; unlock and stream are flat.
   // streamInSolo / streamPilotedOnly configs offer Private Stream only in Piloted.
   const effStreamPrice =
@@ -196,7 +189,7 @@ export default function DeepDungeonPurchaseBox({ service, gameShort }: { service
     addItem(
       {
         ...service,
-        id: `${service.id}::${dc}|${effMethod}${!isGroup && selectedMode ? `|${selectedMode.id}` : ''}|${isGroup ? `${option}~${[...groupChecked].sort().join(',')}` : [...checked].sort().join(',')}${isGroup && mountOn ? 'm' : ''}${stream ? 's' : ''}${priority ? 'p' : ''}${unlockChecked ? 'u' : ''}`,
+        id: `${service.id}::${dc}|${effMethod}|${isGroup ? `${option}~${[...groupChecked].sort().join(',')}` : [...checked].sort().join(',')}${isGroup && mountOn ? 'm' : ''}${stream ? 's' : ''}${priority ? 'p' : ''}${unlockChecked ? 'u' : ''}`,
         price: core,
         flat:
           addonsPart * (priority ? priorityMultiplier : 1) +
@@ -209,13 +202,12 @@ export default function DeepDungeonPurchaseBox({ service, gameShort }: { service
       gameShort,
       [
         `Data Center: ${dc}`,
-        ...(!isGroup && selectedMode ? [`Difficulty: ${selectedMode.label}`] : []),
         ...(isGroup && selectedOption ? [selectedOption.label] : []),
         ...(isGroup ? groupChecked.map((id) => groupAddons.find((a) => a.id === id)!.label) : []),
         ...(isGroup && mountOn && groupMultiplier ? [groupMultiplier.label] : []),
         ...(!isGroup ? checked.map((id) => soloAddons.find((a) => a.id === id)!.label) : []),
         ...(unlockChecked && activeUnlock ? [activeUnlock.label] : []),
-        ...drawerChecked.map((id) => visibleDrawerAddons.find((a) => a.id === id)?.label ?? '').filter(Boolean),
+        ...drawerChecked.map((id) => drawerAddons.find((a) => a.id === id)?.label ?? '').filter(Boolean),
         ...(stream ? ['Private Stream'] : []),
         ...(priority ? [`Priority (+${Math.round((priorityMultiplier - 1) * 100)}%)`] : []),
       ],
@@ -309,6 +301,40 @@ export default function DeepDungeonPurchaseBox({ service, gameShort }: { service
   const methodPill = (id: 'solo' | 'group', label: string, Icon: LucideIcon) =>
     pill(label, Icon, method === id, () => switchMethod(id));
 
+  // Amount of runs — multiplies the per-completion core; pinned to the clear
+  // count while a multiplier is active. Rendered inside the Group Play panel
+  // (the method switch animates it with Run Type) or standalone for
+  // piloted-only services with `runs` enabled. The pb-1.5 gives the
+  // absolutely-positioned slider thumb room — it overflows the 6px track and
+  // would be clipped by the panel's overflow-hidden
+  const runsBlock = (
+    <div className={`pb-1.5 ${forcedRuns > 0 ? 'pointer-events-none opacity-50' : ''}`}>
+      <p className="pl-px text-sm font-semibold text-white">Amount of Runs</p>
+      <input
+        type="text"
+        inputMode="numeric"
+        value={String(effRuns)}
+        aria-label="Amount of runs"
+        disabled={forcedRuns > 0}
+        onChange={(e) => {
+          const v = parseInt(e.target.value.replace(/[^0-9]/g, ''), 10);
+          if (!Number.isNaN(v))
+            setRuns(Math.min(Math.max(v, db.purchaseBox.runsMin), db.purchaseBox.runsMax));
+        }}
+        className="mt-2.5 h-10 w-full rounded-[5px] border border-navy-700/70 bg-navy-850 px-3.5 text-center text-sm text-cyan-400 outline-none transition-colors focus:border-navy-600"
+      />
+      <Slider
+        className="mt-4"
+        min={db.purchaseBox.runsMin}
+        max={db.purchaseBox.runsMax}
+        step={1}
+        value={[effRuns]}
+        onValueChange={([v]) => setRuns(v)}
+        aria-label="Amount of runs slider"
+      />
+    </div>
+  );
+
   return (
     <div
       ref={rootRef}
@@ -360,38 +386,7 @@ export default function DeepDungeonPurchaseBox({ service, gameShort }: { service
                   <div
                     className={`transition-opacity duration-200 ${shown === 'group' && fadeIn ? 'opacity-100' : 'opacity-0'}`}
                   >
-                    {/* Amount of runs — multiplies the per-completion core;
-                        pinned to the clear count while a mount multiplier is
-                        active. Lives inside the Group Play panel so the method
-                        switch animates it together with Run Type. The pb-1.5
-                        gives the absolutely-positioned slider thumb room — it
-                        overflows the 6px track and would be clipped by the
-                        panel's overflow-hidden */}
-                    <div className={`pb-1.5 ${forcedRuns > 0 ? 'pointer-events-none opacity-50' : ''}`}>
-                      <p className="pl-px text-sm font-semibold text-white">Amount of Runs</p>
-                      <input
-                        type="text"
-                        inputMode="numeric"
-                        value={String(effRuns)}
-                        aria-label="Amount of runs"
-                        disabled={forcedRuns > 0}
-                        onChange={(e) => {
-                          const v = parseInt(e.target.value.replace(/[^0-9]/g, ''), 10);
-                          if (!Number.isNaN(v))
-                            setRuns(Math.min(Math.max(v, db.purchaseBox.runsMin), db.purchaseBox.runsMax));
-                        }}
-                        className="mt-2.5 h-10 w-full rounded-[5px] border border-navy-700/70 bg-navy-850 px-3.5 text-center text-sm text-cyan-400 outline-none transition-colors focus:border-navy-600"
-                      />
-                      <Slider
-                        className="mt-4"
-                        min={db.purchaseBox.runsMin}
-                        max={db.purchaseBox.runsMax}
-                        step={1}
-                        value={[effRuns]}
-                        onValueChange={([v]) => setRuns(v)}
-                        aria-label="Amount of runs slider"
-                      />
-                    </div>
+                    {runsBlock}
                     <p className="mt-4 pl-px text-sm font-semibold text-white">Run Type</p>
                     <div className="mt-2.5 grid grid-cols-2 gap-2">
                       {groupOptions.map((o) =>
@@ -481,43 +476,28 @@ export default function DeepDungeonPurchaseBox({ service, gameShort }: { service
               </div>
             </div>
           ) : (
-            cfg && (modes.length > 0 || soloAddons.length > 0 || cfg.streamInSolo) && (
-              <div>
-                {/* Difficulty pills (e.g. The Final Verse Normal / Quantum) —
-                    the selected mode drives the price and the drawer unlock */}
-                {modes.length > 0 && (
-                  <div>
-                    <p className="pl-px text-sm font-semibold text-white">Difficulty</p>
-                    <div className="mt-2.5 grid grid-cols-2 gap-2">
-                      {modes.map((m) =>
-                        pill(m.label, OPTION_ICONS[m.id] ?? Gem, selectedMode?.id === m.id, () =>
-                          setMode(m.id),
-                        ),
-                      )}
-                    </div>
+            <>
+              {runsControls && runsBlock}
+              {cfg && (soloAddons.length > 0 || cfg.streamInSolo) && (
+                <div className={runsControls ? 'mt-4' : ''}>
+                  <p className="pl-px text-sm font-semibold text-white">{cfg?.soloHeading ?? 'Additional Options'}</p>
+                  <div className="mt-2.5 space-y-1.5">
+                    {soloAddons.map((a) =>
+                      row(
+                        a.id,
+                        a.label,
+                        a.timesBase ? `${a.timesBase * 100}%` : `+${format(a.price)}`,
+                        checked.includes(a.id),
+                        () => toggle(a.id),
+                        a.note,
+                      ),
+                    )}
+                    {cfg?.streamInSolo &&
+                      row('stream', 'Private Stream', `+${format(10)}`, stream, () => setStream((s) => !s))}
                   </div>
-                )}
-                {(soloAddons.length > 0 || cfg.streamInSolo) && (
-                  <div className={modes.length > 0 ? 'mt-4' : ''}>
-                    <p className="pl-px text-sm font-semibold text-white">{cfg?.soloHeading ?? 'Additional Options'}</p>
-                    <div className="mt-2.5 space-y-1.5">
-                      {soloAddons.map((a) =>
-                        row(
-                          a.id,
-                          a.label,
-                          a.timesBase ? `${a.timesBase * 100}%` : `+${format(a.price)}`,
-                          checked.includes(a.id),
-                          () => toggle(a.id),
-                          a.note,
-                        ),
-                      )}
-                      {cfg?.streamInSolo &&
-                        row('stream', 'Private Stream', `+${format(10)}`, stream, () => setStream((s) => !s))}
-                    </div>
-                  </div>
-                )}
-              </div>
-            )
+                </div>
+              )}
+            </>
           )}
 
           {/* Data center */}
@@ -563,9 +543,8 @@ export default function DeepDungeonPurchaseBox({ service, gameShort }: { service
               effMethod === 'group' || !hasGroup
                 ? cfg?.drawerAddons?.map((a) => ({
                     label: a.label,
-                    hint: `+${format(a.price)}`,
+                    hint: a.timesRuns ? `+${format(a.price)} / run` : `+${format(a.price)}`,
                     checked: drawerChecked.includes(a.id),
-                    hidden: a.mode != null && a.mode !== selectedMode?.id,
                     onClick: () =>
                       setDrawerChecked((prev) =>
                         prev.includes(a.id) ? prev.filter((x) => x !== a.id) : [...prev, a.id],

@@ -185,38 +185,22 @@
     "ffxiv-final-verse": {
       "completion": "1 Day",
       "soloLabel": "Piloted",
+      "runs": true,
       "solo": {
         "price": 300,
         "addons": []
       },
-      "modes": [
-        {
-          "id": "normal",
-          "label": "Normal",
-          "price": 150,
-          "unlock": {
-            "id": "unlock-normal",
-            "label": "The Final Verse Unlock",
-            "price": 500
-          }
-        },
-        {
-          "id": "quantum",
-          "label": "Quantum",
-          "price": 300,
-          "unlock": {
-            "id": "unlock-quantum",
-            "label": "Quantum Unlock",
-            "price": 650
-          }
-        }
-      ],
+      "unlock": {
+        "id": "unlock-quantum",
+        "label": "Quantum Unlock",
+        "price": 200
+      },
       "drawerAddons": [
         {
           "id": "offerings",
           "label": "40 Offerings",
           "price": 15,
-          "mode": "quantum"
+          "timesRuns": true
         }
       ]
     },

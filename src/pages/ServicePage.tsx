@@ -344,8 +344,8 @@ export default function ServicePage() {
             <FadeImage
               src={game.id === 'ffxiv' ? ffxivBg : game.cardImage}
               alt=""
-              className="h-full w-full"
-              imgClassName="opacity-50 lg:object-[50%_35%]"
+              className="h-full w-full opacity-50"
+              imgClassName="lg:object-[50%_35%]"
             />
           </div>
           <div className="absolute inset-0 bg-gradient-to-r from-navy-900/95 via-navy-900/75 to-navy-900/40" />

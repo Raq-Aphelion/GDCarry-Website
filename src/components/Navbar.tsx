@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { Link, NavLink, useLocation, useNavigate } from 'react-router';
 import {
   Check,
@@ -13,6 +14,7 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 import { OverlayScrollbar } from './Scrollbar';
+import { useSmoothScroller } from '@/hooks/useSmoothScroller';
 import { allServices, games, serviceCount, serviceLink, type Game, type ServiceSearchResult } from '@/data/games';
 import { contentOf, matchSnippet, rankService } from '@/data/search';
 import { useCart } from '@/context/CartContext';
@@ -69,6 +71,32 @@ function SearchBox({
 }) {
   const [listEl, setListEl] = useState<HTMLElement | null>(null);
   const { format } = useCurrency();
+  // Same smooth scrolling as the page — active while the results list exists
+  useSmoothScroller(listEl);
+
+  // Keep the dropdown mounted briefly after showResults flips false so it can
+  // fade out (dropdown-out) — render-time adjustment for the mount, timer for
+  // the unmount (same pattern as the navbar's blur veil)
+  const [mounted, setMounted] = useState(showResults);
+  const [prevShow, setPrevShow] = useState(showResults);
+  if (prevShow !== showResults) {
+    setPrevShow(showResults);
+    if (showResults) setMounted(true);
+  }
+  useEffect(() => {
+    if (showResults || !mounted) return;
+    const t = setTimeout(() => setMounted(false), 180);
+    return () => clearTimeout(t);
+  }, [showResults, mounted]);
+
+  // Freeze the last shown content while visible: during the fade-out the live
+  // query/results may already be cleared, which would flash the empty state
+  // mid-animation. Render-time adjustment (same pattern as the navbar's
+  // navigation reset) — results is memoized, so the identity check is stable.
+  const [shown, setShown] = useState({ results, query });
+  if (showResults && shown.results !== results) {
+    setShown({ results, query });
+  }
 
   return (
     <div className="relative w-full">
@@ -78,7 +106,7 @@ function SearchBox({
         onChange={(e) => onQueryChange(e.target.value)}
         onFocus={onFocus}
         onKeyDown={(e) => {
-          if (e.key === 'Enter' && query.trim().length >= 2) onGoSearch(query.trim());
+          if (e.key === 'Enter' && query.trim().length >= 1) onGoSearch(query.trim());
         }}
         placeholder="Search boosts, games, categories…"
         className="h-[42px] w-full cursor-pointer rounded-[3px] border border-navy-700/70 bg-navy-850/90 pl-10 pr-9 text-sm text-white placeholder:text-slate-500 outline-none transition-colors hover:border-navy-600 focus:border-navy-600"
@@ -94,20 +122,30 @@ function SearchBox({
         </button>
       )}
 
-      {showResults && (
+      {(showResults || mounted) && (
         // 1px wider than the searchbox on mobile so it covers the active game item's ring below
-        <div className="absolute -left-px -right-px top-full z-30 mt-2 overflow-hidden rounded-[3px] border border-navy-700/70 bg-navy-850 shadow-2xl lg:left-0 lg:right-0">
-          {results.length === 0 ? (
+        <div
+          className={`absolute -left-px -right-px top-full z-30 mt-2 overflow-hidden rounded-[3px] border border-navy-700/70 bg-navy-850 shadow-2xl lg:left-0 lg:right-0 ${
+            showResults ? 'dropdown-in' : 'dropdown-out pointer-events-none'
+          }`}
+        >
+          {shown.results.length === 0 ? (
             <p className="px-4 py-3.5 text-sm text-slate-400">
-              No boosts found for “<span className="text-white">{query.trim()}</span>”.
+              No boosts found for “<span className="text-white">{shown.query.trim()}</span>”.
             </p>
           ) : (
             <>
-              <ul ref={setListEl} className="no-scrollbar max-h-80 overflow-y-auto py-1.5">
+              {/* Single content child (the ul): Lenis (useSmoothScroller)
+                  measures it to size the scroll range. data-lenis-prevent:
+                  inside the mobile menu this list is nested in the menu's own
+                  Lenis scroller — the outer instance must ignore its wheel
+                  events */}
+              <div ref={setListEl} data-lenis-prevent className="no-scrollbar max-h-80 overflow-y-auto">
+              <ul className="py-1.5">
                 {(() => {
                   // Group results by game — label above each game's group
-                  const groups: { game: (typeof results)[number]['game']; items: typeof results }[] = [];
-                  for (const r of results) {
+                  const groups: { game: (typeof shown.results)[number]['game']; items: typeof shown.results }[] = [];
+                  for (const r of shown.results) {
                     let g = groups.find((x) => x.game.id === r.game.id);
                     if (!g) {
                       g = { game: r.game, items: [] };
@@ -159,6 +197,7 @@ function SearchBox({
                   ));
                 })()}
               </ul>
+              </div>
               {/* Same overlay scrollbar as the page/cart — appears only when results overflow */}
               <OverlayScrollbar
                 scroller={listEl}
@@ -177,9 +216,12 @@ function SearchBox({
     (pr-3) only while the scrollbar is visible. The cap grows with the viewport
     (15rem floor) so tall phones show more categories at once. */
 function MobileCategoryList({ game, expanded }: { game: Game; expanded: boolean }) {
-  const [listEl, setListEl] = useState<HTMLUListElement | null>(null);
+  const [listEl, setListEl] = useState<HTMLElement | null>(null);
   const [overflows, setOverflows] = useState(false);
   const location = useLocation();
+  // Same smooth scrolling as the page — nested in the mobile menu's own Lenis
+  // scroller, hence data-lenis-prevent on the scroller below
+  useSmoothScroller(listEl);
   // Current page markers — same as the desktop dropdown: line on the game row
   // (handled by the parent), colored font on the active category
   const onGame = location.pathname === `/boosting/${game.id}`;
@@ -195,6 +237,9 @@ function MobileCategoryList({ game, expanded }: { game: Game; expanded: boolean 
     return () => ro.disconnect();
   }, [listEl]);
 
+  // Games without live categories (deleted empty ones) render nothing
+  if (dropdownCats(game).length === 0) return null;
+
   return (
     <div
       className={`grid transition-all duration-300 ${
@@ -203,10 +248,14 @@ function MobileCategoryList({ game, expanded }: { game: Game; expanded: boolean 
     >
       <div className="overflow-hidden">
         <div className="relative my-1.5 ml-3 border-l border-navy-700/60">
-          <ul
+          {/* Single content child (the ul): Lenis (useSmoothScroller) measures
+              it to size the scroll range */}
+          <div
             ref={setListEl}
-            className={`no-scrollbar max-h-[max(15rem,calc(100svh_-_28rem))] space-y-0.5 overflow-y-auto pl-3 ${overflows ? 'pr-3' : ''}`}
+            data-lenis-prevent
+            className={`no-scrollbar max-h-[max(15rem,calc(100svh_-_28rem))] overflow-y-auto pl-3 ${overflows ? 'pr-3' : ''}`}
           >
+          <ul className="space-y-0.5">
             {dropdownCats(game).map((s) => {
               const onCat = onGame && catParam === s.id;
               return (
@@ -228,6 +277,7 @@ function MobileCategoryList({ game, expanded }: { game: Game; expanded: boolean 
               );
             })}
           </ul>
+          </div>
           {/* Same overlay scrollbar as the page/cart — only while the list overflows */}
           {overflows && (
             <OverlayScrollbar
@@ -244,11 +294,17 @@ function MobileCategoryList({ game, expanded }: { game: Game; expanded: boolean 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  // Mobile menu scroller — smooth-scrolls like the page (useSmoothScroller)
+  const [mobileMenuEl, setMobileMenuEl] = useState<HTMLElement | null>(null);
+  useSmoothScroller(mobileMenuEl);
   // Which game's category list is expanded in the mobile menu (accordion)
   const [mobileGameCat, setMobileGameCat] = useState<string | null>(null);
   // Same accordion state for the desktop games dropdown
   const [desktopGameCat, setDesktopGameCat] = useState<string | null>(null);
   const [gamesOpen, setGamesOpen] = useState(false);
+  // Keeps the dim/blur veil mounted briefly after the dropdown closes so it
+  // can fade out — the dropdown panel itself still disappears instantly
+  const [overlayVisible, setOverlayVisible] = useState(false);
   const [currencyOpen, setCurrencyOpen] = useState(false);
   const [searchFocused, setSearchFocused] = useState(false);
   const [query, setQuery] = useState('');
@@ -293,9 +349,30 @@ export default function Navbar() {
     }
   }, [gamesOpen]);
 
+  // Search dropdown visibility — also drives the blur veil below
+  const showResults = searchFocused && query.trim().length >= 1;
+
+  // The blur veil is shared by the games dropdown and the search dropdown
+  const veilOpen = gamesOpen || showResults;
+
+  // Mount the veil the moment a dropdown opens — render-time adjustment
+  // (same pattern as the navigation reset above), not an effect
+  const [prevVeilOpen, setPrevVeilOpen] = useState(veilOpen);
+  if (prevVeilOpen !== veilOpen) {
+    setPrevVeilOpen(veilOpen);
+    if (veilOpen) setOverlayVisible(true);
+  }
+
+  // Unmount the veil only after its fade-out has finished (matches overlay-out)
+  useEffect(() => {
+    if (veilOpen || !overlayVisible) return;
+    const t = setTimeout(() => setOverlayVisible(false), 180);
+    return () => clearTimeout(t);
+  }, [veilOpen, overlayVisible]);
+
   const results = useMemo(() => {
     const q = query.trim().toLowerCase();
-    if (q.length < 2) return [];
+    if (!q) return [];
     const ranked = allServices
       .map((r) => {
         const rank = rankService(r.service, q, { gameName: r.game.name, subName: r.subName });
@@ -305,8 +382,6 @@ export default function Navbar() {
       .sort((a, b) => a.rank - b.rank);
     return ranked.slice(0, 8);
   }, [query, priceOf]);
-
-  const showResults = searchFocused && query.trim().length >= 2;
 
   const goToResult = (serviceId: string) => {
     setQuery('');
@@ -394,13 +469,37 @@ export default function Navbar() {
 
           {searchBox}
 
+          {/* Same dim/blur veil as the cart drawer — shared by the games
+              dropdown and the search dropdown; starts below the navbar so the
+              open dropdown keeps its context. The veil doubles as the
+              click-to-close layer (full-viewport button, transparent over the
+              navbar). Stays mounted briefly after close (overlayVisible) to
+              fade out; inert while fading. Portaled to body: once scrolled,
+              the header's backdrop-blur would otherwise trap position:fixed
+              inside the header's box. z-40 keeps it under the header (z-50)
+              so the bar and dropdown stay crisp. */}
+          {(veilOpen || overlayVisible) &&
+            createPortal(
+              <button
+                className={`fixed inset-0 z-40 cursor-default ${veilOpen ? '' : 'pointer-events-none'}`}
+                aria-label="Close menu"
+                onClick={() => {
+                  setGamesOpen(false);
+                  setSearchFocused(false);
+                }}
+              >
+                <span
+                  className={`absolute inset-x-0 bottom-0 top-16 bg-black/60 backdrop-blur-sm ${
+                    veilOpen ? 'overlay-in' : 'overlay-out'
+                  }`}
+                  aria-hidden
+                />
+              </button>,
+              document.body,
+            )}
+
           {gamesOpen && (
             <>
-              <button
-                className="fixed inset-0 z-10 cursor-default"
-                aria-label="Close games menu"
-                onClick={() => setGamesOpen(false)}
-              />
               <div className="dropdown-in absolute left-0 right-0 top-full z-20 mt-2 overflow-hidden rounded-[3px] border border-navy-700/70 bg-navy-850 shadow-2xl">
                 <ul className="p-1.5">
                   {games.map((g) => {
@@ -484,7 +583,9 @@ export default function Navbar() {
                           </span>
                         </button>
                       </div>
-                      {/* Category columns (max 5 each) — expands in place, pushing games below down */}
+                      {/* Category columns (max 5 each) — expands in place, pushing games below down;
+                          skipped entirely for games without live categories (nothing to show) */}
+                      {chunks.length > 0 && (
                       <div
                         className={`grid transition-all duration-300 ${
                           expanded ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
@@ -527,6 +628,7 @@ export default function Navbar() {
                           </div>
                         </div>
                       </div>
+                      )}
                     </li>
                     );
                   })}
@@ -616,7 +718,13 @@ export default function Navbar() {
           mobileOpen ? 'max-h-[min(760px,calc(100svh_-_4rem))]' : 'max-h-0'
         }`}
       >
-        <div className="no-scrollbar max-h-[inherit] space-y-1.5 overflow-y-auto border-t border-navy-700/60 bg-navy-900/95 px-[25px] py-4 backdrop-blur-xl">
+        {/* Single content child: Lenis (useSmoothScroller) measures it to size
+            the scroll range */}
+        <div
+          ref={setMobileMenuEl}
+          className="no-scrollbar max-h-[inherit] overflow-y-auto border-t border-navy-700/60 bg-navy-900/95 backdrop-blur-xl"
+        >
+        <div className="space-y-1.5 px-[25px] py-4">
           <div className="pb-2">{searchBox}</div>
           <p className="px-3 pb-1 pt-1 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500">Games</p>
           {games.map((g) => {
@@ -686,6 +794,7 @@ export default function Navbar() {
               </div>
             );
           })}
+        </div>
         </div>
       </div>
     </header>

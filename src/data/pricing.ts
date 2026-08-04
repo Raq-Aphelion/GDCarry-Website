@@ -75,13 +75,13 @@ export interface PricingAddon {
   timesBase?: number;
   /** Pins Amount of Runs to this count while checked (e.g. Mount All Paths) */
   forcedRuns?: number;
+  /** Drawer add-on priced per run — multiplied by Amount of Runs instead of
+      added once (e.g. 40 Offerings on multi-run clears) */
+  timesRuns?: boolean;
   /** Piloted-method price when it differs from `price` (e.g. criterion mounts) */
   pilotedPrice?: number;
   /** Second-method (AFK Carry) price when it differs from `price` */
   afkPrice?: number;
-  /** Only shown and priced while this deep-dungeon mode is selected
-      (e.g. 40 Offerings is Quantum-only) */
-  mode?: string;
   /** When the option is checked, show a dropdown of these choices
       (e.g. job or armour set) */
   selectOptions?: {
@@ -328,11 +328,10 @@ export interface PricingDb {
       /** Private Stream stays in the drawer but only for Piloted — hidden
           and reset while Group Play is selected */
       streamPilotedOnly?: boolean;
+      /** Piloted-only services: show the Amount of Runs controls (multiplies
+          the solo core per run, like Group Play) */
+      runs?: boolean;
       solo: { price: number; addons: PricingAddon[] };
-      /** Mode pills for piloted-only services (e.g. The Final Verse Normal /
-          Quantum): the selected mode's price replaces solo.price and its
-          unlock replaces the shared one in the drawer */
-      modes?: { id: string; label: string; price: number; unlock?: PricingAddon }[];
       group?: {
         options: PricingAddon[];
         addons?: PricingAddon[];

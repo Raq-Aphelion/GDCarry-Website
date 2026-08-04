@@ -701,13 +701,13 @@ export const games: Game[] = [
         services: [
           {
             id: 'ffxiv-final-verse',
-            name: 'The Final Verse (Deep Dungeon)',
-            tag2: 'Floor 100: Normal & Quantum',
+            name: 'The Final Verse (Quantum)',
+            tag2: 'Floor 100: Quantum',
             price: 0,
             tag1: 'The Mourner of Light title',
             tag3: 'Piloted Service',
             longDescription:
-              'Shaped by your offerings, a deep anguish burgeons from the sleepless abyss. The Final Verse (Quantum) waits beyond Pilgrim’s Traverse floor 100 — an aberration of Light and Darkness whose strength scales with every sacramental offering, up to a 40-offering battle on par with savage’s hardest floors, with an exclusive title for those who overcome it.',
+              'Shaped by your offerings, a deep anguish burgeons from the sleepless abyss. Only those with the fortitude to face an aberration of both Light and Darkness may navigate this waking dream and overcome the damnation trapped upon a holy road.',
             image: scFinalVerse,
           },
           {
@@ -1686,28 +1686,9 @@ export const games: Game[] = [
     description:
       'Content ranging from Mythic+ keys to Mythic raid clears done by verified professionals with decades of experience & part of world race teams.',
     cardImage: cardWow,
-    subcategories: [
-      {
-        id: 'raids',
-        name: 'Raid Boosts',
-        services: [],
-      },
-      {
-        id: 'mythic-plus',
-        name: 'Mythic+',
-        services: [],
-      },
-      {
-        id: 'leveling',
-        name: 'Leveling',
-        services: [],
-      },
-      {
-        id: 'pvp',
-        name: 'PvP',
-        services: [],
-      },
-    ],
+    // No live services yet — empty categories are deleted, not shown; the
+    // carousel marks the game "Coming soon"
+    subcategories: [],
   },
   {
     id: 'lost-ark',
@@ -1717,28 +1698,7 @@ export const games: Game[] = [
     description:
       'Content ranging from Abyssal Dungeons to Legion Raids done by verified professionals with thousands of clears & part of world-first race teams.',
     cardImage: cardLostArk,
-    subcategories: [
-      {
-        id: 'legion-raids',
-        name: 'Legion Raids',
-        services: [],
-      },
-      {
-        id: 'dungeons',
-        name: 'Dungeons',
-        services: [],
-      },
-      {
-        id: 'progression',
-        name: 'Progression',
-        services: [],
-      },
-      {
-        id: 'collectibles',
-        name: 'Collectibles',
-        services: [],
-      },
-    ],
+    subcategories: [],
   },
   {
     id: 'warframe',
@@ -1748,28 +1708,7 @@ export const games: Game[] = [
     description:
       'Content ranging from Mastery ranks to endgame bosses done by verified professionals with decades of experience & thousands of hours in the Origin System.',
     cardImage: cardWarframe,
-    subcategories: [
-      {
-        id: 'mastery',
-        name: 'Mastery',
-        services: [],
-      },
-      {
-        id: 'farming',
-        name: 'Farming',
-        services: [],
-      },
-      {
-        id: 'bosses',
-        name: 'Bosses',
-        services: [],
-      },
-      {
-        id: 'endgame',
-        name: 'Endgame',
-        services: [],
-      },
-    ],
+    subcategories: [],
   },
   {
     id: 'runescape',
@@ -1779,28 +1718,7 @@ export const games: Game[] = [
     description:
       'Content ranging from Skilling to the Inferno done by verified professionals with decades of experience & maxed accounts across OSRS and RS3.',
     cardImage: cardOsrs,
-    subcategories: [
-      {
-        id: 'bossing',
-        name: 'Bossing',
-        services: [],
-      },
-      {
-        id: 'skilling',
-        name: 'Skilling',
-        services: [],
-      },
-      {
-        id: 'capes',
-        name: 'Capes & Titles',
-        services: [],
-      },
-      {
-        id: 'accounts',
-        name: 'Account Builds',
-        services: [],
-      },
-    ],
+    subcategories: [],
   },
 ];
 

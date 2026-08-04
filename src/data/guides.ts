@@ -426,7 +426,7 @@ export const guides: Guide[] = [
     id: 'ffxiv-ultimate-rewards',
     title: 'FFXIV Ultimate Raid Rewards Guide: Every Totem, Weapon, Title and Plate',
     navTitle: 'Ultimate rewards',
-    image: '/images/guides/ultimate-rewards.webp',
+    image: '/images/guides/ultimate-rewards.jpg',
     excerpt:
       'Every Ultimate in Final Fantasy XIV leaves a permanent mark on your account — a glowing weapon, an exclusive title, an Adventure Plate design and a place in your achievement history. Here is the full reward breakdown for all seven encounters, plus how to plan your clears.',
     updated: 'Last Updated 26th July 2026',
