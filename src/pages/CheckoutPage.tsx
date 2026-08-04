@@ -28,9 +28,17 @@ const ORDER_LOG_URL = 'https://orders-proxy.cluwners.workers.dev';
 const ORDER_KEY = 'GUtdJw87nUC2gtX7ximpY6QRyFBcv0';
 
 /** Order reference linking the chat message to the Discord bot log — the
-    operator can verify a quoted order against the logged record by ID. */
-const generateOrderId = () =>
-  `GD-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).slice(2, 6).toUpperCase()}`;
+    operator can verify a quoted order against the logged record by ID.
+    Format: DDMMYY-XXXX (local date + 4 random letters/digits). */
+const generateOrderId = () => {
+  const d = new Date();
+  const p = (n: number) => String(n).padStart(2, '0');
+  const rand = Array.from(
+    { length: 4 },
+    () => 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'[Math.floor(Math.random() * 36)],
+  ).join('');
+  return `${p(d.getDate())}${p(d.getMonth() + 1)}${p(d.getFullYear() % 100)}-${rand}`;
+};
 
 type Stage = 'idle' | 'processing' | 'done';
 type ContactVia = 'chat' | 'discord';
@@ -211,7 +219,6 @@ export default function CheckoutPage() {
       '[b]NEW GRAND DICE ORDER[/b]',
       `[b]Order ID:[/b] ${orderId}`,
       '',
-      `[b]Contact via:[/b] ${contactVia === 'chat' ? 'Live chat' : 'Discord'}`,
       `[b]${contactVia === 'chat' ? 'Name' : 'Discord'}:[/b] ${contact.trim()}`,
       `[b]E-mail:[/b] ${email.trim() || '—'}`,
       `[b]Payment:[/b] ${methodLabel}`,

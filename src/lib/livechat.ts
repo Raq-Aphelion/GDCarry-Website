@@ -22,38 +22,155 @@ export interface LiveChatPrefill {
 }
 
 /* Styles for the order message once it lands in the chat. Mirrors the
-   checkout order list: square thumbnail left, bold title + meta + diamond
-   bullets right, on the plain dark widget background (no chat bubble).
-   The theme styles visitor bubbles with !important + high-specificity
-   selectors, so these must out-specify it. */
+   checkout order list: square thumbnail top-left, bold title + meta +
+   diamond bullets right, left-aligned on the plain dark widget background
+   (no chat bubble). The theme styles visitor bubbles with !important +
+   high-specificity selectors and right-aligns visitor rows, so these must
+   out-specify and override it. Blue accent = the site's link blue (#60a5fa,
+   same as the gdcarry.com link in the widget footer). */
 const ORDER_CSS = `
+#messagesBlock .message-row.gd-order {
+  max-width: 100% !important;
+  width: 100% !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  justify-content: flex-start !important;
+  text-align: left !important;
+}
 #messagesBlock .message-row.gd-order .msg-body,
 #messagesBlock .message-row.gd-order .msg-body-media {
   background: none !important;
   border: none !important;
   box-shadow: none !important;
-  padding: 1px 0 !important;
+  float: none !important;
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  margin: 0 !important;
+  padding: 2px 0 2px 14px !important;
+  text-align: left !important;
 }
-.gd-order .msg-body strong { color: #67e8f9 !important; letter-spacing: .04em; }
-.gd-order .msg-body-media { padding: 0 !important; }
+.gd-order .msg-body strong { color: #60a5fa !important; letter-spacing: .04em; }
 .gd-item {
   display: flex !important;
   align-items: flex-start !important;
   gap: 10px !important;
   margin-top: 10px !important;
   clear: both !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  padding-left: 14px !important;
 }
-.gd-item .msg-body-media { flex: 0 0 auto !important; margin: 0 !important; }
+.gd-item .msg-body-media {
+  flex: 0 0 auto !important;
+  align-self: flex-start !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+.gd-item .img_embed { display: block !important; }
 .gd-item .img_embed img {
+  display: block !important;
   width: 56px !important;
   height: 56px !important;
   max-height: 56px !important;
   object-fit: cover !important;
   border-radius: 6px !important;
-  border: 1px solid rgba(34, 211, 238, .35) !important;
+  border: 1px solid rgba(96, 165, 250, .4) !important;
+  margin: 0 !important;
 }
-.gd-item-text { flex: 1 1 auto !important; min-width: 0 !important; }
+.gd-item-text { flex: 1 1 auto !important; min-width: 0 !important; padding: 0 !important; }
 `;
+
+/** First line of every order message — used to spot order rows in the chat. */
+const ORDER_MARKER = 'NEW GRAND DICE ORDER';
+
+/** Rebuilds an order message row: LHC renders text as one .msg-body per
+    paragraph block and each [img] as its own .msg-body-media. For every
+    image we wrap it with the text body above it into a thumbnail-left flex
+    row (the first one is split at the "Items:" marker so the contact block
+    stays put), then injects the order styles. Idempotent — processed rows
+    are tagged, so the reload styler can sweep freely. */
+const styleOrderRow = (doc: Document, row: Element) => {
+  if ((row as HTMLElement).dataset.gdStyled) return;
+  (row as HTMLElement).dataset.gdStyled = '1';
+  row.classList.add('gd-order');
+  // Inline !important beats the theme's bubble styles regardless of
+  // selector specificity — plain dark background, no chat bubble. Padding
+  // stays in ORDER_CSS (inline would win over the 14px left pad).
+  const resetBubble = (el: HTMLElement) => {
+    const s = el.style;
+    s.setProperty('background', 'none', 'important');
+    s.setProperty('background-color', 'transparent', 'important');
+    s.setProperty('background-image', 'none', 'important');
+    s.setProperty('border', 'none', 'important');
+    s.setProperty('box-shadow', 'none', 'important');
+  };
+  row.querySelectorAll('.msg-body, .msg-body-media').forEach((el) => resetBubble(el as HTMLElement));
+  const medias = [...row.querySelectorAll('.msg-body-media')];
+  medias.forEach((media, i) => {
+    // The text body sits above the image with <br> elements in between
+    let textBody = media.previousElementSibling;
+    while (
+      textBody &&
+      !(textBody.classList.contains('msg-body') && !textBody.classList.contains('msg-body-media'))
+    ) {
+      textBody = textBody.previousElementSibling;
+    }
+    if (!textBody) return;
+    let itemHtml = textBody.innerHTML;
+    let consumedWholeBody = true;
+    if (i === 0) {
+      // The first text body holds the contact block AND the first item —
+      // split at the Items: marker; contact lines stay where they are.
+      const m = itemHtml.match(/^([\s\S]*?<strong>\s*Items:\s*<\/strong><br>\s*)([\s\S]*)$/i);
+      if (m) {
+        textBody.innerHTML = m[1];
+        itemHtml = m[2];
+        consumedWholeBody = false;
+      }
+    }
+    const wrap = doc.createElement('div');
+    wrap.className = 'gd-item';
+    const textCol = doc.createElement('div');
+    textCol.className = 'gd-item-text msg-body';
+    textCol.innerHTML = itemHtml;
+    resetBubble(textCol); // created after the reset sweep above
+    media.before(wrap);
+    wrap.appendChild(media);
+    wrap.appendChild(textCol);
+    if (consumedWholeBody) textBody.remove();
+  });
+  if (!doc.getElementById('gd-order-css')) {
+    const style = doc.createElement('style');
+    style.id = 'gd-order-css';
+    style.textContent = ORDER_CSS;
+    doc.head?.appendChild(style);
+  }
+};
+
+/** Order-message styler that survives page reloads. The order handoff styles
+    the message when it lands, but after a reload LHC re-renders the chat
+    history from the server and the raw BBCode layout returns — this sweep
+    (re)styles every unprocessed order message it finds in the widget
+    document. Called once from LiveChatWidget. */
+export function initOrderMessageStyler() {
+  const sweep = () => {
+    const el = document.getElementById('lhc_widget_v2') as HTMLIFrameElement | null;
+    let doc: Document | null | undefined;
+    try {
+      doc = el?.contentDocument;
+    } catch {
+      return; // cross-origin — nothing we can do
+    }
+    if (!doc) return;
+    doc.querySelectorAll('.message-row').forEach((row) => {
+      if (row.textContent?.includes(ORDER_MARKER)) styleOrderRow(doc, row);
+    });
+  };
+  sweep();
+  setInterval(sweep, 1000);
+}
 
 /** Starts an LHC chat with the order as the first message and reveals the
     widget only once the message has landed — the customer never sees the
@@ -108,64 +225,6 @@ export function openLiveChatPrefill(data: LiveChatPrefill, attemptsLeft = 10) {
       { cmd: 'attr_set', arg: { type: 'attr_set', attr: ['api_data'], data: { ...fields } } },
     ]);
     setAutoStart(true);
-  };
-
-  /** Rebuilds the landed order message: LHC renders text as one .msg-body
-      per paragraph block and each [img] as its own .msg-body-media. For every
-      image we wrap it with the text body above it into a thumbnail-left flex
-      row (the first one is split at the "Items:" marker so the contact block
-      stays put), then injects the order styles. */
-  const styleOrderRow = (doc: Document, row: Element) => {
-    row.classList.add('gd-order');
-    // Inline !important beats the theme's bubble styles regardless of
-    // selector specificity — plain dark background, no chat bubble
-    const resetBubble = (el: HTMLElement) => {
-      const s = el.style;
-      s.setProperty('background', 'none', 'important');
-      s.setProperty('background-color', 'transparent', 'important');
-      s.setProperty('background-image', 'none', 'important');
-      s.setProperty('border', 'none', 'important');
-      s.setProperty('box-shadow', 'none', 'important');
-      s.setProperty('padding', '1px 0', 'important');
-    };
-    row.querySelectorAll('.msg-body, .msg-body-media').forEach((el) => resetBubble(el as HTMLElement));
-    const medias = [...row.querySelectorAll('.msg-body-media')];
-    medias.forEach((media, i) => {
-      // The text body sits above the image with <br> elements in between
-      let textBody = media.previousElementSibling;
-      while (
-        textBody &&
-        !(textBody.classList.contains('msg-body') && !textBody.classList.contains('msg-body-media'))
-      ) {
-        textBody = textBody.previousElementSibling;
-      }
-      if (!textBody) return;
-      let itemHtml = textBody.innerHTML;
-      let consumedWholeBody = true;
-      if (i === 0) {
-        // The first text body holds the contact block AND the first item —
-        // split at the Items: marker; contact lines stay where they are.
-        const m = itemHtml.match(/^([\s\S]*?<strong>\s*Items:\s*<\/strong><br>\s*)([\s\S]*)$/i);
-        if (m) {
-          textBody.innerHTML = m[1];
-          itemHtml = m[2];
-          consumedWholeBody = false;
-        }
-      }
-      const wrap = doc.createElement('div');
-      wrap.className = 'gd-item';
-      const textCol = doc.createElement('div');
-      textCol.className = 'gd-item-text msg-body';
-      textCol.innerHTML = itemHtml;
-      resetBubble(textCol); // created after the reset sweep above
-      media.before(wrap);
-      wrap.appendChild(media);
-      wrap.appendChild(textCol);
-      if (consumedWholeBody) textBody.remove();
-    });
-    const style = doc.createElement('style');
-    style.textContent = ORDER_CSS;
-    doc.head?.appendChild(style);
   };
 
   /** Drives the hidden widget: waits for the auto-started chat, falls back

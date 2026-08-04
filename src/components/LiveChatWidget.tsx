@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { initLhcWidgetFx } from '@/lib/lhcWidgetFx';
+import { initOrderMessageStyler } from '@/lib/livechat';
 
 /** Live Helper Chat widget — injects the LHC embed script once on app mount.
     Snippet generated in LHC admin → Embed code → Widget embed code (new). */
@@ -44,6 +45,7 @@ export default function LiveChatWidget() {
     s.parentNode?.insertBefore(po, s);
 
     initLhcWidgetFx();
+    initOrderMessageStyler();
   }, []);
 
   return null;
