@@ -693,7 +693,7 @@ export default function Navbar() {
           >
             <ShoppingCart className="h-5 w-5 max-[340px]:h-4 max-[340px]:w-4" />
             {count > 0 && (
-              <span className="absolute -right-1.5 -top-1.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-cyan-600 px-1 text-[11px] font-bold text-navy-900 glow">
+              <span className="absolute -right-1.5 -top-1.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-cyan-600 px-1 text-[11px] font-bold leading-none tabular-nums text-navy-900 glow">
                 {count}
               </span>
             )}

@@ -3,6 +3,7 @@ import { Navigate, Route, Routes, useLocation } from 'react-router';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import CartDrawer from '@/components/CartDrawer';
+import NeedHelpCard from '@/components/NeedHelpCard';
 import LiveChatWidget from '@/components/LiveChatWidget';
 import Scrollbar from '@/components/Scrollbar';
 import SmoothScroll from '@/components/SmoothScroll';
@@ -74,6 +75,7 @@ export default function App() {
               </div>
             </div>
             <CartDrawer />
+            <NeedHelpCard />
             <Scrollbar />
             <SmoothScroll />
           </div>

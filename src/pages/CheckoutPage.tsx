@@ -200,10 +200,10 @@ export default function CheckoutPage() {
   const methodLabel = PAYMENT_METHODS.find((m) => m.id === method)?.label ?? method;
 
   /** Full order as BBCode (LHC renders [b]/[img]/[url] in chat) — used for
-      the live chat message field. Per item: bold title, game · qty meta line,
-      diamond config bullets, "From" unit price (styled like the service card
-      once it lands), then the thumbnail (re-arranged into a thumbnail-left
-      row by styleOrderRow once the message lands). */
+      the live chat message field. Per item: bold title, game · qty · price
+      meta line (like the Discord embed), diamond config bullets, then the
+      thumbnail (re-arranged into a thumbnail-left row by styleOrderRow once
+      the message lands). The bottom Total line carries the big-price style. */
   const buildOrderMessage = (orderId: string) => {
     const itemBlocks = orderItems
       .slice(0, 5)
@@ -211,9 +211,8 @@ export default function CheckoutPage() {
         const details = displayDetails(item).map((d) => `◆ ${d}`).join('\n');
         return [
           `[b]${item.name}[/b]`,
-          cartMeta(item),
+          `${cartMeta(item)} — ${format(lineTotal(item))}`,
           details,
-          `From [b]${format(item.price)}[/b]`,
           `[img]${new URL(item.image, SITE_URL).href}[/img]`,
         ]
           .filter(Boolean)
@@ -224,9 +223,9 @@ export default function CheckoutPage() {
       '[b]ORDER DETAILS[/b]',
       `[b]Order ID:[/b] ${orderId}`,
       '',
-      `[b]${contactVia === 'chat' ? 'Name' : 'Discord'}:[/b] ${contact.trim()}`,
-      `[b]E-mail:[/b] ${email.trim() || '—'}`,
-      `[b]Payment:[/b] ${methodLabel}`,
+      `👤 [b]${contactVia === 'chat' ? 'Name' : 'Discord'}:[/b] ${contact.trim()}`,
+      `✉️ [b]E-mail:[/b] ${email.trim() || '—'}`,
+      `💳 [b]Payment:[/b] ${methodLabel}`,
       '',
       '[b]Items:[/b]',
       itemBlocks,
@@ -239,10 +238,12 @@ export default function CheckoutPage() {
       worker validates them, rebuilds both the Discord embed and the BBCode
       chat message server-side, logs the order and (for chat orders) injects
       it into the visitor's LHC chat: addmsguser when a chat is open
-      (chatId/chatHash), submitonline to start one otherwise (vid). */
+      (chatId/chatHash), submitonline to start one otherwise (vid). The vid is
+      sent for Discord orders too — the embed prints it as the visitor
+      reference. */
   const sendOrderToProxy = async (orderId: string): Promise<{ ok: boolean; injected?: boolean; reason?: string }> => {
     if (!ORDER_KEY) return { ok: false };
-    const session = contactVia === 'chat' ? getLhcSession() : null;
+    const session = getLhcSession();
     const res = await fetch(ORDER_LOG_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'X-Order-Key': ORDER_KEY },

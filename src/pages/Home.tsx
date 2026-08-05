@@ -370,7 +370,7 @@ export default function Home() {
               <div
                 ref={carouselRef}
                 onScroll={updateArrows}
-                className="no-scrollbar flex touch-pan-y gap-4 overflow-x-auto p-1"
+                className="no-scrollbar flex touch-pan-y select-none gap-4 overflow-x-auto p-1"
               >
               {games.map((game) => (
                 <Link

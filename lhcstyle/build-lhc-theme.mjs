@@ -44,14 +44,12 @@ const customStatusCss = `#lhc_status_container {
   border: 1px solid rgba(59, 130, 246, 0.35) !important;
   border-radius: 999px !important;
   box-shadow:
-    0 0 0 1px rgba(59, 130, 246, 0.22),
     0 8px 24px -8px rgba(37, 99, 235, 0.45),
     0 10px 25px -5px rgba(0, 0, 0, 0.5) !important;
 }
 
 #status-icon:hover {
   box-shadow:
-    0 0 0 1px rgba(59, 130, 246, 0.4),
     0 8px 28px -6px rgba(37, 99, 235, 0.6),
     0 10px 25px -5px rgba(0, 0, 0, 0.5) !important;
 }
@@ -161,8 +159,10 @@ body { background-color: #0f0f11 !important; }
 /* Start-chat / offline form view:
    #id-container-fluid gets a FIXED share of the window (flex:1 inside the
    100% widget-body) — LHC resizes the iframe from this element's
-   offsetHeight, which now never changes. Fields + button pinned to the
-   bottom above the footer; the intro card area is the flexible middle. */
+   offsetHeight, which now never changes. The whole column (intro card +
+   fields + button) packs to the BOTTOM, so hidden Name/E-mail fields leave
+   quiet space ABOVE the intro instead of a dead gap between the intro and
+   the question field. */
 .start-chat #id-container-fluid,
 .offline-chat #id-container-fluid {
   display: flex !important;
@@ -175,6 +175,7 @@ body { background-color: #0f0f11 !important; }
 .offline-chat #id-container-fluid > .container-fluid {
   display: flex !important;
   flex-direction: column !important;
+  justify-content: flex-end !important;
   flex: 1 1 auto !important;
   min-height: 0 !important;
   overflow: hidden !important;
@@ -190,11 +191,14 @@ body { background-color: #0f0f11 !important; }
   overflow-y: auto !important;
   padding: 0 12px !important;
 }
+/* The form no longer grows — it bottom-packs with the intro card above it
+   (container is justify-content:flex-end) and scrolls itself if the fields
+   ever exceed the window height */
 .start-chat form,
 .offline-chat form {
   display: flex !important;
   flex-direction: column !important;
-  flex: 1 1 auto !important;
+  flex: 0 1 auto !important;
   min-height: 0 !important;
   margin: 0 !important;
 }
@@ -231,10 +235,12 @@ body { background-color: #0f0f11 !important; }
 }
 
 /* Submit button pinned to the bottom of the form — the question composer
-   grows upward (then scrolls at 3 rows), never pushes the button down */
+   grows upward (then scrolls at 3 rows), never pushes the button down. The
+   form scrolls vertically if the fields overflow (x stays hidden); the
+   sticky submit rides its bottom edge */
 .start-chat form,
 .offline-chat form {
-  overflow: hidden !important;
+  overflow: hidden auto !important;
 }
 .start-chat form .row.pt-2 > [class*="col"]:has([type="submit"]),
 .offline-chat form .row.pt-2 > [class*="col"]:has([type="submit"]) {
@@ -756,7 +762,14 @@ body { background-color: #0f0f11 !important; }
   margin: 0 !important;
   field-sizing: content;
 }
-#CSChatMessage::placeholder { color: #64748b !important; }
+/* Placeholder — same formatting as the site's need-help card input */
+#CSChatMessage::placeholder {
+  color: #64748b !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.05em !important;
+  text-transform: uppercase !important;
+}
 
 /* No scrollbar on the message input, ever — it stays scrollable/draggable,
    just with no native bar and no overlay thumb (excluded from the custom

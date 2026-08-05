@@ -46,14 +46,15 @@ export interface LiveChatPrefill {
 
 /* Styles for the order message once it lands in the chat. Mirrors the site's
    cart drawer + service card: square 64px thumbnail top-left, white Sora
-   title, uppercase cyan meta, cyan-diamond slate detail lines, and the card's
-   "From PRICE" line (small slate label + big white Sora price), left-aligned
-   on the plain dark widget background (no chat bubble). The theme styles
-   visitor bubbles with !important + high-specificity selectors and
-   right-aligns visitor rows, so these must out-specify and override it. Bold
-   accents in the contact block use the site's light blue (#93c5fd); the
-   header keeps the link blue (#60a5fa). Sora/Inter are imported so the widget
-   uses the same fonts as the site.
+   title, uppercase light-blue meta (game · method · qty · price), slate
+   detail lines behind light-blue diamonds, and the bottom Total with the
+   card's big white Sora price — left-aligned on the plain dark widget
+   background (no chat bubble). The theme styles visitor bubbles with
+   !important + high-specificity selectors and right-aligns visitor rows, so
+   these must out-specify and override it. The whole message shares the item
+   palette: light-blue (#93c5fd) labels and header, slate (#94a3b8) contact
+   values and detail text. Sora/Inter are imported so the widget uses the
+   same fonts as the site.
    The body rules are scoped to DIRECT children — a width:100% media box
    inside the flex .gd-item crushes the text column to zero width.
    Images are made non-interactive (pointer-events none + anchors unwrapped in
@@ -84,16 +85,31 @@ const ORDER_CSS = `
   font-family: 'Inter', sans-serif !important;
 }
 .gd-order .msg-body strong { color: #93c5fd !important; letter-spacing: .04em; }
-/* Header — bigger, keeps the site's link blue */
+/* Header — same light-blue family as the labels at item-title size, so the
+   whole message reads as one print instead of a banner above a list */
 .gd-order > .msg-body:first-of-type > strong:first-child {
-  color: #60a5fa !important;
-  font-size: 16px !important;
+  color: #93c5fd !important;
+  font-size: 14px !important;
   letter-spacing: .06em !important;
   font-family: 'Sora', sans-serif !important;
 }
-/* Total — muted label, big bold white price (the service card's price style) */
-.gd-order > .msg-body:last-of-type { color: #94a3b8 !important; font-size: 12px !important; }
-.gd-order > .msg-body:last-of-type strong {
+/* Contact block text (Order ID + Name/E-mail/Payment values) — the same
+   slate as the item detail lines; labels keep their light-blue bold. Needs
+   the #messagesBlock prefix to beat the theme's body/link colors */
+#messagesBlock .message-row.gd-order > .msg-body:first-of-type { color: #94a3b8 !important; }
+#messagesBlock .message-row.gd-order > .msg-body:first-of-type a { color: #94a3b8 !important; }
+/* Total — tagged .gd-total by styleOrderRow (a :last-of-type selector misses
+   once item rows are wrapped in .gd-item divs): small label in the same slate
+   as the detail lines + big bold white Sora price, the service card's "From"
+   price style. The 16px top gap matches the item rows' rhythm. Needs the same
+   #messagesBlock-prefixed specificity as the reset above — that reset's
+   margin:0 (and the theme's ID-level text color) would otherwise win */
+#messagesBlock .message-row.gd-order > .msg-body.gd-total {
+  color: #94a3b8 !important;
+  font-size: 12px !important;
+  margin-top: 16px !important;
+}
+#messagesBlock .message-row.gd-order > .msg-body.gd-total strong {
   color: #ffffff !important;
   font-size: 18px !important;
   font-weight: 700 !important;
@@ -145,16 +161,17 @@ const ORDER_CSS = `
   letter-spacing: 0 !important;
   font-family: 'Sora', sans-serif !important;
 }
-/* Meta line — cart drawer: uppercase cyan, 12px */
+/* Meta line — game · method · qty · price: uppercase in the same light blue
+   as the contact block accents (Items: header) */
 .gd-item-text .gd-meta {
-  color: rgba(34, 211, 238, .8) !important;
+  color: #93c5fd !important;
   font-size: 12px !important;
   font-weight: 500 !important;
   text-transform: uppercase !important;
   letter-spacing: .05em !important;
   margin-top: 2px !important;
 }
-/* Detail lines — cart drawer: slate 12px behind a small cyan diamond */
+/* Detail lines — slate 12px behind a small diamond in the same light blue */
 .gd-item-text .gd-detail {
   display: flex !important;
   align-items: center !important;
@@ -169,7 +186,7 @@ const ORDER_CSS = `
   width: 4px;
   height: 4px;
   transform: rotate(45deg);
-  background: rgba(6, 182, 212, .7);
+  background: rgba(147, 197, 253, .7);
 }
 /* "From PRICE" — service card: small slate label + big bold white Sora price */
 .gd-item-text .gd-price {
@@ -271,6 +288,11 @@ const styleOrderRow = (doc: Document, row: Element) => {
     wrap.appendChild(media);
     wrap.appendChild(textCol);
     if (consumedWholeBody) textBody.remove();
+  });
+  // Tag the Total line — the big-price style targets the class, because a
+  // :last-of-type selector misses once item rows are wrapped in .gd-item divs
+  row.querySelectorAll('.msg-body').forEach((el) => {
+    if (el.textContent?.trim().startsWith('Total:')) el.classList.add('gd-total');
   });
   ensureOrderCss(doc);
 };

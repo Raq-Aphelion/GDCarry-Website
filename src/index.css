@@ -128,6 +128,18 @@
     pointer-events: none;
   }
 
+  /* Interactive chrome isn't text: no accidental highlight while clicking or
+     drag-scrolling. Content stays selectable; form fields keep their text. */
+  button {
+    user-select: none;
+  }
+  header {
+    user-select: none;
+  }
+  header input {
+    user-select: text;
+  }
+
   /* The cart item list uses the same overlay scrollbar as the page, so its
      native scrollbar is always hidden (all viewports). */
   .cart-items-scroll {
@@ -299,6 +311,35 @@ input[type='number'] {
 }
 .overlay-in {
   animation: overlay-in 0.18s ease-out both;
+}
+
+/* Need-help card entrance */
+@keyframes needhelp-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.needhelp-in {
+  animation: needhelp-in 0.3s ease-out both;
+}
+/* Exit twin — same distance, mirrored timing (keep CLOSE_MS in sync) */
+@keyframes needhelp-out {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+.needhelp-out {
+  animation: needhelp-out 0.22s ease-in both;
 }
 /* Own keyframes (not overlay-in reversed): browsers won't restart an
    animation whose name is unchanged, so the fade-out would never play */
