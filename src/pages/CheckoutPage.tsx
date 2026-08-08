@@ -25,7 +25,7 @@ const TWO_COL_QUERY = '(min-width: 1024px)';
     server-side, so the webhook URL never ships in this bundle. Paste the
     ORDER_KEY secret here; while empty, order logging is skipped (the live
     chat flow still works). */
-const ORDER_LOG_URL = 'https://orders-proxy.cluwners.workers.dev';
+const ORDER_LOG_URL = 'https://gdcarry.com/api/order';
 const ORDER_KEY = 'GUtdJw87nUC2gtX7ximpY6QRyFBcv0';
 
 /** Order reference linking the chat message to the Discord bot log — the
@@ -199,6 +199,12 @@ export default function CheckoutPage() {
 
   const methodLabel = PAYMENT_METHODS.find((m) => m.id === method)?.label ?? method;
 
+  /** Strips BBCode brackets/control chars from free-text fields before they
+      are interpolated into the order message — otherwise a "name" like
+      [img]https://evil/x.png[/img] would render in the operator's chat. */
+  // eslint-disable-next-line no-control-regex -- stripping control chars is the point
+  const bbSafe = (s: string) => s.replace(/[[\]\x00-\x1f]/g, '').trim();
+
   /** Full order as BBCode (LHC renders [b]/[img]/[url] in chat) — used for
       the live chat message field. Per item: bold title, game · qty · price
       meta line (like the Discord embed), diamond config bullets, then the
@@ -223,8 +229,8 @@ export default function CheckoutPage() {
       '[b]ORDER DETAILS[/b]',
       `[b]Order ID:[/b] ${orderId}`,
       '',
-      `👤 [b]${contactVia === 'chat' ? 'Name' : 'Discord'}:[/b] ${contact.trim()}`,
-      `✉️ [b]E-mail:[/b] ${email.trim() || '—'}`,
+      `👤 [b]${contactVia === 'chat' ? 'Name' : 'Discord'}:[/b] ${bbSafe(contact)}`,
+      `✉️ [b]E-mail:[/b] ${bbSafe(email) || '—'}`,
       `💳 [b]Payment:[/b] ${methodLabel}`,
       '',
       '[b]Items:[/b]',

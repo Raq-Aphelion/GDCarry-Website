@@ -110,6 +110,15 @@ let failures = 0;
 for (const route of ROUTES) {
   const page = await browser.newPage();
   try {
+    // Never let the live-chat widget initialize during prerender: it would
+    // bake a half-initialized skeleton (#lhc_container_v2 & co.) into the
+    // HTML, and on real visits the LHC loader then sees its own markup and
+    // bails — leaving a visible but dead chat badge.
+    await page.setRequestInterception(true);
+    page.on('request', (req) => {
+      if (req.url().includes('chat.gdcarry.com')) req.abort();
+      else req.continue();
+    });
     await page.goto(`http://127.0.0.1:${port}${route}`, {
       waitUntil: 'domcontentloaded',
       timeout: 30000,
@@ -117,7 +126,12 @@ for (const route of ROUTES) {
     // Give React time to mount, fetch pricing.json and set per-route meta.
     await new Promise((r) => setTimeout(r, 4000));
 
-    const html = await page.evaluate(() => document.documentElement.outerHTML);
+    const html = await page.evaluate(() => {
+      // Belt-and-suspenders: also drop any LHC markup that came from a stale
+      // input HTML (e.g. when `npm run prerender` runs on an old dist).
+      document.querySelectorAll('#lhc_container_v2, #lhc-loader, #lhc-theme-page').forEach((el) => el.remove());
+      return document.documentElement.outerHTML;
+    });
     const rootLen = await page.evaluate(() => document.getElementById('root')?.innerHTML.length ?? 0);
     if (rootLen < 100) {
       failures++;

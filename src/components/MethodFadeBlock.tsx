@@ -8,11 +8,15 @@ import { useEffect, useState, type ReactNode } from 'react';
     the expand finishes so an open dropdown isn't clipped. */
 export default function MethodFadeBlock({ show, children }: { show: boolean; children: ReactNode }) {
   const [expanded, setExpanded] = useState(show);
+  const [prevShow, setPrevShow] = useState(show);
+  if (show !== prevShow) {
+    // Adjust state during render (instead of synchronously in the effect
+    // below) so a collapsing block clips overflow immediately.
+    setPrevShow(show);
+    if (!show) setExpanded(false);
+  }
   useEffect(() => {
-    if (!show) {
-      setExpanded(false);
-      return;
-    }
+    if (!show) return;
     const t = setTimeout(() => setExpanded(true), 200);
     return () => clearTimeout(t);
   }, [show]);

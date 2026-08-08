@@ -215,6 +215,51 @@ const ORDER_MARKER = 'ORDER DETAILS';
     diamond replaces them. Tolerates the older message format (numbered
     names, "meta — price" line, 🔹 markers) that the server-side worker or
     stored chat history may still render. */
+/** Allowlist sanitizer for LHC-rendered message HTML before it is re-injected
+    via innerHTML. LHC escapes/BBCode-renders server-side, but if that ever
+    lets raw markup through we must not amplify it: only the formatting tags
+    LHC's BBCode produces survive, unknown tags are unwrapped (their text is
+    kept), and href/src are restricted to http(s). Parsing happens in an inert
+    <template>, so nothing executes while sanitizing. */
+const sanitizeOrderHtml = (html: string): string => {
+  const ALLOWED: Record<string, string[]> = {
+    STRONG: [],
+    B: [],
+    EM: [],
+    I: [],
+    U: [],
+    SPAN: [],
+    BR: [],
+    A: ['href'],
+    IMG: ['src', 'alt'],
+  };
+  const escapeText = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const tpl = document.createElement('template');
+  tpl.innerHTML = html;
+  const clean = (node: ChildNode): string => {
+    if (node.nodeType === Node.TEXT_NODE) return escapeText(node.textContent ?? '');
+    if (node.nodeType !== Node.ELEMENT_NODE) return '';
+    const el = node as Element;
+    const tag = el.tagName.toUpperCase();
+    const inner = [...el.childNodes].map(clean).join('');
+    if (!(tag in ALLOWED)) return inner;
+    const attrs = ALLOWED[tag]
+      .filter((a) => el.hasAttribute(a))
+      .map((a) => {
+        const v = el.getAttribute(a) ?? '';
+        if ((a === 'href' || a === 'src') && !/^https?:\/\//i.test(v)) return '';
+        return `${a}="${v.replace(/&/g, '&amp;').replace(/"/g, '&quot;')}"`;
+      })
+      .filter(Boolean)
+      .join(' ');
+    if (tag === 'BR') return '<br>';
+    if (tag === 'IMG') return `<img ${attrs}>`;
+    const t = tag.toLowerCase();
+    return `<${t}${attrs ? ` ${attrs}` : ''}>${inner}</${t}>`;
+  };
+  return [...tpl.content.childNodes].map(clean).join('');
+};
+
 const wrapItemLines = (html: string) =>
   html
     .split(/<br\s*\/?>/i)
@@ -266,7 +311,7 @@ const styleOrderRow = (doc: Document, row: Element) => {
     // Strip the full-view link around the image — visitors get a static
     // thumbnail (pointer-events are also cut in ORDER_CSS as a fallback)
     media.querySelectorAll('a').forEach((a) => a.replaceWith(...a.childNodes));
-    let itemHtml = textBody.innerHTML;
+    let itemHtml = sanitizeOrderHtml(textBody.innerHTML);
     let consumedWholeBody = true;
     if (i === 0) {
       // The first text body holds the contact block AND the first item —
