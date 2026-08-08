@@ -10,6 +10,8 @@ import { useCurrency } from '@/context/CurrencyContext';
 import { usePricing } from '@/context/PricingContext';
 import { usePurchaseFloat } from '@/hooks/usePurchaseFloat';
 import type { Service } from '@/data/games';
+import { lineTotal } from '@/lib/pricing/engine/shared';
+import { computeCCRankLine, type CCRankConfig } from '@/lib/pricing/engine/ccrank';
 
 const DATA_CENTERS = [
   'Aether',
@@ -59,9 +61,11 @@ export default function CCRankPurchaseBox({ service, gameShort }: { service: Ser
 
   const startRank = RANKS[start];
   const endRank = RANKS[end];
-  const streamPrice = stream ? cfg?.streamAddon.price ?? 0 : 0;
-  const base = Math.max((endRank?.price ?? 0) - (startRank?.price ?? 0), 0);
-  const total = base * (priority ? priorityMultiplier : 1) + streamPrice;
+  // The displayed total and the cart line come from the same engine compute —
+  // what the visitor sees is exactly what the worker will recompute
+  const lineCfg: CCRankConfig = { family: 'ccrank', start, end, stream, priority };
+  const line = computeCCRankLine(db, service.id, lineCfg);
+  const total = line ? lineTotal(line) : 0;
 
   const addToCart = () => {
     if (total <= 0) return;
@@ -73,9 +77,10 @@ export default function CCRankPurchaseBox({ service, gameShort }: { service: Ser
       {
         ...service,
         id: `${service.id}::${dc}|${start}-${end}`,
-        price: total,
+        price: line?.price ?? total,
         method: 'Piloted',
         qtyLocked: true,
+        config: lineCfg,
       },
       gameShort,
       [

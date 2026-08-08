@@ -10,6 +10,8 @@ import { useCurrency } from '@/context/CurrencyContext';
 import { usePricing } from '@/context/PricingContext';
 import { usePurchaseFloat } from '@/hooks/usePurchaseFloat';
 import type { Service } from '@/data/games';
+import { lineTotal } from '@/lib/pricing/engine/shared';
+import { computeReputationLine, type ReputationConfig } from '@/lib/pricing/engine/reputation';
 
 const DATA_CENTERS = [
   'Aether',
@@ -83,21 +85,25 @@ export default function ReputationPurchaseBox({ service, gameShort }: { service:
   const base = anyPackage
     ? packagesChecked.reduce((s, id) => s + (cfg?.alliedPackages?.find((p) => p.id === id)?.price ?? 0), 0)
     : (end - start) * (cfg?.pricePerRank ?? 0);
-  // Unlock: base price solo; with any "9. Allied" package it reprices per
-  // package (ARR ×6, every other ×3)
-  const unlockPrice = !unlockChecked || !cfg?.unlock
-    ? 0
-    : anyPackage
-      ? (packagesChecked.includes('arr') ? cfg.unlock.arrPrice : 0) +
-        packagesChecked.filter((id) => id !== 'arr').length * cfg.unlock.otherPrice
-      : cfg.unlock.price;
   const unlockDisplayPrice = !cfg?.unlock
     ? 0
     : anyPackage
       ? (packagesChecked.includes('arr') ? cfg.unlock.arrPrice : 0) +
         packagesChecked.filter((id) => id !== 'arr').length * cfg.unlock.otherPrice
       : cfg.unlock.price;
-  const total = base * (priority ? priorityMultiplier : 1) + unlockPrice;
+  // The displayed total and the cart line come from the same engine compute —
+  // what the visitor sees is exactly what the worker will recompute
+  const lineCfg: ReputationConfig = {
+    family: 'reputation',
+    factionIdx: factions.findIndex((f) => f.label === faction),
+    start,
+    end,
+    packages: packagesChecked,
+    unlock: unlockChecked,
+    priority,
+  };
+  const line = computeReputationLine(db, service.id, lineCfg);
+  const total = line ? lineTotal(line) : 0;
 
   const addToCart = () => {
     if (!dc) {
@@ -108,9 +114,10 @@ export default function ReputationPurchaseBox({ service, gameShort }: { service:
       {
         ...service,
         id: `${service.id}::${anyPackage ? packagesChecked.sort().join('+') : `${faction}|${start}-${end}`}|${dc}${unlockChecked ? '|u' : ''}`,
-        price: total,
+        price: line?.price ?? base,
         method: 'Piloted',
         qtyLocked: true,
+        config: lineCfg,
       },
       gameShort,
       [

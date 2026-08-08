@@ -9,6 +9,8 @@ import { useCart } from '@/context/CartContext';
 import { useCurrency } from '@/context/CurrencyContext';
 import { usePricing } from '@/context/PricingContext';
 import { usePurchaseFloat } from '@/hooks/usePurchaseFloat';
+import { lineTotal } from '@/lib/pricing/engine/shared';
+import { computeRelicLine, type RelicConfig } from '@/lib/pricing/engine/relic';
 import type { Service } from '@/data/games';
 
 const DATA_CENTERS = [
@@ -85,11 +87,25 @@ export default function RelicPurchaseBox({ service, gameShort }: { service: Serv
   const mountPrice = mountOn ? (cfg?.mount?.price ?? 0) : 0;
   const gearOptions = cfg?.gearOptions ? db.purchaseBox.gearOptions : [];
   const gearPrice = gearOptions[gearIdx]?.price ?? 0;
-  const total =
-    stepsTotal * (priority ? priorityMultiplier : 1) +
-    mountPrice +
-    gearPrice +
-    (unlockChecked ? (cfg?.unlock?.price ?? 0) : 0);
+  // The displayed total and the cart line come from the same engine compute —
+  // what the visitor sees is exactly what the worker will recompute
+  const lineCfg: RelicConfig = {
+    family: 'relic',
+    steps: stepsSel,
+    mount: mountOn,
+    gearIdx,
+    priority,
+    unlock: unlockChecked,
+  };
+  const line = computeRelicLine(db, service.id, lineCfg);
+  // Fallback: the pre-extraction inline formula — only reachable when the
+  // relic db block is missing
+  const total = line
+    ? lineTotal(line)
+    : stepsTotal * (priority ? priorityMultiplier : 1) +
+      mountPrice +
+      gearPrice +
+      (unlockChecked ? (cfg?.unlock?.price ?? 0) : 0);
   // Nothing purchasable with no steps and no mount — CTA stays disabled
   const nothingSelected = stepsSel.length === 0 && !mountOn;
 
@@ -116,9 +132,13 @@ export default function RelicPurchaseBox({ service, gameShort }: { service: Serv
       {
         ...service,
         id: `${service.id}::${choice}|${dc}|${allSteps ? 'complete' : sorted.join(',')}${mountOn ? 'm' : ''}${priority ? 'p' : ''}${unlockChecked ? 'u' : ''}`,
-        price: total,
+        price: line?.price ?? total,
+        flat: line?.flat,
+        multiplier: line?.multiplier,
+        logsPercent: line?.logsPercent,
+        qtyLocked: line?.qtyLocked ?? true,
         method: 'Piloted',
-        qtyLocked: true,
+        config: lineCfg,
       },
       gameShort,
       [

@@ -46,11 +46,18 @@ lhcstyle/               LiveHelperChat theme builder + exported theme JSON
 
 There is no backend in this repo. The frontend talks to:
 
-- **Orders worker** (`gdcarry.com/api/order`, source in `worker/orders-proxy.js`) —
-  receives checkout submissions and relays them to the operator (Discord
-  webhook + live chat). Auth'd with a shared `X-Order-Key` header (see
-  `src/pages/CheckoutPage.tsx`); validation and rate limiting live in the
-  worker — treat the key as public, it ships in the client bundle.
+- **Orders worker** (`gdcarry.com/api/order`, source in `worker/orders-proxy.js`,
+  deploy config `worker/wrangler.toml`) — receives checkout submissions,
+  recomputes every line's price authoritatively via the shared pricing engine
+  (`src/lib/pricing/engine/`, imported at bundle time), and relays the order
+  to the operator (Discord webhook + live chat). Auth'd with a shared
+  `X-Order-Key` header (see `src/pages/CheckoutPage.tsx`) — treat the key as
+  public, it ships in the client bundle; real abuse control is the worker's
+  rate limit, validation, and price recompute. Deploy:
+  `npx wrangler deploy --config worker/wrangler.toml` (one-time KV namespace +
+  secrets setup is documented in the toml). `npm test` runs the golden suites
+  (`src/lib/pricing/engine/tests/`) pinning engine prices to the catalog
+  formulas.
 - **LiveHelperChat** at `chat.gdcarry.com` — the support/order chat widget
   (`src/components/LiveChatWidget.tsx`, theme in `lhcstyle/`).
 - **Google Apps Script** — the "Work with us" application form target.

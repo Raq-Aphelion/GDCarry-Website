@@ -11,6 +11,8 @@ import { useCurrency } from '@/context/CurrencyContext';
 import { usePricing } from '@/context/PricingContext';
 import { usePurchaseFloat } from '@/hooks/usePurchaseFloat';
 import type { Service } from '@/data/games';
+import { lineTotal } from '@/lib/pricing/engine/shared';
+import { computeTrialBundleLine, type TrialBundleConfig } from '@/lib/pricing/engine/trialbundle';
 
 const DATA_CENTERS = [
   'Aether',
@@ -101,9 +103,15 @@ export default function TrialBundlePurchaseBox({ service, gameShort }: { service
         return s + (t ? priceOf(t) : 0);
       }, 0);
   const streamPrice = 10;
-  const total = guaranteed
-    ? mountPrice + (stream ? streamPrice : 0)
-    : selectionTotal * runs * (priority ? priorityMultiplier : 1) + (stream ? streamPrice : 0);
+  // The displayed total and the cart line come from the same engine compute —
+  // what the visitor sees is exactly what the worker will recompute
+  const lineCfg: TrialBundleConfig = { family: 'trialbundle', method, guaranteed, checked, runs, stream, priority };
+  const line = computeTrialBundleLine(db, service.id, lineCfg);
+  const total = line
+    ? lineTotal(line)
+    : guaranteed
+      ? mountPrice + (stream ? streamPrice : 0)
+      : selectionTotal * runs * (priority ? priorityMultiplier : 1) + (stream ? streamPrice : 0);
 
   const addToCart = () => {
     if (total <= 0) return;
@@ -117,10 +125,13 @@ export default function TrialBundlePurchaseBox({ service, gameShort }: { service
       {
         ...service,
         id: `${service.id}::${method}|${dc}|${guaranteed ? 'guaranteed' : [...checked].sort().join(',')}`,
-        price: guaranteed ? mountPrice : selectionTotal,
+        price: line?.price ?? (guaranteed ? mountPrice : selectionTotal),
         method: methodLabel,
-        flat: stream ? streamPrice : undefined,
-        ...(guaranteed ? { qtyLocked: true } : { multiplier: priority ? priorityMultiplier : undefined }),
+        flat: line?.flat ?? (stream ? streamPrice : undefined),
+        ...(guaranteed
+          ? { qtyLocked: true }
+          : { multiplier: line?.multiplier ?? (priority ? priorityMultiplier : undefined) }),
+        config: lineCfg,
       },
       gameShort,
       [

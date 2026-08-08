@@ -10,6 +10,14 @@ import { useCart } from '@/context/CartContext';
 import { useCurrency } from '@/context/CurrencyContext';
 import { usePricing } from '@/context/PricingContext';
 import type { Service } from '@/data/games';
+import { lineTotal } from '@/lib/pricing/engine/shared';
+import {
+  addonPriceOf as engineAddonPriceOf,
+  computeRunLine,
+  resolveAddonList,
+  resolveMethods,
+  type RunConfig,
+} from '@/lib/pricing/engine/run';
 
 const DATA_CENTERS = [
   'Aether',
@@ -168,28 +176,21 @@ export function CustomSelect({
 export default function PurchaseBox({ service, gameShort }: { service: Service; gameShort: string }) {
   const { addItem, openCart } = useCart();
   const { format } = useCurrency();
-  const { db, priceOf } = usePricing();
+  const { db } = usePricing();
   const cfg = db.purchaseBox;
   const GEAR_OPTIONS = cfg.gearOptions;
   const LOG_OPTIONS = cfg.logOptions;
-  // The duty-unlock addon comes from the ffxiv-UltimateRaids category file;
-  // stream/priority stay in the base purchaseBox config
-  const ADDONS = [...(db.unlockAddon ? [db.unlockAddon] : []), ...cfg.addons];
 
-  const basePrice = priceOf(service.id, service.price);
-  // Services with explicit per-method prices in the DB (e.g. ultimates) bypass
-  // the afkDiscount model; a missing `afk` means the service is piloted-only.
-  const methodPrices = db.methodPrices?.[service.id];
-  const methods = useMemo(() => {
-    const list = [
-      { id: 'piloted', label: 'Piloted', price: methodPrices?.piloted ?? basePrice, icon: Armchair },
-    ];
-    const afkPrice = methodPrices ? methodPrices.afk : Math.max(basePrice - cfg.afkDiscount, 0);
-    if (afkPrice != null)
-      list.push({ id: 'afk', label: methodPrices?.afkLabel ?? 'AFK Carry', price: afkPrice, icon: Gamepad2 });
-    if (methodPrices?.groupFirst) list.reverse();
-    return list;
-  }, [basePrice, cfg.afkDiscount, methodPrices]);
+  // Methods, add-on list and the price math itself live in the pricing
+  // engine (src/lib/pricing/engine) — shared verbatim with the orders worker
+  const methods = useMemo(
+    () =>
+      (resolveMethods(db, service.id, service.price) ?? []).map((m) => ({
+        ...m,
+        icon: m.id === 'afk' ? Gamepad2 : Armchair,
+      })),
+    [db, service.id, service.price],
+  );
 
   const [method, setMethod] = useState(methods[0].id);
   const [runs, setRuns] = useState(cfg.runsMin);
@@ -219,39 +220,16 @@ export default function PurchaseBox({ service, gameShort }: { service: Service; 
   // AFK Carry has no FFXIV Logs option and no Private Stream add-on — both
   // are excluded from the UI and from every calculation
   const isAfk = method === 'afk';
-  // Services with per-method addon lists in the DB (bundles) swap the global
-  // 'unlock' addon for their own list — stream/priority stay untouched.
-  const bundleAddons = db.serviceAddons?.[service.id]?.[isAfk ? 'afk' : 'piloted'];
-  const ADDON_LIST = bundleAddons
-    ? ADDONS.flatMap((a) => (a.id === 'unlock' ? bundleAddons : [a]))
-    : ADDONS;
+  const ADDON_LIST = resolveAddonList(db, service.id, isAfk);
   const effLogIdx = isAfk ? 0 : logIdx;
   const effectiveAddons = isAfk ? addons.filter((a) => a !== 'stream') : addons;
-  // Per-service addon price overrides from the DB (e.g. DSR duty unlock).
-  // A `{ ref: 'series:tier:fight' }` override pulls the savage fight's price
-  // for the active method — AFK fight price when offered, piloted otherwise.
-  const addonPriceOf = (a: (typeof ADDONS)[number]) => {
-    const override = db.addonPrices?.[service.id]?.[a.id];
-    if (override == null) return a.price;
-    if (typeof override === 'number') return override;
-    const [seriesId, tier, fightId] = override.ref.split(':');
-    const series = db.savageSeries?.[seriesId];
-    const pilotedFight = series?.piloted?.fights?.[tier]?.find((f) => f.id === fightId);
-    const afkFight = series?.afk?.fights?.[tier]?.find((f) => f.id === fightId);
-    if (isAfk && afkFight && !afkFight.disabled) return afkFight.price;
-    return pilotedFight?.price ?? afkFight?.price ?? a.price;
-  };
-  const priority = effectiveAddons.includes('priority');
+  const addonPriceOf = (a: (typeof ADDON_LIST)[number]) => engineAddonPriceOf(db, service.id, isAfk, a);
   const logsPercent = LOG_OPTIONS[effLogIdx].percent ?? 0;
-  const flatAddons = ADDON_LIST.filter((a) => a.id !== 'priority' && effectiveAddons.includes(a.id)).reduce(
-    (s, a) => s + addonPriceOf(a),
-    0,
-  );
-  // Priority and the parse tier multiply only (method price × runs);
-  // gear, flat log fees and add-ons are added afterwards, unaffected.
-  const runsPart = activeMethod.price * runs * (priority ? cfg.priorityMultiplier : 1);
-  const total =
-    runsPart * (1 + logsPercent / 100) + GEAR_OPTIONS[gearIdx].price + LOG_OPTIONS[effLogIdx].price + flatAddons;
+  // The displayed total and the cart line come from the same engine compute —
+  // what the visitor sees is exactly what the worker will recompute
+  const lineCfg: RunConfig = { family: 'run', method, runs, gearIdx, logIdx, addons };
+  const line = computeRunLine(db, service.id, lineCfg, service.price);
+  const total = line ? lineTotal(line) : 0;
 
   const toggleAddon = (id: string) =>
     setAddons((prev) => (prev.includes(id) ? prev.filter((a) => a !== id) : [...prev, id]));
@@ -298,11 +276,12 @@ export default function PurchaseBox({ service, gameShort }: { service: Service; 
       {
         ...service,
         id: `${service.id}::${cfgKey}`,
-        price: activeMethod.price, // per run
-        flat: GEAR_OPTIONS[gearIdx].price + LOG_OPTIONS[effLogIdx].price + flatAddons,
-        multiplier: priority ? cfg.priorityMultiplier : undefined,
-        logsPercent: logsPercent > 0 ? logsPercent : undefined,
+        price: line?.price ?? activeMethod.price, // per run
+        flat: line?.flat,
+        multiplier: line?.multiplier,
+        logsPercent: line?.logsPercent,
         method: activeMethod.label,
+        config: lineCfg,
       },
       gameShort,
       details,

@@ -41,6 +41,9 @@ const generateOrderId = () => {
   return `${p(d.getDate())}${p(d.getMonth() + 1)}${p(d.getFullYear() % 100)}-${rand}`;
 };
 
+/** Round to cents — the raw EUR numbers sent to the order proxy. */
+const round2 = (n: number) => Math.round(n * 100) / 100;
+
 type Stage = 'idle' | 'processing' | 'done';
 type ContactVia = 'chat' | 'discord';
 
@@ -261,18 +264,27 @@ export default function CheckoutPage() {
         email: email.trim(),
         payment: methodLabel,
         total: format(orderTotal),
+        // Raw EUR numbers + service ids — the worker verifies quoted prices
+        // against the catalog minimums and flags tampering in the Discord log.
+        totalEur: round2(orderTotal),
         vid: session?.vid,
         chatId: session?.id,
         chatHash: session?.hash,
         items: orderItems.slice(0, 5).map((item) => ({
+          id: item.id.split('::')[0],
           name: item.name,
           meta: cartMeta(item),
           gameShort: item.gameShort,
           qty: item.qty,
           price: format(lineTotal(item)),
           unitPrice: format(item.price),
+          unitPriceEur: round2(item.price),
+          totalEur: round2(lineTotal(item)),
           details: displayDetails(item),
           image: new URL(item.image, SITE_URL).href,
+          // Machine-readable pricing config — the worker recomputes the line
+          // authoritatively from this and flags any drift from the quote
+          config: item.config ?? null,
         })),
       }),
     });

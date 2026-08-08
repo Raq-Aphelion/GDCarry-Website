@@ -11,6 +11,8 @@ import { usePricing } from '@/context/PricingContext';
 import { usePurchaseFloat } from '@/hooks/usePurchaseFloat';
 import type { Service } from '@/data/games';
 import type { PricingAddon } from '@/data/pricing';
+import { lineTotal } from '@/lib/pricing/engine/shared';
+import { computeSavageSeriesLine, type SavageSeriesConfig } from '@/lib/pricing/engine/savageseries';
 
 const DATA_CENTERS = [
   'Aether',
@@ -133,7 +135,6 @@ export default function SavageSeriesPurchaseBox({ service, gameShort }: { servic
           0,
         )
       : 0;
-  const unlocksTotal = unlocks.reduce((s, id) => s + (cfg?.unlocks.find((u) => u.id === id)?.price ?? 0), 0);
   const hasSelection = bundlesTotal + fightsTotal > 0;
   // Amount of Runs multiplies picked tiers and fights — with nothing picked
   // (unlock-only order) the control greys out
@@ -148,15 +149,24 @@ export default function SavageSeriesPurchaseBox({ service, gameShort }: { servic
   // neither, the dropdown is disabled and falls back to "I don't need extra gear".
   const gearEnabled = hasSelection || unlocks.length > 0;
   const effGearIdx = gearEnabled ? gearIdx : 0;
-  // Priority and the parse tier multiply (bundles + fights); flat log fees are
-  // added afterwards, unaffected. Priority multiplies the tier unlocks only
-  // when nothing is picked in the active Boost Option. Private Stream only
-  // counts when something else is priced — it never enables Add to cart alone.
-  const base = (bundlesTotal + fightsTotal) * effRuns * (priority ? priorityMultiplier : 1);
-  const unlocksPart = hasSelection ? unlocksTotal : unlocksTotal * (priority ? priorityMultiplier : 1);
   const gearPrice = showGear ? GEAR_OPTIONS[effGearIdx]?.price ?? 0 : 0;
-  const subtotal = base * (1 + logsPercent / 100) + logsPrice + unlocksPart + gearPrice;
-  const total = subtotal + (subtotal > 0 && stream ? cfg?.stream ?? 0 : 0);
+  // The displayed total and the cart line come from the same engine compute —
+  // what the visitor sees is exactly what the worker will recompute
+  const lineCfg: SavageSeriesConfig = {
+    family: 'savageseries',
+    method,
+    shown,
+    bundles,
+    fights,
+    unlocks,
+    runs,
+    stream,
+    priority,
+    logIdx,
+    gearIdx,
+  };
+  const line = computeSavageSeriesLine(db, service.id, lineCfg);
+  const total = line ? lineTotal(line) : 0;
 
   const addonLabel = (a: PricingAddon) => a.label;
   const addonPrice = (a: PricingAddon) => a.price;
@@ -175,21 +185,17 @@ export default function SavageSeriesPurchaseBox({ service, gameShort }: { servic
         ? fights.map((id) => Object.values(cfg!.fights).flat().find((f) => f.id === id)!.label)
         : [];
     const selectedUnlocks = unlocks.map((id) => cfg!.unlocks.find((u) => u.id === id)!.label);
-    // Per-run cart model: price is the per-run selection total, qty the run
-    // count (cart +/- adjusts runs, identical configs merge). flat covers the
-    // one-off parts (log fees, unlocks — pre-multiplied by priority when they
-    // are the whole order — gear, stream). Unlock-only orders stay one-offs.
-    const streamPart = subtotal > 0 && stream ? (cfg?.stream ?? 0) : 0;
     addItem(
       {
         ...service,
         id: `${service.id}::${method}|${dc}|${shown}~${[...bundles, ...fights].sort().join(',')}|${[...unlocks].sort().join(',')}${gearPrice > 0 ? `g${effGearIdx}` : ''}${logsPercent > 0 || logsPrice > 0 ? `l${effLogIdx}` : ''}${stream ? 's' : ''}${priority ? 'p' : ''}`,
-        price: bundlesTotal + fightsTotal,
+        price: line?.price ?? bundlesTotal + fightsTotal,
         method: methodLabel,
-        flat: logsPrice + unlocksPart + gearPrice + streamPart,
-        multiplier: priority ? priorityMultiplier : undefined,
-        logsPercent: logsPercent > 0 ? logsPercent : undefined,
+        flat: line?.flat,
+        multiplier: line?.multiplier,
+        logsPercent: line?.logsPercent,
         ...(hasSelection ? {} : { qtyLocked: true }),
+        config: lineCfg,
       },
       gameShort,
       [

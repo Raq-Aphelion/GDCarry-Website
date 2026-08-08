@@ -11,6 +11,8 @@ import { usePricing } from '@/context/PricingContext';
 import { usePurchaseFloat } from '@/hooks/usePurchaseFloat';
 import type { Service } from '@/data/games';
 import type { PricingAddon } from '@/data/pricing';
+import { lineTotal } from '@/lib/pricing/engine/shared';
+import { computeDeepDungeonLine, type DeepDungeonConfig } from '@/lib/pricing/engine/deepdungeon';
 
 const DATA_CENTERS = [
   'Aether',
@@ -116,35 +118,15 @@ export default function DeepDungeonPurchaseBox({ service, gameShort }: { service
     );
   };
 
-  const streamPrice = stream ? 10 : 0;
-  // perRun add-ons (e.g. Book Farm) replace the per-run core with their own
-  // price (multiplied by Amount of Runs) instead of adding on top
-  const perRunSolo = checked.map((id) => soloAddons.find((a) => a.id === id)).find((a) => a?.perRun);
-  const perRunGroup = groupChecked.map((id) => groupAddons.find((a) => a.id === id)).find((a) => a?.perRun);
-  const addonsTotal = checked.reduce((s, id) => {
-    const a = soloAddons.find((x) => x.id === id);
-    return a?.perRun ? s : s + (a?.price ?? 0);
-  }, 0);
   // Multiplier add-ons (e.g. Juedi 400%) apply to the solo base price only;
   // every other add-on stays additive on top of the multiplied price
   const soloTimes = checked.reduce(
     (t, id) => t * (soloAddons.find((a) => a.id === id)?.timesBase ?? 1),
     1,
   );
-  const groupAddonsTotal = groupChecked.reduce((s, id) => {
-    const a = groupAddons.find((x) => x.id === id);
-    return a?.perRun ? s : s + (a?.price ?? 0);
-  }, 0);
   const selectedOption = groupOptions.find((o) => o.id === option) ?? groupOptions[0];
-  // Amount of Runs multiplies the per-completion core only — upgrades/loot
-  // (add-ons) stay static additions. An active Mount Juedi (group multiplier
-  // or solo multiplier add-on) replaces the run count with its clear count
-  // instead of multiplying the core, so it never double-counts.
-  const core =
-    pricedMethod === 'group'
-      ? (perRunGroup?.price ?? selectedOption?.price ?? 0)
-      : (perRunSolo?.price ?? cfg?.solo.price ?? 0);
-  const addonsPart = pricedMethod === 'group' ? groupAddonsTotal : addonsTotal;
+  // An active Mount Juedi (group multiplier or solo multiplier add-on) replaces
+  // the run count with its clear count — the runs controls grey out with it
   const forcedRuns =
     pricedMethod === 'group'
       ? mountOn && groupMultiplier
@@ -161,21 +143,24 @@ export default function DeepDungeonPurchaseBox({ service, gameShort }: { service
   // is actually rendering during the cross-fade, so the price flips once
   const runsControls = !hasGroup && cfg?.runs === true;
   const effRuns = forcedRuns > 0 ? forcedRuns : pricedMethod === 'solo' ? (runsControls ? runs : 1) : runs;
-  // Drawer add-ons are flat — except timesRuns ones (e.g. 40 Offerings),
-  // which price per run like the core
-  const drawerAddonsTotal = drawerChecked.reduce((s, id) => {
-    const a = drawerAddons.find((x) => x.id === id);
-    return s + (a?.price ?? 0) * (a?.timesRuns ? effRuns : 1);
-  }, 0);
-  // Priority multiplies the method total × runs; unlock and stream are flat.
-  // streamInSolo / streamPilotedOnly configs offer Private Stream only in Piloted.
-  const effStreamPrice =
-    (cfg?.streamInSolo || cfg?.streamPilotedOnly) && pricedMethod === 'group' ? 0 : streamPrice;
-  const total =
-    (core * effRuns + addonsPart) * (priority ? priorityMultiplier : 1) +
-    (unlockChecked ? (activeUnlock?.price ?? 0) : 0) +
-    drawerAddonsTotal +
-    effStreamPrice;
+  // The price math itself lives in the pricing engine (src/lib/pricing/engine)
+  // — shared verbatim with the orders worker, so what the visitor sees is
+  // exactly what the worker will recompute
+  const lineCfg: DeepDungeonConfig = {
+    family: 'deepdungeon',
+    method: pricedMethod,
+    option,
+    groupAddons: groupChecked,
+    mountOn,
+    soloAddons: checked,
+    runs,
+    stream,
+    priority,
+    unlock: unlockChecked,
+    drawerAddons: drawerChecked,
+  };
+  const line = computeDeepDungeonLine(db, service.id, lineCfg);
+  const total = line ? lineTotal(line) : 0;
 
   const addToCart = () => {
     if (!dc) {
@@ -183,21 +168,19 @@ export default function DeepDungeonPurchaseBox({ service, gameShort }: { service
       return;
     }
     const isGroup = effMethod === 'group';
-    // Per-run cart model: price is the per-completion core, qty the run count,
-    // flat the one-off extras (add-ons are inside the priority multiplication
-    // in the box formula, so they're pre-multiplied here — cart flat is not)
+    // Per-run cart model (from the engine line): price is the per-completion
+    // core, qty the run count, flat the one-off extras (add-ons are inside the
+    // priority multiplication in the box formula, so they're pre-multiplied in
+    // flat — cart flat is not)
     addItem(
       {
         ...service,
         id: `${service.id}::${dc}|${effMethod}|${isGroup ? `${option}~${[...groupChecked].sort().join(',')}` : [...checked].sort().join(',')}${isGroup && mountOn ? 'm' : ''}${stream ? 's' : ''}${priority ? 'p' : ''}${unlockChecked ? 'u' : ''}`,
-        price: core,
-        flat:
-          addonsPart * (priority ? priorityMultiplier : 1) +
-          (unlockChecked ? (activeUnlock?.price ?? 0) : 0) +
-          drawerAddonsTotal +
-          effStreamPrice,
-        multiplier: priority ? priorityMultiplier : undefined,
+        price: line?.price ?? (isGroup ? (selectedOption?.price ?? 0) : (cfg?.solo.price ?? 0)),
+        flat: line?.flat,
+        multiplier: line?.multiplier,
         method: isGroup ? 'Group Play' : (cfg?.soloLabel ?? 'Solo Piloted'),
+        config: lineCfg,
       },
       gameShort,
       [

@@ -9,6 +9,8 @@ import { useCurrency } from '@/context/CurrencyContext';
 import { usePricing } from '@/context/PricingContext';
 import { usePurchaseFloat } from '@/hooks/usePurchaseFloat';
 import type { Service } from '@/data/games';
+import { lineTotal } from '@/lib/pricing/engine/shared';
+import { computeMountSeriesLine, type MountSeriesConfig } from '@/lib/pricing/engine/mountseries';
 
 const DATA_CENTERS = [
   'Aether',
@@ -66,17 +68,12 @@ export default function MountSeriesPurchaseBox({ service, gameShort }: { service
   // Bundle price follows the method the same way (afkBundlePrice override)
   const bundleTotal = (c: { bundlePrice: number; afkBundlePrice?: number }) =>
     method === 'afk' ? (c.afkBundlePrice ?? Number((c.bundlePrice * afkMultiplier).toFixed(2))) : c.bundlePrice;
-  const mountsTotal = allChecked
-    ? bundleTotal(cfg!)
-    : checked.reduce((s, id) => {
-        const m = cfg?.mounts.find((x) => x.id === id);
-        return s + (m ? displayPrice(m) : 0);
-      }, 0);
-  const addonPrice = addonChecked ? cfg?.addon?.price ?? 0 : 0;
   const streamPrice = 10;
-  const total =
-    (mountsTotal + addonPrice * (method === 'afk' ? afkMultiplier : 1)) * (priority ? priorityMultiplier : 1) +
-    (stream ? streamPrice : 0);
+  // The displayed total and the cart line come from the same engine compute —
+  // what the visitor sees is exactly what the worker will recompute
+  const lineCfg: MountSeriesConfig = { family: 'mountseries', method, checked, addon: addonChecked, stream, priority };
+  const line = computeMountSeriesLine(db, service.id, lineCfg);
+  const total = line ? lineTotal(line) : 0;
 
   const addToCart = () => {
     if (total <= 0) return;
@@ -90,9 +87,13 @@ export default function MountSeriesPurchaseBox({ service, gameShort }: { service
       {
         ...service,
         id: `${service.id}::${method}|${dc}|${[...checked].sort().join(',')}|${addonChecked ? 'addon' : ''}`,
-        price: total,
+        price: line?.price ?? total, // full total (one-off line)
+        flat: line?.flat,
+        multiplier: line?.multiplier,
+        logsPercent: line?.logsPercent,
         method: methodLabel,
         qtyLocked: true,
+        config: lineCfg,
       },
       gameShort,
       [

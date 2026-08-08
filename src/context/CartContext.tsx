@@ -1,6 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import type { Service } from '@/data/games';
 import { lineTotal } from '@/lib/cart';
+import type { OrderConfig } from '@/lib/pricing/engine';
 import { useToast } from './ToastContext';
 
 export interface CartItem {
@@ -23,6 +24,9 @@ export interface CartItem {
   logsPercent?: number;
   /** One-off orders (e.g. Pandaemonium tier bundles): qty controls disabled */
   qtyLocked?: boolean;
+  /** Machine-readable pricing config (engine family + options) — sent with the
+      order so the worker can authoritatively recompute the line's price */
+  config?: OrderConfig;
 }
 
 interface CartContextValue {
@@ -33,7 +37,7 @@ interface CartContextValue {
   openCart: () => void;
   closeCart: () => void;
   addItem: (
-    service: Service & { flat?: number; multiplier?: number; logsPercent?: number; method?: string; qtyLocked?: boolean },
+    service: Service & { flat?: number; multiplier?: number; logsPercent?: number; method?: string; qtyLocked?: boolean; config?: OrderConfig },
     gameShort: string,
     details?: string[],
     qty?: number,
@@ -69,7 +73,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const addItem = useCallback(
     (
-      service: Service & { flat?: number; multiplier?: number; logsPercent?: number; method?: string; qtyLocked?: boolean },
+      service: Service & { flat?: number; multiplier?: number; logsPercent?: number; method?: string; qtyLocked?: boolean; config?: OrderConfig },
       gameShort: string,
       details?: string[],
       qty = 1,
@@ -109,6 +113,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
             logsPercent: service.logsPercent,
             method: service.method,
             qtyLocked: service.qtyLocked,
+            config: service.config,
           },
         ];
       });

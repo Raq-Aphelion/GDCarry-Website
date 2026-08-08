@@ -10,6 +10,8 @@ import { useCurrency } from '@/context/CurrencyContext';
 import { usePricing } from '@/context/PricingContext';
 import { usePurchaseFloat } from '@/hooks/usePurchaseFloat';
 import type { Service } from '@/data/games';
+import { lineTotal } from '@/lib/pricing/engine/shared';
+import { computeCriterionLine, type CriterionConfig } from '@/lib/pricing/engine/criterion';
 
 const DATA_CENTERS = [
   'Aether',
@@ -80,18 +82,21 @@ export default function CriterionPurchaseBox({ service, gameShort }: { service: 
     method === 'piloted' ? (a.pilotedPrice ?? a.price) : a.price;
   const forcedRuns = checked.reduce((m, id) => Math.max(m, activeAddons.find((a) => a.id === id)?.forcedRuns ?? 0), 0);
   const effRuns = forcedRuns > 0 ? forcedRuns : runs;
-  const addonsTotal = checked.reduce((s, id) => {
-    const a = activeAddons.find((x) => x.id === id);
-    return s + (a ? addonPriceOf(a) : 0);
-  }, 0);
   const streamPrice = 10;
-  // forcedRuns add-ons (Mount All Paths) zero out the per-run core: the runs
-  // display stays pinned to the path count, but the price is the add-on's own
-  const core = forcedRuns > 0 ? 0 : base * effRuns;
-  const total =
-    (core + addonsTotal) * (priority ? priorityMultiplier : 1) +
-    (unlockChecked ? (cfg?.unlock?.price ?? 0) : 0) +
-    (stream ? streamPrice : 0);
+  // The displayed total and the cart line come from the same engine compute —
+  // what the visitor sees is exactly what the worker will recompute
+  const lineCfg: CriterionConfig = {
+    family: 'criterion',
+    method,
+    difficulty,
+    runs,
+    addons: checked,
+    stream,
+    priority,
+    unlock: unlockChecked,
+  };
+  const line = computeCriterionLine(db, service.id, lineCfg);
+  const total = line ? lineTotal(line) : 0;
 
   const addToCart = () => {
     if (!dc) {
@@ -101,21 +106,15 @@ export default function CriterionPurchaseBox({ service, gameShort }: { service: 
     // pilotedOnly services show a static Piloted pill (no toggle) — `method`
     // keeps its 'group' default, so derive the label from the config first
     const methodLabel = cfg?.pilotedOnly ? 'Piloted' : method === 'group' ? 'Group Play' : 'Piloted';
-    // Per-run cart model: price is the per-run base (0 when a forcedRuns
-    // add-on zeroes the core), qty the run count, flat the one-off extras
-    // (add-ons are inside the priority multiplication in the box formula, so
-    // they're pre-multiplied here — cart flat is not)
     addItem(
       {
         ...service,
         id: `${service.id}::${method}|${effDifficulty}|${dc}|${[...checked].sort().join(',')}${stream ? 's' : ''}${priority ? 'p' : ''}${unlockChecked ? 'u' : ''}`,
-        price: forcedRuns > 0 ? 0 : base,
-        flat:
-          addonsTotal * (priority ? priorityMultiplier : 1) +
-          (unlockChecked ? (cfg?.unlock?.price ?? 0) : 0) +
-          (stream ? streamPrice : 0),
-        multiplier: priority ? priorityMultiplier : undefined,
+        price: line?.price ?? (forcedRuns > 0 ? 0 : base),
+        flat: line?.flat,
+        multiplier: line?.multiplier,
         method: methodLabel,
+        config: lineCfg,
       },
       gameShort,
       [

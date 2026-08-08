@@ -9,6 +9,8 @@ import { useCart } from '@/context/CartContext';
 import { useCurrency } from '@/context/CurrencyContext';
 import { usePricing } from '@/context/PricingContext';
 import type { Service } from '@/data/games';
+import { lineTotal } from '@/lib/pricing/engine/shared';
+import { computeGilLine, type GilConfig } from '@/lib/pricing/engine/gil';
 
 const REGIONS: Record<string, { label: string; dcs: string[] }> = {
   NA: { label: 'North America', dcs: ['Aether', 'Crystal', 'Dynamis', 'Primal'] },
@@ -108,8 +110,12 @@ export default function GilPurchaseBox({ service, gameShort }: { service: Servic
     setServerError(false);
   };
 
+  // The displayed total and the cart line come from the same engine compute —
+  // what the visitor sees is exactly what the worker will recompute
+  const lineCfg: GilConfig = { family: 'gil', dad, millions };
+  const line = computeGilLine(db, service.id, lineCfg);
   // Direct Account Delivery carries a +10% fee over the base rate
-  const total = millions * pricePerMillion * (dad ? 1.1 : 1);
+  const total = line ? lineTotal(line) : millions * pricePerMillion * (dad ? 1.1 : 1);
 
   const addToCart = () => {
     const missing = { region: !region, dc: !dc, server: !server };
@@ -123,7 +129,12 @@ export default function GilPurchaseBox({ service, gameShort }: { service: Servic
         ...service,
         id: `${service.id}::${method}|${dad ? 'dad' : ''}|${region}|${dc}|${server}`,
         // per 1 M gil — qty is the amount in millions; DAD carries a +10% fee
-        price: pricePerMillion * (dad ? 1.1 : 1),
+        price: line?.price ?? pricePerMillion * (dad ? 1.1 : 1),
+        flat: line?.flat,
+        multiplier: line?.multiplier,
+        logsPercent: line?.logsPercent,
+        qtyLocked: line?.qtyLocked,
+        config: lineCfg,
       },
       gameShort,
       [

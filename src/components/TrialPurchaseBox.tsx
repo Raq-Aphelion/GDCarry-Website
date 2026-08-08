@@ -11,6 +11,8 @@ import { useCurrency } from '@/context/CurrencyContext';
 import { usePricing } from '@/context/PricingContext';
 import { usePurchaseFloat } from '@/hooks/usePurchaseFloat';
 import { games, type Service } from '@/data/games';
+import { lineTotal } from '@/lib/pricing/engine/shared';
+import { computeTrialLine, type TrialConfig } from '@/lib/pricing/engine/trial';
 
 const DATA_CENTERS = [
   'Aether',
@@ -90,9 +92,15 @@ export default function TrialPurchaseBox({ service, gameShort }: { service: Serv
 
   const streamPrice = 10;
   const methodBase = method === 'afk' ? (cfg?.afkPrice ?? cfg?.price ?? 0) : (cfg?.price ?? 0);
-  const total = guaranteed
-    ? mountPrice + (stream ? streamPrice : 0)
-    : methodBase * runs * (priority ? priorityMultiplier : 1) + (stream ? streamPrice : 0);
+  // The displayed total and the cart line come from the same engine compute —
+  // what the visitor sees is exactly what the worker will recompute
+  const lineCfg: TrialConfig = { family: 'trial', method, runs, guaranteed, stream, priority };
+  const line = computeTrialLine(db, service.id, lineCfg);
+  const total = line
+    ? lineTotal(line)
+    : guaranteed
+      ? mountPrice + (stream ? streamPrice : 0)
+      : methodBase * runs * (priority ? priorityMultiplier : 1) + (stream ? streamPrice : 0);
 
   const addToCart = () => {
     if (!dc) {
@@ -106,10 +114,13 @@ export default function TrialPurchaseBox({ service, gameShort }: { service: Serv
       {
         ...service,
         id: `${service.id}::${method}|${dc}${guaranteed ? '|guaranteed' : ''}`,
-        price: guaranteed ? mountPrice : methodBase,
+        price: line?.price ?? (guaranteed ? mountPrice : methodBase),
         method: methodLabel,
-        flat: stream ? streamPrice : undefined,
-        ...(guaranteed ? { qtyLocked: true } : { multiplier: priority ? priorityMultiplier : undefined }),
+        flat: line?.flat ?? (stream ? streamPrice : undefined),
+        ...(guaranteed
+          ? { qtyLocked: true }
+          : { multiplier: line?.multiplier ?? (priority ? priorityMultiplier : undefined) }),
+        config: lineCfg,
       },
       gameShort,
       [

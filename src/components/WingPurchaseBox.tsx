@@ -9,6 +9,8 @@ import { useCurrency } from '@/context/CurrencyContext';
 import { usePricing } from '@/context/PricingContext';
 import { usePurchaseFloat } from '@/hooks/usePurchaseFloat';
 import type { Service } from '@/data/games';
+import { lineTotal } from '@/lib/pricing/engine/shared';
+import { computeWingLine, type WingConfig } from '@/lib/pricing/engine/wing';
 
 const DATA_CENTERS = [
   'Aether',
@@ -36,7 +38,6 @@ export default function WingPurchaseBox({ service, gameShort }: { service: Servi
   const { format } = useCurrency();
   const { db } = usePricing();
   const cfg = db.mounts?.wings?.[service.id];
-  const afkMultiplier = db.mounts?.afkMultiplier ?? 1.1;
   const priorityMultiplier = db.purchaseBox.priorityMultiplier;
 
   const [method, setMethod] = useState<(typeof METHODS)[number]['id']>('piloted');
@@ -50,9 +51,11 @@ export default function WingPurchaseBox({ service, gameShort }: { service: Servi
   );
 
   const streamPrice = 10;
-  // AFK price is explicit per wing (afkPrice), falling back to the multiplier
-  const base = method === 'afk' ? (cfg?.afkPrice ?? (cfg?.price ?? 0) * afkMultiplier) : (cfg?.price ?? 0);
-  const total = base * (priority ? priorityMultiplier : 1) + (stream ? streamPrice : 0);
+  // The displayed total and the cart line come from the same engine compute —
+  // what the visitor sees is exactly what the worker will recompute
+  const lineCfg: WingConfig = { family: 'wing', method, stream, priority };
+  const line = computeWingLine(db, service.id, lineCfg);
+  const total = line ? lineTotal(line) : 0;
 
   const addToCart = () => {
     if (!dc) {
@@ -64,9 +67,10 @@ export default function WingPurchaseBox({ service, gameShort }: { service: Servi
       {
         ...service,
         id: `${service.id}::${method}|${dc}`,
-        price: total,
+        price: line?.price ?? total,
         method: methodLabel,
         qtyLocked: true,
+        config: lineCfg,
       },
       gameShort,
       [

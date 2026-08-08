@@ -17,6 +17,8 @@
  * is required.
  */
 
+import { mergeCategoryFiles } from '../lib/pricing/engine/shared.ts';
+
 export interface PricingOption {
   label: string;
   price: number;
@@ -520,8 +522,10 @@ export const DEFAULT_PRICING: PricingDb = {
   servicePrices: {},
 };
 
-/** Per-category database files (without .json) loaded and merged at startup. */
-const CATEGORY_FILES = [
+/** Per-category database files (without .json) loaded and merged at startup.
+    Exported: the orders worker fetches the same public files for its
+    authoritative recompute. */
+export const CATEGORY_FILES = [
   'ffxiv-UltimateRaids',
   'ffxiv-Gil',
   'ffxiv-SavageRaids',
@@ -539,114 +543,28 @@ const CATEGORY_FILES = [
 ];
 
 /** Fetch the pricing database (global + category files), falling back to the
-    bundled defaults. Broken or missing category files are skipped. */
+    bundled defaults. Broken or missing category files are skipped. The merge
+    itself lives in the pricing engine so the orders worker merges the same
+    files byte-for-byte identically. */
 export async function loadPricing(): Promise<PricingDb> {
   try {
     const base = import.meta.env.BASE_URL;
     const res = await fetch(`${base}db/pricing.json`, { cache: 'no-store' });
     if (!res.ok) throw new Error(String(res.status));
     const db = (await res.json()) as PricingDb;
-
-    const methodPrices: NonNullable<PricingDb['methodPrices']> = {};
-    const addonPrices: NonNullable<PricingDb['addonPrices']> = {};
-    const serviceAddons: NonNullable<PricingDb['serviceAddons']> = {};
-    let purchaseBox = DEFAULT_PRICING.purchaseBox;
-    let gil: PricingDb['gil'];
-    let savageSeries: PricingDb['savageSeries'];
-    let leveling: PricingDb['leveling'];
-    let crafterLeveling: PricingDb['crafterLeveling'];
-    let msqBoost: PricingDb['msqBoost'];
-    let bluLeveling: PricingDb['bluLeveling'];
-    let pvpSeries: PricingDb['pvpSeries'];
-    let ccRank: PricingDb['ccRank'];
-    let wolfMarks: PricingDb['wolfMarks'];
-    let mounts: PricingDb['mounts'];
-    let trials: PricingDb['trials'];
-    let trialBundles: PricingDb['trialBundles'];
-    let deepDungeons: PricingDb['deepDungeons'];
-    let criterion: PricingDb['criterion'];
-    let relics: PricingDb['relics'];
-    let fieldLeveling: PricingDb['fieldLeveling'];
-    let reputation: PricingDb['reputation'];
-    let unlockAddon: PricingDb['unlockAddon'];
-    let catalog: PricingDb['catalog'];
-    await Promise.all(
+    const cats = await Promise.all(
       CATEGORY_FILES.map(async (file) => {
         try {
           const r = await fetch(`${base}db/${file}.json`, { cache: 'no-store' });
-          if (!r.ok) return;
-          const cat = (await r.json()) as Pick<
-            PricingDb,
-            'methodPrices' | 'addonPrices' | 'serviceAddons' | 'purchaseBox' | 'gil' | 'savageSeries' | 'leveling' | 'crafterLeveling' | 'msqBoost' | 'bluLeveling' | 'pvpSeries' | 'ccRank' | 'wolfMarks' | 'mounts' | 'trials' | 'trialBundles' | 'deepDungeons' | 'criterion' | 'relics' | 'fieldLeveling' | 'reputation' | 'unlockAddon' | 'catalog'
-          >;
-          Object.assign(methodPrices, cat.methodPrices);
-          Object.assign(addonPrices, cat.addonPrices);
-          Object.assign(serviceAddons, cat.serviceAddons);
-          if (cat.purchaseBox) purchaseBox = { ...purchaseBox, ...cat.purchaseBox };
-          if (cat.gil) gil = cat.gil;
-          if (cat.savageSeries) savageSeries = { ...savageSeries, ...cat.savageSeries };
-          if (cat.leveling) leveling = cat.leveling;
-          if (cat.crafterLeveling) crafterLeveling = cat.crafterLeveling;
-          if (cat.msqBoost) msqBoost = cat.msqBoost;
-          if (cat.bluLeveling) bluLeveling = cat.bluLeveling;
-          if (cat.pvpSeries) pvpSeries = cat.pvpSeries;
-          if (cat.ccRank) ccRank = cat.ccRank;
-          if (cat.wolfMarks) wolfMarks = cat.wolfMarks;
-          if (cat.mounts) {
-            // Group-aware merge: several category files can contribute entries
-            // to the same group (e.g. savageMounts) — a shallow spread would
-            // let a later file replace the whole group
-            mounts = {
-              ...mounts,
-              ...cat.mounts,
-              wings: { ...mounts?.wings, ...cat.mounts.wings },
-              series: { ...mounts?.series, ...cat.mounts.series },
-              savageMounts: { ...mounts?.savageMounts, ...cat.mounts.savageMounts },
-            };
-          }
-          if (cat.trials) trials = { ...trials, ...cat.trials };
-          if (cat.trialBundles) trialBundles = { ...trialBundles, ...cat.trialBundles };
-          if (cat.deepDungeons) deepDungeons = { ...deepDungeons, ...cat.deepDungeons };
-          if (cat.criterion) criterion = { ...criterion, ...cat.criterion };
-          if (cat.relics) relics = { ...relics, ...cat.relics };
-          if (cat.fieldLeveling) fieldLeveling = { ...fieldLeveling, ...cat.fieldLeveling };
-          if (cat.reputation) reputation = { ...reputation, ...cat.reputation };
-          if (cat.unlockAddon) unlockAddon = cat.unlockAddon;
-          if (cat.catalog) catalog = cat.catalog;
+          if (!r.ok) return null;
+          return (await r.json()) as Partial<PricingDb>;
         } catch {
           /* broken category file — skip it */
+          return null;
         }
       }),
     );
-
-    return {
-      currency: { ...DEFAULT_PRICING.currency, ...db.currency },
-      popularPicks: catalog?.popularPicks ?? db.popularPicks,
-      catalog,
-      unlockAddon,
-      purchaseBox,
-      methodPrices,
-      addonPrices,
-      serviceAddons,
-      gil,
-      savageSeries,
-      leveling,
-      crafterLeveling,
-      msqBoost,
-      bluLeveling,
-      pvpSeries,
-      ccRank,
-      wolfMarks,
-      mounts,
-      trials,
-      trialBundles,
-      deepDungeons,
-      criterion,
-      relics,
-      fieldLeveling,
-      reputation,
-      servicePrices: db.servicePrices ?? {},
-    };
+    return mergeCategoryFiles(db, cats);
   } catch {
     return DEFAULT_PRICING;
   }

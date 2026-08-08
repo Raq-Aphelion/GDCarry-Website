@@ -8,6 +8,8 @@ import { useCart } from '@/context/CartContext';
 import { useCurrency } from '@/context/CurrencyContext';
 import { usePricing } from '@/context/PricingContext';
 import { usePurchaseFloat } from '@/hooks/usePurchaseFloat';
+import { lineTotal } from '@/lib/pricing/engine/shared';
+import { computeMsqLine, type MsqConfig } from '@/lib/pricing/engine/msq';
 import type { Service } from '@/data/games';
 
 const DATA_CENTERS = [
@@ -84,9 +86,16 @@ export default function MsqPurchaseBox({ service, gameShort }: { service: Servic
   const aetherPrice = aether ? aetherCount * (cfg?.aetherCurrents?.pricePerExpansion ?? 0) : 0;
   // Priority multiplies expansions + aether only; gear stays flat
   const expansionsTotal = expansions.reduce((s, i) => s + (EXPANSIONS[i]?.price ?? 0), 0);
-  const total =
-    (expansionsTotal + aetherPrice) * (priority ? priorityMultiplier : 1) +
-    gearPrice;
+  // The displayed total and the cart line come from the same engine compute —
+  // what the visitor sees is exactly what the worker will recompute
+  const lineCfg: MsqConfig = { family: 'msq', expansions, aether, gearIdx, priority };
+  const line = computeMsqLine(db, service.id, lineCfg);
+  // Fallback: the pre-extraction inline formula — only reachable when the
+  // msqBoost db block is missing
+  const total = line
+    ? lineTotal(line)
+    : (expansionsTotal + aetherPrice) * (priority ? priorityMultiplier : 1) +
+      gearPrice;
 
   const addToCart = () => {
     if (!hasExpansions) return;
@@ -109,9 +118,13 @@ export default function MsqPurchaseBox({ service, gameShort }: { service: Servic
       {
         ...service,
         id: `${service.id}::${job}|${dc}|${sorted.join(',')}`,
-        price: total,
+        price: line?.price ?? total,
+        flat: line?.flat,
+        multiplier: line?.multiplier,
+        logsPercent: line?.logsPercent,
+        qtyLocked: line?.qtyLocked ?? true,
         method: 'Piloted',
-        qtyLocked: true,
+        config: lineCfg,
       },
       gameShort,
       [

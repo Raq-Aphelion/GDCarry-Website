@@ -1,0 +1,29 @@
+# Orders proxy worker — deploys orders-proxy.js and bundles the pricing
+# engine it imports from ../src (wrangler builds with esbuild; no separate
+# build step needed).
+#
+# Deploy (from the repo root):
+#   npx wrangler deploy --config worker/wrangler.toml
+#
+# One-time setup:
+#   npx wrangler kv namespace create RATE_LIMIT --config worker/wrangler.toml
+#     → paste the returned id into [[kv_namespaces]] below
+#   npx wrangler secret put ORDER_KEY --config worker/wrangler.toml
+#   npx wrangler secret put DISCORD_WEBHOOK_URL --config worker/wrangler.toml
+#
+# The name matches the existing dashboard-created worker, so the first
+# wrangler deploy adopts it (the cluwners.workers.dev hostname is disabled
+# below — the zone route replaces it).
+
+name = "orders-proxy"
+main = "orders-proxy.js"
+compatibility_date = "2025-01-01"
+
+# Serve only via the zone route: the site-wide flood rate-limit rule covers
+# it, and the unprotected *.workers.dev hostname goes away.
+workers_dev = false
+routes = [{ pattern = "gdcarry.com/api/order", zone_name = "gdcarry.com" }]
+
+[[kv_namespaces]]
+binding = "RATE_LIMIT"
+id = "738bd81f74424da5804a50b114fa3848"

@@ -9,6 +9,8 @@ import { useCurrency } from '@/context/CurrencyContext';
 import { usePricing } from '@/context/PricingContext';
 import { usePurchaseFloat } from '@/hooks/usePurchaseFloat';
 import type { Service } from '@/data/games';
+import { lineTotal } from '@/lib/pricing/engine/shared';
+import { computeSavageMountLine, type SavageMountConfig } from '@/lib/pricing/engine/savagemount';
 
 const DATA_CENTERS = [
   'Aether',
@@ -37,7 +39,6 @@ export default function SavageMountPurchaseBox({ service, gameShort }: { service
   const { format } = useCurrency();
   const { db } = usePricing();
   const cfg = db.mounts?.savageMounts?.[service.id];
-  const afkMultiplier = db.mounts?.afkMultiplier ?? 1.1;
   const priorityMultiplier = db.purchaseBox.priorityMultiplier;
 
   const [method, setMethod] = useState<(typeof METHODS)[number]['id']>(
@@ -54,11 +55,11 @@ export default function SavageMountPurchaseBox({ service, gameShort }: { service
   );
 
   const streamPrice = 10;
-  // AFK uses the duty's AFK fight price when set, else the global multiplier
-  const methodBase =
-    method === 'afk' ? (cfg?.afkPrice ?? (cfg?.price ?? 0) * afkMultiplier) : (cfg?.price ?? 0);
-  const addonsTotal = checked.reduce((s, id) => s + (cfg?.addons?.find((a) => a.id === id)?.price ?? 0), 0);
-  const total = methodBase * (priority ? priorityMultiplier : 1) + addonsTotal + (stream ? streamPrice : 0);
+  // The displayed total and the cart line come from the same engine compute —
+  // what the visitor sees is exactly what the worker will recompute
+  const lineCfg: SavageMountConfig = { family: 'savagemount', method, addons: checked, stream, priority };
+  const line = computeSavageMountLine(db, service.id, lineCfg);
+  const total = line ? lineTotal(line) : 0;
   const toggle = (id: string) =>
     setChecked((prev) => (prev.includes(id) ? prev.filter((c) => c !== id) : [...prev, id]));
 
@@ -75,9 +76,13 @@ export default function SavageMountPurchaseBox({ service, gameShort }: { service
       {
         ...service,
         id: `${service.id}::${method}|${dc}|${[...checked].sort().join(',')}`,
-        price: total,
+        price: line?.price ?? total, // full total (one-off line)
+        flat: line?.flat,
+        multiplier: line?.multiplier,
+        logsPercent: line?.logsPercent,
         method: methodLabel,
         qtyLocked: true,
+        config: lineCfg,
       },
       gameShort,
       [

@@ -12,6 +12,8 @@ import { usePricing } from '@/context/PricingContext';
 import { usePurchaseFloat } from '@/hooks/usePurchaseFloat';
 import type { Service } from '@/data/games';
 import type { PricingAddon } from '@/data/pricing';
+import { lineTotal } from '@/lib/pricing/engine/shared';
+import { computeLevelingLine, type LevelingConfig } from '@/lib/pricing/engine/leveling';
 
 const DATA_CENTERS = [
   'Aether',
@@ -314,12 +316,31 @@ export default function LevelingPurchaseBox({
   const gearOptions = cfg.gearOptions ? db.purchaseBox.gearOptions : [];
   const gearPrice = gearOptions[gearIdx]?.price ?? 0;
   // Priority multiplies the level prices only; add-ons/groups/gear stay flat
-  const total =
+  const fallbackTotal =
     (levelPrice + phantomPrice + allPrice) * (priority ? priorityMultiplier : 1) +
     addonPrice +
     extrasPrice +
     groupsPrice +
     gearPrice;
+  // The displayed total and the cart line come from the same engine compute —
+  // what the visitor sees is exactly what the worker will recompute
+  const lineCfg: LevelingConfig = {
+    family: 'leveling',
+    start,
+    end,
+    job,
+    gearIdx,
+    addon: addonChecked,
+    addons: addonsChecked,
+    groupOptions: groupsChecked,
+    priority,
+    phantom: phantomOn,
+    all: allOn,
+    pStart,
+    pEnd,
+  };
+  const line = computeLevelingLine(db, service.id, lineCfg);
+  const total = line ? lineTotal(line) : fallbackTotal;
 
   const addToCart = () => {
     let ok = true;
@@ -346,9 +367,10 @@ export default function LevelingPurchaseBox({
       {
         ...service,
         id: `${service.id}::${cfg.showJob || (cfg.jobs?.length && (!isPhantomSplit || phantomOn)) ? job : 'x'}|${dc}|${start}-${end}${isPhantomSplit && phantomOn ? `|p${pStart}-${pEnd}` : ''}${isPhantomSplit && allOn ? '|all' : ''}`,
-        price: total,
+        price: line?.price ?? total,
         method: 'Piloted',
-        qtyLocked: true,
+        qtyLocked: line?.qtyLocked ?? true,
+        config: lineCfg,
       },
       gameShort,
       [

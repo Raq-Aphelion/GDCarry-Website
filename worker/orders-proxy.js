@@ -7,6 +7,15 @@
    secret — never in the client bundle), and for live-chat orders injects the
    order into the visitor's LHC chat.
 
+   Prices: the worker imports the site's pricing engine
+   (src/lib/pricing/engine) and recomputes every configured line
+   authoritatively from its machine-readable config — tampered quotes are
+   flagged in the Discord embed. Lines without a config (old carts) fall back
+   to a catalog minimum-price check.
+
+   Deploy with wrangler (bundles the engine import): see worker/wrangler.toml
+     npx wrangler deploy --config worker/wrangler.toml
+
    Required bindings/secrets:
      ORDER_KEY            (secret) shared with the site's X-Order-Key header
      DISCORD_WEBHOOK_URL  (secret) Discord channel webhook
@@ -15,6 +24,14 @@
    Note: X-Order-Key is public by nature (it ships in the client bundle) — it
    is a soft filter only. Real abuse control = the rate limit + validation
    below; treat every field as attacker-controlled. */
+
+import { CATEGORY_FILES } from '../src/data/pricing.ts';
+import {
+  computeLine,
+  fromPrice,
+  lineTotal,
+  mergeCategoryFiles,
+} from '../src/lib/pricing/engine/index.ts';
 
 const ALLOWED_ORIGINS = [
   'https://gdcarry.com',
@@ -62,6 +79,87 @@ const bb = (v, max) => str(v, max).replace(/[[\]]/g, '');
 const safeImage = (v) => {
   const url = str(v, 200);
   return /^https:\/\/gdcarry\.com\/[\w\-./]+$/.test(url) ? url : '';
+};
+
+/* ------------------------------------------------------- price verification
+   Quoted prices are computed in the visitor's browser and can be tampered
+   with (cart lives in localStorage). Lines carrying a machine-readable
+   config are recomputed AUTHORITATIVELY via the site's own pricing engine
+   (imported above — same code, same catalog JSON) and the quote is compared
+   to the cent. Legacy lines without a config fall back to a catalog
+   minimum-price check. Advisory only: the check fails OPEN (unknown service,
+   catalog unreachable, old client payload → no flag), it never blocks. */
+
+const DB_BASE = 'https://gdcarry.com/db/';
+const CATALOG_TTL_MS = 5 * 60 * 1000;
+let catalogCache = { at: 0, db: null };
+
+const loadCatalog = async () => {
+  if (catalogCache.db && Date.now() - catalogCache.at < CATALOG_TTL_MS) return catalogCache.db;
+  const parts = await Promise.all(
+    ['pricing', ...CATEGORY_FILES].map(async (f) => {
+      try {
+        const r = await fetch(DB_BASE + f + '.json');
+        return r.ok ? await r.json() : null;
+      } catch {
+        return null;
+      }
+    }),
+  );
+  const db = mergeCategoryFiles(parts[0], parts.slice(1));
+  catalogCache = { at: Date.now(), db };
+  return db;
+};
+
+const num = (v) => (typeof v === 'number' && Number.isFinite(v) ? v : null);
+const eur = (n) => `€${n.toFixed(2)}`;
+
+/** Compares quoted prices against engine-recomputed (or, for legacy lines,
+    floor) values. Returns flag strings (empty = order looks fine). Skipped
+    entirely for old payloads with neither raw numbers nor configs, so a
+    stale site build never produces false flags. */
+const verifyPrices = async (o) => {
+  if (!o.items.some((it) => num(it.unitPriceEur) != null || (it.config && typeof it.config === 'object')))
+    return [];
+  let db;
+  try {
+    db = await loadCatalog();
+  } catch {
+    return []; // catalog unreachable — fail open
+  }
+  const flags = [];
+  let sum = 0;
+  for (const it of o.items) {
+    const unit = num(it.unitPriceEur);
+    const total = num(it.totalEur);
+    const qty = num(it.qty) ?? 1;
+    const label = str(it.name, 60) || str(it.id, 60) || 'item';
+    if (total != null) sum += total;
+    if (unit != null && total != null && total < unit * qty - 0.02)
+      flags.push(`${label}: total ${eur(total)} < unit ${eur(unit)} ×${qty}`);
+    if (it.config && typeof it.config === 'object' && typeof it.config.family === 'string') {
+      // Structured config → authoritative recompute. NOTE: qty comes from the
+      // cart line (runs/gil amount are editable in the cart drawer after the
+      // config was captured); the config supplies per-unit price parts.
+      const line = computeLine(db, str(it.id, 80), it.config);
+      if (!line) {
+        flags.push(`${label}: unrecognized pricing config — verify this line manually`);
+      } else if (total != null) {
+        const authoritative = lineTotal({ ...line, qty });
+        if (Math.abs(total - authoritative) > Math.max(0.02, authoritative * 0.005))
+          flags.push(`${label}: quoted ${eur(total)} but catalog computes ${eur(authoritative)} for these options`);
+      }
+      continue;
+    }
+    // Legacy payload (no config): minimum-price floor check only
+    const floor = fromPrice(db, str(it.id, 80));
+    if (floor != null && unit != null && unit < floor * 0.98)
+      flags.push(`${label}: quoted ${eur(unit)} below catalog minimum ${eur(floor)}`);
+  }
+  const orderTotal = num(o.totalEur);
+  if (orderTotal != null && orderTotal < sum - 0.02)
+    flags.push(`Order total ${eur(orderTotal)} < sum of items ${eur(sum)}`);
+  return flags;
 };
 
 /** BBCode order message — the chat print layout. Matches the site's cart
@@ -126,10 +224,12 @@ const injectIntoChat = async (o) => {
 };
 
 /** Discord embed. Everything lives in embed fields (never `content`), so
-    @everyone/@here in user input cannot ping. */
-const buildEmbed = (o) => ({
+    @everyone/@here in user input cannot ping. Price-check flags turn the
+    embed amber and get their own field — the operator must verify the quote
+    against the catalog before taking the order. */
+const buildEmbed = (o, flags = []) => ({
   title: `New order placed — ${o.orderId}`,
-  color: 0x22d3ee,
+  color: flags.length ? 0xf59e0b : 0x22d3ee,
   timestamp: new Date().toISOString(),
   fields: [
     { name: 'Contact via', value: str(o.contactVia, 20), inline: true },
@@ -150,6 +250,9 @@ const buildEmbed = (o) => ({
           .slice(0, 1024) || '—',
       inline: false,
     },
+    ...(flags.length
+      ? [{ name: '⚠️ PRICE CHECK — verify before quoting', value: flags.join('\n').slice(0, 1024), inline: false }]
+      : []),
   ],
 });
 
@@ -184,11 +287,14 @@ export default {
     o.chatHash = hex(o.chatHash, 64);
     o.chatId = Number.isInteger(o.chatId) ? o.chatId : 0;
 
+    // Verify quoted prices against catalog floors — flags go into the embed
+    const flags = await verifyPrices(o);
+
     // Canonical record — logged for every order, both channels
     const discord = await fetch(env.DISCORD_WEBHOOK_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username: 'Grand Dice Orders', embeds: [buildEmbed(o)] }),
+      body: JSON.stringify({ username: 'Grand Dice Orders', embeds: [buildEmbed(o, flags)] }),
     });
 
     let injected = false, reason;
