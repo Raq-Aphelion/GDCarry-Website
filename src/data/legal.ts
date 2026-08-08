@@ -253,6 +253,10 @@ export const legalDocs: LegalDoc[] = [
               'Cookies, tracking pixels, and analytics data',
             ],
           },
+          {
+            type: 'p',
+            text: 'On your first visit we request your approximate country from ipapi.co (which receives your IP address for that one lookup) to preselect your currency. No other data is sent, and the result is stored only in your browser.',
+          },
         ],
       },
       {
