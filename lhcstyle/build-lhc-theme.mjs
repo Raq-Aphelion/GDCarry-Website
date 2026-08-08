@@ -183,13 +183,20 @@ body { background-color: #0f0f11 !important; }
 }
 
 /* Intro card gets the same side inset as the form columns (12px col padding),
-   so the card is exactly as wide as the text field and the button */
+   so the card is exactly as wide as the text field and the button. It also
+   takes the full free height between the header and the form and CENTERS its
+   content vertically in it (safe center: falls back to top-anchored scrolling
+   if the intro ever overflows) */
 .start-chat .custom-html-container,
 .offline-chat .custom-html-container {
-  flex: 0 1 auto !important;
+  flex: 1 1 auto !important;
   min-height: 0 !important;
   overflow-y: auto !important;
   padding: 0 12px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  justify-content: safe center !important;
 }
 /* The form no longer grows — it bottom-packs with the intro card above it
    (container is justify-content:flex-end) and scrolls itself if the fields
@@ -762,8 +769,12 @@ body { background-color: #0f0f11 !important; }
   margin: 0 !important;
   field-sizing: content;
 }
-/* Placeholder — same formatting as the site's need-help card input */
-#CSChatMessage::placeholder {
+/* Placeholders — same formatting as the site's need-help card input:
+   conversation input AND the start/offline form's question field ("Enter
+   your message" lives on the latter) */
+#CSChatMessage::placeholder,
+.start-chat textarea.form-control::placeholder,
+.offline-chat textarea.form-control::placeholder {
   color: #64748b !important;
   font-size: 11px !important;
   font-weight: 600 !important;

@@ -146,18 +146,20 @@ if (failures > 0) {
 console.log('[prerender] all routes rendered');
 
 // Sitemap from the same route list — never drifts out of sync.
+// /checkout is excluded: it is disallowed in robots.txt and marked noindex,
+// so listing it would send crawlers a contradictory signal.
+const SITEMAP_ROUTES = ROUTES.filter((r) => r !== '/checkout');
 const priority = (route) =>
   route === '/' ? '1.0'
     : route === '/boosting/ffxiv' ? '0.9'
     : route.startsWith('/boosting/ffxiv/') ? '0.8'
     : route.startsWith('/boosting/') ? '0.7'
     : route.startsWith('/guides') || route === '/faq' ? '0.7'
-    : route === '/checkout' ? '0.1'
     : '0.3';
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${ROUTES.map((r) => `  <url>\n    <loc>https://gdcarry.com${r}</loc>\n    <priority>${priority(r)}</priority>\n  </url>`).join('\n')}
+${SITEMAP_ROUTES.map((r) => `  <url>\n    <loc>https://gdcarry.com${r}</loc>\n    <priority>${priority(r)}</priority>\n  </url>`).join('\n')}
 </urlset>
 `;
 fs.writeFileSync(path.join(DIST, 'sitemap.xml'), sitemap);
-console.log(`[prerender] sitemap.xml written (${ROUTES.length} routes)`);
+console.log(`[prerender] sitemap.xml written (${SITEMAP_ROUTES.length} routes)`);

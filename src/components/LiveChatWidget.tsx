@@ -24,6 +24,9 @@ export default function LiveChatWidget() {
       domain: 'gdcarry.com',
       leaveamessage: true,
       check_messages: false,
+      // Chat input placeholder (the widget's own default is "Type your
+      // message here...") — matches the need-help card's field text
+      react_attr: [{ k: ['chat_ui', 'placeholder_message'], v: 'Write a message...' }],
       // Default operator avatar beside operator messages (the theme's
       // operator_image covers the classic server-rendered paths)
       profile_pic: 'https://gdcarry.com/images/gd_favicon.png',

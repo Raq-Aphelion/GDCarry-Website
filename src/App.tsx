@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { Suspense, lazy, useEffect } from 'react';
 import { Navigate, Route, Routes, useLocation } from 'react-router';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -8,14 +8,19 @@ import LiveChatWidget from '@/components/LiveChatWidget';
 import Scrollbar from '@/components/Scrollbar';
 import SmoothScroll from '@/components/SmoothScroll';
 import Home from '@/pages/Home';
-import CheckoutPage from '@/pages/CheckoutPage';
-import GamePage from '@/pages/GamePage';
-import ServicePage from '@/pages/ServicePage';
-import LegalPage from '@/pages/LegalPage';
-import FaqPage from '@/pages/FaqPage';
-import AccountSafetyPage from '@/pages/AccountSafetyPage';
-import GuidesPage from '@/pages/GuidesPage';
-import WorkWithUsPage from '@/pages/WorkWithUsPage';
+
+// Route-level code splitting: every page except Home loads as its own chunk,
+// so first paint only downloads the landing page. Vite re-splits automatically
+// on every build — no per-build step needed. The prerender script waits 4s
+// after domcontentloaded, so lazy chunks are fully loaded in snapshots.
+const CheckoutPage = lazy(() => import('@/pages/CheckoutPage'));
+const GamePage = lazy(() => import('@/pages/GamePage'));
+const ServicePage = lazy(() => import('@/pages/ServicePage'));
+const LegalPage = lazy(() => import('@/pages/LegalPage'));
+const FaqPage = lazy(() => import('@/pages/FaqPage'));
+const AccountSafetyPage = lazy(() => import('@/pages/AccountSafetyPage'));
+const GuidesPage = lazy(() => import('@/pages/GuidesPage'));
+const WorkWithUsPage = lazy(() => import('@/pages/WorkWithUsPage'));
 import { ToastProvider } from '@/context/ToastContext';
 import { lenisRef } from '@/lib/lenis';
 import { PricingProvider } from '@/context/PricingContext';
@@ -57,7 +62,10 @@ export default function App() {
                   min-h-full keeps the footer pinned to the bottom on short pages. */}
               <div className="flex min-h-full flex-col">
                 <main className="flex-1">
-                  <Routes>
+                  {/* fallback=null keeps navbar/footer visible while a page
+                      chunk loads; the chunk fetch is fast on repeat visits. */}
+                  <Suspense fallback={null}>
+                    <Routes>
                     <Route path="/" element={<Home />} />
                     <Route path="/boosting/:gameId" element={<GamePage />} />
                     <Route path="/boosting/:gameId/:serviceId" element={<ServicePage />} />
@@ -70,6 +78,7 @@ export default function App() {
                     <Route path="/guides/:guideId" element={<GuidesPage />} />
                     <Route path="*" element={<Navigate to="/" replace />} />
                   </Routes>
+                  </Suspense>
                 </main>
                 <Footer />
               </div>
