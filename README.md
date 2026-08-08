@@ -46,9 +46,11 @@ lhcstyle/               LiveHelperChat theme builder + exported theme JSON
 
 There is no backend in this repo. The frontend talks to:
 
-- **Orders worker** (`orders-proxy.cluwners.workers.dev`) — receives checkout
-  submissions and relays them to the operator (Discord webhook + live chat).
-  Auth'd with a shared `X-Order-Key` header (see `src/pages/CheckoutPage.tsx`).
+- **Orders worker** (`gdcarry.com/api/order`, source in `worker/orders-proxy.js`) —
+  receives checkout submissions and relays them to the operator (Discord
+  webhook + live chat). Auth'd with a shared `X-Order-Key` header (see
+  `src/pages/CheckoutPage.tsx`); validation and rate limiting live in the
+  worker — treat the key as public, it ships in the client bundle.
 - **LiveHelperChat** at `chat.gdcarry.com` — the support/order chat widget
   (`src/components/LiveChatWidget.tsx`, theme in `lhcstyle/`).
 - **Google Apps Script** — the "Work with us" application form target.

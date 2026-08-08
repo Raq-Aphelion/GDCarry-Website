@@ -26,7 +26,7 @@ const TWO_COL_QUERY = '(min-width: 1024px)';
     ORDER_KEY secret here; while empty, order logging is skipped (the live
     chat flow still works). */
 const ORDER_LOG_URL = 'https://gdcarry.com/api/order';
-const ORDER_KEY = 'GUtdJw87nUC2gtX7ximpY6QRyFBcv0';
+const ORDER_KEY = 'bfa5dfd68a3f2b2c4916f7fadf54bd592d8692fb615a56a4ecf8a68c54c76490';
 
 /** Order reference linking the chat message to the Discord bot log — the
     operator can verify a quoted order against the logged record by ID.
