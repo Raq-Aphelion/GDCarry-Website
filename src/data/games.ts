@@ -1676,6 +1676,16 @@ export const games: Game[] = [
           },
         ],
       },
+      {
+        id: 'progression',
+        name: 'Progression',
+        services: [],
+      },
+      {
+        id: 'accounts',
+        name: 'Accounts',
+        services: [],
+      },
     ],
   },
   {

@@ -280,7 +280,7 @@ body { background-color: #0f0f11 !important; }
   flex: 0 0 auto !important;
   min-height: 42px !important;
   max-height: 76px !important;
-  padding: 9px 12px !important;
+  padding: 9px 14px !important;
   overflow-y: auto !important;
   resize: none !important;
   field-sizing: content;
@@ -770,11 +770,11 @@ body { background-color: #0f0f11 !important; }
   field-sizing: content;
 }
 /* Placeholders — same formatting as the site's need-help card input:
-   conversation input AND the start/offline form's question field ("Enter
-   your message" lives on the latter) */
+   conversation input AND every start/offline form field (Name, E-mail,
+   question) */
 #CSChatMessage::placeholder,
-.start-chat textarea.form-control::placeholder,
-.offline-chat textarea.form-control::placeholder {
+.start-chat .form-control::placeholder,
+.offline-chat .form-control::placeholder {
   color: #64748b !important;
   font-size: 11px !important;
   font-weight: 600 !important;
@@ -885,13 +885,16 @@ body { background-color: #0f0f11 !important; }
 }
 /* Required-field asterisk (wrapped by the header_html observer) — theme blue */
 .gdc-req { color: #60a5fa !important; }
+/* Fields match the need-help card's input box: 12px text, 14px side padding */
 .form-control,
 .form-select {
   background-color: #1b1b20 !important;
   border: 1px solid #34343e !important;
   color: #f1f5f9 !important;
-  font-size: 13px !important;
+  font-size: 12px !important;
   border-radius: 5px !important;
+  padding-left: 14px !important;
+  padding-right: 14px !important;
 }
 textarea.form-control {
   min-height: 40px !important;
@@ -912,9 +915,11 @@ textarea.form-control {
 .form-control.is-invalid { border-color: #dc2626 !important; }
 .offline-intro { color: #f1f5f9 !important; }
 
-/* Submit buttons — the site's purchase-cta look, full width */
-.start-chat .btn-secondary[type="submit"],
-.offline-chat .btn-secondary[type="submit"],
+/* Submit buttons — the site's purchase-cta look, full width. The offline
+   form's button isn't .btn-secondary (LHC renders it .btn-primary), so the
+   start/offline selectors match any submit in those views */
+.start-chat [type="submit"],
+.offline-chat [type="submit"],
 form .btn-secondary[type="submit"] {
   background: linear-gradient(90deg, #60a5fa, #2563eb) !important;
   border: none !important;
@@ -930,6 +935,8 @@ form .btn-secondary[type="submit"] {
     0 10px 30px -10px rgba(37, 99, 235, 0.45),
     inset 0 1px 0 rgba(255, 255, 255, 0.18);
 }
+.start-chat [type="submit"]:hover,
+.offline-chat [type="submit"]:hover,
 form .btn-secondary[type="submit"]:hover { filter: brightness(1.1); }
 .start-chat form .row:last-child .col-12,
 .offline-chat form .row:last-child .col-12 {
@@ -960,6 +967,26 @@ body:has(.online-chat) .lhc-custom-footer-below {
   border: 1px solid rgba(220, 38, 38, 0.4) !important;
   color: #fca5a5 !important;
   border-radius: 5px;
+}
+
+/* Form error alerts (start + offline): the alert renders outside the form
+   columns, so it spans wider than the fields — add the missing inset back
+   as margin (12px col padding when mounted next to the form, plus the
+   16px container padding when mounted above it), and quiet the text down
+   to label/field size */
+.start-chat .alert-danger,
+.offline-chat .alert-danger {
+  padding: 8px 12px !important;
+  font-size: 12px !important;
+  line-height: 1.4 !important;
+}
+.start-chat .container-fluid .alert-danger,
+.offline-chat .container-fluid .alert-danger {
+  margin: 0 12px 12px !important;
+}
+.start-chat #id-container-fluid > .alert-danger,
+.offline-chat #id-container-fluid > .alert-danger {
+  margin: 0 28px 12px !important;
 }
 
 /* Scrollbars — the site's style: thin navy pill, transparent track, and NO
@@ -1081,6 +1108,14 @@ const introCardBot = `<div style="margin:16px 0 0;padding:8px 16px;text-align:ce
   <div style="font-size:12px;color:#93c5fd;margin-top:2px;">Instant answers, 24/7</div>
 </div>`;
 
+// Offline intro — same structure as the online card, but the reply-time line
+// fits an unattended desk: the answer arrives by e-mail, not in chat
+const introCardOffline = `<div style="margin:16px 0 0;padding:8px 16px;text-align:center;">
+  <img src="${svgChat('93c5fd')}" alt="" style="width:28px;height:28px;display:inline-block;">
+  <p style="margin:10px 0 0;font-size:13px;line-height:1.5;color:#f1f5f9;">Tell us your personalized custom order</p>
+  <div style="font-size:12px;color:#93c5fd;margin-top:2px;">We reply by e-mail — usually within a few hours</div>
+</div>`;
+
 const headerIdentity = `<div style="display:flex;align-items:center;gap:10px;">
   <img src="https://gdcarry.com/images/gd_favicon.png" alt="" style="width:32px;height:32px;border-radius:8px;">
   <div style="line-height:1.3;">
@@ -1140,6 +1175,14 @@ new MutationObserver(function () {
       if (part) l.appendChild(document.createTextNode(part));
     });
   });
+  /* Doubled "your" in placeholders — LHC composes the question placeholder
+     as "Enter your " + the field's label, so a "Your question" label comes
+     out as "Enter your your question". Collapse it wherever it appears. */
+  document.querySelectorAll('.start-chat .form-control[placeholder], .offline-chat .form-control[placeholder]').forEach(function (el) {
+    var p = el.getAttribute('placeholder');
+    var fixed = p && p.replace(/\byour your\b/i, 'your');
+    if (fixed && fixed !== p) el.setAttribute('placeholder', fixed);
+  });
 }).observe(document.documentElement, { childList: true, subtree: true });
 
 /* Smooth scroll-to-bottom (capture phase, beats React's instant jump) */
@@ -1158,7 +1201,7 @@ document.addEventListener('click', function (e) {
    ::-webkit-scrollbar-button, so CSS alone can't remove their arrows).
    The chat input is NOT a host — it must stay scrollable with no bar at all */
 (function () {
-  var hosts = ['#messagesBlock', '#messages-scroll', '#messages', '.start-chat textarea.form-control'];
+  var hosts = ['#messagesBlock', '#messages-scroll', '#messages', '.start-chat textarea.form-control', '.offline-chat textarea.form-control'];
   function attach(host) {
     if (host.__gdcSb) return;
     host.__gdcSb = true;
@@ -1364,7 +1407,10 @@ const botConfiguration = {
   custom_html_header_body: headerIdentity,
   custom_html_footer: footerHtml,
   pre_chat_html: '',
-  pre_offline_chat_html: '',
+  // Offline form: LHC renders neither custom_html nor custom_html_widget
+  // there, so the intro card AND the headerHtml engine (label rename,
+  // asterisk wrapping, etc.) ride in here — same setup as the online form
+  pre_offline_chat_html: introCardOffline + headerHtml,
   after_chat_status: '',
   intro_message_html: introMessageHtml,
   header_html: headerHtml,

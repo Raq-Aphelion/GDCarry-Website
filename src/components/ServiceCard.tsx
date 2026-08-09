@@ -4,6 +4,7 @@ import { serviceLink, type Service } from '@/data/games';
 import { SERVICE_TAG_ICONS } from '@/data/serviceIcons';
 import { useCurrency } from '@/context/CurrencyContext';
 import { usePricing } from '@/context/PricingContext';
+import cardPlaceholder from '@/assets/images/service-cards/ffxiv/ffxiv-blank.webp';
 
 /**
  * Flat service block: the image fills the whole card as a background and
@@ -30,6 +31,7 @@ export default function ServiceCard({ service }: { service: Service }) {
           alt=""
           className="h-full w-full"
           imgClassName="object-top transition-transform duration-500 group-hover:scale-105"
+          placeholder={cardPlaceholder}
         />
       </div>
       <div className="absolute -inset-px bg-gradient-to-t from-navy-800 from-[33%] via-navy-800/70 via-[45%] to-transparent to-[60%]" />

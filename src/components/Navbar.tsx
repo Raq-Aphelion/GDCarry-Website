@@ -45,9 +45,12 @@ const CURRENCIES: { c: Currency; symbol: string; label: string; icon: LucideIcon
     the game art button already links to it. */
 const dropdownCats = (g: Game) => g.subcategories.filter((s) => s.id !== 'all');
 
+/** Max categories per dropdown column */
+const CATS_PER_COL = 6;
+
 /** Category column count in the games dropdown — set by the biggest game
     (FFXIV). Every game aligns to this grid, even with a single column. */
-const CAT_COLS = Math.max(...games.map((g) => Math.ceil(dropdownCats(g).length / 5)));
+const CAT_COLS = Math.max(...games.map((g) => Math.ceil(dropdownCats(g).length / CATS_PER_COL)));
 
 /** Search input + results dropdown. Rendered twice (desktop nav and mobile
     menu), so it's a real component: each instance needs its own dropdown
@@ -505,11 +508,11 @@ export default function Navbar() {
                   {games.map((g) => {
                     const expanded = desktopGameCat === g.id;
                     const onGame = location.pathname === `/boosting/${g.id}`;
-                    // Category columns: max 5 entries each, rail line between them
+                    // Category columns: max 6 entries each, rail line between them
                     const cats = dropdownCats(g);
                     const chunks = [];
-                    for (let i = 0; i < cats.length; i += 5) {
-                      chunks.push(cats.slice(i, i + 5));
+                    for (let i = 0; i < cats.length; i += CATS_PER_COL) {
+                      chunks.push(cats.slice(i, i + CATS_PER_COL));
                     }
                     return (
                     <li key={g.id}>
@@ -583,7 +586,7 @@ export default function Navbar() {
                           </span>
                         </button>
                       </div>
-                      {/* Category columns (max 5 each) — expands in place, pushing games below down;
+                      {/* Category columns (max 6 each) — expands in place, pushing games below down;
                           skipped entirely for games without live categories (nothing to show) */}
                       {chunks.length > 0 && (
                       <div
