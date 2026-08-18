@@ -139,11 +139,11 @@ function SearchBox({
           ) : (
             <>
               {/* Single content child (the ul): Lenis (useSmoothScroller)
-                  measures it to size the scroll range. data-lenis-prevent:
-                  inside the mobile menu this list is nested in the menu's own
-                  Lenis scroller — the outer instance must ignore its wheel
-                  events */}
-              <div ref={setListEl} data-lenis-prevent className="no-scrollbar max-h-80 overflow-y-auto">
+                  measures it to size the scroll range. No data-lenis-prevent:
+                  nested in the mobile menu's Lenis scroller, chaining works
+                  via lenisStopPropagation (see useSmoothScroller) — at the
+                  list's edges the menu scrolls on instead of freezing. */}
+              <div ref={setListEl} className="no-scrollbar max-h-80 overflow-y-auto">
               <ul className="py-1.5">
                 {(() => {
                   // Group results by game — label above each game's group
@@ -223,7 +223,8 @@ function MobileCategoryList({ game, expanded }: { game: Game; expanded: boolean 
   const [overflows, setOverflows] = useState(false);
   const location = useLocation();
   // Same smooth scrolling as the page — nested in the mobile menu's own Lenis
-  // scroller, hence data-lenis-prevent on the scroller below
+  // scroller (no data-lenis-prevent: chaining works via lenisStopPropagation,
+  // see useSmoothScroller)
   useSmoothScroller(listEl);
   // Current page markers — same as the desktop dropdown: line on the game row
   // (handled by the parent), colored font on the active category
@@ -252,10 +253,10 @@ function MobileCategoryList({ game, expanded }: { game: Game; expanded: boolean 
       <div className="overflow-hidden">
         <div className="relative my-1.5 ml-3 border-l border-navy-700/60">
           {/* Single content child (the ul): Lenis (useSmoothScroller) measures
-              it to size the scroll range */}
+              it to size the scroll range (no data-lenis-prevent — see
+              useSmoothScroller) */}
           <div
             ref={setListEl}
-            data-lenis-prevent
             className={`no-scrollbar max-h-[max(15rem,calc(100svh_-_28rem))] overflow-y-auto pl-3 ${overflows ? 'pr-3' : ''}`}
           >
           <ul className="space-y-0.5">

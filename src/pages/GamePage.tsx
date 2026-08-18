@@ -10,6 +10,7 @@ import PageMeta from '@/components/PageMeta';
 import ServiceCard from '@/components/ServiceCard';
 import { getGame, serviceCount, type Service } from '@/data/games';
 import { lenisRef } from '@/lib/lenis';
+import { useSmoothScroller } from '@/hooks/useSmoothScroller';
 import { usePricing } from '@/context/PricingContext';
 import { rankService } from '@/data/search';
 import ffxivBg from '@/assets/images/backgrounds/ffxiv-bg-1.webp';
@@ -40,8 +41,10 @@ export default function GamePage() {
   const [active, setActive] = useState<string>(
     () => validCat(catParam) ?? game?.subcategories[0]?.id ?? '',
   );
-  // Ref for the desktop category list, so the overlay scrollbar can mirror it
-  const [catListEl, setCatListEl] = useState<HTMLUListElement | null>(null);
+  // Ref for the desktop category list scroller: drives the overlay scrollbar
+  // mirror and the sidebar's own Lenis instance (same smooth scroll as the page)
+  const [catListEl, setCatListEl] = useState<HTMLDivElement | null>(null);
+  useSmoothScroller(catListEl);
   // True only while the category list actually overflows — drives the inset
   // that keeps the buttons clear of the overlay scrollbar pill
   const [catOverflows, setCatOverflows] = useState(false);
@@ -327,12 +330,16 @@ export default function GamePage() {
           <div className="sticky top-8 flex max-h-[calc(100vh-4rem)] flex-col">
             <p className="shrink-0 px-3 text-xs font-bold uppercase tracking-[0.2em] text-slate-500">Categories</p>
             <div className="relative mt-3 flex min-h-0 flex-col">
-              {/* pr-3 (only while overflowing) keeps the buttons/counts clear of the overlay scrollbar pill */}
-              <ul
+              {/* pr-3 (only while overflowing) keeps the buttons/counts clear of the overlay scrollbar pill.
+                  Single content child (the ul): Lenis (useSmoothScroller) measures it to size the scroll
+                  range. No data-lenis-prevent: with its own Lenis, nesting in the page scroller works via
+                  lenisStopPropagation (see useSmoothScroller) — at the list's edges the page smooth-scrolls
+                  on instead of freezing. */}
+              <div
                 ref={setCatListEl}
-                data-lenis-prevent
-                className={`no-scrollbar min-h-0 flex-1 divide-y divide-navy-700/50 overflow-y-auto ${catOverflows ? 'pr-3' : ''}`}
+                className={`no-scrollbar min-h-0 flex-1 overflow-y-auto ${catOverflows ? 'pr-3' : ''}`}
               >
+              <ul className="divide-y divide-navy-700/50">
                 {game.subcategories.map((sub) => {
                   const isActive = active === sub.id;
                   return (
@@ -355,6 +362,7 @@ export default function GamePage() {
                   );
                 })}
               </ul>
+              </div>
               {/* Same overlay scrollbar as the page/cart — mounted only while the list overflows */}
               {catOverflows && (
                 <OverlayScrollbar

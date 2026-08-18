@@ -590,10 +590,12 @@ export default function CheckoutPage() {
               </h2>
               <div className="relative mt-5 flex min-h-0 flex-1 flex-col">
                 {/* Single content child (the ul): Lenis (useSmoothScroller)
-                    measures it to size the scroll range */}
+                    measures it to size the scroll range. No data-lenis-prevent:
+                    nesting in the page scroller works via lenisStopPropagation
+                    (see useSmoothScroller) — at the list's edges the page
+                    smooth-scrolls on instead of freezing. */}
                 <div
                   ref={setOrderListEl}
-                  data-lenis-prevent
                   className={`no-scrollbar min-h-0 flex-1 overflow-y-auto ${orderOverflows ? 'pr-4' : ''}`}
                 >
                 <ul className="divide-y divide-navy-700/50">

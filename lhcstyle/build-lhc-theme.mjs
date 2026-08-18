@@ -93,7 +93,7 @@ const customContainerCss =
   'border: none !important; border-radius: 12px !important; overflow: hidden !important; ' +
   'box-shadow: 0 0 0 1px rgba(59,130,246,.22), 0 24px 60px -24px rgba(59,130,246,.30), 0 25px 50px -12px rgba(0,0,0,.55) !important;';
 
-const customWidgetCss = `/* ===== GD Carry dark theme — widget interior v17 ===== */
+const customWidgetCss = `/* ===== GD Carry dark theme — widget interior v21 ===== */
 
 :root { --lhc-message-padding: 7px 10px; }
 
@@ -264,13 +264,13 @@ body { background-color: #0f0f11 !important; }
   min-height: 0 !important;
 }
 /* The question group reserves the composer's full 3-row height up front
-   (label ~24px + 76px composer) and bottom-anchors its content — the
+   (label ~24px + 78px composer) and bottom-anchors its content — the
    textarea grows into empty reserved space, so the total form height never
    changes and the Start chat button never moves */
 .start-chat .form-group:has(textarea),
 .offline-chat .form-group:has(textarea) {
   flex: 0 0 auto !important;
-  height: 100px !important;
+  height: 102px !important;
   display: flex !important;
   flex-direction: column !important;
   justify-content: flex-end !important;
@@ -278,12 +278,6 @@ body { background-color: #0f0f11 !important; }
 }
 .start-chat .form-group textarea.form-control {
   flex: 0 0 auto !important;
-  min-height: 42px !important;
-  max-height: 76px !important;
-  padding: 9px 14px !important;
-  overflow-y: auto !important;
-  resize: none !important;
-  field-sizing: content;
 }
 .start-chat .form-group {
   margin-bottom: 6px !important;
@@ -401,11 +395,37 @@ body { background-color: #0f0f11 !important; }
   vertical-align: bottom !important;
 }
 
-/* Operator rows without the avatar (chain followers, or the first row after
-   the avatar was moved to the chain's last message) keep their bubble aligned
-   with the avatar row: 26px avatar + 22px gap */
-.message-row.message-admin:not(:has(.profile-msg-pic)) .msg-body {
-  margin-left: 48px !important;
+/* Operator avatar pinned to the LAST message of each chain — LHC shows it on
+   the FIRST row: its widget CSS force-shows .usr-tit on first/operator-changes
+   rows (display:block !important) and force-hides it on chain followers
+   (display:none + visibility:hidden + 5px clip). Flip it: hide every operator
+   .usr-tit (ID scope outranks LHC's !important show rules), then re-show and
+   un-clip it on rows not followed by another same-operator row (a row
+   followed by an .operator-changes row is also a chain end — the next run
+   belongs to a different operator). Every operator bubble keeps the fixed
+   34px lane, so nothing shifts when the avatar appears/disappears */
+#messagesBlock .message-row.message-admin .usr-tit {
+  display: none !important;
+}
+#messagesBlock .message-row.message-admin:not(:has(+ .message-row.message-admin:not(.operator-changes))) .usr-tit:has(.profile-msg-pic) {
+  display: block !important;
+  visibility: visible !important;
+  width: auto !important;
+  height: auto !important;
+  overflow: visible !important;
+  margin: 2px 5px 0 0 !important;
+  padding: 2px 0 !important;
+}
+
+/* Operator bubble lane — LHC pins every operator .msg-body with its own
+   default margin-left (~29px), ignoring the avatar's margins entirely, which
+   left the bubble 3px off the avatar. Take the lane over on the bubble
+   itself: 26px avatar + 8px gap = 34px. Scoped to .message-admin so the
+   right-side visitor bubbles (no icon) are untouched; chain followers carry
+   a hidden avatar inside .usr-tit, so a :not(:has(.profile-msg-pic)) guard
+   would never match — the rule must cover every operator row */
+.message-row.message-admin .msg-body {
+  margin-left: 34px !important;
 }
 
 /* No visitor avatar — the right lane belongs to the bubble alone */
@@ -579,14 +599,15 @@ body { background-color: #0f0f11 !important; }
   color: #60a5fa !important;
 }
 
-/* Timestamps — small and quiet; flush (2px) under the bubble, aligned to
-   their sender's side, and shown only on the LAST message of each sender's
-   run (before the other person replies), plus the final message */
+/* Timestamps — small and quiet; hugging their own bubble (no top gap), 2px
+   below, aligned to their sender's side, and shown only on the LAST message
+   of each sender's run (before the other person replies), plus the final
+   message */
 .msg-date {
   font-size: 10px !important;
   color: #64748b !important;
   font-style: normal !important;
-  margin: 2px 2px 0 !important;
+  margin: 0 2px 2px !important;
   padding: 0 !important;
   line-height: 1.3 !important;
 }
@@ -602,9 +623,11 @@ body { background-color: #0f0f11 !important; }
   text-align: left !important;
   align-self: flex-start !important;
 }
-/* Timestamps under avatar-less operator rows line up with the bubble */
-.message-row.message-admin:not(:has(.profile-msg-pic)) .msg-date {
-  margin-left: 50px !important;
+/* Operator timestamps line up with the bubble lane (34px + the 2px base
+   margin) — again on every operator row, since the hidden avatar inside
+   .usr-tit defeats a :not(:has(.profile-msg-pic)) guard */
+.message-row.message-admin .msg-date {
+  margin-left: 36px !important;
 }
 #messagesBlock .message-row .msg-date { display: none !important; }
 #messagesBlock .message-row.response:has(+ .message-row:not(.response)) .msg-date,
@@ -623,7 +646,7 @@ body { background-color: #0f0f11 !important; }
   position: static !important;
   left: auto !important;
   right: auto !important;
-  margin: 2px 2px 0 !important;
+  margin: 0 2px 2px !important;
   padding: 0 !important;
   background: transparent !important;
   border: none !important;
@@ -702,7 +725,9 @@ body { background-color: #0f0f11 !important; }
   width: auto !important;
 }
 
-/* Send area — dark divider, no cogwheel, centered row with side padding */
+/* Send area — dark divider, no cogwheel, centered row with side padding.
+   Extra top padding buys the last message's timestamp some air above the
+   chat field (padding the timestamp itself would grow every message gap) */
 .message-send-area,
 .message-send-area.border-top,
 .widget-body .border-top {
@@ -712,7 +737,12 @@ body { background-color: #0f0f11 !important; }
 .message-send-area {
   flex: 0 0 auto !important;
   align-items: center !important;
-  padding: 8px 12px !important;
+  padding: 12px 12px 8px !important;
+}
+/* #messages-scroll (.bottom-message) — 4px of scrollable air below the last
+   timestamp so it never sits flush against the send area */
+.bottom-message {
+  padding-bottom: 4px !important;
 }
 .message-send-area > .mx-auto {
   display: flex !important;
@@ -896,10 +926,16 @@ body { background-color: #0f0f11 !important; }
   padding-left: 14px !important;
   padding-right: 14px !important;
 }
+/* Composer textareas (online + offline start forms) — 12px vertical padding
+   centers the single line exactly in the 42px box (12 + 18px line + 12); as
+   lines are added field-sizing grows the box and the uniform padding reads as
+   a normal inset, so multiline text never keeps a static top offset. 3 lines
+   (54px) + padding = 78px max, then it scrolls internally */
 textarea.form-control {
-  min-height: 40px !important;
+  min-height: 42px !important;
   height: auto !important;
-  max-height: 76px !important;
+  max-height: 78px !important;
+  padding: 12px 14px !important;
   overflow-y: auto !important;
   resize: none !important;
   field-sizing: content;
@@ -1320,32 +1356,13 @@ document.addEventListener('click', function (e) {
 
 /* Live fixes — one observer (+ a slow interval safety net for anything the
    observer misses):
-   1. Operator avatar pinned to the LAST message of each operator chain (LHC
-      renders it on the first). Rows left without the avatar stay aligned via
-      the .message-admin:not(:has(.profile-msg-pic)) indent in the CSS.
-   2. Timestamps trimmed to no year, no seconds, whatever LHC emits.
-   3. Operator strip: the React widget can render a bare centered avatar with
+   1. Timestamps trimmed to no year, no seconds, whatever LHC emits.
+   2. Operator strip: the React widget can render a bare centered avatar with
       no name — inject the operator's name (first operator nick in the
-      conversation, else 'Grand Dice'). */
+      conversation, else 'Grand Dice').
+   (The operator avatar is pinned to the last chain message purely in CSS —
+   it must survive React re-renders, which wipe DOM moves.) */
 (function () {
-  var moving = false;
-  function fixAvatars() {
-    if (moving) return;
-    document.querySelectorAll('#messagesBlock .message-row.message-admin').forEach(function (row) {
-      var pic = row.querySelector('.profile-msg-pic');
-      if (!pic) return;
-      var last = row;
-      while (last.nextElementSibling && last.nextElementSibling.matches('.message-row.message-admin')) {
-        last = last.nextElementSibling;
-      }
-      if (last === row) return;
-      var host = pic.closest('.chat-operators') || pic;
-      var anchor = last.querySelector('.msg-body');
-      moving = true;
-      last.insertBefore(host, anchor || last.firstChild);
-      moving = false;
-    });
-  }
   function fixTimestamps() {
     // Trim year/seconds, then collapse runs of identical timestamps: only
     // the first message of a same-minute run keeps its stamp (inline
@@ -1375,7 +1392,7 @@ document.addEventListener('click', function (e) {
     span.textContent = name;
     strip.appendChild(span);
   }
-  function fix() { fixAvatars(); fixTimestamps(); fixStrip(); }
+  function fix() { fixTimestamps(); fixStrip(); }
   new MutationObserver(fix).observe(document.documentElement, { childList: true, subtree: true });
   setInterval(fix, 1500);
   fix();
