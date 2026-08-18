@@ -7,6 +7,7 @@ import NeedHelpCard from '@/components/NeedHelpCard';
 import LiveChatWidget from '@/components/LiveChatWidget';
 import Scrollbar from '@/components/Scrollbar';
 import SmoothScroll from '@/components/SmoothScroll';
+import TruncationTooltip from '@/components/TruncationTooltip';
 import Home from '@/pages/Home';
 
 // Route-level code splitting: every page except Home loads as its own chunk,
@@ -87,6 +88,7 @@ export default function App() {
             <NeedHelpCard />
             <Scrollbar />
             <SmoothScroll />
+            <TruncationTooltip />
           </div>
           </CartProvider>
         </CurrencyProvider>
