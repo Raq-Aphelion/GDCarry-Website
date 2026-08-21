@@ -1677,11 +1677,6 @@ export const games: Game[] = [
         ],
       },
       {
-        id: 'progression',
-        name: 'Progression',
-        services: [],
-      },
-      {
         id: 'accounts',
         name: 'Accounts',
         services: [],
@@ -1835,3 +1830,54 @@ export const serviceLink = (serviceId: string): string => {
   if (SERVICE_PAGES[serviceId]) return `/boosting/${hit.game.id}/${serviceId}`;
   return `/boosting/${hit.game.id}?cat=${hit.subId}`;
 };
+
+/** The first real category a service belongs to (the search index skips the
+    synthetic 'all' bucket, so this is never 'all'). */
+export const serviceCategory = (serviceId: string): ServiceSearchResult | undefined =>
+  allServices.find((s) => s.service.id === serviceId);
+
+/**
+ * Static "Most Popular" order for the All services grid — curated to match
+ * typical boosting-site demand (currency and progression skips first, then
+ * current raid content, ultimates, current extremes/mounts, deep dungeons,
+ * relics, field content and PvP). Unlisted services trail in catalog order.
+ */
+export const POPULAR_ORDER: string[] = [
+  'ffxiv-gil-pack',
+  'ffxiv-msq-skip',
+  'ffxiv-leveling-boost',
+  'ffxiv-crafter-gatherer-leveling',
+  'ffxiv-arcadion-savage',
+  'ffxiv-pandaemonium-savage',
+  'ffxiv-uwu',
+  'ffxiv-fru',
+  'ffxiv-top',
+  'ffxiv-dsr',
+  'ffxiv-tea',
+  'ffxiv-ucob',
+  'ffxiv-dmu',
+  'ffxiv-ultimate-bundle',
+  'ffxiv-dawntrail-trials-bundle',
+  'ffxiv-the-unmaking',
+  'ffxiv-hell-on-rails',
+  'ffxiv-wings-of-mist',
+  'ffxiv-wings-of-legacy',
+  'ffxiv-potd-solo',
+  'ffxiv-pilgrims-traverse',
+  'ffxiv-orthos',
+  'ffxiv-hoh',
+  'ffxiv-final-verse',
+  'ffxiv-deep-dungeon-bundle',
+  'ffxiv-phantom-weapon',
+  'ffxiv-manderville-weapon',
+  'ffxiv-occult-crescent',
+  'ffxiv-cosmic-exploration',
+  'ffxiv-cc-rank-boost',
+  'ffxiv-pvp-series-boost',
+  'ffxiv-forked-tower-blood',
+  'ffxiv-forked-tower-magic',
+  'ffxiv-cloud-of-darkness',
+  'ffxiv-another-merchants-tale',
+  'ffxiv-kamuy-nine-tails',
+  'ffxiv-demi-ozma',
+];

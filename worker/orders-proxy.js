@@ -244,7 +244,7 @@ const buildEmbed = (o, flags = []) => ({
           .map((it) => {
             const details = Array.isArray(it.details) && it.details.length
               ? `\n· ${it.details.map((d) => str(d, 120)).join('\n· ')}` : '';
-            return `**${str(it.name, 120)}** (${str(it.gameShort, 20)}) ×${Math.min(+it.qty || 1, 99)} — ${str(it.price, 30)}${details}`;
+            return `**${str(it.name, 120)}** (${str(it.gameShort, 20)}) ×${Math.min(+it.qty || 1, 9999)} — ${str(it.price, 30)}${details}`;
           })
           .join('\n')
           .slice(0, 1024) || '—',

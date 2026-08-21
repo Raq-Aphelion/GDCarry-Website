@@ -85,6 +85,75 @@ const ORDER_CSS = `
   font-family: 'Inter', sans-serif !important;
 }
 .gd-order .msg-body strong { color: #93c5fd !important; letter-spacing: .04em; }
+/* The original LHC-rendered bodies/medias stay in the DOM (React owns them —
+   moving or removing them crashes React's removeChild on the next render)
+   but never show; the styled layout is rebuilt from clones inside
+   .gd-order-content */
+#messagesBlock .message-row.gd-order > .msg-body,
+#messagesBlock .message-row.gd-order > .msg-body-media {
+  display: none !important;
+}
+#messagesBlock .message-row.gd-order > .gd-order-content {
+  width: 100%;
+  max-width: 100%;
+}
+/* No timestamp on order prints — .response in the selector lifts specificity
+   above the theme's last-of-run display:block rules (they re-show timestamps
+   on the final visitor row) */
+#messagesBlock .message-row.gd-order.response .msg-date,
+#messagesBlock .message-row.gd-order.response .msg-date-vi,
+#messagesBlock .message-row.gd-order.response .msg-date-op {
+  display: none !important;
+}
+/* Clone reset — same intent as the direct-child reset above, but for the
+   cloned bodies/medias inside .gd-order-content (no width: the .gd-item
+   flex rules size them). Inline !important resets are ALSO applied at
+   creation time (styleOrderRow) — the theme's visitor-bubble styles carry
+   !important on ID-level selectors, which would beat this rule alone */
+#messagesBlock .message-row.gd-order .gd-order-content .msg-body,
+#messagesBlock .message-row.gd-order .gd-order-content .msg-body-media {
+  background: none !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  float: none !important;
+  display: block;
+  box-sizing: border-box !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  text-align: left !important;
+  font-family: 'Inter', sans-serif !important;
+}
+/* Contact block clone (styled like the old direct-child first body). Needs
+   .gd-order-content.msg-body in the selector — the clone reset above is
+   (1,4,0), anything weaker loses padding to it */
+#messagesBlock .message-row.gd-order .gd-order-content .msg-body.gd-contact {
+  color: #94a3b8 !important;
+  padding: 2px 0 2px 14px !important;
+  font-size: 12px !important;
+}
+#messagesBlock .message-row.gd-order .gd-order-content .msg-body.gd-contact a { color: #94a3b8 !important; }
+#messagesBlock .message-row.gd-order .gd-order-content .msg-body.gd-contact > strong:first-child {
+  color: #93c5fd !important;
+  font-size: 14px !important;
+  letter-spacing: .06em;
+  font-family: 'Sora', sans-serif !important;
+}
+/* Total clone (styled like the old direct-child .gd-total) */
+#messagesBlock .message-row.gd-order .gd-order-content .msg-body.gd-total {
+  color: #94a3b8 !important;
+  font-size: 12px !important;
+  margin-top: 16px !important;
+  padding: 2px 0 2px 14px !important;
+}
+#messagesBlock .message-row.gd-order .gd-order-content .msg-body.gd-total strong {
+  color: #ffffff !important;
+  font-size: 18px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0 !important;
+  font-family: 'Sora', sans-serif !important;
+}
 /* Header — same light-blue family as the labels at item-title size, so the
    whole message reads as one print instead of a banner above a list */
 .gd-order > .msg-body:first-of-type > strong:first-child {
@@ -233,7 +302,14 @@ const sanitizeOrderHtml = (html: string): string => {
     A: ['href'],
     IMG: ['src', 'alt'],
   };
-  const escapeText = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const escapeText = (s: string) =>
+    s
+      // Private-use-area chars are icon-font ligatures (LHC message-status
+      // icons) — outside their font they render as tofu boxes
+      .replace(/[-]/g, '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
   const tpl = document.createElement('template');
   tpl.innerHTML = html;
   const clean = (node: ChildNode): string => {
@@ -241,6 +317,12 @@ const sanitizeOrderHtml = (html: string): string => {
     if (node.nodeType !== Node.ELEMENT_NODE) return '';
     const el = node as Element;
     const tag = el.tagName.toUpperCase();
+    // LHC message-status / icon-font spans (msg-del-st-*, material-icons):
+    // their text is an icon-font ligature glyph — with the class stripped
+    // (allowlist below keeps no span attrs) it renders as a tofu box, and a
+    // leading glyph breaks Total-line detection, so drop them wholesale
+    if (tag === 'SPAN' && /msg-del-st|material-icons|vis-icon/.test(el.getAttribute('class') ?? ''))
+      return '';
     const inner = [...el.childNodes].map(clean).join('');
     if (!(tag in ALLOWED)) return inner;
     const attrs = ALLOWED[tag]
@@ -273,72 +355,129 @@ const wrapItemLines = (html: string) =>
     })
     .join('');
 
-/** Rebuilds an order message row: LHC renders text as one .msg-body per
-    paragraph block and each [img] as its own .msg-body-media. For every
-    image we wrap it with the text body above it into a thumbnail-left flex
-    row (the first one is split at the "Items:" marker so the contact block
-    stays put), classify the text lines for styling, strip the image's
-    full-view link so visitors can't open it, then inject the order styles.
-    Idempotent — processed rows are tagged, so the reload styler can sweep
-    freely. */
+/** Inline !important reset for our CLONES (never applied to React-owned
+    originals) — beats the theme's visitor-bubble styles regardless of
+    selector specificity. Paddings/margins stay in ORDER_CSS. */
+const resetCloneBubble = (el: HTMLElement) => {
+  const s = el.style;
+  s.setProperty('background', 'none', 'important');
+  s.setProperty('background-color', 'transparent', 'important');
+  s.setProperty('background-image', 'none', 'important');
+  s.setProperty('border', 'none', 'important');
+  s.setProperty('box-shadow', 'none', 'important');
+};
+
+/** Rebuilds an order message row NON-DESTRUCTIVELY. LHC's React owns the
+    message DOM: the old styler reparented medias into wrappers, removed
+    consumed bodies and rewrote innerHTML — React then crashed with
+    NotFoundError (removeChild) on the next re-render. Now the original
+    bodies/medias are never moved, edited or removed — they stay in place,
+    hidden via CSS (display:none in ORDER_CSS), and the styled layout is
+    rebuilt from deep CLONES inside an appended .gd-order-content container.
+    A foreign extra child is safe: React only ever removes/updates nodes it
+    created itself.
+
+    Rebuilds are guarded by a signature of the originals' content: our own
+    clone insertions trigger the MutationObserver too, and the guard stops
+    that loop; if React genuinely re-renders the row (new content), the
+    signature changes and the clones are rebuilt fresh. */
 const styleOrderRow = (doc: Document, row: Element) => {
-  if ((row as HTMLElement).dataset.gdStyled) return;
-  (row as HTMLElement).dataset.gdStyled = '1';
-  row.classList.add('gd-order');
-  // Inline !important beats the theme's bubble styles regardless of
-  // selector specificity — plain dark background, no chat bubble. Padding
-  // stays in ORDER_CSS (inline would win over the 14px left pad).
-  const resetBubble = (el: HTMLElement) => {
-    const s = el.style;
-    s.setProperty('background', 'none', 'important');
-    s.setProperty('background-color', 'transparent', 'important');
-    s.setProperty('background-image', 'none', 'important');
-    s.setProperty('border', 'none', 'important');
-    s.setProperty('box-shadow', 'none', 'important');
-  };
-  row.querySelectorAll('.msg-body, .msg-body-media').forEach((el) => resetBubble(el as HTMLElement));
-  const medias = [...row.querySelectorAll('.msg-body-media')];
-  medias.forEach((media, i) => {
-    // The text body sits above the image with <br> elements in between
-    let textBody = media.previousElementSibling;
-    while (
-      textBody &&
-      !(textBody.classList.contains('msg-body') && !textBody.classList.contains('msg-body-media'))
-    ) {
-      textBody = textBody.previousElementSibling;
-    }
-    if (!textBody) return;
-    // Strip the full-view link around the image — visitors get a static
-    // thumbnail (pointer-events are also cut in ORDER_CSS as a fallback)
-    media.querySelectorAll('a').forEach((a) => a.replaceWith(...a.childNodes));
-    let itemHtml = sanitizeOrderHtml(textBody.innerHTML);
-    let consumedWholeBody = true;
-    if (i === 0) {
-      // The first text body holds the contact block AND the first item —
-      // split at the Items: marker; contact lines stay where they are.
-      const m = itemHtml.match(/^([\s\S]*?<strong>\s*Items:\s*<\/strong><br>\s*)([\s\S]*)$/i);
-      if (m) {
-        textBody.innerHTML = m[1];
-        itemHtml = m[2];
-        consumedWholeBody = false;
+  const rowEl = row as HTMLElement;
+  // The direct children LHC rendered — never touched beyond being read
+  const originals = [...row.children].filter(
+    (c): c is HTMLElement =>
+      c.classList.contains('msg-body') || c.classList.contains('msg-body-media'),
+  );
+  const isTextBody = (el: HTMLElement) =>
+    el.classList.contains('msg-body') && !el.classList.contains('msg-body-media');
+
+  const sig = originals
+    .map((c) => `${c.textContent ?? ''}~${c.querySelector('img')?.getAttribute('src') ?? ''}`)
+    .join('␟');
+  if (rowEl.dataset.gdSig === sig) return;
+  rowEl.dataset.gdSig = sig;
+  rowEl.classList.add('gd-order');
+
+  row.querySelector(':scope > .gd-order-content')?.remove();
+  const content = doc.createElement('div');
+  content.className = 'gd-order-content';
+
+  // Pair each image with the text body directly above it (LHC renders the
+  // item's text body first, then its [img] media)
+  const paired = new Map<HTMLElement, HTMLElement>(); // media -> textBody
+  for (const el of originals) {
+    if (!el.classList.contains('msg-body-media')) continue;
+    for (let i = originals.indexOf(el) - 1; i >= 0; i--) {
+      if (isTextBody(originals[i])) {
+        paired.set(el, originals[i]);
+        break;
       }
     }
+  }
+  const consumedBodies = new Set(paired.values());
+
+  let contactEmitted = false;
+  for (const el of originals) {
+    if (isTextBody(el)) {
+      const html = sanitizeOrderHtml(el.innerHTML);
+      if (consumedBodies.has(el)) {
+        // The first item's body also carries the contact block — split it off
+        // at the Items: marker and emit it here, ahead of the item rows
+        if (!contactEmitted) {
+          contactEmitted = true;
+          const m = html.match(/^([\s\S]*?<strong>\s*Items:\s*<\/strong><br>\s*)([\s\S]*)$/i);
+          if (m) {
+            const contact = doc.createElement('div');
+            contact.className = 'msg-body gd-contact';
+            contact.innerHTML = m[1];
+            resetCloneBubble(contact);
+            content.appendChild(contact);
+          }
+        }
+        continue;
+      }
+      // Standalone body (e.g. the Total line) — cloned straight through.
+      // Total detection tolerates leading non-word chars (a stray icon glyph
+      // would otherwise lose the line its big-price style)
+      const clone = doc.createElement('div');
+      clone.className = 'msg-body';
+      clone.innerHTML = html;
+      if ((clone.textContent ?? '').trim().replace(/^[\W_]+/, '').startsWith('Total:'))
+        clone.classList.add('gd-total');
+      resetCloneBubble(clone);
+      content.appendChild(clone);
+      continue;
+    }
+    // Media → thumbnail-left item row with the paired text in a styled column
+    const textBody = paired.get(el);
+    if (!textBody) continue;
+    let itemHtml = sanitizeOrderHtml(textBody.innerHTML);
+    // The contact part (if any) was already emitted at the body's position
+    const m = itemHtml.match(/^([\s\S]*?<strong>\s*Items:\s*<\/strong><br>\s*)([\s\S]*)$/i);
+    if (m) itemHtml = m[2];
+
     const wrap = doc.createElement('div');
     wrap.className = 'gd-item';
+    const mediaClone = el.cloneNode(true) as HTMLElement;
+    resetCloneBubble(mediaClone);
+    mediaClone.querySelectorAll('.msg-body, .msg-body-media').forEach((n) => resetCloneBubble(n as HTMLElement));
+    // Read-receipt icons are noise on an order print (and their ligature
+    // glyphs tofu without the icon font)
+    mediaClone
+      .querySelectorAll('span[class*="msg-del-st"], .material-icons')
+      .forEach((n) => n.remove());
+    // Static thumbnail: strip the full-view link (CSS pointer-events backup)
+    mediaClone.querySelectorAll('a').forEach((a) => a.replaceWith(...a.childNodes));
     const textCol = doc.createElement('div');
     textCol.className = 'gd-item-text msg-body';
     textCol.innerHTML = wrapItemLines(itemHtml);
-    resetBubble(textCol); // created after the reset sweep above
-    media.before(wrap);
-    wrap.appendChild(media);
+    resetCloneBubble(textCol);
+    wrap.appendChild(mediaClone);
     wrap.appendChild(textCol);
-    if (consumedWholeBody) textBody.remove();
-  });
-  // Tag the Total line — the big-price style targets the class, because a
-  // :last-of-type selector misses once item rows are wrapped in .gd-item divs
-  row.querySelectorAll('.msg-body').forEach((el) => {
-    if (el.textContent?.trim().startsWith('Total:')) el.classList.add('gd-total');
-  });
+    content.appendChild(wrap);
+  }
+
+  row.appendChild(content);
   ensureOrderCss(doc);
 };
 

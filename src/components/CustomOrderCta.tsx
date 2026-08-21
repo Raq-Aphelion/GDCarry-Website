@@ -22,7 +22,7 @@ export default function CustomOrderCta({
             {/* One line only from lg up — below that the row layout + button
                 would overflow the panel (visible ~750px and narrower) */}
             <h2 className="font-display text-xl font-extrabold text-white sm:text-3xl lg:whitespace-nowrap">
-              Can’t find <span className="text-gradient-blue">your boost?</span>
+              Can’t find <span className="text-cyan-500">your boost?</span>
             </h2>
             <p className="mt-2 text-sm leading-relaxed text-slate-400 max-sm:text-xs">
               {compact ? (

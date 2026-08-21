@@ -1,4 +1,4 @@
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import FadeImage from './FadeImage';
 import { serviceLink, type Service } from '@/data/games';
 import { SERVICE_TAG_ICONS } from '@/data/serviceIcons';
@@ -11,7 +11,16 @@ import cardPlaceholder from '@/assets/images/service-cards/ffxiv/ffxiv-blank.web
  * fades out behind the text at the bottom. The whole card links through to
  * the service's dedicated subpage, or to its category page otherwise.
  */
-export default function ServiceCard({ service }: { service: Service }) {
+export default function ServiceCard({
+  service,
+  categoryLabel,
+  categoryHref,
+}: {
+  service: Service;
+  categoryLabel?: string;
+  categoryHref?: string;
+}) {
+  const navigate = useNavigate();
   const { format } = useCurrency();
   const { priceOf } = usePricing();
   const price = priceOf(service.id, service.price);
@@ -24,6 +33,28 @@ export default function ServiceCard({ service }: { service: Service }) {
       className="group relative flex h-full min-h-[300px] w-full max-w-[280px] flex-col overflow-hidden rounded-[5px] bg-navy-850 text-left transition-all duration-300 max-sm:mx-auto sm:min-h-[340px] lg:min-h-[380px]"
       aria-label={service.name}
     >
+      {/* Category pill — same style as DiscountTag, pinned inside the card's
+          top-right corner. Links to the category (a span, not a nested <a>:
+          the whole card is already a link) */}
+      {categoryLabel && (
+        <span
+          role={categoryHref ? 'link' : undefined}
+          onClick={
+            categoryHref
+              ? (e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  navigate(categoryHref);
+                }
+              : undefined
+          }
+          className={`absolute right-2 top-2 z-10 max-w-[calc(100%-1rem)] truncate rounded-[3px] bg-cyan-600 px-1.5 py-px text-[9px] font-bold uppercase tracking-wide text-navy-900 shadow-[0_2px_8px_rgb(0_0_0/0.45)] ${
+            categoryHref ? 'cursor-pointer transition-colors hover:bg-cyan-400' : ''
+          }`}
+        >
+          {categoryLabel}
+        </span>
+      )}
       {/* Background image, faded behind the text */}
       <div className="absolute -inset-px">
         <FadeImage

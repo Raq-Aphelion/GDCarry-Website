@@ -18,13 +18,38 @@ export default function MobileCategoryBar({
   activeId,
   gameId,
   onSelect,
+  hidden: hiddenProp,
 }: {
   items: Item[];
   activeId: string;
   gameId?: string;
   onSelect?: (id: string) => void;
+  /** Controlled hide state (GamePage drives it from the label row's sticky
+      choreography). Uncontrolled callers get the self-managed hide-on-scroll-
+      down behavior below. Controlled also drops the bar's own background
+      gradient — the label row's overlay is the single gradient there. */
+  hidden?: boolean;
 }) {
   const dragRef = useDragScroll();
+  const controlled = hiddenProp !== undefined;
+
+  // Uncontrolled fallback: hide on scroll down, reveal on scroll up
+  const [hiddenSelf, setHiddenSelf] = useState(false);
+  useEffect(() => {
+    if (controlled) return;
+    const scroller = document.getElementById('page-scroll');
+    if (!scroller) return;
+    let last = scroller.scrollTop;
+    const onScroll = () => {
+      const y = scroller.scrollTop;
+      if (Math.abs(y - last) < 4) return; // ignore sub-pixel Lenis drift
+      setHiddenSelf(y > last && y > 96);
+      last = y;
+    };
+    scroller.addEventListener('scroll', onScroll, { passive: true });
+    return () => scroller.removeEventListener('scroll', onScroll);
+  }, [controlled]);
+  const hidden = controlled ? hiddenProp : hiddenSelf;
 
   // Fade-out gradients on the edges that have overflowing content
   const [canLeft, setCanLeft] = useState(false);
@@ -63,7 +88,12 @@ export default function MobileCategoryBar({
           : undefined;
 
   return (
-    <div id="mobile-category-bar" className="sticky top-0 z-30 bg-gradient-to-b from-navy-900/90 via-navy-900/60 to-navy-900/0 lg:hidden">
+    <div
+      id="mobile-category-bar"
+      className={`sticky top-0 z-30 transition-[transform,opacity] duration-300 lg:hidden ${
+        controlled ? '' : 'bg-gradient-to-b from-navy-900/90 via-navy-900/60 to-navy-900/0'
+      } ${hidden ? '-translate-y-full opacity-0' : ''}`}
+    >
       <div className="relative">
         <div
           ref={dragRef}

@@ -6,7 +6,7 @@ import PageMeta, { JsonLd, SITE_URL } from '@/components/PageMeta';
 import FadeImage from '@/components/FadeImage';
 import Reveal from '@/components/Reveal';
 import ServiceCard from '@/components/ServiceCard';
-import { games, getGame, serviceCount } from '@/data/games';
+import { games, getGame, serviceCategory, serviceCount } from '@/data/games';
 import { usePricing } from '@/context/PricingContext';
 import useDragScroll from '@/hooks/useDragScroll';
 
@@ -300,7 +300,11 @@ export default function Home() {
         <div className="relative mx-auto flex min-h-[calc(100svh-64px)] w-full max-w-[1440px] flex-col items-center justify-center px-[25px] pb-24 pt-14 sm:px-6 lg:px-8">
           <div className="w-full max-w-3xl text-center">
             <Reveal>
-              <span className="inline-flex items-center rounded-full border border-cyan-600/40 bg-cyan-600/10 px-4 py-1.5 text-xs font-bold uppercase leading-none tracking-[0.18em] text-cyan-400 backdrop-blur-sm">
+              {/* leading-snug (not none) keeps wrapped lines readable when the
+                  badge text breaks onto two lines on narrow screens; pt/pb are
+                  asymmetric because all-caps glyphs have no descenders — equal
+                  padding would leave the text sitting optically high */}
+              <span className="inline-flex items-center rounded-full border border-cyan-600/40 bg-cyan-600/10 px-4 pb-1 pt-2 text-center text-xs font-bold uppercase leading-snug tracking-[0.18em] text-cyan-400 backdrop-blur-sm">
                 The EU's best-rated boosting services
               </span>
             </Reveal>
@@ -454,7 +458,14 @@ export default function Home() {
                 delay={i * 90}
                 className={`w-full max-w-[280px] ${i === 3 ? 'hidden min-[400px]:block md:hidden lg:block' : i === 4 ? 'hidden xl:block' : ''}`}
               >
-                <ServiceCard service={s} />
+                <ServiceCard
+                  service={s}
+                  categoryLabel={serviceCategory(s.id)?.subName}
+                  categoryHref={(() => {
+                    const cat = serviceCategory(s.id);
+                    return cat ? `/boosting/${cat.game.id}?cat=${cat.subId}` : undefined;
+                  })()}
+                />
               </Reveal>
             ))}
           </div>

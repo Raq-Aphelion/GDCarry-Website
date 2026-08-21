@@ -157,6 +157,18 @@
       radial-gradient(900px 500px at -10% 10%, rgb(var(--glow-2) / 0.05), transparent 55%);
     background-attachment: fixed;
   }
+  /* Pixel-exact copy of the page background: the fixed-attachment glows align
+     with the body's no matter where the element sits. The sticky label rows
+     on game pages paint this (with a mask fade) over scrolling cards, so the
+     cards dissolve into the background instead of sliding under an
+     approximately-colored box. */
+  .bg-page-fixed {
+    @apply bg-navy-900;
+    background-image:
+      radial-gradient(1200px 600px at 85% -10%, rgb(var(--glow-1) / 0.08), transparent 60%),
+      radial-gradient(900px 500px at -10% 10%, rgb(var(--glow-2) / 0.05), transparent 55%);
+    background-attachment: fixed;
+  }
   ::selection {
     background: rgb(var(--glow-1) / 0.35);
     color: #e0faff;

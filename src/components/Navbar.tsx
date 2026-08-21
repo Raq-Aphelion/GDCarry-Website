@@ -730,7 +730,6 @@ export default function Navbar() {
         >
         <div className="space-y-1.5 px-[25px] py-4">
           <div className="pb-2">{searchBox}</div>
-          <p className="px-3 pb-1 pt-1 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500">Games</p>
           {games.map((g) => {
             const expanded = mobileGameCat === g.id;
             const onGame = location.pathname === `/boosting/${g.id}`;
