@@ -22,6 +22,18 @@ const FEATURED_IDS = [
   'ffxiv-potd-solo',
 ];
 
+/** Carousel logo heights — tuned per game so all wordmarks read at similar
+    visual size (their aspect ratios range from 4.0 to 2.1), scaled down on
+    smaller viewports where the cards shrink; Lost Ark is the widest mark, so
+    it stays comparatively short to not dominate the card */
+const LOGO_SIZE: Record<string, string> = {
+  'lost-ark': 'h-8 sm:h-10 lg:h-12',
+  ffxiv: 'h-10 sm:h-14 lg:h-16',
+  wow: 'h-12 sm:h-16 lg:h-[68px]',
+  warframe: 'h-12 sm:h-16 lg:h-[68px]',
+  runescape: 'h-16 sm:h-[68px] lg:h-20',
+};
+
 const PERKS = [
   {
     icon: Users,
@@ -389,11 +401,32 @@ export default function Home() {
                     imgClassName="transition-transform duration-500 group-hover:scale-105"
                   />
                   <div className="absolute -inset-px bg-gradient-to-t from-navy-800 from-0% via-navy-800/60 via-35% to-transparent to-60%" />
-                  <div className="absolute inset-x-0 bottom-0 p-4">
-                    <h3 className="font-display text-base font-bold text-white transition-colors group-hover:text-cyan-400 sm:text-lg">
-                      {game.name}
-                    </h3>
-                    <p className="mt-0.5 text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+                  {/* Logo wordmark centered on the card. Per-game heights keep
+                      the wordmarks visually matched to Lost Ark's — the
+                      aspect ratios differ wildly, so one shared height would
+                      make some tiny and some huge. FFXIV's mark is
+                      black-on-transparent — inverted for the dark card. The
+                      soft radial dim keeps white wordmarks readable over
+                      bright card art */}
+                  <div className="absolute inset-0 flex items-center justify-center p-4">
+                    <div className="flex items-center justify-center rounded-full bg-[radial-gradient(closest-side,rgb(var(--navy-900)/0.6),transparent)] px-7 py-5">
+                      <img
+                        src={game.logo}
+                        alt={game.name}
+                        className={`w-auto max-w-full object-contain transition-transform duration-300 group-hover:scale-105 ${
+                          LOGO_SIZE[game.id] ?? 'h-9'
+                          /* FFXIV's mark is black-on-transparent (inverted for
+                             the dark card) and reads high — nudged down;
+                             Warframe's has a tall icon above the text —
+                             nudged up */
+                        } ${game.id === 'ffxiv' ? 'translate-y-1 invert' : ''} ${
+                          game.id === 'warframe' ? '-translate-y-1.5' : ''
+                        }`}
+                      />
+                    </div>
+                  </div>
+                  <div className="absolute inset-x-0 bottom-0 p-4 text-center">
+                    <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
                       {serviceCount(game) > 0 ? `${serviceCount(game)} services` : 'Coming soon'}
                     </p>
                   </div>

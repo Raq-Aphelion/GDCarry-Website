@@ -1,4 +1,5 @@
 import { Link, useNavigate } from 'react-router';
+import { memo } from 'react';
 import FadeImage from './FadeImage';
 import { serviceLink, type Service } from '@/data/games';
 import { SERVICE_TAG_ICONS } from '@/data/serviceIcons';
@@ -10,8 +11,11 @@ import cardPlaceholder from '@/assets/images/service-cards/ffxiv/ffxiv-blank.web
  * Flat service block: the image fills the whole card as a background and
  * fades out behind the text at the bottom. The whole card links through to
  * the service's dedicated subpage, or to its category page otherwise.
+ * Memoized: long grids (All services) re-render on every sticky-chips
+ * toggle — props here are a stable service object + equal-by-value strings,
+ * so every card bails out.
  */
-export default function ServiceCard({
+const ServiceCard = memo(function ServiceCard({
   service,
   categoryLabel,
   categoryHref,
@@ -107,4 +111,6 @@ export default function ServiceCard({
       </div>
     </Link>
   );
-}
+});
+
+export default ServiceCard;

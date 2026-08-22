@@ -31,6 +31,8 @@ export interface Game {
   description: string;
   /** Card art used in the home carousel, navbar games menu and game page header */
   cardImage: string;
+  /** Logo wordmark shown on the home carousel cards instead of the title text */
+  logo: string;
   main?: boolean;
   subcategories: Subcategory[];
 }
@@ -40,6 +42,11 @@ import cardWow from '@/assets/images/game-cards/GameCard_WoW.webp';
 import cardLostArk from '@/assets/images/game-cards/GameCard_LostArk.webp';
 import cardWarframe from '@/assets/images/game-cards/GameCard_Warframe.webp';
 import cardOsrs from '@/assets/images/game-cards/GameCard_OSRS.webp';
+import logoFfxiv from '@/assets/images/game-logos/ffxiv.png';
+import logoWow from '@/assets/images/game-logos/wow.png';
+import logoLostArk from '@/assets/images/game-logos/lost-ark.png';
+import logoWarframe from '@/assets/images/game-logos/warframe.png';
+import logoRunescape from '@/assets/images/game-logos/runescape.webp';
 import scGil from '@/assets/images/service-cards/ffxiv/gil-currency/ffxiv-gil.webp';
 import scDmu from '@/assets/images/service-cards/ffxiv/ultimate-raids/ffxiv-dmu.webp';
 import scFru from '@/assets/images/service-cards/ffxiv/ultimate-raids/ffxiv-fru.webp';
@@ -171,6 +178,7 @@ export const games: Game[] = [
     description:
       'Content ranging from Trials to Ultimates done by verified professionals with decades of experience & part of world race teams.',
     cardImage: cardFfxiv,
+    logo: logoFfxiv,
     main: true,
     subcategories: [
       {
@@ -1691,6 +1699,7 @@ export const games: Game[] = [
     description:
       'Content ranging from Mythic+ keys to Mythic raid clears done by verified professionals with decades of experience & part of world race teams.',
     cardImage: cardWow,
+    logo: logoWow,
     // No live services yet — empty categories are deleted, not shown; the
     // carousel marks the game "Coming soon"
     subcategories: [],
@@ -1703,6 +1712,7 @@ export const games: Game[] = [
     description:
       'Content ranging from Abyssal Dungeons to Legion Raids done by verified professionals with thousands of clears & part of world-first race teams.',
     cardImage: cardLostArk,
+    logo: logoLostArk,
     subcategories: [],
   },
   {
@@ -1713,6 +1723,7 @@ export const games: Game[] = [
     description:
       'Content ranging from Mastery ranks to endgame bosses done by verified professionals with decades of experience & thousands of hours in the Origin System.',
     cardImage: cardWarframe,
+    logo: logoWarframe,
     subcategories: [],
   },
   {
@@ -1723,6 +1734,7 @@ export const games: Game[] = [
     description:
       'Content ranging from Skilling to the Inferno done by verified professionals with decades of experience & maxed accounts across OSRS and RS3.',
     cardImage: cardOsrs,
+    logo: logoRunescape,
     subcategories: [],
   },
 ];

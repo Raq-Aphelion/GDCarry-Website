@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useRef, useState } from 'react';
+import { Fragment, memo, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, Navigate, useParams, useSearchParams } from 'react-router';
 import { ArrowDown, ArrowDownAZ, ArrowUp, ArrowUpZA, Check, ChevronDown, ChevronRight, Flame, Layers, Package, type LucideIcon } from 'lucide-react';
 import CustomOrderCta from '@/components/CustomOrderCta';
@@ -60,6 +60,82 @@ const SortIcon = () => (
     <span className="h-[1.5px] w-[6px] rounded-full bg-current" />
   </span>
 );
+
+interface CatInfo {
+  name: string;
+  subId: string;
+  order: number;
+}
+
+/** The card grid. Memoized with stable inputs (memoized services/catInfo from
+    GamePage), so sticky-chips toggles and other header state changes bail out
+    here instead of re-rendering every card — the mobile hide/show hitch on
+    long categories (All services, Mounts) was exactly that re-render. */
+const ServicesGrid = memo(function ServicesGrid({
+  services,
+  withCtas,
+  activeCount,
+  showPills,
+  catInfo,
+  gameId,
+}: {
+  services: Service[];
+  withCtas: boolean;
+  activeCount: number;
+  showPills: boolean;
+  catInfo: Map<string, CatInfo>;
+  gameId: string;
+}) {
+  return (
+    /* 2 per row from mobile up; md 3 — below lg the sidebar becomes the
+       carousel, so the full row fits 3 cards; lg keeps 3 (sidebar takes
+       240px, 4 would squeeze cards to ~155px); xl 4 — cards cap at 280px
+       and never drop below ~213px */
+    <div className="mt-5 grid grid-cols-1 justify-items-center gap-5 min-[400px]:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
+      {services.map((service, i) => {
+        // Category pill — All services view only; links to that category
+        const cat = showPills ? catInfo.get(service.id) : undefined;
+        return (
+        <Fragment key={service.id}>
+          {/* Cards cap at 280px (ServiceCard max-w) — centered in their
+              cells like the home page's popular picks, so extra row width
+              becomes even outer margins */}
+          <Reveal className="w-full max-w-[280px]" immediate>
+            <ServiceCard
+              service={service}
+              categoryLabel={cat?.name}
+              categoryHref={cat ? `/boosting/${gameId}?cat=${cat.subId}` : undefined}
+            />
+          </Reveal>
+          {/* Inline custom-order CTA on mobile: only in categories with
+              more than 7 card rows (7+ services at 1 col). Below 400px
+              (1 col) it follows the 2nd card; at 2 cols it follows the
+              4th card and spans both columns — 2 full rows above it in
+              either case */}
+          {withCtas && activeCount > 7 && i === 1 && (
+            <div className="mx-auto w-full max-w-[280px] min-[400px]:hidden">
+              <CustomOrderCta compact />
+            </div>
+          )}
+          {withCtas && activeCount > 7 && i === 3 && (
+            <div className="hidden w-full min-[400px]:col-span-2 min-[400px]:block sm:hidden">
+              <CustomOrderCta compact />
+            </div>
+          )}
+        </Fragment>
+        );
+      })}
+      {/* Desktop grid-breaker: only in categories with more than 3 card
+          rows (12+ services at 4 cols), pinned to row 3 so exactly 2
+          rows of cards sit above it */}
+      {withCtas && activeCount > 12 && (
+        <div className="hidden w-full sm:col-span-2 sm:row-start-3 sm:block md:col-span-3 xl:col-span-4">
+          <CustomOrderCta lateTextBreak />
+        </div>
+      )}
+    </div>
+  );
+});
 
 export default function GamePage() {
   const { gameId } = useParams<{ gameId: string }>();
@@ -162,8 +238,23 @@ export default function GamePage() {
   // Category selection also pushes ?cat= into the URL, so the browser
   // back/forward buttons walk the category history. Switching categories
   // always clears a search-results view (?q=).
+  const minHeightReset = useRef<number | undefined>(undefined);
   const selectCategory = (id: string) => {
     if (id === active && !searchParams.get('q')) return;
+    // Hold the section's height across the swap: switching from a tall
+    // category (Mounts) to a short one while scrolled deep would otherwise
+    // shrink the page under the scroll position, and the browser's instant
+    // scrollTop clamp would violently jump before the smooth scroll starts
+    const grid = gridRef.current;
+    if (grid) {
+      grid.style.minHeight = `${grid.offsetHeight}px`;
+      window.clearTimeout(minHeightReset.current);
+      // Released once the 0.4s scroll snap has finished — at the grid's top,
+      // the shrink happens below the fold and stays invisible
+      minHeightReset.current = window.setTimeout(() => {
+        grid.style.minHeight = '';
+      }, 600);
+    }
     setActive(id);
     setSortOpen(false);
     setSearchParams({ cat: id });
@@ -221,54 +312,64 @@ export default function GamePage() {
     return () => ro.disconnect();
   }, [catListEl]);
 
-  if (!game) return <Navigate to="/" replace />;
-
-  const activeSub = game.subcategories.find((s) => s.id === active) ?? game.subcategories[0];
+  const activeSub = game?.subcategories.find((s) => s.id === active) ?? game?.subcategories[0];
   // Proxy cards (e.g. Current Patch): duplicates of services from other
-  // subcategories — resolved by id so counts never double them
-  const activeServices = [
-    ...activeSub.services,
-    ...(activeSub.proxies ?? [])
-      .map((id) => {
-        for (const s of game.subcategories) {
-          const hit = s.services.find((sv) => sv.id === id);
-          if (hit) return hit;
-        }
-        return undefined;
-      })
-      .filter((sv): sv is NonNullable<typeof sv> => sv !== undefined),
-  ];
+  // subcategories — resolved by id so counts never double them.
+  // Memoized (like the chain below): the chips hide/show toggle re-renders
+  // the page, and stable references let the memoized grid bail out entirely
+  // instead of re-rendering every card
+  const activeServices = useMemo(() => {
+    if (!game || !activeSub) return [];
+    return [
+      ...activeSub.services,
+      ...(activeSub.proxies ?? [])
+        .map((id) => {
+          for (const s of game.subcategories) {
+            const hit = s.services.find((sv) => sv.id === id);
+            if (hit) return hit;
+          }
+          return undefined;
+        })
+        .filter((sv): sv is NonNullable<typeof sv> => sv !== undefined),
+    ];
+  }, [activeSub, game]);
 
   // Category lookup for the pill/sort: first real category wins for services
   // listed in several (the synthetic 'all' bucket is skipped)
-  const isAll = activeSub.id === 'all';
-  const catInfo = new Map<string, { name: string; subId: string; order: number }>();
-  game.subcategories.forEach((s, i) => {
-    if (s.id === 'all') return;
-    for (const sv of s.services) {
-      if (!catInfo.has(sv.id)) catInfo.set(sv.id, { name: s.name, subId: s.id, order: i });
-    }
-  });
+  const isAll = activeSub?.id === 'all';
+  const catInfo = useMemo(() => {
+    const map = new Map<string, { name: string; subId: string; order: number }>();
+    game?.subcategories.forEach((s, i) => {
+      if (s.id === 'all') return;
+      for (const sv of s.services) {
+        if (!map.has(sv.id)) map.set(sv.id, { name: s.name, subId: s.id, order: i });
+      }
+    });
+    return map;
+  }, [game]);
 
   // Search-results mode (?q=keyword from the navbar search): a flat grid of
   // every matching service in the game, ranked like the dropdown. Changing
   // category or page drops the param, clearing the search view.
   const searchQ = (searchParams.get('q') ?? '').trim();
-  const searchResults =
-    searchQ.length >= 1
-      ? [
-          ...new Map(
-            game.subcategories
-              .filter((s) => s.id !== 'all')
-              .flatMap((s) => s.services)
-              .map((sv) => [sv.id, sv] as const),
-          ).values(),
-        ]
-          .map((sv) => ({ sv, rank: rankService(sv, searchQ.toLowerCase()) }))
-          .filter((r) => r.rank >= 0)
-          .sort((a, b) => a.rank - b.rank)
-          .map((r) => r.sv)
-      : null;
+  const searchResults = useMemo(
+    () =>
+      game && searchQ.length >= 1
+        ? [
+            ...new Map(
+              game.subcategories
+                .filter((s) => s.id !== 'all')
+                .flatMap((s) => s.services)
+                .map((sv) => [sv.id, sv] as const),
+            ).values(),
+          ]
+            .map((sv) => ({ sv, rank: rankService(sv, searchQ.toLowerCase()) }))
+            .filter((r) => r.rank >= 0)
+            .sort((a, b) => a.rank - b.rank)
+            .map((r) => r.sv)
+        : null,
+    [game, searchQ],
+  );
 
   // Sort dropdown options per view: All services and search results get
   // "Most Popular"; single categories default to "By Category" (catalog order).
@@ -280,7 +381,7 @@ export default function GamePage() {
   // The grid in its current sort. Defaults pass the natural order through:
   // search rank for search results, catalog order for single categories.
   // Array.sort is stable, so ties keep the incoming order.
-  const gridServices = (() => {
+  const gridServices = useMemo(() => {
     const base = searchResults ?? activeServices;
     switch (effSort) {
       case 'price-asc':
@@ -304,27 +405,27 @@ export default function GamePage() {
               (a, b) => (popularRank.get(a.id) ?? 9999) - (popularRank.get(b.id) ?? 9999),
             );
     }
-  })();
+  }, [searchResults, activeServices, effSort, isAll, inSearch, catInfo, priceOf]);
 
   // Category sub-sections from the database catalog: the Mounts category is
   // split by the duty each mount drops from (`mountDutyGroups`; leftovers
   // trail under 'Other Mounts'), Extreme Trials by expansion
   // (`trialExpansionGroups` — section order and per-trial order come from the
   // DB; leftovers trail under 'Other Trials')
-  const groupSections = (() => {
+  const groupSections = useMemo(() => {
     const defs: { title: string; ids: string[] }[] =
-      activeSub.id === 'mounts'
+      activeSub?.id === 'mounts'
         ? [
             { title: 'Extreme Trial Mounts', ids: db.catalog?.mountDutyGroups?.extreme ?? [] },
             { title: 'Savage Raid Mounts', ids: db.catalog?.mountDutyGroups?.savage ?? [] },
             { title: 'V&C Dungeons', ids: db.catalog?.mountDutyGroups?.vc ?? [] },
           ].filter((d) => d.ids.length)
-        : activeSub.id === 'trials'
+        : activeSub?.id === 'trials'
           ? Object.entries(db.catalog?.trialExpansionGroups ?? {}).map(([title, ids]) => ({
               title,
               ids,
             }))
-          : activeSub.id === 'criterion-dungeons'
+          : activeSub?.id === 'criterion-dungeons'
             ? Object.entries(db.catalog?.dungeonGroups ?? {}).map(([title, ids]) => ({
                 title,
                 ids,
@@ -348,66 +449,18 @@ export default function GamePage() {
     if (other.length) {
       sections.push({
         title:
-          activeSub.id === 'mounts'
+          activeSub?.id === 'mounts'
             ? 'Other Mounts'
-            : activeSub.id === 'criterion-dungeons'
+            : activeSub?.id === 'criterion-dungeons'
               ? 'Other Dungeons'
               : 'Other Trials',
         services: other,
       });
     }
     return sections.length ? sections : null;
-  })();
+  }, [activeSub, activeServices, db]);
 
-  const renderServiceGrid = (services: Service[], withCtas: boolean) => (
-    /* 2 per row from mobile up; md 3 — below lg the sidebar becomes the
-       carousel, so the full row fits 3 cards; lg keeps 3 (sidebar takes
-       240px, 4 would squeeze cards to ~155px); xl 4 — cards cap at 280px
-       and never drop below ~213px */
-    <div className="mt-5 grid grid-cols-1 justify-items-center gap-5 min-[400px]:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
-      {services.map((service, i) => {
-        // Category pill — All services view only; links to that category
-        const cat = isAll && !inSearch ? catInfo.get(service.id) : undefined;
-        return (
-        <Fragment key={service.id}>
-          {/* Cards cap at 280px (ServiceCard max-w) — centered in their
-              cells like the home page's popular picks, so extra row width
-              becomes even outer margins */}
-          <Reveal className="w-full max-w-[280px]" immediate>
-            <ServiceCard
-              service={service}
-              categoryLabel={cat?.name}
-              categoryHref={cat ? `/boosting/${game.id}?cat=${cat.subId}` : undefined}
-            />
-          </Reveal>
-          {/* Inline custom-order CTA on mobile: only in categories with
-              more than 7 card rows (7+ services at 1 col). Below 400px
-              (1 col) it follows the 2nd card; at 2 cols it follows the
-              4th card and spans both columns — 2 full rows above it in
-              either case */}
-          {withCtas && activeServices.length > 7 && i === 1 && (
-            <div className="mx-auto w-full max-w-[280px] min-[400px]:hidden">
-              <CustomOrderCta compact />
-            </div>
-          )}
-          {withCtas && activeServices.length > 7 && i === 3 && (
-            <div className="hidden w-full min-[400px]:col-span-2 min-[400px]:block sm:hidden">
-              <CustomOrderCta compact />
-            </div>
-          )}
-        </Fragment>
-        );
-      })}
-      {/* Desktop grid-breaker: only in categories with more than 3 card
-          rows (12+ services at 4 cols), pinned to row 3 so exactly 2
-          rows of cards sit above it */}
-      {withCtas && activeServices.length > 12 && (
-        <div className="hidden w-full sm:col-span-2 sm:row-start-3 sm:block md:col-span-3 xl:col-span-4">
-          <CustomOrderCta lateTextBreak />
-        </div>
-      )}
-    </div>
-  );
+  if (!game || !activeSub) return <Navigate to="/" replace />;
 
   // Shared sort dropdown — rendered in the category header row and, with the
   // same behavior, in the search-results header row
@@ -605,21 +658,26 @@ export default function GamePage() {
                   lets clicks through to the cards under the fade — re-enabled
                   on the content row so the sort dropdown stays interactive.
                   Mobile: the container reserves the chips bar's height with
-                  -mt-[58px]/pt-[58px]; when the bar hides (scroll down, label
-                  about to stick) the padding collapses to pt-[13px] — a transitioned
-                  layout property, so the label slides in sync with the bar and
-                  the fixed background never re-anchors. The overlay is the only
-                  gradient and fades in only once the row is stuck (labelStuck);
-                  on desktop it's always on, with -mt-8/pt-8 extending the cover
-                  above the label */}
+                  -mt-[58px]/pt-[58px] — kept CONSTANT; when the bar hides
+                  (scroll down, label about to stick) the content row slides
+                  up with a transform instead. A padding animation would
+                  re-layout the whole card grid on every frame (a visible
+                  hitch on long categories); a transform is compositor-only
+                  and doesn't re-anchor the overlay's fixed background (the
+                  overlay is its sibling, not its child). The overlay is the
+                  only gradient and fades in only once the row is stuck
+                  (labelStuck); on desktop it's always on, with -mt-8/pt-8
+                  extending the cover above the label */}
               <div ref={labelSentinelRef} className="h-0" aria-hidden />
-              <div className={`pointer-events-none sticky top-0 z-20 -mt-[58px] -mb-8 pb-8 transition-[padding] duration-300 lg:-mt-8 lg:pt-8 ${chipsHidden ? 'pt-[13px]' : 'pt-[58px]'}`}>
+              <div className="pointer-events-none sticky top-0 z-20 -mt-[58px] -mb-8 pb-8 pt-[58px] lg:-mt-8 lg:pt-8">
                 <div
                   className={`bg-page-fixed absolute inset-0 [mask-image:linear-gradient(to_bottom,black,rgb(0_0_0/0.88)_22%,rgb(0_0_0/0.68)_42%,rgb(0_0_0/0.45)_60%,rgb(0_0_0/0.24)_76%,rgb(0_0_0/0.08)_90%,transparent)] transition-opacity duration-300 lg:opacity-100 ${labelStuck ? 'opacity-100' : 'opacity-0'}`}
                   aria-hidden
                 />
                 <Reveal className="pointer-events-auto">
-                  <div className="relative flex items-center gap-3 max-sm:justify-center">
+                  {/* translate-y-[-45px] lands the label 13px under the navbar
+                      (58px reserved − 45px) once the chips bar slides away */}
+                  <div className={`relative flex items-center gap-3 transition-transform duration-300 max-sm:justify-center lg:translate-y-0 ${chipsHidden ? '-translate-y-[45px]' : 'translate-y-0'}`}>
                   <h2 className="min-w-0 truncate font-display text-xl font-bold text-white sm:text-2xl">
                     Search Results for <span className="text-cyan-400">{searchQ}</span>
                   </h2>
@@ -639,7 +697,16 @@ export default function GamePage() {
               ) : (
                 // Keyed by the sort only — changing it remounts the cards
                 // (replaying their animation) but not the label row above
-                <div key={effSort}>{renderServiceGrid(gridServices, true)}</div>
+                <div key={effSort}>
+                  <ServicesGrid
+                    services={gridServices}
+                    withCtas
+                    activeCount={activeServices.length}
+                    showPills={isAll && !inSearch}
+                    catInfo={catInfo}
+                    gameId={game.id}
+                  />
+                </div>
               )}
             </>
           ) : (
@@ -655,21 +722,26 @@ export default function GamePage() {
               zone; pointer-events-none on the wrapper lets clicks through to
               the cards under the fade — re-enabled on the content row so the
               sort dropdown stays interactive. Mobile: the container reserves
-              the chips bar's height with -mt-[58px]/pt-[58px]; when the bar
-              hides (scroll down, label about to stick) the padding collapses
-              to pt-[13px] — a transitioned layout property, so the label slides in
-              sync with the bar and the fixed background never re-anchors. The
+              the chips bar's height with -mt-[58px]/pt-[58px] — kept
+              CONSTANT; when the bar hides (scroll down, label about to stick)
+              the content row slides up with a transform instead. A padding
+              animation would re-layout the whole card grid on every frame (a
+              visible hitch on long categories); a transform is
+              compositor-only and doesn't re-anchor the overlay's fixed
+              background (the overlay is its sibling, not its child). The
               overlay is the only gradient and fades in only once the row is
               stuck (labelStuck); on desktop it's always on, with -mt-8/pt-8
               extending the cover above the label */}
           <div ref={labelSentinelRef} className="h-0" aria-hidden />
-          <div className={`pointer-events-none sticky top-0 z-20 -mt-[58px] -mb-8 pb-8 transition-[padding] duration-300 lg:-mt-8 lg:pt-8 ${chipsHidden ? 'pt-[13px]' : 'pt-[58px]'}`}>
+          <div className="pointer-events-none sticky top-0 z-20 -mt-[58px] -mb-8 pb-8 pt-[58px] lg:-mt-8 lg:pt-8">
             <div
               className={`bg-page-fixed absolute inset-0 [mask-image:linear-gradient(to_bottom,black,rgb(0_0_0/0.88)_22%,rgb(0_0_0/0.68)_42%,rgb(0_0_0/0.45)_60%,rgb(0_0_0/0.24)_76%,rgb(0_0_0/0.08)_90%,transparent)] transition-opacity duration-300 lg:opacity-100 ${labelStuck ? 'opacity-100' : 'opacity-0'}`}
               aria-hidden
             />
             <Reveal className="pointer-events-auto">
-              <div className="relative flex items-center gap-3 max-sm:justify-center">
+              {/* translate-y-[-45px] lands the label 13px under the navbar
+                  (58px reserved − 45px) once the chips bar slides away */}
+              <div className={`relative flex items-center gap-3 transition-transform duration-300 max-sm:justify-center lg:translate-y-0 ${chipsHidden ? '-translate-y-[45px]' : 'translate-y-0'}`}>
               <h2 className="font-display text-xl font-bold text-white sm:text-2xl">{activeSub.name}</h2>
               <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-navy-800 text-xs font-bold text-slate-400">
                 {activeServices.length}
@@ -722,7 +794,14 @@ export default function GamePage() {
                       }`}
                     >
                       <div className="min-h-0 overflow-hidden">
-                        {renderServiceGrid(section.services, si === 0)}
+                        <ServicesGrid
+                          services={section.services}
+                          withCtas={si === 0}
+                          activeCount={activeServices.length}
+                          showPills={isAll && !inSearch}
+                          catInfo={catInfo}
+                          gameId={game.id}
+                        />
                       </div>
                     </div>
                     </div>
@@ -731,7 +810,14 @@ export default function GamePage() {
               })}
             </div>
           ) : (
-            renderServiceGrid(gridServices, true)
+            <ServicesGrid
+              services={gridServices}
+              withCtas
+              activeCount={activeServices.length}
+              showPills={isAll && !inSearch}
+              catInfo={catInfo}
+              gameId={game.id}
+            />
           )}
           </div>
             </>
