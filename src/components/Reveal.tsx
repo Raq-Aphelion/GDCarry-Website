@@ -36,7 +36,11 @@ export default function Reveal({ children, delay = 0, className = '', instant = 
           io.disconnect();
         }
       },
-      { threshold: 0.1, rootMargin: '0px 0px -40px 0px' },
+      // Fires the moment the element's very top touches the viewport — the
+      // +150px bottom margin actually starts the 700ms animation slightly
+      // BEFORE entry, so cards are already fading in as they scroll into
+      // view instead of leaving a visible empty row behind fast scrolls
+      { threshold: 0, rootMargin: '0px 0px 150px 0px' },
     );
     io.observe(el);
     return () => io.disconnect();

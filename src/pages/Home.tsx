@@ -276,6 +276,13 @@ export default function Home() {
               logo: `${SITE_URL}/images/gd_logo.png`,
               description:
                 'Professional boosting services and carries for FFXIV, World of Warcraft, Lost Ark, Warframe and RuneScape.',
+              sameAs: [
+                'https://discord.gg/granddice',
+                'https://www.trustpilot.com/review/gdcarry.com',
+                'https://granddice.carrd.co',
+                'https://www.patreon.com/GrandDice/membership',
+                'https://www.epicnpc.com/members/grand-dice.1661988/',
+              ],
             },
             {
               '@type': 'WebSite',

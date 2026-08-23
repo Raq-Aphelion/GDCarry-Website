@@ -1,4 +1,4 @@
-import { Fragment, memo, useEffect, useMemo, useRef, useState } from 'react';
+import { Fragment, memo, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { Link, Navigate, useParams, useSearchParams } from 'react-router';
 import { ArrowDown, ArrowDownAZ, ArrowUp, ArrowUpZA, Check, ChevronDown, ChevronRight, Flame, Layers, Package, type LucideIcon } from 'lucide-react';
 import CustomOrderCta from '@/components/CustomOrderCta';
@@ -99,8 +99,11 @@ const ServicesGrid = memo(function ServicesGrid({
         <Fragment key={service.id}>
           {/* Cards cap at 280px (ServiceCard max-w) — centered in their
               cells like the home page's popular picks, so extra row width
-              becomes even outer margins */}
-          <Reveal className="w-full max-w-[280px]" immediate>
+              becomes even outer margins. No `immediate`: the reveal is
+              viewport-gated so long grids (All services, 100+ cards) don't
+              fire a transition per card on mount — off-screen cards animate
+              when scrolled into view instead */}
+          <Reveal className="w-full max-w-[280px]">
             <ServiceCard
               service={service}
               categoryLabel={cat?.name}
@@ -238,36 +241,25 @@ export default function GamePage() {
   // Category selection also pushes ?cat= into the URL, so the browser
   // back/forward buttons walk the category history. Switching categories
   // always clears a search-results view (?q=).
-  const minHeightReset = useRef<number | undefined>(undefined);
   const selectCategory = (id: string) => {
     if (id === active && !searchParams.get('q')) return;
-    // Hold the section's height across the swap: switching from a tall
-    // category (Mounts) to a short one while scrolled deep would otherwise
-    // shrink the page under the scroll position, and the browser's instant
-    // scrollTop clamp would violently jump before the smooth scroll starts
-    const grid = gridRef.current;
-    if (grid) {
-      grid.style.minHeight = `${grid.offsetHeight}px`;
-      window.clearTimeout(minHeightReset.current);
-      // Released once the 0.4s scroll snap has finished — at the grid's top,
-      // the shrink happens below the fold and stays invisible
-      minHeightReset.current = window.setTimeout(() => {
-        grid.style.minHeight = '';
-      }, 600);
-    }
     setActive(id);
     setSortOpen(false);
     setSearchParams({ cat: id });
   };
 
-  // On category change, smooth-scroll so the grid's top edge (where the header
+  // On category change, jump so the grid's top edge (where the header
   // background ends and the content segment starts) lands right below the
-  // navbar — on mobile, below the sticky category chips bar instead.
+  // navbar — on mobile, below the sticky category chips bar instead. The
+  // page length changes instantly with the category, so the scroll is an
+  // instant jump too — a smooth scroll can't survive the scroll range
+  // collapsing mid-animation, and the browser's scrollTop clamp would
+  // flash for a frame. useLayoutEffect jumps before the paint.
   // Only scrolls when the category actually CHANGES within the same game:
   // never on first open, and never when switching games (a new game page is a
   // fresh open — ScrollToTop owns the scroll position there, and the new
   // game's default category would otherwise look like a "change").
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (prevGameId.current !== gameId) {
       prevGameId.current = gameId;
       // Record the category the URL-sync effect above is about to switch to —
@@ -293,12 +285,11 @@ export default function GamePage() {
       // natural top = section top + the section's padding-top
       top += parseFloat(getComputedStyle(el).paddingTop) - 32;
     }
-    // Scroll through Lenis when it's running so the animation uses the same
-    // easing and isn't fighting Lenis's own scroll loop. Short duration so
-    // the snap starts instantly instead of ramping up slowly via lerp.
+    // Jump through Lenis when it's running so its internal scroll state
+    // stays in sync and doesn't animate back to the stale position
     const lenis = lenisRef.current;
-    if (lenis) lenis.scrollTo(top, { duration: 0.4 });
-    else scroller.scrollTo({ top, behavior: 'smooth' });
+    if (lenis) lenis.scrollTo(top, { immediate: true, force: true });
+    else scroller.scrollTo({ top, behavior: 'instant' as ScrollBehavior });
     // eslint-disable-next-line react-hooks/exhaustive-deps -- validCat is stable (pure lookup)
   }, [active, gameId, catParam, game]);
 
