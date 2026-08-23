@@ -1,24 +1,37 @@
 /**
  * Throttles the Live Helper Chat widget's polling while the browser tab is
- * hidden. The widget otherwise polls `fetchmessages` (chat app, inside the
- * same-origin about:blank iframe) and `chatcheckstatus` (parent wrapper) every
- * few seconds forever, even with the window unfocused.
+ * hidden AND the chat window is closed. The widget otherwise polls
+ * `fetchmessages` (chat app, inside the same-origin about:blank iframe) and
+ * `chatcheckstatus` (parent wrapper) every few seconds forever, even with the
+ * window unfocused.
  *
  * While the tab is VISIBLE nothing changes — every request goes straight
- * through. While HIDDEN, poll requests are gated: the first one passes, the
- * rest wait on a shared release timer, so at most one poll fires per
- * THROTTLE_MS. Delaying (not dropping) keeps the widget's request/response
- * chain intact, and because LHC chains its polls (the next one is scheduled
- * after the previous response), one delayed call naturally slows the whole
- * loop. Non-poll requests (sending a message, starting a chat) are never
- * gated.
+ * through. While HIDDEN with the chat window OPEN (a live conversation —
+ * the visitor is waiting on replies), nothing changes either: a 10-minute
+ * delay there would break message delivery. Only hidden + closed (idle
+ * session spam) is gated: the first poll passes, the rest wait on a shared
+ * release timer, so at most one poll fires per THROTTLE_MS. Delaying (not
+ * dropping) keeps the widget's request/response chain intact, and because
+ * LHC chains its polls (the next one is scheduled after the previous
+ * response), one delayed call naturally slows the whole loop. Non-poll
+ * requests (sending a message, starting a chat) are never gated.
  */
 
-/** One poll per 10 minutes while the tab is hidden */
-const THROTTLE_MS = 10 * 60 * 1000;
+/** One poll per minute while hidden+closed — matches the browser's own
+    hidden-tab timer clamp (~1/min), so this only cuts the excess. The moment
+    the tab becomes visible again, any held poll is released immediately
+    (catch-up), and the chain resumes at full rate */
+const THROTTLE_MS = 60 * 1000;
 
 /** Poll endpoints (path fragments match both the wrapper's and the app's calls) */
 const POLL_RE = /fetchmessages|chatcheckstatus/;
+
+/** The chat window's open state — LHC toggles display on #lhc_widget_v2
+    (the same signal lhcWidgetFx animates from) */
+const isChatOpen = () => {
+  const el = document.getElementById('lhc_widget_v2');
+  return !!el && getComputedStyle(el).display !== 'none';
+};
 
 /** URL out of a fetch() first argument — duck-typed, because the iframe's
     Request/URL constructors are different realm objects than ours */
@@ -41,8 +54,10 @@ const patchWindow = (win: PatchedWindow) => {
   // Gate state is per window context (page wrapper and iframe app throttle independently)
   let lastRun = 0;
   let pending: Promise<void> | null = null;
+  let releasePending: (() => void) | null = null;
   const gate = (): Promise<void> => {
-    if (win.document.visibilityState !== 'hidden') {
+    // Visible tab, or an open chat window (live conversation) — never gate
+    if (win.document.visibilityState !== 'hidden' || isChatOpen()) {
       lastRun = Date.now();
       return Promise.resolve();
     }
@@ -53,16 +68,26 @@ const patchWindow = (win: PatchedWindow) => {
     }
     // Coalesce concurrent polls onto one release timer
     if (!pending) {
-      pending = new Promise<void>((resolve) =>
-        setTimeout(() => {
+      pending = new Promise<void>((resolve) => {
+        const finish = () => {
+          clearTimeout(timer);
           pending = null;
+          releasePending = null;
           lastRun = Date.now();
           resolve();
-        }, wait),
-      );
+        };
+        const timer = setTimeout(finish, wait);
+        releasePending = finish;
+      });
     }
     return pending;
   };
+  // Catch-up: a held poll is released the instant the tab becomes visible
+  // again, so a returning visitor sees new messages right away instead of
+  // waiting out the hidden-tab timer
+  win.document.addEventListener('visibilitychange', () => {
+    if (win.document.visibilityState === 'visible') releasePending?.();
+  });
 
   const origFetch = win.fetch.bind(win);
   win.fetch = ((input: RequestInfo | URL, init?: RequestInit) => {
