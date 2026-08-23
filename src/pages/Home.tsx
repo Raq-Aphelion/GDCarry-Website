@@ -193,8 +193,33 @@ export default function Home() {
   const updateArrows = () => {
     const track = carouselRef.current;
     if (!track) return;
-    setCanLeft(track.scrollLeft > 4);
-    setCanRight(track.scrollLeft < track.scrollWidth - track.clientWidth - 4);
+    const maxScroll = track.scrollWidth - track.clientWidth;
+    const canL = track.scrollLeft > 4;
+    const canR = track.scrollLeft < maxScroll - 4;
+    setCanLeft(canL);
+    setCanRight(canR);
+
+    // Edge fade, applied imperatively so it tracks every scroll/drag frame
+    // without re-rendering. The fade width follows how deep the edge cuts
+    // into a card: it grows from the first clipped pixel (3x the clipped
+    // depth, up to MAX_FADE), never reaches past the card's visible sliver,
+    // and eases back to 0 as the sliver exits — so a full block flush in
+    // view (edge sitting in the gap) gets no fade, and nothing ever pops.
+    const cardW = (track.firstElementChild as HTMLElement | null)?.offsetWidth ?? 0;
+    const step = cardW + 16; // card + gap-4
+    const MAX_FADE = 72; // px
+    const mod = (n: number) => (((n % step) + step) % step);
+    const fadeLen = (at: number, can: boolean) => {
+      if (!can || !cardW || at >= cardW) return 0; // in the gap, or scroll edge
+      return Math.min(at * 3, cardW - at, MAX_FADE);
+    };
+    const fl = fadeLen(mod(track.scrollLeft - 4), canL);
+    const fr = fadeLen(mod(track.scrollLeft + track.clientWidth - 4), canR);
+    const mask = `linear-gradient(to right, ${
+      fl > 0 ? `transparent, black ${fl}px` : 'black 0'
+    }${fr > 0 ? `, black calc(100% - ${fr}px), transparent` : ''})`;
+    track.style.maskImage = mask;
+    track.style.setProperty('-webkit-mask-image', mask);
   };
 
   useEffect(() => {
@@ -387,6 +412,9 @@ export default function Home() {
                 ref={carouselRef}
                 onScroll={updateArrows}
                 className="no-scrollbar flex touch-pan-y select-none gap-4 overflow-x-auto p-1"
+                /* Real edge fade: an alpha mask on the track itself (not an
+                   overlay div), driven imperatively by updateArrows so it
+                   follows every scroll frame — see the comment there */
               >
               {games.map((game) => (
                 <Link
@@ -433,17 +461,6 @@ export default function Home() {
                 </Link>
               ))}
               </div>
-              {/* Mobile edge fades — shown on the side(s) with overflowing cards */}
-              <div
-                className={`pointer-events-none absolute inset-y-0 left-0 w-8 bg-gradient-to-r from-navy-900/90 to-transparent transition-opacity duration-300 lg:hidden ${
-                  canLeft ? 'opacity-100' : 'opacity-0'
-                }`}
-              />
-              <div
-                className={`pointer-events-none absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-navy-900/90 to-transparent transition-opacity duration-300 lg:hidden ${
-                  canRight ? 'opacity-100' : 'opacity-0'
-                }`}
-              />
             </div>
           </Reveal>
         </div>
