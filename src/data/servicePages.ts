@@ -1,4 +1,4 @@
-import { ArrowUp, BadgeCheck, Coins, Gem, Medal, NotebookText, Package, Shield, ShieldCheck, Swords, Timer, Trophy, Undo2, createLucideIcon, type LucideIcon } from 'lucide-react';
+import { ArrowRightLeft, ArrowUp, BadgeCheck, Coins, Gem, Globe, Medal, NotebookText, Package, Shield, ShieldCheck, Swords, Timer, Trophy, Undo2, createLucideIcon, type LucideIcon } from 'lucide-react';
 
 /** Single coin — lucide only ships `Coins` (two coins); keeps the same stroke style. */
 const SingleCoin = createLucideIcon('SingleCoin', [
@@ -409,6 +409,64 @@ SERVICE_PAGES['ffxiv-gil-pack'] = {
         },
       ],
     },
+  ],
+};
+
+/** The All Jobs Maxed account listing — account sale, so the rewards read as
+    "what's on the account" and the accordion covers the transfer instead of
+    a piloted/AFK service. */
+SERVICE_PAGES['ffxiv-account-lpdu-helper'] = {
+  short: 'EU Account',
+  rewardsHeading: "What's on the account",
+  rewards: [
+    {
+      icon: BadgeCheck,
+      title: 'All Combat Jobs & Crafters maxed',
+      text: 'Every combat, crafter and gatherer job at max level, with most job quests already completed.',
+    },
+    {
+      icon: Coins,
+      title: '1M+ Gil Included',
+      text: 'Over 1,000,000 gil on hand — more can be added on request.',
+    },
+    {
+      icon: Globe,
+      title: 'EU — Light Data Center',
+      text: 'EU based account, currently on the Light data center.',
+    },
+    {
+      icon: ArrowRightLeft,
+      title: 'Transferable Anywhere',
+      text: 'The account can be transferred to any region and data center you want to play on.',
+    },
+  ],
+  accordion: [
+    {
+      title: "What's on the account",
+      items: [
+        'All 100 jobs & crafters at max level, with most job quests completed',
+        '1M+ gil included — more can be added at request',
+        'EU based account on the Light data center',
+        'No housing plot registered',
+      ],
+    },
+    {
+      title: 'How does the transfer work?',
+      items: [
+        'After the purchase, our manager contacts you via Live Chat or Discord',
+        'We walk you through the account handover step by step',
+        'The account can then be transferred to any region or data center',
+        'You change the e-mail and password — the account is fully yours',
+      ],
+    },
+    {
+      title: 'Requirements',
+      items: [
+        'An e-mail address you control for the handover',
+        'No active FFXIV subscription is required to receive the account',
+      ],
+    },
+    HOW_IT_WORKS,
   ],
 };
 

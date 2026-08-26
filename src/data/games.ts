@@ -12,6 +12,19 @@ export interface Service {
   /** Long-form text shown on a dedicated service subpage */
   longDescription?: string;
   tag?: 'Popular' | 'Hot' | 'New' | 'Best Value';
+  /** Account-listing metadata (Accounts category) — drives the Region /
+      Levels / Housing filters and the Newest/Oldest sort on the game page. */
+  account?: {
+    region: 'us' | 'eu' | 'oc' | 'jp';
+    /** 'all-max' (combat + crafter/gatherer) is a superset of 'combat-max' */
+    levels: 'combat-max' | 'all-max';
+    housing: 'none' | 'small' | 'medium' | 'large';
+    /** ISO date the listing was added — Newest/Oldest sort */
+    addedAt?: string;
+    /** Overrides the purchase box's "What you get" list (defaults to the
+        card's three tags) — listings can show more than 3 lines there */
+    specs?: string[];
+  };
 }
 
 export interface Subcategory {
@@ -48,6 +61,7 @@ import logoLostArk from '@/assets/images/game-logos/lost-ark.png';
 import logoWarframe from '@/assets/images/game-logos/warframe.png';
 import logoRunescape from '@/assets/images/game-logos/runescape.webp';
 import scGil from '@/assets/images/service-cards/ffxiv/gil-currency/ffxiv-gil.webp';
+import scAccountLpdu from '@/assets/images/service-cards/ffxiv/accounts/account_1.webp';
 import scDmu from '@/assets/images/service-cards/ffxiv/ultimate-raids/ffxiv-dmu.webp';
 import scFru from '@/assets/images/service-cards/ffxiv/ultimate-raids/ffxiv-fru.webp';
 import scTop from '@/assets/images/service-cards/ffxiv/ultimate-raids/ffxiv-top.webp';
@@ -1687,7 +1701,31 @@ export const games: Game[] = [
       {
         id: 'accounts',
         name: 'Accounts',
-        services: [],
+        services: [
+          {
+            id: 'ffxiv-account-lpdu-helper',
+            name: 'EU Account (All Jobs Maxed)',
+            tag1: 'All Combat Jobs & Crafters maxed',
+            tag2: '1M+ Gil included',
+            tag3: 'EU - Light Data Center',
+            longDescription:
+              'A fully maxed EU account on the Light data center: all 100 jobs and crafters at max level with most job quests completed, over 1,000,000 gil on hand (more can be added on request), and a full transfer available to any region or data center.',
+            price: 500,
+            image: scAccountLpdu,
+            account: {
+              region: 'eu',
+              levels: 'all-max',
+              housing: 'none',
+              addedAt: '2026-08-26',
+              specs: [
+                'All Combat Jobs & Crafters maxed',
+                'Main Scenario Quests finished',
+                '1M+ Gil included',
+                'EU - Light Data Center',
+              ],
+            },
+          },
+        ],
       },
     ],
   },

@@ -433,7 +433,14 @@ export default function Home() {
                     src={game.cardImage}
                     alt={game.name}
                     className="aspect-[16/10]"
-                    imgClassName="transition-transform duration-500 group-hover:scale-105"
+                    /* will-change keeps the art on its own compositor layer
+                       permanently: without it the browser re-rasterizes the
+                       object-cover crop when the hover zoom starts/ends, and
+                       at whole-pixel carousel offsets (e.g. 1920px wide
+                       viewports) the re-raster rounds the sub-pixel crop
+                       differently — visible as the art/logos shifting
+                       sideways mid-zoom */
+                    imgClassName="will-change-transform transition-transform duration-500 group-hover:scale-105"
                   />
                   <div className="absolute -inset-px bg-gradient-to-t from-navy-800 from-0% via-navy-800/60 via-35% to-transparent to-60%" />
                   {/* Logo wordmark centered on the card. Per-game heights keep
@@ -448,7 +455,7 @@ export default function Home() {
                       <img
                         src={game.logo}
                         alt={game.name}
-                        className={`w-auto max-w-full object-contain transition-transform duration-300 group-hover:scale-105 ${
+                        className={`w-auto max-w-full object-contain will-change-transform transition-transform duration-300 group-hover:scale-105 ${
                           LOGO_SIZE[game.id] ?? 'h-9'
                           /* FFXIV's mark is black-on-transparent (inverted for
                              the dark card) and reads high — nudged down;

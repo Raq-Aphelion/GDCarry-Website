@@ -19,13 +19,15 @@ export default function FadeImage({ src, alt, className = '', imgClassName = '',
   return (
     <div className={`relative overflow-hidden bg-navy-800 ${className}`}>
       {placeholder ? (
-        /* Stays mounted so it can crossfade out; also covers load failure */
+        /* Stays mounted so it can crossfade out; also covers load failure.
+           The fade-out is a keyframe animation (see .img-fade-out) so cached
+           images can't skip it by loading before the first paint */
         <img
           src={placeholder}
           alt=""
           aria-hidden
           className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ${
-            loaded && !failed ? 'opacity-0' : 'opacity-100'
+            loaded && !failed ? 'img-fade-out opacity-0' : 'opacity-100'
           }`}
         />
       ) : (
@@ -41,8 +43,12 @@ export default function FadeImage({ src, alt, className = '', imgClassName = '',
           decoding="async"
           onLoad={() => setLoaded(true)}
           onError={() => setFailed(true)}
+          /* The reveal is a keyframe animation (see .img-reveal), not a
+             class-flip transition — a transition never runs when onLoad
+             fires before the first paint (cached images), which used to make
+             cards pop in instead of fading */
           className={`h-full w-full object-cover transition-all duration-700 ${
-            loaded ? 'scale-100 opacity-100' : 'scale-105 opacity-0'
+            loaded ? 'img-reveal scale-100 opacity-100' : 'scale-105 opacity-0'
           } ${imgClassName}`}
         />
       )}

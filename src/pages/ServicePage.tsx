@@ -6,6 +6,7 @@ import PageMeta from '@/components/PageMeta';
 import FadeImage from '@/components/FadeImage';
 import MobileCategoryBar from '@/components/MobileCategoryBar';
 import PurchaseBox from '@/components/PurchaseBox';
+import AccountPurchaseBox from '@/components/AccountPurchaseBox';
 import GilPurchaseBox from '@/components/GilPurchaseBox';
 import SavageSeriesPurchaseBox from '@/components/SavageSeriesPurchaseBox';
 import LevelingPurchaseBox from '@/components/LevelingPurchaseBox';
@@ -391,9 +392,12 @@ export default function ServicePage() {
         {/* Middle top: title, text, tags — negative margin trims the flex gap below on mobile */}
         <div className="min-w-0 max-lg:-mb-4 lg:col-start-2 lg:row-start-1">{header}</div>
 
-        {/* Right: purchase block (gil/savage series use their own boxes; price block floats via its own sticky) */}
+        {/* Right: purchase block (accounts/gil/raid families use their own
+            boxes; price block floats via its own sticky) */}
         <aside className="min-w-0 lg:col-start-3 lg:row-span-2 lg:row-start-1 lg:flex lg:flex-col">
-          {service.id === 'ffxiv-gil-pack' ? (
+          {service.account ? (
+            <AccountPurchaseBox service={service} gameShort={game.short} />
+          ) : service.id === 'ffxiv-gil-pack' ? (
             <GilPurchaseBox service={service} gameShort={game.short} />
           ) : db.savageSeries?.[service.id] ? (
             <SavageSeriesPurchaseBox key={service.id} service={service} gameShort={game.short} />

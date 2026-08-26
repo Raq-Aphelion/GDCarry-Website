@@ -1,6 +1,6 @@
 import { Fragment, memo, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { Link, Navigate, useParams, useSearchParams } from 'react-router';
-import { ArrowDown, ArrowDownAZ, ArrowUp, ArrowUpZA, Check, ChevronDown, ChevronRight, Flame, Layers, Package, type LucideIcon } from 'lucide-react';
+import { ArrowDown, ArrowDownAZ, ArrowUp, ArrowUpZA, Ban, Building, Castle, Check, ChevronDown, ChevronRight, CircleDot, ClockArrowDown, ClockArrowUp, Flame, Globe, House, Layers, MapPin, Package, Star, Swords, TrendingUp, type LucideIcon } from 'lucide-react';
 import CustomOrderCta from '@/components/CustomOrderCta';
 import FadeImage from '@/components/FadeImage';
 import MobileCategoryBar from '@/components/MobileCategoryBar';
@@ -30,8 +30,9 @@ const GAME_BG: Record<string, string> = {
 
 /** Sort modes. 'popular' = the curated POPULAR_ORDER (All services) / search
     rank (search results); 'category' = category-grouped (All services /
-    search) or plain catalog order (single category — its default). */
-type SortId = 'popular' | 'price-asc' | 'price-desc' | 'name-az' | 'name-za' | 'category';
+    search) or plain catalog order (single category — its default).
+    'newest'/'oldest' are Accounts-only (account listings by recency). */
+type SortId = 'popular' | 'price-asc' | 'price-desc' | 'name-az' | 'name-za' | 'category' | 'newest' | 'oldest';
 
 const SORT_OPTIONS: { id: SortId; label: string; arrow?: string; Icon: LucideIcon }[] = [
   { id: 'popular', label: 'Most Popular', Icon: Flame },
@@ -49,6 +50,63 @@ const CATEGORY_SORT_OPTIONS = [
   ...SORT_OPTIONS.filter((o) => o.id !== 'popular' && o.id !== 'category'),
 ];
 
+/** Accounts category: "By Category" replaced by recency — Newest is the
+    default (top option); name sorts are dropped, price sorts stay. Sorts by
+    the listing's Service.account.addedAt; listings without a date trail. */
+const ACCOUNT_SORT_OPTIONS: typeof SORT_OPTIONS = [
+  { id: 'newest', label: 'Newest', Icon: ClockArrowDown },
+  { id: 'oldest', label: 'Oldest', Icon: ClockArrowUp },
+  ...SORT_OPTIONS.filter((o) => o.id === 'price-asc' || o.id === 'price-desc'),
+];
+
+interface FilterDef {
+  id: string;
+  label: string;
+  Icon: LucideIcon;
+  options: { id: string; label: string; Icon: LucideIcon }[];
+}
+
+/** Accounts-only listing filters, shown next to the sort dropdown. They
+    filter on the Service.account metadata (region/levels/housing); listings
+    without it only show while every filter is at its default. The first
+    option of each filter is the default. */
+const ACCOUNT_FILTERS: FilterDef[] = [
+  {
+    id: 'region',
+    label: 'Region',
+    Icon: Globe,
+    options: [
+      { id: 'all', label: 'All', Icon: Globe },
+      { id: 'us', label: 'US', Icon: MapPin },
+      { id: 'eu', label: 'EU', Icon: MapPin },
+      { id: 'oc', label: 'OC', Icon: MapPin },
+      { id: 'jp', label: 'JP', Icon: MapPin },
+    ],
+  },
+  {
+    id: 'levels',
+    label: 'Levels',
+    Icon: TrendingUp,
+    options: [
+      { id: 'any', label: 'Any', Icon: TrendingUp },
+      { id: 'combat-max', label: 'All Combat Jobs Max', Icon: Swords },
+      { id: 'all-max', label: 'All Jobs Max', Icon: Star },
+    ],
+  },
+  {
+    id: 'housing',
+    label: 'Housing',
+    Icon: House,
+    options: [
+      { id: 'any', label: 'Any', Icon: CircleDot },
+      { id: 'none', label: 'None', Icon: Ban },
+      { id: 'small', label: 'Small House', Icon: House },
+      { id: 'medium', label: 'Medium House', Icon: Building },
+      { id: 'large', label: 'Large House', Icon: Castle },
+    ],
+  },
+];
+
 /** Rank of each service in the curated Most Popular order (unlisted = last) */
 const popularRank = new Map(POPULAR_ORDER.map((id, i) => [id, i]));
 
@@ -60,6 +118,99 @@ const SortIcon = () => (
     <span className="h-[1.5px] w-[6px] rounded-full bg-current" />
   </span>
 );
+
+/** Keeps an open dropdown menu inside the viewport horizontally: menus are
+    right-aligned to their trigger, so on mobile a trigger near the left edge
+    would push the menu off-screen — shift it right just enough (8px margin).
+    Written straight to the DOM in a layout effect: no re-render, no flash. */
+function useMenuClamp(open: boolean) {
+  const menuRef = useRef<HTMLUListElement>(null);
+  useLayoutEffect(() => {
+    const menu = menuRef.current;
+    if (!open || !menu) return;
+    const r = menu.getBoundingClientRect();
+    if (r.left < 8) menu.style.right = `${r.left - 8}px`;
+  }, [open]);
+  return menuRef;
+}
+
+/** Generic label-row dropdown (the Accounts listing filters) — same look and
+    behavior as the sort dropdown. The trigger shows the filter's name while
+    the default option is selected, just the chosen value once a real one is
+    picked. Outside-click close uses the same pointerdown pattern as the sort
+    dropdown (a fixed click-away layer won't work here — the header's Reveal
+    keeps a transform, which would trap position:fixed inside the header box). */
+function LabelDropdown({
+  def,
+  value,
+  onChange,
+}: {
+  def: FilterDef;
+  value: string;
+  onChange: (v: string) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const boxRef = useRef<HTMLDivElement>(null);
+  const menuRef = useMenuClamp(open);
+  useEffect(() => {
+    if (!open) return;
+    const onDown = (e: PointerEvent) => {
+      if (!boxRef.current?.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener('pointerdown', onDown);
+    return () => document.removeEventListener('pointerdown', onDown);
+  }, [open]);
+
+  const cur = def.options.find((o) => o.id === value) ?? def.options[0];
+  const isDefault = cur.id === def.options[0].id;
+  const TriggerIcon = def.Icon;
+  return (
+    <div ref={boxRef} className="relative shrink-0">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        className={`flex cursor-pointer items-center gap-2 rounded-[3px] border px-3 py-1.5 text-xs font-semibold transition-colors ${
+          open || !isDefault
+            ? 'border-cyan-500/60 bg-navy-800 text-cyan-400'
+            : 'border-navy-700/70 bg-navy-850 text-slate-300 hover:border-cyan-500/40 hover:text-cyan-400'
+        }`}
+      >
+        <TriggerIcon className="h-3.5 w-3.5 text-cyan-400/70" />
+        {isDefault ? def.label : cur.label}
+        <ChevronDown className={`h-3 w-3 text-cyan-400/60 transition-transform ${open ? 'rotate-180' : ''}`} />
+      </button>
+      {open && (
+        <ul
+          ref={menuRef}
+          className="dropdown-in absolute right-0 top-full z-20 mt-2 w-auto min-w-36 rounded-[3px] border border-navy-700/70 bg-navy-850 p-1.5 shadow-2xl"
+        >
+          {def.options.map(({ id, label, Icon }) => (
+            <li key={id}>
+              <button
+                type="button"
+                onClick={() => {
+                  onChange(id);
+                  setOpen(false);
+                }}
+                aria-pressed={value === id}
+                className={`flex w-full cursor-pointer items-center gap-2 rounded-[3px] px-2.5 py-2 text-left text-xs transition-colors ${
+                  value === id
+                    ? 'bg-navy-800 font-semibold text-cyan-400'
+                    : 'text-slate-300 hover:bg-navy-800 hover:text-white'
+                }`}
+              >
+                <Icon className={`h-3.5 w-3.5 shrink-0 ${value === id ? 'text-cyan-400' : 'text-cyan-500/70'}`} />
+                {label}
+                {value === id && <Check className="ml-auto h-3.5 w-3.5 shrink-0 text-cyan-400" />}
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
 
 interface CatInfo {
   name: string;
@@ -147,10 +298,17 @@ export default function GamePage() {
   const game = gameId ? getGame(gameId) : undefined;
   const catParam = searchParams.get('cat');
   // Sort dropdown state — options depend on the view (All services/search get
-  // "Most Popular"; single categories default to "By Category" = catalog order)
+  // "Most Popular"; single categories default to "By Category" = catalog
+  // order; Accounts defaults to "Newest")
   const [sort, setSort] = useState<SortId>('popular');
   const [sortOpen, setSortOpen] = useState(false);
   const sortBoxRef = useRef<HTMLDivElement>(null);
+  const sortMenuRef = useMenuClamp(sortOpen);
+  // Accounts listing filters — filter on the Service.account metadata
+  // (see ACCOUNT_FILTERS)
+  const [accountFilters, setAccountFilters] = useState<Record<string, string>>(() =>
+    Object.fromEntries(ACCOUNT_FILTERS.map((f) => [f.id, f.options[0].id])),
+  );
 
   // Mobile choreography with the category chips bar: the bar hides once the
   // label row is about to stick (and only while scrolling down); any scroll
@@ -363,40 +521,72 @@ export default function GamePage() {
   );
 
   // Sort dropdown options per view: All services and search results get
-  // "Most Popular"; single categories default to "By Category" (catalog order).
+  // "Most Popular"; single categories default to "By Category" (catalog
+  // order); Accounts swaps "By Category" for "Newest"/"Oldest".
   // A sort picked in one view falls back to the next view's default.
   const inSearch = searchResults !== null;
-  const sortOptions = inSearch || isAll ? SORT_OPTIONS : CATEGORY_SORT_OPTIONS;
+  const isAccounts = activeSub?.id === 'accounts';
+  const sortOptions = isAccounts
+    ? ACCOUNT_SORT_OPTIONS
+    : inSearch || isAll
+      ? SORT_OPTIONS
+      : CATEGORY_SORT_OPTIONS;
   const effSort = sortOptions.some((o) => o.id === sort) ? sort : sortOptions[0].id;
 
   // The grid in its current sort. Defaults pass the natural order through:
   // search rank for search results, catalog order for single categories.
   // Array.sort is stable, so ties keep the incoming order.
+  // Accounts: the listing filters (Region/Levels/Housing) apply first.
+  const accountFiltersDefault =
+    accountFilters.region === 'all' && accountFilters.levels === 'any' && accountFilters.housing === 'any';
   const gridServices = useMemo(() => {
     const base = searchResults ?? activeServices;
+    const filtered =
+      isAccounts && !inSearch && !accountFiltersDefault
+        ? base.filter((sv) => {
+            const a = sv.account;
+            if (!a) return false; // unlabeled listings only show at default filters
+            if (accountFilters.region !== 'all' && a.region !== accountFilters.region) return false;
+            // 'combat-max' also matches 'all-max' listings (a superset), so
+            // only the 'all-max' filter can actually exclude a listing
+            if (accountFilters.levels === 'all-max' && a.levels !== 'all-max') return false;
+            if (accountFilters.housing !== 'any' && a.housing !== accountFilters.housing) return false;
+            return true;
+          })
+        : base;
     switch (effSort) {
       case 'price-asc':
-        return [...base].sort((a, b) => priceOf(a.id, a.price) - priceOf(b.id, b.price));
+        return [...filtered].sort((a, b) => priceOf(a.id, a.price) - priceOf(b.id, b.price));
       case 'price-desc':
-        return [...base].sort((a, b) => priceOf(b.id, b.price) - priceOf(a.id, a.price));
+        return [...filtered].sort((a, b) => priceOf(b.id, b.price) - priceOf(a.id, a.price));
       case 'name-az':
-        return [...base].sort((a, b) => a.name.localeCompare(b.name));
+        return [...filtered].sort((a, b) => a.name.localeCompare(b.name));
       case 'name-za':
-        return [...base].sort((a, b) => b.name.localeCompare(a.name));
+        return [...filtered].sort((a, b) => b.name.localeCompare(a.name));
       case 'category':
         return inSearch || isAll
-          ? [...base].sort(
+          ? [...filtered].sort(
               (a, b) => (catInfo.get(a.id)?.order ?? 0) - (catInfo.get(b.id)?.order ?? 0),
             )
-          : base;
+          : filtered;
       case 'popular':
         return inSearch
-          ? base
-          : [...base].sort(
+          ? filtered
+          : [...filtered].sort(
               (a, b) => (popularRank.get(a.id) ?? 9999) - (popularRank.get(b.id) ?? 9999),
             );
+      // Accounts-only (see ACCOUNT_SORT_OPTIONS): by the listing's addedAt;
+      // listings without a date trail (catalog order) in both directions
+      case 'newest':
+        return [...filtered].sort((a, b) =>
+          (b.account?.addedAt ?? '').localeCompare(a.account?.addedAt ?? ''),
+        );
+      case 'oldest':
+        return [...filtered].sort((a, b) =>
+          (a.account?.addedAt ?? '9999').localeCompare(b.account?.addedAt ?? '9999'),
+        );
     }
-  }, [searchResults, activeServices, effSort, isAll, inSearch, catInfo, priceOf]);
+  }, [searchResults, activeServices, effSort, isAll, inSearch, catInfo, priceOf, isAccounts, accountFilters, accountFiltersDefault]);
 
   // Category sub-sections from the database catalog: the Mounts category is
   // split by the duty each mount drops from (`mountDutyGroups`; leftovers
@@ -480,7 +670,10 @@ export default function GamePage() {
         <ChevronDown className={`h-3 w-3 text-cyan-400/60 transition-transform ${sortOpen ? 'rotate-180' : ''}`} />
       </button>
       {sortOpen && (
-        <ul className="dropdown-in absolute right-0 top-full z-20 mt-2 w-44 rounded-[3px] border border-navy-700/70 bg-navy-850 p-1.5 shadow-2xl">
+        <ul
+          ref={sortMenuRef}
+          className="dropdown-in absolute right-0 top-full z-20 mt-2 w-44 rounded-[3px] border border-navy-700/70 bg-navy-850 p-1.5 shadow-2xl"
+        >
           {sortOptions.map(({ id, label, Icon }) => (
             <li key={id}>
               <button
@@ -621,7 +814,7 @@ export default function GamePage() {
               )}
             </div>
 
-            <div className="mt-8 shrink-0 rounded-[5px] bg-navy-850 p-4">
+            <div className="mt-4 shrink-0 rounded-[5px] bg-navy-850 p-4">
               <p className="font-display text-sm font-bold text-cyan-400">Need something else?</p>
               <p className="mt-1 text-xs leading-relaxed text-slate-400">
                 Custom {game.short} orders are quoted within the hour.
@@ -675,7 +868,8 @@ export default function GamePage() {
                   <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-navy-800 text-xs font-bold text-slate-400">
                     {searchResults.length}
                   </span>
-                  <div className="h-px flex-1 bg-gradient-to-r from-navy-700/70 to-transparent max-sm:hidden" />
+                  {/* Fades out once the row is stuck — cards scroll beneath it */}
+                  <div className={`h-px flex-1 bg-gradient-to-r from-navy-700/70 to-transparent transition-opacity duration-300 max-sm:hidden ${labelStuck ? 'opacity-0' : 'opacity-100'}`} />
                   {sortDropdown}
                   </div>
                 </Reveal>
@@ -732,12 +926,27 @@ export default function GamePage() {
             <Reveal className="pointer-events-auto">
               {/* translate-y-[-45px] lands the label 13px under the navbar
                   (58px reserved − 45px) once the chips bar slides away */}
-              <div className={`relative flex items-center gap-3 transition-transform duration-300 max-sm:justify-center lg:translate-y-0 ${chipsHidden ? '-translate-y-[45px]' : 'translate-y-0'}`}>
+              {/* flex-wrap only matters on the Accounts row (sort + 3 filter
+                  dropdowns can exceed small widths — they wrap under the
+                  label); other categories never wrap */}
+              <div className={`relative flex flex-wrap items-center gap-3 transition-transform duration-300 max-sm:justify-center lg:translate-y-0 ${chipsHidden ? '-translate-y-[45px]' : 'translate-y-0'}`}>
               <h2 className="font-display text-xl font-bold text-white sm:text-2xl">{activeSub.name}</h2>
               <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-navy-800 text-xs font-bold text-slate-400">
                 {activeServices.length}
               </span>
-              <div className="h-px flex-1 bg-gradient-to-r from-navy-700/70 to-transparent max-sm:hidden" />
+              {/* Fades out once the row is stuck — cards scroll beneath it */}
+              <div className={`h-px flex-1 bg-gradient-to-r from-navy-700/70 to-transparent transition-opacity duration-300 max-sm:hidden ${labelStuck ? 'opacity-0' : 'opacity-100'}`} />
+              {/* Accounts listing filters (see ACCOUNT_FILTERS);
+                  sort stays the rightmost dropdown */}
+              {isAccounts &&
+                ACCOUNT_FILTERS.map((f) => (
+                  <LabelDropdown
+                    key={f.id}
+                    def={f}
+                    value={accountFilters[f.id]}
+                    onChange={(v) => setAccountFilters((s) => ({ ...s, [f.id]: v }))}
+                  />
+                ))}
               {sortDropdown}
               </div>
             </Reveal>
@@ -749,6 +958,11 @@ export default function GamePage() {
             // Matches the service card height (ServiceCard min-h)
             <div className="mt-5 flex h-[380px] items-center justify-center rounded-[5px] bg-navy-850 text-sm text-slate-500">
               No boosts in this category yet
+            </div>
+          ) : gridServices.length === 0 ? (
+            // Every listing was filtered out (Accounts filters)
+            <div className="mt-5 flex h-[380px] items-center justify-center rounded-[5px] bg-navy-850 px-6 text-sm text-slate-500">
+              No accounts match the selected filters
             </div>
           ) : groupSections && effSort === 'category' ? (
             <div className="mt-5 space-y-10">

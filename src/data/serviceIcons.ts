@@ -4,6 +4,7 @@ import { ArrowUp, Coins, Gamepad2, Gem, Globe, Layers, Package, Shield, ShieldCh
     pill row and on service cards (falling back to the default diamonds/icons
     when a service has no entry). */
 export const SERVICE_TAG_ICONS: Record<string, [LucideIcon, LucideIcon, LucideIcon]> = {
+  'ffxiv-account-lpdu-helper': [SquareCheck, Coins, Globe],
   'ffxiv-gil-pack': [Coins, Globe, ShieldCheck],
   'ffxiv-leveling-boost': [ArrowUp, SquareCheck, Gamepad2],
   'ffxiv-msq-skip': [ArrowUp, SquareCheck, Gamepad2],
