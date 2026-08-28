@@ -6,6 +6,7 @@ import { SERVICE_TAG_ICONS } from '@/data/serviceIcons';
 import { useCurrency } from '@/context/CurrencyContext';
 import { usePricing } from '@/context/PricingContext';
 import cardPlaceholder from '@/assets/images/service-cards/ffxiv/ffxiv-blank.webp';
+import cardPlaceholderWhite from '@/assets/images/service-cards/ffxiv/ffxiv-blank-white.webp';
 
 /**
  * Flat service block: the image fills the whole card as a background and
@@ -66,7 +67,8 @@ const ServiceCard = memo(function ServiceCard({
           alt=""
           className="h-full w-full"
           imgClassName="object-top transition-transform duration-500 group-hover:scale-105"
-          placeholder={cardPlaceholder}
+          placeholder={service.account ? cardPlaceholderWhite : cardPlaceholder}
+          sharedZoom
         />
       </div>
       <div className="absolute -inset-px bg-gradient-to-t from-navy-800 from-[33%] via-navy-800/70 via-[45%] to-transparent to-[60%]" />

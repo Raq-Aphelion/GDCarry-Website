@@ -227,6 +227,16 @@ export default function ServicePage() {
                     {r.text && (
                       <span className="text-sm leading-relaxed text-slate-400 max-sm:text-xs">{r.text}</span>
                     )}
+                    {r.link && (
+                      <a
+                        href={r.link.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm leading-relaxed text-cyan-400 underline decoration-cyan-400/40 underline-offset-2 transition-colors hover:text-cyan-300 max-sm:text-xs"
+                      >
+                        {r.link.label}
+                      </a>
+                    )}
                   </div>
                 ) : r.dutyButton ? (
                   <div className="mt-2 flex flex-wrap items-center gap-2">
@@ -242,7 +252,19 @@ export default function ServicePage() {
                     )}
                   </div>
                 ) : (
-                  <p className="mt-1 text-sm leading-relaxed text-slate-400 max-sm:text-xs">{r.text}</p>
+                  <p className="mt-1 text-sm leading-relaxed text-slate-400 max-sm:text-xs">
+                    {r.text}
+                    {r.link && (
+                      <a
+                        href={r.link.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-cyan-400 underline decoration-cyan-400/40 underline-offset-2 transition-colors hover:text-cyan-300"
+                      >
+                        {r.link.label}
+                      </a>
+                    )}
+                  </p>
                 )}
               </div>
             </div>

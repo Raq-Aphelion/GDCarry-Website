@@ -1,4 +1,4 @@
-import { ArrowRightLeft, ArrowUp, BadgeCheck, Coins, Gem, Globe, Medal, NotebookText, Package, Shield, ShieldCheck, Swords, Timer, Trophy, Undo2, createLucideIcon, type LucideIcon } from 'lucide-react';
+import { ArrowRightLeft, ArrowUp, BadgeCheck, Coins, Gem, Medal, NotebookText, Package, Shield, ShieldCheck, Swords, Timer, Trophy, Undo2, UserRound, createLucideIcon, type LucideIcon } from 'lucide-react';
 
 /** Single coin — lucide only ships `Coins` (two coins); keeps the same stroke style. */
 const SingleCoin = createLucideIcon('SingleCoin', [
@@ -10,6 +10,8 @@ export interface ServicePageReward {
   icon: LucideIcon;
   title: string;
   text?: string;
+  /** Trailing external hyperlink after `text` (e.g. the Fantasia store link) */
+  link?: { label: string; href: string };
   /** Replaces `text`: mount names rendered as buttons (future mount links) */
   items?: string[];
   /** Duty name rendered as a linked button under the title (mount drop sources) */
@@ -422,17 +424,18 @@ SERVICE_PAGES['ffxiv-account-lpdu-helper'] = {
     {
       icon: BadgeCheck,
       title: 'All Combat Jobs & Crafters maxed',
-      text: 'Every combat, crafter and gatherer job at max level, with most job quests already completed.',
+      text: 'Every Combat (except Blue Mage and Beastmaster), Crafter and Gatherer job at max level, with most job quests already completed.',
     },
     {
-      icon: Coins,
-      title: '1M+ Gil Included',
-      text: 'Over 1,000,000 gil on hand — more can be added on request.',
+      icon: Package,
+      title: 'Expansions included',
+      text: 'Access to all expansions (PC only) and all Main Scenario Quests completed.',
     },
     {
-      icon: Globe,
-      title: 'EU — Light Data Center',
-      text: 'EU based account, currently on the Light data center.',
+      icon: UserRound,
+      title: 'Character details',
+      text: 'The current character is a male Viera, race and gender can be changed any time with the use of a ',
+      link: { label: 'Phial of Fantasia', href: 'https://store.finalfantasyxiv.com/ffxivstore/en-us/product/1' },
     },
     {
       icon: ArrowRightLeft,
@@ -442,15 +445,6 @@ SERVICE_PAGES['ffxiv-account-lpdu-helper'] = {
   ],
   accordion: [
     {
-      title: "What's on the account",
-      items: [
-        'All 100 jobs & crafters at max level, with most job quests completed',
-        '1M+ gil included — more can be added at request',
-        'EU based account on the Light data center',
-        'No housing plot registered',
-      ],
-    },
-    {
       title: 'How does the transfer work?',
       items: [
         'After the purchase, our manager contacts you via Live Chat or Discord',
@@ -459,14 +453,6 @@ SERVICE_PAGES['ffxiv-account-lpdu-helper'] = {
         'You change the e-mail and password — the account is fully yours',
       ],
     },
-    {
-      title: 'Requirements',
-      items: [
-        'An e-mail address you control for the handover',
-        'No active FFXIV subscription is required to receive the account',
-      ],
-    },
-    HOW_IT_WORKS,
   ],
 };
 

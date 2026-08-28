@@ -293,6 +293,32 @@
 .img-reveal {
   animation: img-reveal 0.7s cubic-bezier(0.4, 0, 0.2, 1) backwards;
 }
+/* sharedZoom variant (service cards): the zoom lives on a wrapper around BOTH
+   image versions while the opacity crossfade runs per-image — one shared
+   motion instead of the placeholder and the loaded image each appearing to
+   move */
+@keyframes img-zoom {
+  from {
+    transform: scale(1.05);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+.img-zoom {
+  animation: img-zoom 0.7s cubic-bezier(0.4, 0, 0.2, 1) backwards;
+}
+@keyframes img-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.img-fade-in {
+  animation: img-fade-in 0.7s cubic-bezier(0.4, 0, 0.2, 1) backwards;
+}
 @keyframes img-fade-out {
   from {
     opacity: 1;
