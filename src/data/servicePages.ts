@@ -430,9 +430,7 @@ SERVICE_PAGES['ffxiv-account-1'] = {
   // real account shots as they're added
   gallery: [
     '/images/accounts/ffxiv-account-1/ffxiv-account-1-gallery-1.webp',
-    '/images/guides/ffxiv-boosting.jpg',
-    '/images/og-image.png',
-    '/images/ranks/cc-crystal.webp',
+    '/images/accounts/ffxiv-account-1/ffxiv-account-1-gallery-2.webp',
   ],
   rewards: [
     // Character
