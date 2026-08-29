@@ -1,5 +1,4 @@
 import { ArrowRightLeft, BadgeCheck } from 'lucide-react';
-import FadeImage from './FadeImage';
 import { usePurchaseFloat } from '@/hooks/usePurchaseFloat';
 import { useCart } from '@/context/CartContext';
 import { useCurrency } from '@/context/CurrencyContext';
@@ -9,7 +8,8 @@ import type { Service } from '@/data/games';
 /** Account listing purchase box: a one-off sale, so no methods or options —
     just the specs recap and a fixed price. Shares the PurchaseBox shell and
     the floating price block; quantity is locked to 1 (the cart merges repeat
-    adds into nothing — qtyLocked makes a re-add a no-op). */
+    adds into nothing — qtyLocked makes a re-add a no-op). No header image —
+    the listing's gallery sits in the page body. */
 export default function AccountPurchaseBox({ service, gameShort }: { service: Service; gameShort: string }) {
   const { addItem, openCart } = useCart();
   const { format } = useCurrency();
@@ -35,16 +35,6 @@ export default function AccountPurchaseBox({ service, gameShort }: { service: Se
       style={stick === 'overflow' ? { top: overflowTop } : undefined}
     >
       <div className="purchase-box relative overflow-visible rounded-[5px] bg-navy-850">
-        {/* Service image behind the top of the box — taller than the service
-            boxes: account art is the listing's preview, so more of it shows.
-            The spacer matches the image height, so the content below starts
-            under the gradient, fully on the solid background */}
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-[300px] overflow-hidden rounded-t-[5px]" aria-hidden>
-          <FadeImage src={service.image} alt="" className="h-full w-full" imgClassName="object-[50%_0%]" />
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent via-[70%] to-navy-850" />
-        </div>
-        <div className="h-[300px]" />
-
         <div className="relative space-y-4 p-4">
           <div>
             <p className="pl-px text-sm font-semibold text-white">

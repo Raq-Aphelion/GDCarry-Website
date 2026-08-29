@@ -61,7 +61,7 @@ import logoLostArk from '@/assets/images/game-logos/lost-ark.png';
 import logoWarframe from '@/assets/images/game-logos/warframe.png';
 import logoRunescape from '@/assets/images/game-logos/runescape.webp';
 import scGil from '@/assets/images/service-cards/ffxiv/gil-currency/ffxiv-gil.webp';
-import scAccountLpdu from '@/assets/images/service-cards/ffxiv/accounts/ffxiv-account-1.webp';
+import scAccount1 from '@/assets/images/service-cards/ffxiv/accounts/ffxiv-account-1.webp';
 import scDmu from '@/assets/images/service-cards/ffxiv/ultimate-raids/ffxiv-dmu.webp';
 import scFru from '@/assets/images/service-cards/ffxiv/ultimate-raids/ffxiv-fru.webp';
 import scTop from '@/assets/images/service-cards/ffxiv/ultimate-raids/ffxiv-top.webp';
@@ -1703,15 +1703,15 @@ export const games: Game[] = [
         name: 'Accounts',
         services: [
           {
-            id: 'ffxiv-account-lpdu-helper',
+            id: 'ffxiv-account-1',
             name: 'EU Account (All Jobs Maxed)',
             tag1: 'All Combat Jobs & Crafters maxed',
             tag2: 'No housing included',
             tag3: 'EU - Light Data Center',
             longDescription:
-              'A fully maxed EU account on the Light data center: all 100 jobs and crafters at max level with most job quests completed, over 1,000,000 gil on hand (more can be added on request), and a full transfer available to any region or data center.',
+              'A verified pre-owned FFXIV account. Everything included is listed below.',
             price: 500,
-            image: scAccountLpdu,
+            image: scAccount1,
             account: {
               region: 'eu',
               levels: 'all-max',

@@ -1,4 +1,4 @@
-import { ArrowRightLeft, ArrowUp, BadgeCheck, Coins, Gem, Medal, NotebookText, Package, Shield, ShieldCheck, Swords, Timer, Trophy, Undo2, UserRound, createLucideIcon, type LucideIcon } from 'lucide-react';
+import { ArrowRightLeft, ArrowUp, BadgeCheck, Coins, Gem, Globe, Hammer, House, Medal, Monitor, NotebookText, Package, Shield, ShieldCheck, Swords, Timer, Trophy, Undo2, UserRound, createLucideIcon, type LucideIcon } from 'lucide-react';
 
 /** Single coin — lucide only ships `Coins` (two coins); keeps the same stroke style. */
 const SingleCoin = createLucideIcon('SingleCoin', [
@@ -12,6 +12,9 @@ export interface ServicePageReward {
   text?: string;
   /** Trailing external hyperlink after `text` (e.g. the Fantasia store link) */
   link?: { label: string; href: string };
+  /** Optional group heading rendered above this row when the group changes
+      (account listings render as spec sheets: Character / Jobs / …) */
+  group?: string;
   /** Replaces `text`: mount names rendered as buttons (future mount links) */
   items?: string[];
   /** Duty name rendered as a linked button under the title (mount drop sources) */
@@ -41,6 +44,9 @@ export interface ServicePageContent {
   short: string;
   /** Section heading above the rewards — defaults to "Duty's Rewards" */
   rewardsHeading?: string;
+  /** Subpage image gallery (account listings): main shot + a thumbnail per
+      image, so the strip grows with the list */
+  gallery?: string[];
   rewards: ServicePageReward[];
   accordion: ServicePageAccordionSection[];
 }
@@ -414,33 +420,45 @@ SERVICE_PAGES['ffxiv-gil-pack'] = {
   ],
 };
 
-/** The All Jobs Maxed account listing — account sale, so the rewards read as
-    "what's on the account" and the accordion covers the transfer instead of
-    a piloted/AFK service. */
-SERVICE_PAGES['ffxiv-account-lpdu-helper'] = {
+/** Account listings: the rewards block renders as a spec sheet (grouped
+    label/value rows, account-marketplace style) instead of marketing cards.
+    The accordion covers the delivery/handover. */
+SERVICE_PAGES['ffxiv-account-1'] = {
   short: 'EU Account',
   rewardsHeading: "What's on the account",
+  // Test entries: mixed-resolution images from the project — replace with the
+  // real account shots as they're added
+  gallery: [
+    '/images/accounts/ffxiv-account-1/ffxiv-account-1-gallery-1.webp',
+    '/images/guides/ffxiv-boosting.jpg',
+    '/images/og-image.png',
+    '/images/ranks/cc-crystal.webp',
+  ],
   rewards: [
+    // Character
+    { group: 'Character Details', icon: Globe, title: 'Data Center', text: 'Light (EU)' },
+    { icon: Monitor, title: 'Platforms', text: 'PC' },
+    { icon: Package, title: 'Expansions', text: 'All (PC only)' },
+    { icon: UserRound, title: 'Race & Gender', text: 'Male Viera' },
+    // Jobs & Progression
     {
-      icon: BadgeCheck,
-      title: 'All Combat Jobs & Crafters maxed',
-      text: 'Every Combat (except Blue Mage and Beastmaster), Crafter and Gatherer job at max level, with most job quests already completed.',
+      group: 'Jobs & Progression',
+      icon: Swords,
+      title: 'Combat Jobs',
+      text: 'All max level (except Blue Mage and Beastmaster)',
     },
+    { icon: Hammer, title: 'Crafters & Gatherers', text: 'All max level' },
+    { icon: NotebookText, title: 'Main Scenario', text: 'All quests completed' },
+    { icon: Medal, title: 'Job Quests', text: 'Mostly completed' },
+    // Housing & Economy
+    { group: 'Housing & Economy', icon: House, title: 'Housing', text: 'None' },
+    { icon: Coins, title: 'Gil', text: '1M+ included (more on request)' },
+    // Delivery
     {
-      icon: Package,
-      title: 'Expansions included',
-      text: 'Access to all expansions (PC only) and all Main Scenario Quests completed.',
-    },
-    {
-      icon: UserRound,
-      title: 'Character details',
-      text: 'The current character is a male Viera, race and gender can be changed any time with the use of a ',
-      link: { label: 'Phial of Fantasia', href: 'https://store.finalfantasyxiv.com/ffxivstore/en-us/product/1' },
-    },
-    {
+      group: 'Delivery',
       icon: ArrowRightLeft,
-      title: 'Transferable Anywhere',
-      text: 'The account can be transferred to any region and data center you want to play on.',
+      title: 'Transfer',
+      text: 'The account can be transferred to any region and data center',
     },
   ],
   accordion: [
