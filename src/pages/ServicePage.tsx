@@ -24,8 +24,9 @@ import RelicPurchaseBox from '@/components/RelicPurchaseBox';
 import ReputationPurchaseBox from '@/components/ReputationPurchaseBox';
 import Reveal from '@/components/Reveal';
 import ServiceCard from '@/components/ServiceCard';
+import ServiceGallery from '@/components/ServiceGallery';
 import { getGame, serviceLink } from '@/data/games';
-import { getServicePage, MOUNT_LINKS } from '@/data/servicePages';
+import { getServicePage, MOUNT_LINKS, type ServicePageReward } from '@/data/servicePages';
 import { usePricing } from '@/context/PricingContext';
 import { SERVICE_TAG_ICONS as POINT_ICONS } from '@/data/serviceIcons';
 import ffxivBg from '@/assets/images/backgrounds/ffxiv-bg.webp';
@@ -75,6 +76,85 @@ function Bullets({
         </li>
       ))}
     </ul>
+  );
+}
+
+/** Single spec row in the rewards/spec-sheet blocks (icon + title + text /
+    mount buttons / duty link). */
+function RewardRow({ r }: { r: ServicePageReward }) {
+  return (
+    <div className="flex items-start gap-4 p-4 sm:p-5">
+      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[5px] bg-navy-800">
+        <r.icon className="h-5 w-5 text-cyan-400" strokeWidth={1.75} />
+      </span>
+      <div className="min-w-0 text-left">
+        <p className="text-sm font-bold text-white max-sm:text-xs">{r.title}</p>
+        {r.items ? (
+          <div className="mt-2 flex flex-wrap items-center gap-2">
+            {r.items.map((m) => {
+              const linked = MOUNT_LINKS[m];
+              const cls =
+                'inline-flex items-center gap-1.5 rounded-[5px] border border-navy-700/70 bg-navy-800 px-2.5 py-1 text-xs font-medium text-slate-300 transition-colors hover:border-cyan-600/30 hover:text-cyan-400';
+              const inner = (
+                <>
+                  {m}
+                  <ArrowRight className="h-3 w-3 text-cyan-500" />
+                </>
+              );
+              return linked ? (
+                <Link key={m} to={serviceLink(linked)} className={cls}>
+                  {inner}
+                </Link>
+              ) : (
+                <button key={m} type="button" className={cls}>
+                  {inner}
+                </button>
+              );
+            })}
+            {r.text && (
+              <span className="text-sm leading-relaxed text-slate-400 max-sm:text-xs">{r.text}</span>
+            )}
+            {r.link && (
+              <a
+                href={r.link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm leading-relaxed text-cyan-400 underline decoration-cyan-400/40 underline-offset-2 transition-colors hover:text-cyan-300 max-sm:text-xs"
+              >
+                {r.link.label}
+              </a>
+            )}
+          </div>
+        ) : r.dutyButton ? (
+          <div className="mt-2 flex flex-wrap items-center gap-2">
+            <Link
+              to={r.dutyButton.to}
+              className="inline-flex items-center gap-1.5 rounded-[5px] border border-navy-700/70 bg-navy-800 px-2.5 py-1 text-xs font-medium text-slate-300 transition-colors hover:border-cyan-600/30 hover:text-cyan-400"
+            >
+              {r.dutyButton.label}
+              <ArrowRight className="h-3 w-3 text-cyan-500" />
+            </Link>
+            {r.text && (
+              <span className="text-sm leading-relaxed text-slate-400 max-sm:text-xs">{r.text}</span>
+            )}
+          </div>
+        ) : (
+          <p className="mt-1 text-sm leading-relaxed text-slate-400 max-sm:text-xs">
+            {r.text}
+            {r.link && (
+              <a
+                href={r.link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-cyan-400 underline decoration-cyan-400/40 underline-offset-2 transition-colors hover:text-cyan-300"
+              >
+                {r.link.label}
+              </a>
+            )}
+          </p>
+        )}
+      </div>
+    </div>
   );
 }
 
@@ -182,95 +262,70 @@ export default function ServicePage() {
     </div>
   );
 
+  // Spec-sheet grouping (account listings): `group` marks the FIRST row of a
+  // group — each group becomes its own titled block with a 2-col grid of
+  // rows. Ungrouped pages keep the single "Duty's Rewards"-style card.
+  const rewardGroups = content.rewards.some((r) => r.group)
+    ? content.rewards.reduce(
+        (acc, r) => {
+          if (r.group || !acc.length)
+            acc.push({ name: r.group ?? content.rewardsHeading ?? "Duty's Rewards", rewards: [] });
+          acc[acc.length - 1].rewards.push(r);
+          return acc;
+        },
+        [] as { name: string; rewards: ServicePageReward[] }[],
+      )
+    : null;
+
   const body = (
     <div className="min-w-0">
-      {/* ============ DUTY'S REWARDS ============ */}
-      <Reveal>
-        <div className="flex items-center gap-3">
-          <h2 className="font-display text-xl font-bold text-white sm:text-2xl">
-            {content.rewardsHeading ?? "Duty's Rewards"}
-          </h2>
-          <div className="h-px flex-1 bg-gradient-to-r from-navy-700/70 to-transparent" />
-        </div>
-      </Reveal>
-      <Reveal delay={100}>
-        <div className="card-surface mt-5 divide-y divide-navy-700/50 rounded-[5px]">
-          {content.rewards.map((r) => (
-            <div key={r.title} className="flex items-start gap-4 p-4 sm:p-5">
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[5px] bg-navy-800">
-                <r.icon className="h-5 w-5 text-cyan-400" strokeWidth={1.75} />
-              </span>
-              <div className="min-w-0 text-left">
-                <p className="text-sm font-bold text-white max-sm:text-xs">{r.title}</p>
-                {r.items ? (
-                  <div className="mt-2 flex flex-wrap items-center gap-2">
-                    {r.items.map((m) => {
-                      const linked = MOUNT_LINKS[m];
-                      const cls =
-                        'inline-flex items-center gap-1.5 rounded-[5px] border border-navy-700/70 bg-navy-800 px-2.5 py-1 text-xs font-medium text-slate-300 transition-colors hover:border-cyan-600/30 hover:text-cyan-400';
-                      const inner = (
-                        <>
-                          {m}
-                          <ArrowRight className="h-3 w-3 text-cyan-500" />
-                        </>
-                      );
-                      return linked ? (
-                        <Link key={m} to={serviceLink(linked)} className={cls}>
-                          {inner}
-                        </Link>
-                      ) : (
-                        <button key={m} type="button" className={cls}>
-                          {inner}
-                        </button>
-                      );
-                    })}
-                    {r.text && (
-                      <span className="text-sm leading-relaxed text-slate-400 max-sm:text-xs">{r.text}</span>
-                    )}
-                    {r.link && (
-                      <a
-                        href={r.link.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-sm leading-relaxed text-cyan-400 underline decoration-cyan-400/40 underline-offset-2 transition-colors hover:text-cyan-300 max-sm:text-xs"
-                      >
-                        {r.link.label}
-                      </a>
-                    )}
+      {/* Gallery (account listings) */}
+      {content.gallery && content.gallery.length > 0 && (
+        <Reveal>
+          <ServiceGallery images={content.gallery} alt={service.name} />
+        </Reveal>
+      )}
+
+      {/* ============ REWARDS / SPEC SHEET ============ */}
+      {rewardGroups ? (
+        rewardGroups.map((g, gi) => (
+          <Reveal key={g.name} delay={gi * 80}>
+            <div className={gi > 0 || content.gallery?.length ? 'mt-8' : ''}>
+              <div className="flex items-center gap-3">
+                <h2 className="font-display text-xl font-bold text-white sm:text-2xl">{g.name}</h2>
+                <div className="h-px flex-1 bg-gradient-to-r from-navy-700/70 to-transparent" />
+              </div>
+              {/* gap-px grid: the container bg paints hairline dividers
+                  between the spec cells */}
+              <div className="card-surface mt-5 grid grid-cols-1 gap-px overflow-hidden rounded-[5px] bg-navy-700/40 sm:grid-cols-2">
+                {g.rewards.map((r) => (
+                  <div key={r.title} className="bg-navy-850">
+                    <RewardRow r={r} />
                   </div>
-                ) : r.dutyButton ? (
-                  <div className="mt-2 flex flex-wrap items-center gap-2">
-                    <Link
-                      to={r.dutyButton.to}
-                      className="inline-flex items-center gap-1.5 rounded-[5px] border border-navy-700/70 bg-navy-800 px-2.5 py-1 text-xs font-medium text-slate-300 transition-colors hover:border-cyan-600/30 hover:text-cyan-400"
-                    >
-                      {r.dutyButton.label}
-                      <ArrowRight className="h-3 w-3 text-cyan-500" />
-                    </Link>
-                    {r.text && (
-                      <span className="text-sm leading-relaxed text-slate-400 max-sm:text-xs">{r.text}</span>
-                    )}
-                  </div>
-                ) : (
-                  <p className="mt-1 text-sm leading-relaxed text-slate-400 max-sm:text-xs">
-                    {r.text}
-                    {r.link && (
-                      <a
-                        href={r.link.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-cyan-400 underline decoration-cyan-400/40 underline-offset-2 transition-colors hover:text-cyan-300"
-                      >
-                        {r.link.label}
-                      </a>
-                    )}
-                  </p>
-                )}
+                ))}
               </div>
             </div>
-          ))}
-        </div>
-      </Reveal>
+          </Reveal>
+        ))
+      ) : (
+        <>
+          <Reveal>
+            <div className="flex items-center gap-3">
+              <h2 className="font-display text-xl font-bold text-white sm:text-2xl">
+                {content.rewardsHeading ?? "Duty's Rewards"}
+              </h2>
+              <div className="h-px flex-1 bg-gradient-to-r from-navy-700/70 to-transparent" />
+            </div>
+          </Reveal>
+          <Reveal delay={100}>
+            <div className="card-surface mt-5 divide-y divide-navy-700/50 rounded-[5px]">
+              {content.rewards.map((r) => (
+                <RewardRow key={r.title} r={r} />
+              ))}
+            </div>
+          </Reveal>
+        </>
+      )}
 
       {/* ============ INFO ACCORDION ============ */}
       <div className="mt-8 space-y-3">
