@@ -479,7 +479,7 @@ export const guides: Guide[] = [
         blocks: [
           {
             type: 'p',
-            text: 'Legacy Ultimates — UCoB through FRU — have no weekly lockout, so totems can be farmed across as many resets as you want. The newest encounter is the exception, so prioritise it first if you care about its weapon before the hype dies down.',
+            text: 'Legacy Ultimates — UCoB through FRU — have no weekly lockout, so totems can be farmed across as many clears as you want. The newest encounter is the exception, so prioritise it first if you care about its weapon before the hype dies down.',
           },
           {
             type: 'p',

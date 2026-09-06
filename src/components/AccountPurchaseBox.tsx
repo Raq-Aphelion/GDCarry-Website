@@ -1,15 +1,18 @@
-import { ArrowRightLeft, BadgeCheck } from 'lucide-react';
+import { ArrowRightLeft, BadgeCheck, Clock } from 'lucide-react';
+import FadeImage from './FadeImage';
 import { usePurchaseFloat } from '@/hooks/usePurchaseFloat';
 import { useCart } from '@/context/CartContext';
 import { useCurrency } from '@/context/CurrencyContext';
 import { usePricing } from '@/context/PricingContext';
 import type { Service } from '@/data/games';
+import blankCardArt from '@/assets/images/service-cards/ffxiv/ffxiv-blank.webp';
 
 /** Account listing purchase box: a one-off sale, so no methods or options —
     just the specs recap and a fixed price. Shares the PurchaseBox shell and
     the floating price block; quantity is locked to 1 (the cart merges repeat
-    adds into nothing — qtyLocked makes a re-add a no-op). No header image —
-    the listing's gallery sits in the page body. */
+    adds into nothing — qtyLocked makes a re-add a no-op). The header shows
+    the standard blank card art (the listing's own gallery sits in the page
+    body). */
 export default function AccountPurchaseBox({ service, gameShort }: { service: Service; gameShort: string }) {
   const { addItem, openCart } = useCart();
   const { format } = useCurrency();
@@ -35,6 +38,14 @@ export default function AccountPurchaseBox({ service, gameShort }: { service: Se
       style={stick === 'overflow' ? { top: overflowTop } : undefined}
     >
       <div className="purchase-box relative overflow-visible rounded-[5px] bg-navy-850">
+        {/* Standard header art — the blank card image behind the gradient,
+            same size as the other purchase boxes */}
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-[180px] overflow-hidden rounded-t-[5px]" aria-hidden>
+          <FadeImage src={blankCardArt} alt="" className="h-full w-full" imgClassName="object-[50%_10%]" />
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent via-[65%] to-navy-850" />
+        </div>
+        <div className="h-28" />
+
         <div className="relative space-y-4 p-4">
           <div>
             <p className="pl-px text-sm font-semibold text-white">
@@ -65,7 +76,10 @@ export default function AccountPurchaseBox({ service, gameShort }: { service: Se
           }`}
         >
           <p className="font-display text-2xl font-extrabold text-white">{format(total)}</p>
-          <p className="mt-1 text-xs text-slate-400">One-time payment — the account is fully yours</p>
+          <p className="mt-1 flex items-center justify-center gap-1.5 text-xs text-slate-400">
+            <Clock className="h-3.5 w-3.5 text-cyan-500" />
+            Average Completion Time: 24 Hours
+          </p>
           <button
             onClick={addToCart}
             className="purchase-cta mt-3.5 w-full rounded-[5px] bg-gradient-to-r from-cyan-500 to-cyan-700 py-2.5 font-display text-sm font-bold text-navy-900 transition-all hover:brightness-110"

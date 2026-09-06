@@ -1,7 +1,5 @@
 import { useCallback, useEffect, useRef, useState, type CSSProperties } from 'react';
 
-const TWO_COL_QUERY = '(min-width: 1024px)';
-
 /** Shared floating-price-block + sticky-box behavior used by PurchaseBox and
     GilPurchaseBox. The price block floats to the screen bottom when its
     natural spot is below the fold, pins like the category sidebar when
@@ -167,5 +165,3 @@ export function usePurchaseFloat(watchKey?: unknown) {
 
   return { rootRef, wrapRef, stick, overflowTop, fixedStyle, blockHpx };
 }
-
-export { TWO_COL_QUERY };

@@ -85,10 +85,12 @@
   /* lenis.css traps wheel scroll on data-lenis-prevent elements
      (overscroll-behavior: contain) — that rule is meant for modals. Our
      prevented elements are in-page native dropdowns (purchase-box selects),
-     so keep native scroll chaining: wheeling over one that can't scroll
-     (further) falls through to the page, as before Lenis. Inner scrollers
-     with their own Lenis instance (category sidebar, order summary, cart)
-     don't use data-lenis-prevent — they nest via lenisStopPropagation.
+     which lock the page themselves: CustomSelect consumes wheel events over
+     the open list (manual scrollTop), so nothing bubbles to the page
+     scroller even at the list's edges. This override only matters for any
+     remaining native-chaining fallback. Inner scrollers with their own
+     Lenis instance (category sidebar, order summary, cart) don't use
+     data-lenis-prevent — they nest via lenisStopPropagation.
      ID selector beats lenis.css's .lenis [data-lenis-prevent] regardless
      of bundle order or Lenis's state classes. */
   #page-scroll [data-lenis-prevent] {
@@ -329,6 +331,58 @@
 }
 .img-fade-out {
   animation: img-fade-out 0.7s cubic-bezier(0.4, 0, 0.2, 1) backwards;
+}
+
+/* Lightbox (ServiceGallery) enter/exit — the overlay fades, the image scales
+   a touch. Exit is driven by the -out classes; the component delays the
+   unmount by the animation length (keep in sync). */
+@keyframes lightbox-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.lightbox-in {
+  animation: lightbox-in 0.18s ease-out both;
+}
+@keyframes lightbox-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+.lightbox-out {
+  animation: lightbox-out 0.18s ease-in both;
+}
+@keyframes lightbox-img-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.lightbox-img-in {
+  animation: lightbox-img-in 0.22s ease-out both;
+}
+@keyframes lightbox-img-out {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+}
+.lightbox-img-out {
+  animation: lightbox-img-out 0.18s ease-in both;
 }
 
 /* Remove native number input spinners */

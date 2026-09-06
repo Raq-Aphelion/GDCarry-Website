@@ -524,7 +524,7 @@ export const DEFAULT_PRICING: PricingDb = {
 
 /** Per-category database files (without .json) loaded and merged at startup.
     Exported: the orders worker fetches the same public files for its
-    authoritative recompute. */
+    authoritative recompute (worker/orders-proxy.js imports this list). */
 export const CATEGORY_FILES = [
   'ffxiv-UltimateRaids',
   'ffxiv-Gil',

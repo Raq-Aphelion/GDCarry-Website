@@ -15,7 +15,6 @@
 const WIDGET_ID = 'lhc_widget_v2';
 const BADGE_ID = 'lhc_status_widget_v2';
 const CONTAINER_ID = 'lhc_container_v2';
-const CART_WIDTH = 448; // cart drawer max-w-md (28rem)
 
 type LhcEl = HTMLElement & { dataset: DOMStringMap & { gdOrderFlow?: string } };
 
@@ -160,5 +159,3 @@ export function initLhcWidgetFx() {
   tick();
   setInterval(tick, 1000);
 }
-
-export { CART_WIDTH };

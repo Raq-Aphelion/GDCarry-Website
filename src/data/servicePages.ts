@@ -148,7 +148,7 @@ const rewards = (
   {
     icon: Gem,
     title: totem,
-    text: 'Ultimate Specific totems that can be exchanged for a weapon of your choosing.',
+    text: 'Ultimate-specific totems that can be exchanged for a weapon of your choosing.',
   },
   {
     icon: BadgeCheck,
@@ -337,7 +337,7 @@ export const SERVICE_PAGES: Record<string, ServicePageContent> = {
       },
     ],
     accordion: [
-      requirements('All revelant savage fights Completed (M4S, P4S, P8S, E4S, O4S and O8S)', 'ilvl 740 or higher gear'),
+      requirements('All relevant savage fights Completed (M4S, P4S, P8S, E4S, O4S and O8S)', 'ilvl 740 or higher gear'),
       HOW_IT_WORKS,
       PILOTED_VS_AFK,
     ],
@@ -377,7 +377,7 @@ SERVICE_PAGES['ffxiv-gil-pack'] = {
       items: [
         'Have an active Final Fantasy XIV account subscription (Free Trial accounts cannot trade)',
         'Be eligible to trade or have the requirements for a mannequin transaction',
-        'Be available for the trade at the agreed place and time if face to face trades',
+        'Be available for the trade at the agreed place and time for face-to-face trades',
       ],
     },
     HOW_IT_WORKS,
@@ -1812,7 +1812,7 @@ SERVICE_PAGES['ffxiv-pilgrims-traverse'] = deepDungeonPage(
 SERVICE_PAGES['ffxiv-final-verse'] = deepDungeonPage(
   'The Final Verse',
   [
-    { icon: Swords, title: 'The Final Verse (Quantum) Cleared', text: 'The quantum encounter defeated at the maximum 40 sacramental offerings.' },
+    { icon: Swords, title: 'The Final Verse (Quantum) Cleared', text: 'The quantum encounter defeated at a maximum of 40 sacramental offerings.' },
     { icon: Gem, title: 'Sacks of First Light', text: 'Every reward coffer from the clear stays on your character.' },
     { icon: BadgeCheck, title: '“The Mourner of Light” Title', text: 'Exclusive title earned for clearing with the maximum amount of sacramental offerings.' },
     { icon: Medal, title: 'Achievement: “Unholy Devotion”', text: 'Achievement unlocked upon completing The Final Verse (Quantum) with 40 offerings.' },
@@ -1857,7 +1857,7 @@ SERVICE_PAGES['ffxiv-eureka-leveling'] = {
     { icon: Swords, title: 'Increased Elemental Level', text: 'Get your elemental level increased to your specific requirement!' },
     { icon: Package, title: 'Completion of Eureka zone progression', text: 'Eureka zone progression from lvl 1 to lvl 60' },
     { icon: Medal, title: 'Baldesion Arsenal', text: 'Unlock the Baldesion Arsenal' },
-    { icon: Trophy, title: 'Eureka Relic Weapon', text: 'Progress toward Eureka relic weapons and armor' },
+    { icon: Trophy, title: 'Eureka Relic Weapon', text: 'Progress toward Eureka relic weapons and armour' },
   ],
   accordion: [
     { title: 'Requirements', items: ['Own the relevant expansion', 'Content unlocked (available as an additional service)'] },

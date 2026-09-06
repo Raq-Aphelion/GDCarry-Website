@@ -7,8 +7,8 @@ import type { PricingDb } from '../../../data/pricing.ts';
 import type { LinePrice } from './shared.ts';
 
 /** Amount bounds in millions of gil — same clamp the box's setAmount applies */
-export const MIN_GIL_M = 5;
-export const MAX_GIL_M = 900;
+const MIN_GIL_M = 5;
+const MAX_GIL_M = 900;
 
 /** What the box's UI state serializes to — JSON-safe, this is what the cart
     item carries and what the worker recomputes from. Trade method

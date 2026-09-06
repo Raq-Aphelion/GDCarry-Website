@@ -35,6 +35,21 @@ for (const [id, t] of Object.entries(trials.trials ?? {}).slice(0, 3))
 // Unknown service must fail open (null, not a flag)
 check('unknown-service', fromPrice(db, 'does-not-exist'), null);
 
+// Account listings: the bundled price in games.ts must exist as a db floor.
+// Account lines carry no pricing config, so the worker's verifyPrices can only
+// check them via servicePrices — without this entry any quoted price passes.
+const gamesSrc = await readFile('src/data/games.ts', 'utf8');
+const accountListings = [
+  ...gamesSrc.matchAll(/id: '([a-z0-9]+-[a-z0-9-]+)',[\s\S]{0,800}?\bprice: (\d+),[\s\S]{0,800}?account: \{/g),
+];
+if (accountListings.length === 0) {
+  console.log('FAIL no account listings found in games.ts (regex stale?)');
+  fail++;
+} else {
+  for (const [, id, price] of accountListings)
+    check(`${id} (account) floor matches bundled price`, fromPrice(db, id), Number(price));
+}
+
 // Coverage report: how many ids across all maps get a floor
 const ids = new Set([
   ...Object.keys(db.methodPrices ?? {}), ...Object.keys(db.servicePrices ?? {}),

@@ -670,7 +670,7 @@ export default function CheckoutPage() {
             <div ref={setActionEl}>
               <p className="flex items-center justify-center gap-1.5 text-xs text-slate-400">
                 <Timer className="h-3.5 w-3.5 shrink-0 text-cyan-500" />
-                Average response time: within an hour of the order placement.
+                Average response time: within an hour of placing your order.
               </p>
             {stage === 'done' ? (
               <div className="confirm-in mt-4 rounded-[5px] border border-cyan-600/40 bg-navy-850 p-6 text-center shadow-2xl">

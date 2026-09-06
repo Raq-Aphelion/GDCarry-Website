@@ -35,7 +35,7 @@ const SECTIONS: FaqSection[] = [
         q: 'Currency',
         answers: [
           {
-            text: 'We primarily accept EURO and USD currency. The conversion rate and prices of each product can be changed at the top right of the main page, depending on whether you prefer USD or EURO payments.',
+            text: 'We primarily accept EURO and USD currency. You can change the conversion rate and prices of each service or product with the navigation bar\'s currency dropdown (next to the cart button), depending on whether you prefer USD or EURO payments.',
           },
         ],
       },
@@ -57,7 +57,7 @@ const SECTIONS: FaqSection[] = [
       {
         q: 'Order Confirmation',
         answers: [
-          { text: 'We will confirm your order via Discord or email, depending on what you have provided for chat.' },
+          { text: 'We will confirm your order via Discord or email, depending on what you have provided for contact.' },
         ],
       },
       {
@@ -70,7 +70,7 @@ const SECTIONS: FaqSection[] = [
           { text: 'We have three order types.' },
           {
             heading: 'Pilot',
-            text: 'This means a raider / booster will be logging into your account using a secure login method and a VPN to mask our location. You don’t need to be logged in during this duration, but you will need to provide the account credentials for the booster to login and start your run. Your account information is not stored and isn’t shared with anyone.',
+            text: 'This means a raider / booster will be logging into your account using a secure login method and a VPN to mask our location. You don’t need to be logged in during this duration, but you will need to provide the account credentials for the booster to log in and start your run. Your account information is not stored and isn’t shared with anyone.',
           },
           {
             heading: 'AFK',
@@ -116,7 +116,7 @@ const SECTIONS: FaqSection[] = [
         q: 'Can I do a custom request?',
         answers: [
           {
-            text: 'Yes you can — just message us and let us know your custom request. We’ll give you an accurate pricing depending on the difficulty and time it takes to complete it.',
+            text: 'Yes you can — just message us and let us know your custom request. We’ll give you an accurate price depending on the difficulty and time it takes to complete it.',
           },
         ],
       },
@@ -125,7 +125,7 @@ const SECTIONS: FaqSection[] = [
 ];
 
 export default function FaqPage() {
-  const [openId, setOpenId] = useState<string | null>(null);
+  const [openIds, setOpenIds] = useState<Set<string>>(() => new Set());
 
   const faqSchema = {
     '@context': 'https://schema.org',
@@ -191,12 +191,19 @@ export default function FaqPage() {
               <div className="mt-5 space-y-3">
                 {section.items.map((item, i) => {
                   const id = `${section.id}-${i}`;
-                  const open = openId === id;
+                  const open = openIds.has(id);
                   return (
                     <Reveal key={id} delay={i * 80}>
                       <div className="card-surface rounded-[5px]">
                         <button
-                          onClick={() => setOpenId(open ? null : id)}
+                          onClick={() =>
+                            setOpenIds((prev) => {
+                              const next = new Set(prev);
+                              if (next.has(id)) next.delete(id);
+                              else next.add(id);
+                              return next;
+                            })
+                          }
                           aria-expanded={open}
                           className="flex w-full items-center justify-between px-5 py-4 text-left"
                         >

@@ -15,8 +15,21 @@ import Home from '@/pages/Home';
 // on every build — no per-build step needed. The prerender script waits 4s
 // after domcontentloaded, so lazy chunks are fully loaded in snapshots.
 const CheckoutPage = lazy(() => import('@/pages/CheckoutPage'));
-const GamePage = lazy(() => import('@/pages/GamePage'));
-const ServicePage = lazy(() => import('@/pages/ServicePage'));
+// Game/service pages: one wrapper per game (src/pages/games/) around the
+// shared GamePageCore/ServicePageCore — each wrapper is a lazy chunk that
+// pins its gameId, so game-specific overrides can live in the wrapper and
+// the shared core stays single-source. Unknown game ids fall through to the
+// generic :gameId route, which redirects home.
+const GamePageFFXIV = lazy(() => import('@/pages/games/GamePageFFXIV'));
+const GamePageWoW = lazy(() => import('@/pages/games/GamePageWoW'));
+const GamePageLostArk = lazy(() => import('@/pages/games/GamePageLostArk'));
+const GamePageWarframe = lazy(() => import('@/pages/games/GamePageWarframe'));
+const GamePageRuneScape = lazy(() => import('@/pages/games/GamePageRuneScape'));
+const ServicePageFFXIV = lazy(() => import('@/pages/games/ServicePageFFXIV'));
+const ServicePageWoW = lazy(() => import('@/pages/games/ServicePageWoW'));
+const ServicePageLostArk = lazy(() => import('@/pages/games/ServicePageLostArk'));
+const ServicePageWarframe = lazy(() => import('@/pages/games/ServicePageWarframe'));
+const ServicePageRuneScape = lazy(() => import('@/pages/games/ServicePageRuneScape'));
 const LegalPage = lazy(() => import('@/pages/LegalPage'));
 const FaqPage = lazy(() => import('@/pages/FaqPage'));
 const AccountSafetyPage = lazy(() => import('@/pages/AccountSafetyPage'));
@@ -68,8 +81,20 @@ export default function App() {
                   <Suspense fallback={null}>
                     <Routes>
                     <Route path="/" element={<Home />} />
-                    <Route path="/boosting/:gameId" element={<GamePage />} />
-                    <Route path="/boosting/:gameId/:serviceId" element={<ServicePage />} />
+                    <Route path="/boosting/ffxiv" element={<GamePageFFXIV />} />
+                    <Route path="/boosting/wow" element={<GamePageWoW />} />
+                    <Route path="/boosting/lost-ark" element={<GamePageLostArk />} />
+                    <Route path="/boosting/warframe" element={<GamePageWarframe />} />
+                    <Route path="/boosting/runescape" element={<GamePageRuneScape />} />
+                    {/* Unknown game id — redirect home (old generic route) */}
+                    <Route path="/boosting/:gameId" element={<Navigate to="/" replace />} />
+                    <Route path="/boosting/ffxiv/:serviceId" element={<ServicePageFFXIV />} />
+                    <Route path="/boosting/wow/:serviceId" element={<ServicePageWoW />} />
+                    <Route path="/boosting/lost-ark/:serviceId" element={<ServicePageLostArk />} />
+                    <Route path="/boosting/warframe/:serviceId" element={<ServicePageWarframe />} />
+                    <Route path="/boosting/runescape/:serviceId" element={<ServicePageRuneScape />} />
+                    {/* Unknown game/service id — redirect home */}
+                    <Route path="/boosting/:gameId/:serviceId" element={<Navigate to="/" replace />} />
                     <Route path="/checkout" element={<CheckoutPage />} />
                     <Route path="/legal/:docId" element={<LegalPage />} />
                     <Route path="/faq" element={<FaqPage />} />

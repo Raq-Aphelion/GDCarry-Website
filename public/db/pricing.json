@@ -1,5 +1,8 @@
 {
   "currency": {
     "usdPerEur": 1.15
+  },
+  "servicePrices": {
+    "ffxiv-account-1": 500
   }
 }

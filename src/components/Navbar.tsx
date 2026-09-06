@@ -112,7 +112,7 @@ function SearchBox({
           if (e.key === 'Enter' && query.trim().length >= 1) onGoSearch(query.trim());
         }}
         placeholder="Search boosts, games, categories…"
-        className="h-[42px] w-full cursor-pointer rounded-[3px] border border-navy-700/70 bg-navy-850/90 pl-10 pr-9 text-sm text-white placeholder:text-slate-500 outline-none transition-colors hover:border-navy-600 focus:border-navy-600"
+        className="h-[42px] w-full cursor-text rounded-[3px] border border-navy-700/70 bg-navy-850/90 pl-10 pr-9 text-sm text-white placeholder:text-slate-500 outline-none transition-colors hover:border-navy-600 focus:border-navy-600"
         aria-label="Search services"
       />
       {query && (

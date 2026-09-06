@@ -190,7 +190,7 @@ export const games: Game[] = [
     short: 'FFXIV',
     tagline: 'Eorzea’s most trusted carry crew',
     description:
-      'Content ranging from Trials to Ultimates done by verified professionals with decades of experience & part of world race teams.',
+      'Content ranging from Trials to Ultimates done by verified professionals with decades of experience who are part of world race teams.',
     cardImage: cardFfxiv,
     logo: logoFfxiv,
     main: true,
@@ -291,7 +291,7 @@ export const games: Game[] = [
             name: 'The Unending Coil of Bahamut (Ultimate)',
             tag2: 'Adventurer Plate + Title',
             price: 0,
-            tag1: 'Ultima Weapon',
+            tag1: 'Ultimate Dreadwyrm Weapon',
             tag3: 'Piloted or AFK Carry',
             longDescription:
               'There once were brave souls who uncovered the truth of the Seventh Umbral Calamity. Such trials as they overcame were not to be recorded in history, but far from fading with the passage of time, they have been imagined in vivid detail by the wandering minstrel.',
@@ -302,7 +302,7 @@ export const games: Game[] = [
             name: 'The Weapon’s Refrain (Ultimate)',
             tag2: 'Adventurer Plate + Title',
             price: 0,
-            tag1: 'Ultimate Dreadwyrm Weapon',
+            tag1: 'Ultima Weapon',
             tag3: 'Piloted or AFK Carry',
             longDescription:
               'Just as warriors temper their spirits in battle, so too does the wandering minstrel hone his craft through colorful retellings of heroic deeds. His rendition of your triumph over the Ultima Weapon takes the threads of history and weaves them into an epic tapestry.',
@@ -316,7 +316,7 @@ export const games: Game[] = [
             tag1: 'Ultimate Weapons',
             tag3: 'Piloted or AFK Carry*',
             longDescription:
-              "All of Final Fantasy XIV's hardest ultimates combined into one bundle whether its 6 Piloted ones or 4 AFK ones done at your convenience.",
+              "All of Final Fantasy XIV's hardest ultimates combined into one bundle whether it's 6 Piloted ones or 4 AFK ones done at your convenience.",
             image: scUltBundle,
             tag: 'Best Value',
           },
@@ -871,7 +871,7 @@ export const games: Game[] = [
             tag1: 'Exclusive Loot + Tokens',
             tag3: 'Piloted Service',
             longDescription:
-              "On Hingashi's westernmost isle of Shishu lies the long-venerated Mount Rokkon. Once refuge for humble monks and weary pilgrims, the holy site lately fell to a host of malevolent mononoke, spurring the local liege lord to take the unprecedented step of inviting ijin to assist in reclaiming its slopes. As in his wont, Hancock has secured the promise of valuable rewards in exchange for his—and your—assistance, but each of these treasures has a life of its own...",
+              "On Hingashi's westernmost isle of Shishu lies the long-venerated Mount Rokkon. Once refuge for humble monks and weary pilgrims, the holy site lately fell to a host of malevolent mononoke, spurring the local liege lord to take the unprecedented step of inviting ijin to assist in reclaiming its slopes. As is his wont, Hancock has secured the promise of valuable rewards in exchange for his—and your—assistance, but each of these treasures has a life of its own...",
             image: scVariantMountRokkon,
           },
           {
@@ -1267,7 +1267,7 @@ export const games: Game[] = [
             tag1: 'Guaranteed mount drop',
             tag3: 'Piloted Service',
             longDescription:
-              'A swirling throne of umbral energy from The Cloud of Darkness (Chaotic) — guaranteed at minimum ilvl with our raiders on your account.',
+              'A swirling throne of umbral energy from The Cloud of Darkness (Chaotic) — guaranteed even at minimum item level with our raiders on your account.',
             image: scDaisOfDarkness,
           },
           {
@@ -1278,7 +1278,7 @@ export const games: Game[] = [
             tag1: 'Guaranteed mount drop',
             tag3: 'Piloted Service',
             longDescription:
-              'Wings woven from pure darkness, earned in The Cloud of Darkness (Chaotic) — guaranteed at minimum ilvl with our raiders on your account.',
+              'Wings woven from pure darkness, earned in The Cloud of Darkness (Chaotic) — guaranteed even at minimum item level with our raiders on your account.',
             image: scShroudOfDarkness,
           },
           {
@@ -1572,7 +1572,7 @@ export const games: Game[] = [
             name: 'MSQ Completion Boost',
             tag2: 'Job quests included',
             price: 0,
-            tag1: 'Any Expansion or Patches',
+            tag1: 'Any Expansion or Patch',
             tag3: 'Piloted Service',
             longDescription:
               'The main scenario is the heart of Eorzea’s story — but not everyone has the time to live through every chapter. Our MSQ Completion boost carries your character through the Main Scenario up to your chosen expansion, unlocking duties, trials and endgame content along the way.',
@@ -1736,7 +1736,7 @@ export const games: Game[] = [
     short: 'WoW',
     tagline: 'Azeroth, handled',
     description:
-      'Content ranging from Mythic+ keys to Mythic raid clears done by verified professionals with decades of experience & part of world race teams.',
+      'Content ranging from Mythic+ keys to Mythic raid clears done by verified professionals with decades of experience who are part of world race teams.',
     cardImage: cardWow,
     logo: logoWow,
     // No live services yet — empty categories are deleted, not shown; the
@@ -1749,7 +1749,7 @@ export const games: Game[] = [
     short: 'Lost Ark',
     tagline: 'Arkesia without the homework',
     description:
-      'Content ranging from Abyssal Dungeons to Legion Raids done by verified professionals with thousands of clears & part of world-first race teams.',
+      'Content ranging from Abyssal Dungeons to Legion Raids done by verified professionals with thousands of clears who are part of world-first race teams.',
     cardImage: cardLostArk,
     logo: logoLostArk,
     subcategories: [],
@@ -1864,8 +1864,6 @@ export const getGame = (id: string) => games.find((g) => g.id === id);
 
 export const serviceCount = (game: Game) =>
   new Set(game.subcategories.flatMap((s) => s.services.map((sv) => sv.id))).size;
-
-export const totalServiceCount = games.reduce((sum, g) => sum + serviceCount(g), 0);
 
 export interface ServiceSearchResult {
   game: Game;

@@ -1,8 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { ChevronLeft, ChevronRight, X } from 'lucide-react';
 import FadeImage from './FadeImage';
-import { lenisRef } from '@/lib/lenis';
 
 /** Image gallery for service subpages (account listings): a main shot with a
     thumbnail strip below — one thumb per image, so the strip grows/shrinks
@@ -13,25 +12,44 @@ import { lenisRef } from '@/lib/lenis';
 export default function ServiceGallery({ images, alt }: { images: string[]; alt: string }) {
   const [active, setActive] = useState(0);
   const [lightbox, setLightbox] = useState(false);
+  // Exit animation: closing plays .lightbox-out, then unmounts (see index.css)
+  const [closing, setClosing] = useState(false);
+  const closeTimer = useRef<number | null>(null);
   const cur = Math.min(active, images.length - 1);
   const multi = images.length > 1;
   const prev = () => setActive((i) => (i - 1 + images.length) % images.length);
   const next = () => setActive((i) => (i + 1) % images.length);
 
-  // Lightbox: Escape/arrows, and hold the page's smooth scroll while open
+  const openLightbox = () => {
+    if (closeTimer.current) window.clearTimeout(closeTimer.current);
+    setClosing(false);
+    setLightbox(true);
+  };
+  const closeLightbox = () => {
+    if (closing || !lightbox) return;
+    setClosing(true);
+    closeTimer.current = window.setTimeout(() => {
+      setLightbox(false);
+      setClosing(false);
+    }, 180);
+  };
+
+  // Lightbox: Escape/arrows. No scroll lock needed — the overlay is portaled
+  // to <body>, outside the #page-scroll scroller, so wheel/touch over it never
+  // reach Lenis. (lenis.stop() would be WRONG here: its .lenis-stopped class
+  // sets overflow:clip on the scroller, which resets the page's scroll offset
+  // to 0 — that was the jump-to-top when the lightbox opened.)
   useEffect(() => {
     if (!lightbox) return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setLightbox(false);
+      if (e.key === 'Escape') closeLightbox();
       else if (e.key === 'ArrowLeft') prev();
       else if (e.key === 'ArrowRight') next();
     };
     window.addEventListener('keydown', onKey);
-    const lenis = lenisRef.current;
-    lenis?.stop();
     return () => {
       window.removeEventListener('keydown', onKey);
-      lenis?.start();
+      if (closeTimer.current) window.clearTimeout(closeTimer.current);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lightbox, images.length]);
@@ -52,9 +70,14 @@ export default function ServiceGallery({ images, alt }: { images: string[]; alt:
         role="button"
         tabIndex={0}
         aria-label={`${alt} — open gallery image ${cur + 1} fullscreen`}
-        onClick={() => setLightbox(true)}
+        // preventDefault on mousedown: clicking a tabindex element focuses it,
+        // and Chrome scrolls newly focused elements into view — that jumped the
+        // page to the gallery whenever the lightbox opened (and Lenis's scroll
+        // hold then fought the in-flight scroll, briefly locking the page)
+        onMouseDown={(e) => e.preventDefault()}
+        onClick={openLightbox}
         onKeyDown={(e) => {
-          if (e.key === 'Enter') setLightbox(true);
+          if (e.key === 'Enter') openLightbox();
         }}
         className="card-surface group relative aspect-[2/1] cursor-zoom-in overflow-hidden rounded-[5px]"
       >
@@ -130,13 +153,15 @@ export default function ServiceGallery({ images, alt }: { images: string[]; alt:
             role="dialog"
             aria-modal="true"
             aria-label={`${alt} — image ${cur + 1} of ${images.length}`}
-            onClick={() => setLightbox(false)}
-            className="fixed inset-0 z-[100] flex items-center justify-center bg-navy-950/85 backdrop-blur-md"
+            onClick={closeLightbox}
+            className={`fixed inset-0 z-[100] flex items-center justify-center bg-navy-950/85 backdrop-blur-md ${
+              closing ? 'lightbox-out' : 'lightbox-in'
+            }`}
           >
           <button
             type="button"
             aria-label="Close gallery"
-            onClick={() => setLightbox(false)}
+            onClick={closeLightbox}
             className="absolute right-4 top-4 z-10 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-navy-700/70 bg-navy-900/80 text-slate-300 transition-all hover:border-cyan-500/50 hover:text-cyan-400"
           >
             <X className="h-5 w-5" />
@@ -170,11 +195,15 @@ export default function ServiceGallery({ images, alt }: { images: string[]; alt:
           )}
           <div className="flex max-h-full flex-col items-center">
             {/* touch-pinch-zoom enables pinch zoom on mobile */}
+            {/* key remounts on navigation so the fade-in replays per image */}
             <img
+              key={images[cur]}
               src={images[cur]}
               alt={alt}
               onClick={(e) => e.stopPropagation()}
-              className="max-h-[85vh] max-w-[90vw] cursor-default touch-pinch-zoom rounded-[5px] object-contain max-sm:max-h-[70vh]"
+              className={`max-h-[85vh] max-w-[90vw] cursor-default touch-pinch-zoom rounded-[5px] object-contain max-sm:max-h-[70vh] ${
+                closing ? 'lightbox-img-out' : 'lightbox-img-in'
+              }`}
             />
             {multi && (
               <div className="mt-3 flex items-center justify-center gap-3 sm:hidden">

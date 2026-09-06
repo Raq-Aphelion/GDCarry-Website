@@ -92,7 +92,9 @@ export default function MobileCategoryBar({
       id="mobile-category-bar"
       className={`sticky top-0 z-30 transition-[transform,opacity] duration-300 lg:hidden ${
         controlled ? '' : 'bg-gradient-to-b from-navy-900/90 via-navy-900/60 to-navy-900/0'
-      } ${hidden ? '-translate-y-full opacity-0' : ''}`}
+        // Hidden: also inert — the translated bar would otherwise still catch
+        // wheels/clicks over the content above its slot
+      } ${hidden ? 'pointer-events-none -translate-y-full opacity-0' : ''}`}
     >
       <div className="relative">
         <div

@@ -18,9 +18,9 @@ const CLOSE_MS = 220;
     only public source of operator photos), it replaces the THIRD slot.
     Rings stay positional (red / yellow / green). */
 const AVATARS: { src: string; ring: string }[] = [
-  { src: 'https://i.gyazo.com/61f36a7bf5fdff93fb6f4977cded514d.png', ring: 'border-red-500' },
-  { src: 'https://chat.gdcarry.com/var/userphoto/2026y/08/03/3/1671b3ba485599e1acc34be772408fd0.jpg', ring: 'border-yellow-500' },
-  { src: 'https://chat.gdcarry.com/var/userphoto/2026y/08/02/1/7af11194662c7dd281678f0eeffbcf84.png', ring: 'border-green-500' },
+  { src: '/images/support/operator-1.png', ring: 'border-red-500' },
+  { src: '/images/support/operator-2.jpg', ring: 'border-yellow-500' },
+  { src: '/images/support/operator-3.png', ring: 'border-green-500' },
 ];
 
 const LHC_BASE = 'https://chat.gdcarry.com/index.php/';

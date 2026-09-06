@@ -42,7 +42,7 @@ const PERKS = [
   },
   {
     icon: Zap,
-    title: 'Fast fullfilment',
+    title: 'Fast fulfillment',
     text: 'Our own in-house team ensures that all orders are attended to within the 1st day of purchase.',
   },
   {
@@ -62,7 +62,7 @@ const REVIEWS = [
     name: 'BlackSheep1988',
     game: 'Final Fantasy XIV',
     rating: 5,
-    text: 'Easy and realy Good Service. Experienced Raiders Clears the new Content nice and realy Quick.',
+    text: 'Easy and really Good Service. Experienced Raiders Clears the new Content nice and very Quick.',
   },
   {
     name: 'Mina Bajhiri',

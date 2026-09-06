@@ -122,10 +122,10 @@ export const legalDocs: LegalDoc[] = [
         blocks: [
           {
             type: 'p',
-            text: 'All payments are processed securely through third-party providers (PayPal, Stripe, etc.)',
+            text: 'All payments are processed securely through third-party providers (PayPal, Stripe, etc.).',
           },
-          { type: 'p', text: 'We do not store credit card information' },
-          { type: 'p', text: 'By paying, you agree to our Refund Policy' },
+          { type: 'p', text: 'We do not store credit card information.' },
+          { type: 'p', text: 'By paying, you agree to our Refund Policy.' },
           {
             type: 'p',
             text: 'Chargebacks opened without contacting us first may result in suspension of service and permanent account blacklisting.',
@@ -265,7 +265,7 @@ export const legalDocs: LegalDoc[] = [
           { type: 'p', text: 'We may receive limited data from:' },
           {
             type: 'ul',
-            items: ['Payment systems (Paypal&Stripe)', 'Analytics providers (e.g., Google Analytics)'],
+            items: ['Payment systems (PayPal & Stripe)', 'Analytics providers (e.g., Google Analytics)'],
           },
           {
             type: 'p',
@@ -500,7 +500,7 @@ export const legalDocs: LegalDoc[] = [
               'The service has not yet begun',
               'We are unable to complete the order',
               'A booster becomes unavailable and no replacement can be provided',
-              'There was a mistake in the purchase (e.g., selected wrong service) and it has not started yet / booster was not assigned',
+              'There was a mistake in the purchase (e.g., selected wrong service) and the service has not started or been assigned to a booster yet',
             ],
           },
         ],
@@ -515,7 +515,7 @@ export const legalDocs: LegalDoc[] = [
               'The service has already been started',
               'The boost is partially completed',
               'You provide incorrect account details or login issues prevent progress',
-              'You violate game Terms of Service resulting in account penalties such as botting / hacking',
+              'You violate game Terms of Service through activities such as botting / hacking and receive account penalties as a result',
               'You request a refund after the service has been fully completed',
               'You purchased a service for content you cannot access (wrong expansion, gear level, etc.)',
               'Chargeback without contacting support first',
@@ -542,7 +542,7 @@ export const legalDocs: LegalDoc[] = [
         ],
       },
       {
-        heading: '3. Service Delays',
+        heading: '4. Service Delays',
         blocks: [
           {
             type: 'p',

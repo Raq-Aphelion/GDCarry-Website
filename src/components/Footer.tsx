@@ -122,7 +122,7 @@ export default function Footer() {
         <div className="hidden xl:block">
           <h3 className="font-display text-sm font-bold uppercase tracking-wider text-cyan-500 max-md:text-xs">Why Grand Dice</h3>
           <ul className="mt-4 space-y-2.5 text-sm text-slate-500 max-md:text-xs">
-            {['No outsourcing', 'Fast fullfilment', 'Shop with confidence', 'Account safety first'].map((perk) => (
+            {['No outsourcing', 'Fast fulfillment', 'Shop with confidence', 'Account safety first'].map((perk) => (
               <li key={perk} className="flex items-center gap-2">
                 <Check className="h-3.5 w-3.5 shrink-0 text-cyan-500" strokeWidth={3} />
                 {perk}

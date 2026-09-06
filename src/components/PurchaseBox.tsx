@@ -82,6 +82,22 @@ export function CustomSelect({
 }) {
   const [open, setOpen] = useState(false);
   const [valueMain, valueAccent] = blueParens ? splitParens(value) : [value];
+  const listRef = useRef<HTMLDivElement>(null);
+
+  // Lock the page while the wheel is over the open list: consume the wheel
+  // event (manual scrollTop) so it never reaches the Lenis page scroller —
+  // even when the list is already at its scroll edge.
+  useEffect(() => {
+    const el = listRef.current;
+    if (!el) return;
+    const onWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      el.scrollTop += e.deltaY;
+    };
+    el.addEventListener('wheel', onWheel, { passive: false });
+    return () => el.removeEventListener('wheel', onWheel);
+  }, []);
 
   return (
     <div className={`relative ${open ? 'z-30' : ''}`}>
@@ -121,7 +137,7 @@ export function CustomSelect({
         }`}
       >
         <div className="overflow-hidden">
-          <div data-lenis-prevent className="max-h-60 overflow-y-auto rounded-b-[5px] border border-t-0 border-navy-600 bg-navy-850 shadow-2xl">
+          <div ref={listRef} data-lenis-prevent className="max-h-60 overflow-y-auto rounded-b-[5px] border border-t-0 border-navy-600 bg-navy-850 shadow-2xl">
             {(() => {
               // Dividers render as static headers and skip the select index
               let sel = -1;
