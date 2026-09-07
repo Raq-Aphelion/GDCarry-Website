@@ -8,8 +8,17 @@
 # One-time setup:
 #   npx wrangler kv namespace create RATE_LIMIT --config worker/wrangler.toml
 #     → paste the returned id into [[kv_namespaces]] below
-#   npx wrangler secret put ORDER_KEY --config worker/wrangler.toml
+#   Create a Turnstile widget: Cloudflare dashboard → Turnstile → Add site
+#     (hostname gdcarry.com; add localhost for dev) → copy the SITE key into
+#     TURNSTILE_SITE_KEY in src/pages/CheckoutPage.tsx, then:
+#   npx wrangler secret put TURNSTILE_SECRET_KEY --config worker/wrangler.toml
+#     (paste the widget's SECRET key — it lives only in Cloudflare; rotation is
+#     a dashboard/wrangler action, no client deploy needed)
 #   npx wrangler secret put DISCORD_WEBHOOK_URL --config worker/wrangler.toml
+#   CSP (set in Cloudflare) must allow challenges.cloudflare.com in
+#   script-src, frame-src and connect-src for the widget to run.
+#   Local dev without secrets: worker skips verification (warns); use
+#   Cloudflare's always-pass test site key 1x00000000000000000000AA client-side.
 #
 # The name matches the existing dashboard-created worker, so the first
 # wrangler deploy adopts it (the cluwners.workers.dev hostname is disabled

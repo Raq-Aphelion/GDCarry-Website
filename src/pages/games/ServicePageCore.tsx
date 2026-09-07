@@ -468,8 +468,10 @@ export default function ServicePageCore({ gameId }: { gameId: string }) {
           <div className="absolute inset-0 bg-gradient-to-t from-navy-900 via-transparent to-navy-900/60" />
         </div>
 
-        {/* Left: categories, pushed to the top */}
-        <aside id="category-sidebar" className="hidden lg:col-start-1 lg:row-span-2 lg:row-start-1 lg:block">
+        {/* Left: categories, pushed to the top — the -mt-4 lifts the sidebar's
+            resting top to the sticky pin point (top-8), matching the game
+            page's stuck sidebar height instead of sitting 16px lower */}
+        <aside id="category-sidebar" className="-mt-4 hidden lg:col-start-1 lg:row-span-2 lg:row-start-1 lg:block">
           <div className="sticky top-8">
             <ul className="divide-y divide-navy-700/50">
               {game.subcategories.map((s) => {

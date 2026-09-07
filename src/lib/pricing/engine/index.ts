@@ -79,5 +79,11 @@ export const computeLine = (
   serviceId: string,
   config: OrderConfig,
   staticBase?: number,
-): (LinePrice & { qty: number }) | null =>
-  FAMILIES[config?.family]?.(db, serviceId, config as never, staticBase) ?? null;
+): (LinePrice & { qty: number }) | null => {
+  // `family` is attacker-controlled — a plain-object lookup would resolve
+  // inherited Object.prototype members ('toString', '__proto__', ...), so
+  // whitelist via hasOwn and reject anything else.
+  const f = config?.family;
+  if (typeof f !== 'string' || !Object.hasOwn(FAMILIES, f)) return null;
+  return FAMILIES[f](db, serviceId, config as never, staticBase) ?? null;
+};

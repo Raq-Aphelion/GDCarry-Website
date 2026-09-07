@@ -17,13 +17,16 @@
      npx wrangler deploy --config worker/wrangler.toml
 
    Required bindings/secrets:
-     ORDER_KEY            (secret) shared with the site's X-Order-Key header
+     TURNSTILE_SECRET_KEY  (secret) Cloudflare Turnstile widget secret — the
+                           client earns a token per order (X-Turnstile-Token
+                           header) and the worker re-verifies it; nothing
+                           secret ships in the bundle
      DISCORD_WEBHOOK_URL  (secret) Discord channel webhook
      RATE_LIMIT           (KV namespace binding) per-IP rate limiting
 
-   Note: X-Order-Key is public by nature (it ships in the client bundle) — it
-   is a soft filter only. Real abuse control = the rate limit + validation
-   below; treat every field as attacker-controlled. */
+   Note: the Turnstile site key is public by design, but forging a token
+   requires the Cloudflare-only secret — treat every other field as
+   attacker-controlled regardless. */
 
 import { CATEGORY_FILES } from '../src/data/pricing.ts';
 import {
@@ -47,12 +50,15 @@ const MAX_BODY_BYTES = 8192;
 
 const cors = (request) => {
   const origin = request.headers.get('Origin') ?? '';
-  return {
-    'Access-Control-Allow-Origin': ALLOWED_ORIGINS.includes(origin) ? origin : 'null',
+  const headers = {
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type, X-Order-Key',
+    'Access-Control-Allow-Headers': 'Content-Type, X-Turnstile-Token',
     'Vary': 'Origin',
   };
+  // Disallowed origins get NO ACAO header — sending 'null' would grant CORS
+  // to sandboxed/null-origin documents and let them read responses.
+  if (ALLOWED_ORIGINS.includes(origin)) headers['Access-Control-Allow-Origin'] = origin;
+  return headers;
 };
 
 /** Max 5 order requests per minute per IP (KV-backed; eventually consistent —
@@ -72,6 +78,11 @@ const hex = (v, max) => (/^[a-z0-9]+$/i.test(str(v, max)) ? str(v, max) : '');
     contain brackets — otherwise a forged order can inject [img]/[url] into
     the operator's chat. */
 const bb = (v, max) => str(v, max).replace(/[[\]]/g, '');
+
+/** Same bracket strip for Discord embed field values: without [ ] an
+    attacker-controlled contact/name can't forge a clickable [text](url)
+    markdown link for operators to click. */
+const md = (v, max) => str(v, max).replace(/[[\]]/g, '');
 
 /** Item thumbnails: same-origin images only, and a character allowlist so the
     URL can't smuggle BBCode past the prefix check (e.g.
@@ -141,7 +152,14 @@ const verifyPrices = async (o) => {
       // Structured config → authoritative recompute. NOTE: qty comes from the
       // cart line (runs/gil amount are editable in the cart drawer after the
       // config was captured); the config supplies per-unit price parts.
-      const line = computeLine(db, str(it.id, 80), it.config);
+      // try/catch: a hostile config must flag the line, never 500 the request
+      // (that would skip the Discord log entirely — a logging DoS).
+      let line = null;
+      try {
+        line = computeLine(db, str(it.id, 80), it.config);
+      } catch {
+        line = null;
+      }
       if (!line) {
         flags.push(`${label}: unrecognized pricing config — verify this line manually`);
       } else if (total != null) {
@@ -197,6 +215,21 @@ const buildMessage = (o, withImages = true) => {
   ].join('\n');
 };
 
+/** Anti-abuse challenge — the client earns a Turnstile token at checkout and
+    sends it as X-Turnstile-Token; the matching secret key lives ONLY in
+    Cloudflare (unlike the old shared ORDER_KEY, nothing secret ships in the
+    bundle). Tokens are single-use and short-lived. Without a secret (local
+    dev) verification is skipped — production MUST set TURNSTILE_SECRET_KEY. */
+const verifyTurnstile = async (token, ip, secret) => {
+  const res = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ secret, response: token, remoteip: ip }),
+  });
+  const data = await res.json().catch(() => ({}));
+  return data.success === true;
+};
+
 const postLhc = async (path, payload) => {
   const res = await fetch(LHC_BASE + path, {
     method: 'POST',
@@ -219,8 +252,13 @@ const injectIntoChat = async (o) => {
     ({ res, data } = await attempt(buildMessage(o, false)));
   }
   if (res.ok && data.error !== true) return { injected: true };
+  // Reason is an internal enum, never LHC's raw error string — don't echo
+  // upstream error text back to the client.
   const r = String(data.r ?? '');
-  return { injected: false, reason: /closed/i.test(r) ? 'chat_closed' : r.slice(0, 120) || 'unknown' };
+  return {
+    injected: false,
+    reason: /closed/i.test(r) ? 'chat_closed' : 'lhc_rejected',
+  };
 };
 
 /** Discord embed. Everything lives in embed fields (never `content`), so
@@ -232,19 +270,19 @@ const buildEmbed = (o, flags = []) => ({
   color: flags.length ? 0xf59e0b : 0x22d3ee,
   timestamp: new Date().toISOString(),
   fields: [
-    { name: 'Contact via', value: str(o.contactVia, 20), inline: true },
-    { name: 'Contact', value: str(o.contact, 60), inline: true },
-    { name: 'E-mail', value: str(o.email, 60) || '—', inline: true },
-    { name: 'Payment', value: str(o.payment, 40), inline: true },
-    { name: 'Total', value: str(o.total, 30), inline: true },
+    { name: 'Contact via', value: md(o.contactVia, 20) || '—', inline: true },
+    { name: 'Contact', value: md(o.contact, 60) || '—', inline: true },
+    { name: 'E-mail', value: md(o.email, 60) || '—', inline: true },
+    { name: 'Payment', value: md(o.payment, 40) || '—', inline: true },
+    { name: 'Total', value: md(o.total, 30) || '—', inline: true },
     {
       name: 'Items',
       value:
         o.items
           .map((it) => {
             const details = Array.isArray(it.details) && it.details.length
-              ? `\n· ${it.details.map((d) => str(d, 120)).join('\n· ')}` : '';
-            return `**${str(it.name, 120)}** (${str(it.gameShort, 20)}) ×${Math.min(+it.qty || 1, 9999)} — ${str(it.price, 30)}${details}`;
+              ? `\n· ${it.details.map((d) => md(d, 120)).join('\n· ')}` : '';
+            return `**${md(it.name, 120)}** (${md(it.gameShort, 20)}) ×${Math.min(+it.qty || 1, 9999)} — ${md(it.price, 30)}${details}`;
           })
           .join('\n')
           .slice(0, 1024) || '—',
@@ -275,17 +313,30 @@ export default {
         headers: { ...cors(request), 'Content-Type': 'application/json' },
       });
 
-    if (request.headers.get('X-Order-Key') !== env.ORDER_KEY)
-      return new Response(null, { status: 401 });
+    // Anti-abuse challenge before any order handling — the client earns a
+    // Turnstile token at checkout; the secret never ships anywhere.
+    if (env.TURNSTILE_SECRET_KEY) {
+      const token = request.headers.get('X-Turnstile-Token') ?? '';
+      if (!token || !(await verifyTurnstile(token, ip, env.TURNSTILE_SECRET_KEY)))
+        return new Response(JSON.stringify({ ok: false, error: 'challenge_failed' }), {
+          status: 403,
+          headers: { ...cors(request), 'Content-Type': 'application/json' },
+        });
+    } else {
+      console.warn('TURNSTILE_SECRET_KEY not set — skipping challenge verification (dev only, never deploy this way)');
+    }
 
     let o;
     try { o = await request.json(); } catch { return new Response(null, { status: 400 }); }
+    // Chunked requests have no Content-Length — re-check the parsed size so
+    // the cap can't be skipped by omitting the header.
+    if (JSON.stringify(o).length > MAX_BODY_BYTES) return new Response(null, { status: 413 });
     if (!/^\d{6}-[A-Z0-9]{4}$/.test(str(o.orderId, 30)))
       return new Response(null, { status: 400 });
     o.items = Array.isArray(o.items) ? o.items.slice(0, 20) : [];
     o.vid = hex(o.vid, 64);
     o.chatHash = hex(o.chatHash, 64);
-    o.chatId = Number.isInteger(o.chatId) ? o.chatId : 0;
+    o.chatId = Number.isInteger(o.chatId) && o.chatId > 0 ? o.chatId : 0;
 
     // Verify quoted prices against catalog floors — flags go into the embed
     const flags = await verifyPrices(o);
@@ -294,7 +345,12 @@ export default {
     const discord = await fetch(env.DISCORD_WEBHOOK_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username: 'Grand Dice Orders', embeds: [buildEmbed(o, flags)] }),
+      body: JSON.stringify({
+        username: 'Grand Dice Orders',
+        embeds: [buildEmbed(o, flags)],
+        // Defense-in-depth: never let any field ping the channel.
+        allowed_mentions: { parse: [] },
+      }),
     });
 
     let injected = false, reason;

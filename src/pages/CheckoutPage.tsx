@@ -22,11 +22,26 @@ const RETURN_COUNTDOWN_S = 10;
 const TWO_COL_QUERY = '(min-width: 1024px)';
 
 /** Order log proxy (Cloudflare Worker) — rebuilds the Discord embed
-    server-side, so the webhook URL never ships in this bundle. Paste the
-    ORDER_KEY secret here; while empty, order logging is skipped (the live
-    chat flow still works). */
+    server-side, so the webhook URL never ships in this bundle. Orders are
+    gated by a Cloudflare Turnstile challenge: this site key is PUBLIC by
+    design (it identifies the widget, it grants no ability to forge tokens —
+    verification uses a Cloudflare-only secret). While empty, order logging
+    is skipped (the live chat flow still works). Local dev: use Cloudflare's
+    always-pass test key 1x00000000000000000000AA. */
 const ORDER_LOG_URL = 'https://gdcarry.com/api/order';
-const ORDER_KEY = 'bfa5dfd68a3f2b2c4916f7fadf54bd592d8692fb615a56a4ecf8a68c54c76490';
+const TURNSTILE_SITE_KEY = '0x4AAAAAAEqwlV_lM0EL7NU5';
+
+/** Minimal type for the Turnstile API (no @types package). */
+type TurnstileWidget = {
+  render: (el: HTMLElement, opts: Record<string, unknown>) => string;
+  execute: (id: string, opts: Record<string, unknown>) => void;
+  reset: (id: string) => void;
+};
+declare global {
+  interface Window {
+    turnstile?: TurnstileWidget;
+  }
+}
 
 /** Order reference linking the chat message to the Discord bot log — the
     operator can verify a quoted order against the logged record by ID.
@@ -89,6 +104,9 @@ export default function CheckoutPage() {
   const hintRef = useRef<HTMLSpanElement>(null);
   // Scroll target for failed submits on mobile (contact block sits above the button)
   const contactRef = useRef<HTMLElement>(null);
+  // Turnstile widget container — rendered invisible (interaction-only), the
+  // challenge only surfaces when Cloudflare decides it needs a human
+  const turnstileRef = useRef<HTMLDivElement>(null);
   // Field errors surface on the first Place Order click, not while typing
   const [submitAttempted, setSubmitAttempted] = useState(false);
   const [method, setMethod] = useState('paypal');
@@ -121,6 +139,49 @@ export default function CheckoutPage() {
     document.addEventListener('pointerdown', onDown);
     return () => document.removeEventListener('pointerdown', onDown);
   }, [hintOpen]);
+
+  // Render the Turnstile widget once the API script has loaded (it's async —
+  // poll briefly rather than wiring the api.js onload callback through index.html)
+  useEffect(() => {
+    if (!TURNSTILE_SITE_KEY) return;
+    const render = () => {
+      const el = turnstileRef.current;
+      if (!window.turnstile || !el || el.dataset.widgetId) return true;
+      el.dataset.widgetId = String(
+        window.turnstile.render(el, {
+          sitekey: TURNSTILE_SITE_KEY,
+          // No widget until Cloudflare actually challenges the submitter;
+          // the container anchors where a challenge would appear.
+          appearance: 'interaction-only',
+          execution: 'execute',
+        }),
+      );
+      return true;
+    };
+    if (render()) return;
+    const iv = window.setInterval(() => {
+      if (render()) window.clearInterval(iv);
+    }, 200);
+    return () => window.clearInterval(iv);
+  }, []);
+
+  /** Fresh Turnstile token for one order POST. Tokens are single-use and
+      expire in 300s, so this runs at submit time, not earlier. A missing
+      API/widget fails the order open (the caller's fallback flow takes over). */
+  const getTurnstileToken = (): Promise<string | null> => {
+    const w = window.turnstile;
+    const el = turnstileRef.current;
+    const id = el?.dataset.widgetId;
+    if (!w || !el || !id) return Promise.resolve(null);
+    return new Promise((resolve) => {
+      w.reset(id); // allow a retry after a previous failure/expiry
+      w.execute(id, {
+        callback: (token: string) => resolve(token),
+        'error-callback': () => resolve(null),
+        'expired-callback': () => resolve(null),
+      });
+    });
+  };
 
   // Count down to the automatic redirect once the order is confirmed
   useEffect(() => {
@@ -251,11 +312,15 @@ export default function CheckoutPage() {
       sent for Discord orders too — the embed prints it as the visitor
       reference. */
   const sendOrderToProxy = async (orderId: string): Promise<{ ok: boolean; injected?: boolean; reason?: string }> => {
-    if (!ORDER_KEY) return { ok: false };
+    if (!TURNSTILE_SITE_KEY) return { ok: false };
+    // Anti-abuse challenge first — the worker re-verifies this token with
+    // Cloudflare before doing anything else with the order
+    const token = await getTurnstileToken();
+    if (!token) return { ok: false };
     const session = getLhcSession();
     const res = await fetch(ORDER_LOG_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'X-Order-Key': ORDER_KEY },
+      headers: { 'Content-Type': 'application/json', 'X-Turnstile-Token': token },
       body: JSON.stringify({
         orderId,
         channel: contactVia,
@@ -365,6 +430,12 @@ export default function CheckoutPage() {
       <Reveal>
         <h1 className="font-display text-3xl font-extrabold text-white sm:text-4xl">Order Placement</h1>
       </Reveal>
+
+      {/* Turnstile mount point — interaction-only: invisible unless Cloudflare
+          challenges the submitter, so it never disturbs the layout */}
+      {TURNSTILE_SITE_KEY && (
+        <div ref={turnstileRef} className="fixed bottom-4 right-4 z-50" aria-hidden />
+      )}
 
       {/* noValidate: native browser popups are replaced by FieldPopup bubbles */}
       <form noValidate onSubmit={purchase} className="mt-8 grid items-start gap-8 lg:grid-cols-2">

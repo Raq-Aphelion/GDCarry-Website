@@ -26,6 +26,11 @@
     <title>GD Carry — Grand Dice Gaming Boosting</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Cloudflare Turnstile — invisible anti-abuse challenge on checkout.
+         Loaded with render=explicit; CheckoutPage renders the widget on demand.
+         CSP (Cloudflare): needs challenges.cloudflare.com in script-src,
+         frame-src and connect-src. -->
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
     <link
       href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap"
       rel="stylesheet"

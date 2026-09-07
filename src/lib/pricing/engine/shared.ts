@@ -70,6 +70,8 @@ export const fromPrice = (db: PricingDb, serviceId: string, fallback?: number): 
     return db.msqBoost.expansions[0].price;
   const mp = db.methodPrices?.[serviceId];
   if (mp) return Math.min(mp.piloted, mp.afk ?? Infinity);
+  const acc = db.accounts?.[serviceId];
+  if (acc) return acc.price;
   return db.servicePrices[serviceId] ?? fallback ?? null;
 };
 
@@ -119,6 +121,7 @@ export const mergeCategoryFiles = (
     if (cat.relics) out.relics = { ...out.relics, ...cat.relics };
     if (cat.fieldLeveling) out.fieldLeveling = { ...out.fieldLeveling, ...cat.fieldLeveling };
     if (cat.reputation) out.reputation = { ...out.reputation, ...cat.reputation };
+    if (cat.accounts) out.accounts = { ...out.accounts, ...cat.accounts };
     if (cat.unlockAddon) out.unlockAddon = cat.unlockAddon;
     if (cat.catalog) out.catalog = cat.catalog;
   }
@@ -148,6 +151,7 @@ export const mergeCategoryFiles = (
     relics: out.relics,
     fieldLeveling: out.fieldLeveling,
     reputation: out.reputation,
+    accounts: out.accounts,
     servicePrices: base?.servicePrices ?? {},
   };
 };

@@ -460,6 +460,11 @@ export interface PricingDb {
   serviceAddons?: Record<string, { piloted?: PricingAddon[]; afk?: PricingAddon[] }>;
   /** Service id -> flat base price override (legacy; prefer methodPrices) */
   servicePrices: Record<string, number>;
+  /** Account listings (from ffxiv-Accounts): one-off whole-account sales,
+      fixed price, no methods or options. The orders worker verifies account
+      order lines against these floors (account cart lines carry no pricing
+      config), so every listing needs an entry here. */
+  accounts?: Record<string, { price: number }>;
   /** Allied Society reputation boosting (from ffxiv-FieldExplorations):
       per-rank price, faction select with per-faction rank caps */
   reputation?: Record<
@@ -540,6 +545,7 @@ export const CATEGORY_FILES = [
   'ffxiv-Reputation',
   'ffxiv-FieldExplorations',
   'ffxiv-Catalog',
+  'ffxiv-Accounts',
 ];
 
 /** Fetch the pricing database (global + category files), falling back to the

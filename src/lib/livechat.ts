@@ -458,7 +458,14 @@ const styleOrderRow = (doc: Document, row: Element) => {
 
     const wrap = doc.createElement('div');
     wrap.className = 'gd-item';
-    const mediaClone = el.cloneNode(true) as HTMLElement;
+    // Rebuild from sanitized HTML rather than cloneNode(true): a raw clone
+    // would re-inject any markup LHC ever lets through unfiltered (inline
+    // handlers, unknown tags) into the widget document — same treatment as
+    // the text bodies above. The allowlist keeps img/a, so the thumbnail
+    // survives; the icon-span/link cleanup below still applies.
+    const mediaClone = doc.createElement((el as HTMLElement).tagName.toLowerCase());
+    mediaClone.setAttribute('class', (el as HTMLElement).getAttribute('class') ?? '');
+    mediaClone.innerHTML = sanitizeOrderHtml(el.innerHTML);
     resetCloneBubble(mediaClone);
     mediaClone.querySelectorAll('.msg-body, .msg-body-media').forEach((n) => resetCloneBubble(n as HTMLElement));
     // Read-receipt icons are noise on an order print (and their ligature
