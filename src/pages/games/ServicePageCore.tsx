@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, Navigate, useParams } from 'react-router';
 import { ArrowRight, BadgeCheck, ChevronDown, ChevronRight, Gamepad2, Swords } from 'lucide-react';
-import CustomOrderCta from '@/components/CustomOrderCta';
+import CustomOrderCta, { SidebarCustomOrderCta } from '@/components/CustomOrderCta';
 import PageMeta from '@/components/PageMeta';
 import FadeImage from '@/components/FadeImage';
 import MobileCategoryBar from '@/components/MobileCategoryBar';
@@ -496,12 +496,9 @@ export default function ServicePageCore({ gameId }: { gameId: string }) {
               })}
             </ul>
 
-            <div id="sidebar-bottom-cta" className="mt-8 rounded-[5px] bg-navy-850 p-4">
-              <p className="font-display text-sm font-bold text-cyan-400">Need something else?</p>
-              <p className="mt-1 text-xs leading-relaxed text-slate-400">
-                Custom {game.short} orders are quoted within the hour.
-              </p>
-            </div>
+            {/* mt-4 matches the game page's sidebar, so the block sits at the
+                same height on both page types */}
+            <SidebarCustomOrderCta className="mt-4" />
           </div>
         </aside>
 

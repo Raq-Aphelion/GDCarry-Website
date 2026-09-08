@@ -198,8 +198,9 @@ export default function NeedHelpCard() {
       aria-label="Live support"
     >
       {/* Avatar stack — half outside the card's top edge; positional rings
-          (red/yellow/green) while online, all red when the badge is offline */}
-      <div className="absolute -top-[18px] left-4 flex" aria-hidden>
+          (red/yellow/green) while online, all red when the badge is offline.
+          pointer-events-none: purely decorative — no drag / right-click-open */}
+      <div className="pointer-events-none absolute -top-[18px] left-4 flex select-none" aria-hidden>
         {avatars.map((a, i) => (
           <img
             key={a.src}

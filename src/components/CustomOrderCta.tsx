@@ -1,6 +1,21 @@
 import Reveal from './Reveal';
 import { openLiveChat } from '@/lib/livechat';
 
+/** "Need something else?" mini-CTA pinned under the sidebar's category list
+    (game + service pages). The whole block is the button — opens the live
+    chat for a custom-order quote. */
+export function SidebarCustomOrderCta({ className }: { className?: string }) {
+  return (
+    <button
+      onClick={() => openLiveChat()}
+      className={`w-full cursor-pointer rounded-[5px] bg-navy-850 p-4 text-left transition-colors hover:bg-navy-800${className ? ` ${className}` : ''}`}
+    >
+      <span className="block font-display text-sm font-bold text-cyan-400">Need something else?</span>
+      <span className="mt-1 block text-xs leading-relaxed text-slate-400">Request a custom order</span>
+    </button>
+  );
+}
+
 /** "Can't find your boost?" custom-order call-to-action panel.
     `compact` shortens the secondary text (used inline inside card grids).
     `lateTextBreak` delays the hard text break to 1200px — for the inline grid
