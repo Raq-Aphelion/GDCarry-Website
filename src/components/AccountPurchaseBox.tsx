@@ -1,5 +1,6 @@
 import { ArrowRightLeft, BadgeCheck, Clock } from 'lucide-react';
 import FadeImage from './FadeImage';
+import Price from './Price';
 import { usePurchaseFloat } from '@/hooks/usePurchaseFloat';
 import { useCart } from '@/context/CartContext';
 import { useCurrency } from '@/context/CurrencyContext';
@@ -75,7 +76,7 @@ export default function AccountPurchaseBox({ service, gameShort }: { service: Se
             fixedStyle ? 'price-block-glow' : ''
           }`}
         >
-          <p className="font-display text-2xl font-extrabold text-white">{format(total)}</p>
+          <p className="font-display text-2xl font-extrabold text-white"><Price>{format(total)}</Price></p>
           <p className="mt-1 flex items-center justify-center gap-1.5 text-xs text-slate-400">
             <Clock className="h-3.5 w-3.5 text-cyan-500" />
             Average Completion Time: 24 Hours

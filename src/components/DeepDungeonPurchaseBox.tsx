@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import { Armchair, Check, Clock, Dices, Gem, Users, Zap, type LucideIcon } from 'lucide-react';
 import FadeImage from './FadeImage';
+import Price from './Price';
 import FieldPopup from './FieldPopup';
 import MountAddonsBlock from './MountAddonsBlock';
 import { CustomSelect } from './PurchaseBox';
@@ -199,7 +200,7 @@ export default function DeepDungeonPurchaseBox({ service, gameShort }: { service
     openCart();
   };
 
-  const row = (id: string, label: string, right: string, isChecked: boolean, onClick: () => void, note?: string) => (
+  const row = (id: string, label: string, right: ReactNode, isChecked: boolean, onClick: () => void, note?: string) => (
     <button
       key={id}
       type="button"
@@ -253,7 +254,7 @@ export default function DeepDungeonPurchaseBox({ service, gameShort }: { service
               <span className="block truncate text-sm text-slate-300">{a.label}</span>
               {a.note && <span className="block text-[11px] leading-snug text-slate-500">{a.note}</span>}
             </span>
-            <span className="text-xs font-bold text-cyan-400">+{format(a.price)}</span>
+            <Price className="text-xs font-bold text-cyan-400">+{format(a.price)}</Price>
           </button>
         </div>
       </div>
@@ -445,14 +446,14 @@ export default function DeepDungeonPurchaseBox({ service, gameShort }: { service
                         row(
                           a.id,
                           a.label,
-                          a.timesBase ? `${a.timesBase * 100}%` : `+${format(a.price)}`,
+                          a.timesBase ? `${a.timesBase * 100}%` : <>+<Price>{format(a.price)}</Price></>,
                           checked.includes(a.id),
                           () => toggle(a.id),
                           a.note,
                         ),
                       )}
                       {cfg?.streamInSolo &&
-                        row('stream', 'Private Stream', `+${format(10)}`, stream, () => setStream((s) => !s))}
+                        row('stream', 'Private Stream', <>+<Price>{format(10)}</Price></>, stream, () => setStream((s) => !s))}
                     </div>
                   </div>
                 </div>
@@ -469,14 +470,14 @@ export default function DeepDungeonPurchaseBox({ service, gameShort }: { service
                       row(
                         a.id,
                         a.label,
-                        a.timesBase ? `${a.timesBase * 100}%` : `+${format(a.price)}`,
+                        a.timesBase ? `${a.timesBase * 100}%` : <>+<Price>{format(a.price)}</Price></>,
                         checked.includes(a.id),
                         () => toggle(a.id),
                         a.note,
                       ),
                     )}
                     {cfg?.streamInSolo &&
-                      row('stream', 'Private Stream', `+${format(10)}`, stream, () => setStream((s) => !s))}
+                      row('stream', 'Private Stream', <>+<Price>{format(10)}</Price></>, stream, () => setStream((s) => !s))}
                   </div>
                 </div>
               )}
@@ -516,7 +517,7 @@ export default function DeepDungeonPurchaseBox({ service, gameShort }: { service
               activeUnlock
                 ? {
                     label: activeUnlock.label,
-                    hint: `+${format(activeUnlock.price)}`,
+                    hint: <>+<Price>{format(activeUnlock.price)}</Price></>,
                     checked: unlockChecked,
                     onClick: () => setUnlockChecked((u) => !u),
                   }
@@ -526,7 +527,7 @@ export default function DeepDungeonPurchaseBox({ service, gameShort }: { service
               effMethod === 'group' || !hasGroup
                 ? cfg?.drawerAddons?.map((a) => ({
                     label: a.label,
-                    hint: a.timesRuns ? `+${format(a.price)} / run` : `+${format(a.price)}`,
+                    hint: a.timesRuns ? <>+<Price>{format(a.price)}</Price> / run</> : <>+<Price>{format(a.price)}</Price></>,
                     checked: drawerChecked.includes(a.id),
                     onClick: () =>
                       setDrawerChecked((prev) =>
@@ -547,7 +548,7 @@ export default function DeepDungeonPurchaseBox({ service, gameShort }: { service
             fixedStyle ? 'price-block-glow' : ''
           }`}
         >
-          <p className="font-display text-2xl font-extrabold text-white">{format(total)}</p>
+          <p className="font-display text-2xl font-extrabold text-white"><Price>{format(total)}</Price></p>
           <p className="mt-1 flex items-center justify-center gap-1.5 text-xs text-slate-400">
             <Clock className="h-3.5 w-3.5 text-cyan-500" />
             Average Completion Time: {cfg?.completion ?? '5-7 Days'}

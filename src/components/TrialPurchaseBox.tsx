@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Armchair, Check, Clock, Gamepad2 } from 'lucide-react';
 import FadeImage from './FadeImage';
+import Price from './Price';
 import FieldPopup from './FieldPopup';
 import DiscountTag from './DiscountTag';
 import MountAddonsBlock from './MountAddonsBlock';
@@ -225,7 +226,7 @@ export default function TrialPurchaseBox({ service, gameShort }: { service: Serv
                     <Check className="h-3 w-3" strokeWidth={3.5} />
                   </span>
                   <span className="min-w-0 flex-1 truncate text-sm text-slate-300">{mountLabel} Guaranteed</span>
-                  <span className="text-xs font-bold text-cyan-400">{format(mountPrice)}</span>
+                  <Price className="text-xs font-bold text-cyan-400">{format(mountPrice)}</Price>
                 </button>
               </div>
             </div>
@@ -271,7 +272,7 @@ export default function TrialPurchaseBox({ service, gameShort }: { service: Serv
             fixedStyle ? 'price-block-glow' : ''
           }`}
         >
-          <p className="font-display text-2xl font-extrabold text-white">{format(total)}</p>
+          <p className="font-display text-2xl font-extrabold text-white"><Price>{format(total)}</Price></p>
           <p className="mt-1 flex items-center justify-center gap-1.5 text-xs text-slate-400">
             <Clock className="h-3.5 w-3.5 text-cyan-500" />
             Average Completion Time: {cfg?.completion ?? '24 Hours'}

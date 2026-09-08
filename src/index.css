@@ -480,6 +480,31 @@ input[type='number'] {
   animation: overlay-out 0.18s ease-in both;
 }
 
+/* Price fade on currency switch — the Price component swaps the text between
+   the two phases (keep FADE_OUT_MS in sync with the -out duration) */
+@keyframes price-fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+.price-fade-out {
+  animation: price-fade-out 0.16s ease-in both;
+}
+@keyframes price-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.price-fade-in {
+  animation: price-fade-in 0.22s ease-out both;
+}
+
 /* Toast entrance */
 @keyframes toast-in {
   from {

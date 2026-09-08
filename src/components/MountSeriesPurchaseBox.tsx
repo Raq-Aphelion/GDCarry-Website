@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Armchair, Check, Clock, Gamepad2 } from 'lucide-react';
 import FadeImage from './FadeImage';
+import Price from './Price';
 import FieldPopup from './FieldPopup';
 import MountAddonsBlock from './MountAddonsBlock';
 import { CustomSelect } from './PurchaseBox';
@@ -130,7 +131,7 @@ export default function MountSeriesPurchaseBox({ service, gameShort }: { service
         <Check className="h-3 w-3" strokeWidth={3.5} />
       </span>
       <span className="min-w-0 flex-1 truncate text-sm text-slate-300">{label}</span>
-      <span className="text-xs font-bold text-cyan-400">+{format(price)}</span>
+      <Price className="text-xs font-bold text-cyan-400">+{format(price)}</Price>
     </button>
   );
 
@@ -184,7 +185,7 @@ export default function MountSeriesPurchaseBox({ service, gameShort }: { service
             <p className="pl-px text-sm font-semibold text-white [text-shadow:0_1px_4px_rgb(0_0_0/0.7)]">
               Missing Mounts{' '}
               <span className="text-xs font-normal text-slate-300 [text-shadow:0_1px_4px_rgb(0_0_0/0.7)]">
-                (all {cfg?.mounts.length} = {format(cfg ? bundleTotal(cfg) : 0)} bundle)
+                (all {cfg?.mounts.length} = <Price>{format(cfg ? bundleTotal(cfg) : 0)}</Price> bundle)
               </span>
             </p>
             <div className="mt-2.5 space-y-1.5">
@@ -242,7 +243,7 @@ export default function MountSeriesPurchaseBox({ service, gameShort }: { service
             fixedStyle ? 'price-block-glow' : ''
           }`}
         >
-          <p className="font-display text-2xl font-extrabold text-white">{format(total)}</p>
+          <p className="font-display text-2xl font-extrabold text-white"><Price>{format(total)}</Price></p>
           <p className="mt-1 flex items-center justify-center gap-1.5 text-xs text-slate-400">
             <Clock className="h-3.5 w-3.5 text-cyan-500" />
             Average Completion Time: {cfg?.completion ?? '24 Hours'}

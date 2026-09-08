@@ -5,6 +5,7 @@ import { useCart, type CartItem } from '@/context/CartContext';
 import { cartMeta, displayDetails, lineTotal } from '@/lib/cart';
 import { useCurrency } from '@/context/CurrencyContext';
 import { OverlayScrollbar } from '@/components/Scrollbar';
+import Price from './Price';
 import { serviceLink } from '@/data/games';
 import { setLhcCartOffset } from '@/lib/lhcWidgetFx';
 import { useSmoothScroller } from '@/hooks/useSmoothScroller';
@@ -221,9 +222,9 @@ export default function CartDrawer() {
                           <Plus className="h-3.5 w-3.5" />
                         </button>
                       </div>
-                      <span className="font-display text-sm font-bold text-cyan-400">
+                      <Price className="font-display text-sm font-bold text-cyan-400">
                         {format(lineTotal(item))}
-                      </span>
+                      </Price>
                     </div>
                   </div>
                 </div>
@@ -261,7 +262,7 @@ export default function CartDrawer() {
             <div className="border-t border-navy-700/60 px-5 pb-6 pt-4">
               <div className="flex items-center justify-between">
                 <span className="text-sm text-slate-400">Subtotal</span>
-                <span className="font-display text-xl font-bold text-cyan-400">{format(subtotal)}</span>
+                <Price className="font-display text-xl font-bold text-cyan-400">{format(subtotal)}</Price>
               </div>
               <div className="mt-3 border-t border-navy-700/60" />
               <Link

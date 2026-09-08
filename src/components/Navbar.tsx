@@ -14,6 +14,7 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 import { OverlayScrollbar } from './Scrollbar';
+import Price from './Price';
 import { useSmoothScroller } from '@/hooks/useSmoothScroller';
 import { allServices, games, serviceCount, serviceLink, type Game, type ServiceSearchResult } from '@/data/games';
 import { contentOf, matchSnippet, rankService } from '@/data/search';
@@ -189,7 +190,7 @@ function SearchBox({
                               {r.fromPrice != null && r.fromPrice > 0 && (
                                 <span className="hidden shrink-0 items-baseline gap-1.5 text-xs text-slate-400 lg:flex lg:pr-4">
                                   From
-                                  <span className="font-display text-lg font-bold text-white">{format(r.fromPrice)}</span>
+                                  <Price className="font-display text-lg font-bold text-white">{format(r.fromPrice)}</Price>
                                 </span>
                               )}
                             </button>

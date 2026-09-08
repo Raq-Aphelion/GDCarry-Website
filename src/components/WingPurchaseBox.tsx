@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Armchair, Clock, Gamepad2 } from 'lucide-react';
 import FadeImage from './FadeImage';
+import Price from './Price';
 import FieldPopup from './FieldPopup';
 import MountAddonsBlock from './MountAddonsBlock';
 import { CustomSelect } from './PurchaseBox';
@@ -170,7 +171,7 @@ export default function WingPurchaseBox({ service, gameShort }: { service: Servi
             fixedStyle ? 'price-block-glow' : ''
           }`}
         >
-          <p className="font-display text-2xl font-extrabold text-white">{format(total)}</p>
+          <p className="font-display text-2xl font-extrabold text-white"><Price>{format(total)}</Price></p>
           <p className="mt-1 flex items-center justify-center gap-1.5 text-xs text-slate-400">
             <Clock className="h-3.5 w-3.5 text-cyan-500" />
             Average Completion Time: {cfg?.completion ?? '24 Hours'}

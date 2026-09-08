@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Armchair, Check, Clock, Swords, Users, Zap, type LucideIcon } from 'lucide-react';
 import FadeImage from './FadeImage';
+import Price from './Price';
 import FieldPopup from './FieldPopup';
 import MountAddonsBlock from './MountAddonsBlock';
 import { CustomSelect } from './PurchaseBox';
@@ -262,7 +263,7 @@ export default function CriterionPurchaseBox({ service, gameShort }: { service: 
                             <span className="block truncate text-sm text-slate-300">{a.label}</span>
                             {a.note && <span className="block text-[11px] leading-snug text-slate-500">{a.note}</span>}
                           </span>
-                          <span className="text-xs font-bold text-cyan-400">+{format(addonPriceOf(a))}</span>
+                          <Price className="text-xs font-bold text-cyan-400">+{format(addonPriceOf(a))}</Price>
                         </button>
                       );
                     })}
@@ -306,7 +307,7 @@ export default function CriterionPurchaseBox({ service, gameShort }: { service: 
               cfg?.unlock
                 ? {
                     label: cfg.unlock.label,
-                    hint: `+${format(cfg.unlock.price)}`,
+                    hint: <>+<Price>{format(cfg.unlock.price)}</Price></>,
                     checked: unlockChecked,
                     onClick: () => setUnlockChecked((u) => !u),
                   }
@@ -324,7 +325,7 @@ export default function CriterionPurchaseBox({ service, gameShort }: { service: 
             fixedStyle ? 'price-block-glow' : ''
           }`}
         >
-          <p className="font-display text-2xl font-extrabold text-white">{format(total)}</p>
+          <p className="font-display text-2xl font-extrabold text-white"><Price>{format(total)}</Price></p>
           <p className="mt-1 flex items-center justify-center gap-1.5 text-xs text-slate-400">
             <Clock className="h-3.5 w-3.5 text-cyan-500" />
             Average Completion Time: {cfg?.completion ?? '24 Hours'}

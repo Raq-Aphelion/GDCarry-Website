@@ -4,6 +4,7 @@ import { CheckCircle2, Circle, Loader2, Mail, MessageCircle, Timer, type LucideI
 import Reveal from '@/components/Reveal';
 import PageMeta, { SITE_URL } from '@/components/PageMeta';
 import FadeImage from '@/components/FadeImage';
+import Price from '@/components/Price';
 import FieldPopup from '@/components/FieldPopup';
 import { OverlayScrollbar } from '@/components/Scrollbar';
 import { useCart, type CartItem } from '@/context/CartContext';
@@ -701,9 +702,9 @@ export default function CheckoutPage() {
                           </ul>
                         )}
                       </div>
-                      <span className="shrink-0 font-display text-sm font-bold text-cyan-400">
+                      <Price className="shrink-0 font-display text-sm font-bold text-cyan-400">
                         {format(lineTotal(item))}
-                      </span>
+                      </Price>
                     </li>
                   ))}
                 </ul>
@@ -732,7 +733,7 @@ export default function CheckoutPage() {
               </div>
               <div className="mt-5 flex shrink-0 items-center justify-between border-t border-navy-700/60 pt-4">
                 <span className="text-sm text-slate-400">Total</span>
-                <span className="font-display text-xl font-bold text-cyan-400">{format(orderTotal)}</span>
+                <Price className="font-display text-xl font-bold text-cyan-400">{format(orderTotal)}</Price>
               </div>
             </section>
           </Reveal>

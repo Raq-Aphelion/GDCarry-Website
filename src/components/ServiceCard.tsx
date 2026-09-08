@@ -1,6 +1,7 @@
 import { Link, useNavigate } from 'react-router';
 import { memo } from 'react';
 import FadeImage from './FadeImage';
+import Price from './Price';
 import { serviceLink, type Service } from '@/data/games';
 import { SERVICE_TAG_ICONS } from '@/data/serviceIcons';
 import { useCurrency } from '@/context/CurrencyContext';
@@ -108,7 +109,7 @@ const ServiceCard = memo(function ServiceCard({
 
         <p className={`mt-4 flex items-baseline gap-1.5 text-xs text-slate-400 ${price > 0 ? '' : 'invisible'}`}>
           From
-          <span className="font-display text-lg font-bold text-white">{price > 0 ? format(price) : '0'}</span>
+          <Price className="font-display text-lg font-bold text-white">{price > 0 ? format(price) : '0'}</Price>
         </p>
       </div>
     </Link>

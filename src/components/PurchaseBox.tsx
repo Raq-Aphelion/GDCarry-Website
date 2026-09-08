@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { Armchair, Check, ChevronDown, Clock, Gamepad2, Minus, Plus, Settings2, type LucideIcon } from 'lucide-react';
 import { splitParens } from '@/data/jobs';
 import FadeImage from './FadeImage';
+import Price from './Price';
 import FieldPopup from './FieldPopup';
 import MethodFadeBlock from './MethodFadeBlock';
 import { Slider } from '@/components/ui/slider';
@@ -174,7 +175,7 @@ export function CustomSelect({
                       {o.accent && <span className="text-cyan-400">{o.accent}</span>}
                     </span>
                     {o.hint ? (
-                      <span className="shrink-0 text-xs font-bold text-cyan-400">{o.hint}</span>
+                      <span className="shrink-0 text-xs font-bold text-cyan-400"><Price>{o.hint}</Price></span>
                     ) : selected ? (
                       <Check className="h-3.5 w-3.5 shrink-0 text-cyan-500" />
                     ) : null}
@@ -490,7 +491,7 @@ export default function PurchaseBox({ service, gameShort }: { service: Service; 
                             <span className="text-xs font-bold text-cyan-400">
                               {a.id === 'priority'
                                 ? `+${Math.round((cfg.priorityMultiplier - 1) * 100)}%`
-                                : `+${format(addonPriceOf(a))}`}
+                                : <Price>+{format(addonPriceOf(a))}</Price>}
                             </span>
                           </button>
                         );
@@ -521,7 +522,7 @@ export default function PurchaseBox({ service, gameShort }: { service: Service; 
             fixedStyle ? 'price-block-glow' : ''
           }`}
         >
-          <p className="font-display text-2xl font-extrabold text-white">{format(total)}</p>
+          <p className="font-display text-2xl font-extrabold text-white"><Price>{format(total)}</Price></p>
           <p className="mt-1 flex items-center justify-center gap-1.5 text-xs text-slate-400">
             <Clock className="h-3.5 w-3.5 text-cyan-500" />
             Average Completion Time: 24 Hours

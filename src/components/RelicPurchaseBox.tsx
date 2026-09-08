@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Check, Clock } from 'lucide-react';
 import FadeImage from './FadeImage';
+import Price from './Price';
 import FieldPopup from './FieldPopup';
 import MountAddonsBlock from './MountAddonsBlock';
 import { CustomSelect } from './PurchaseBox';
@@ -217,7 +218,7 @@ export default function RelicPurchaseBox({ service, gameShort }: { service: Serv
               Steps{' '}
               {cfg?.complete && (
                 <span className="text-xs font-normal text-slate-500">
-                  (all steps = {format(cfg.complete.price)})
+                  (all steps = <Price>{format(cfg.complete.price)}</Price>)
                 </span>
               )}
             </p>
@@ -240,7 +241,7 @@ export default function RelicPurchaseBox({ service, gameShort }: { service: Serv
                       <Check className="h-3 w-3" strokeWidth={3.5} />
                     </span>
                     <span className="min-w-0 flex-1 truncate text-sm text-slate-300">{s.label}</span>
-                    <span className="text-xs font-bold text-cyan-400">+{format(s.price)}</span>
+                    <Price className="text-xs font-bold text-cyan-400">+{format(s.price)}</Price>
                   </button>
                 );
               })}
@@ -263,7 +264,7 @@ export default function RelicPurchaseBox({ service, gameShort }: { service: Serv
                   <Check className="h-3 w-3" strokeWidth={3.5} />
                 </span>
                 <span className="min-w-0 flex-1 truncate text-sm text-slate-300">{cfg.mount.label}</span>
-                <span className="text-xs font-bold text-cyan-400">+{format(cfg.mount.price)}</span>
+                <Price className="text-xs font-bold text-cyan-400">+{format(cfg.mount.price)}</Price>
               </button>
             </div>
           )}
@@ -297,7 +298,7 @@ export default function RelicPurchaseBox({ service, gameShort }: { service: Serv
               cfg?.unlock
                 ? {
                     label: cfg.unlock.label,
-                    hint: `+${format(cfg.unlock.price)}`,
+                    hint: <>+<Price>{format(cfg.unlock.price)}</Price></>,
                     checked: unlockChecked,
                     onClick: () => setUnlockChecked((u) => !u),
                   }
@@ -331,7 +332,7 @@ export default function RelicPurchaseBox({ service, gameShort }: { service: Serv
             fixedStyle ? 'price-block-glow' : ''
           }`}
         >
-          <p className="font-display text-2xl font-extrabold text-white">{format(total)}</p>
+          <p className="font-display text-2xl font-extrabold text-white"><Price>{format(total)}</Price></p>
           <p className="mt-1 flex items-center justify-center gap-1.5 text-xs text-slate-400">
             <Clock className="h-3.5 w-3.5 text-cyan-500" />
             Average Completion Time: {cfg?.completion ?? '3-5 Days'}

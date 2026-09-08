@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Check, Clock, Minus, Plus, Settings2 } from 'lucide-react';
 import { JOB_GROUPS, splitParens } from '@/data/jobs';
 import FadeImage from './FadeImage';
+import Price from './Price';
 import FieldPopup from './FieldPopup';
 import { CustomSelect } from './PurchaseBox';
 import { useCart } from '@/context/CartContext';
@@ -207,7 +208,7 @@ export default function MsqPurchaseBox({ service, gameShort }: { service: Servic
                       <Check className="h-3 w-3" strokeWidth={3.5} />
                     </span>
                     <span className="min-w-0 flex-1 truncate text-sm text-slate-300">{e.label}</span>
-                    <span className="text-xs font-bold text-cyan-400">+{format(e.price)}</span>
+                    <Price className="text-xs font-bold text-cyan-400">+{format(e.price)}</Price>
                   </button>
                 );
               })}
@@ -281,9 +282,9 @@ export default function MsqPurchaseBox({ service, gameShort }: { service: Servic
                             <Check className="h-3 w-3" strokeWidth={3.5} />
                           </span>
                           <span className="min-w-0 flex-1 truncate text-sm text-slate-300">{cfg.aetherCurrents.label}</span>
-                          <span className="text-xs font-bold text-cyan-400">
+                          <Price className="text-xs font-bold text-cyan-400">
                             +{format(aetherCount * cfg.aetherCurrents.pricePerExpansion)}
-                          </span>
+                          </Price>
                         </button>
                       </div>
                     </div>
@@ -337,7 +338,7 @@ export default function MsqPurchaseBox({ service, gameShort }: { service: Servic
             fixedStyle ? 'price-block-glow' : ''
           }`}
         >
-          <p className="font-display text-2xl font-extrabold text-white">{format(total)}</p>
+          <p className="font-display text-2xl font-extrabold text-white"><Price>{format(total)}</Price></p>
           <p className="mt-1 flex items-center justify-center gap-1.5 text-xs text-slate-400">
             <Clock className="h-3.5 w-3.5 text-cyan-500" />
             Average Completion Time: {cfg?.completion ?? '4-6 Days'}

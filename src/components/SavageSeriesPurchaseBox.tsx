@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Armchair, Check, Clock, Gamepad2, Layers, Minus, Plus, Settings2, Swords } from 'lucide-react';
 import FadeImage from './FadeImage';
+import Price from './Price';
 import FieldPopup from './FieldPopup';
 import MethodFadeBlock from './MethodFadeBlock';
 import { CustomSelect } from './PurchaseBox';
@@ -352,7 +353,7 @@ export default function SavageSeriesPurchaseBox({ service, gameShort }: { servic
                             <Check className="h-3 w-3" strokeWidth={3.5} />
                           </span>
                           <span className="min-w-0 flex-1 truncate text-sm text-slate-300">{a.label}</span>
-                          <span className="text-xs font-bold text-cyan-400">+{format(a.price)}</span>
+                          <Price className="text-xs font-bold text-cyan-400">+{format(a.price)}</Price>
                         </button>
                       );
                     })}
@@ -394,7 +395,7 @@ export default function SavageSeriesPurchaseBox({ service, gameShort }: { servic
                               <Check className="h-3 w-3" strokeWidth={3.5} />
                             </span>
                             <span className="min-w-0 flex-1 truncate text-sm text-slate-300">{a.label}</span>
-                            <span className="text-xs font-bold text-cyan-400">+{format(a.price)}</span>
+                            <Price className="text-xs font-bold text-cyan-400">+{format(a.price)}</Price>
                           </button>
                         );
                       })}
@@ -515,7 +516,7 @@ export default function SavageSeriesPurchaseBox({ service, gameShort }: { servic
                               <Check className="h-3 w-3" strokeWidth={3.5} />
                             </span>
                             <span className="min-w-0 flex-1 truncate text-sm text-slate-300">{addonLabel(a)}</span>
-                            <span className="text-xs font-bold text-cyan-400">+{format(addonPrice(a))}</span>
+                            <Price className="text-xs font-bold text-cyan-400">+{format(addonPrice(a))}</Price>
                           </button>
                         );
                       })}
@@ -538,7 +539,7 @@ export default function SavageSeriesPurchaseBox({ service, gameShort }: { servic
                             <Check className="h-3 w-3" strokeWidth={3.5} />
                           </span>
                           <span className="min-w-0 flex-1 truncate text-sm text-slate-300">Private Stream</span>
-                          <span className="text-xs font-bold text-cyan-400">+{format(cfg?.stream ?? 0)}</span>
+                          <Price className="text-xs font-bold text-cyan-400">+{format(cfg?.stream ?? 0)}</Price>
                         </button>
                       </MethodFadeBlock>
                       <button
@@ -578,7 +579,7 @@ export default function SavageSeriesPurchaseBox({ service, gameShort }: { servic
             fixedStyle ? 'price-block-glow' : ''
           }`}
         >
-          <p className="font-display text-2xl font-extrabold text-white">{format(total)}</p>
+          <p className="font-display text-2xl font-extrabold text-white"><Price>{format(total)}</Price></p>
           <p className="mt-1 flex items-center justify-center gap-1.5 text-xs text-slate-400">
             <Clock className="h-3.5 w-3.5 text-cyan-500" />
             Average Completion Time: {priority ? cfg?.completion.priority : cfg?.completion.normal}

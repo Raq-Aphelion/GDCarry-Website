@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Check, ChevronRight, Clock } from 'lucide-react';
 import FadeImage from './FadeImage';
+import Price from './Price';
 import FieldPopup from './FieldPopup';
 import MountAddonsBlock from './MountAddonsBlock';
 import { CustomSelect } from './PurchaseBox';
@@ -234,7 +235,7 @@ export default function ReputationPurchaseBox({ service, gameShort }: { service:
                         <Check className="h-3 w-3" strokeWidth={3.5} />
                       </span>
                       <span className="min-w-0 flex-1 truncate text-sm text-slate-300">{p.label}</span>
-                      <span className="text-xs font-bold text-cyan-400">+{format(p.price)}</span>
+                      <Price className="text-xs font-bold text-cyan-400">+{format(p.price)}</Price>
                     </button>
                   );
                 })}
@@ -275,7 +276,7 @@ export default function ReputationPurchaseBox({ service, gameShort }: { service:
               cfg?.unlock
                 ? {
                     label: cfg.unlock.label,
-                    hint: `+${format(unlockDisplayPrice)}`,
+                    hint: <>+<Price>{format(unlockDisplayPrice)}</Price></>,
                     checked: unlockChecked,
                     onClick: () => setUnlockChecked((u) => !u),
                   }
@@ -293,7 +294,7 @@ export default function ReputationPurchaseBox({ service, gameShort }: { service:
             fixedStyle ? 'price-block-glow' : ''
           }`}
         >
-          <p className="font-display text-2xl font-extrabold text-white">{format(total)}</p>
+          <p className="font-display text-2xl font-extrabold text-white"><Price>{format(total)}</Price></p>
           <p className="mt-1 flex items-center justify-center gap-1.5 text-xs text-slate-400">
             <Clock className="h-3.5 w-3.5 text-cyan-500" />
             Average Completion Time: {cfg?.completion ?? '2-4 Weeks'}

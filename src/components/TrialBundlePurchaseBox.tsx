@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import { Armchair, Check, Clock, Gamepad2 } from 'lucide-react';
 import FadeImage from './FadeImage';
+import Price from './Price';
 import FieldPopup from './FieldPopup';
 import DiscountTag from './DiscountTag';
 import MountAddonsBlock from './MountAddonsBlock';
@@ -154,7 +155,7 @@ export default function TrialBundlePurchaseBox({ service, gameShort }: { service
   const row = (
     id: string,
     label: string,
-    right: string,
+    right: ReactNode,
     isChecked: boolean,
     onClick: () => void,
     disabled = false,
@@ -257,12 +258,12 @@ export default function TrialBundlePurchaseBox({ service, gameShort }: { service
             <p className="pl-px text-sm font-semibold text-white [text-shadow:0_1px_4px_rgb(0_0_0/0.7)]">
               Trials{' '}
               <span className="text-xs font-normal text-slate-300 [text-shadow:0_1px_4px_rgb(0_0_0/0.7)]">
-                (all {cfg?.trials.length} = {format(method === 'afk' ? afkBundleTotal : (cfg?.bundlePrice ?? 0))} bundle)
+                (all {cfg?.trials.length} = <Price>{format(method === 'afk' ? afkBundleTotal : (cfg?.bundlePrice ?? 0))}</Price> bundle)
               </span>
             </p>
             <div className="mt-2.5 space-y-1.5">
               {cfg?.trials.map((t) =>
-                row(t.id, t.label, `+${format(priceOf(t))}`, checked.includes(t.id), () => toggle(t.id), guaranteed),
+                row(t.id, t.label, <>+<Price>{format(priceOf(t))}</Price></>, checked.includes(t.id), () => toggle(t.id), guaranteed),
               )}
             </div>
           </div>
@@ -275,7 +276,7 @@ export default function TrialBundlePurchaseBox({ service, gameShort }: { service
               {row(
                 'mount-guaranteed',
                 `${cfg.mountLabel} Guaranteed`,
-                format(mountPrice),
+                <Price>{format(mountPrice)}</Price>,
                 guaranteed,
                 toggleGuaranteed,
               )}
@@ -323,7 +324,7 @@ export default function TrialBundlePurchaseBox({ service, gameShort }: { service
             fixedStyle ? 'price-block-glow' : ''
           }`}
         >
-          <p className="font-display text-2xl font-extrabold text-white">{format(total)}</p>
+          <p className="font-display text-2xl font-extrabold text-white"><Price>{format(total)}</Price></p>
           <p className="mt-1 flex items-center justify-center gap-1.5 text-xs text-slate-400">
             <Clock className="h-3.5 w-3.5 text-cyan-500" />
             Average Completion Time: {cfg?.completion ?? '24 Hours'}

@@ -3,6 +3,7 @@ import { Check, ChevronRight, Clock, Minus, Plus, Settings2, type LucideIcon } f
 import { JOB_GROUPS } from '@/data/jobs';
 import { jobGroupsUpTo, splitParens } from '@/data/jobs';
 import FadeImage from './FadeImage';
+import Price from './Price';
 import FieldPopup from './FieldPopup';
 import { CustomSelect } from './PurchaseBox';
 import { Slider } from '@/components/ui/slider';
@@ -428,7 +429,7 @@ export default function LevelingPurchaseBox({
         <Check className="h-3 w-3" strokeWidth={3.5} />
       </span>
       <span className="min-w-0 flex-1 truncate text-sm text-slate-300">{cfg.addon.label}</span>
-      <span className="text-xs font-bold text-cyan-400">+{format(cfg.addon.price)}</span>
+      <Price className="text-xs font-bold text-cyan-400">+{format(cfg.addon.price)}</Price>
     </button>
   );
 
@@ -452,7 +453,7 @@ export default function LevelingPurchaseBox({
             <Check className="h-3 w-3" strokeWidth={3.5} />
           </span>
           <span className="min-w-0 flex-1 truncate text-sm text-slate-300">{a.label}</span>
-          <span className="text-xs font-bold text-cyan-400">+{format(a.price)}</span>
+          <Price className="text-xs font-bold text-cyan-400">+{format(a.price)}</Price>
         </button>
         {/* Choice dropdown (job / armour set) once the option is picked —
             expands and retracts with an animated height transition */}
@@ -591,7 +592,7 @@ export default function LevelingPurchaseBox({
                     <Check className="h-3 w-3" strokeWidth={3.5} />
                   </span>
                   <span className="min-w-0 flex-1 truncate text-sm text-slate-300">{cfg.phantomAll.label}</span>
-                  <span className="text-xs font-bold text-cyan-400">+{format(allJobsSum)}</span>
+                  <Price className="text-xs font-bold text-cyan-400">+{format(allJobsSum)}</Price>
                 </button>
               )}
               <button
@@ -762,7 +763,7 @@ export default function LevelingPurchaseBox({
                               <Check className="h-3 w-3" strokeWidth={3.5} />
                             </span>
                             <span className="min-w-0 flex-1 truncate text-sm text-slate-300">{a.label}</span>
-                            <span className="text-xs font-bold text-cyan-400">+{format(a.price)}</span>
+                            <Price className="text-xs font-bold text-cyan-400">+{format(a.price)}</Price>
                           </button>
                         );
                       })}
@@ -801,7 +802,7 @@ export default function LevelingPurchaseBox({
             fixedStyle ? 'price-block-glow' : ''
           }`}
         >
-          <p className="font-display text-2xl font-extrabold text-white">{format(total)}</p>
+          <p className="font-display text-2xl font-extrabold text-white"><Price>{format(total)}</Price></p>
           <p className="mt-1 flex items-center justify-center gap-1.5 text-xs text-slate-400">
             <Clock className="h-3.5 w-3.5 text-cyan-500" />
             Average Completion Time: {cfg.completion}

@@ -1,5 +1,6 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import { Check, Minus, Plus, Settings2 } from 'lucide-react';
+import Price from './Price';
 import { useCurrency } from '@/context/CurrencyContext';
 import { usePricing } from '@/context/PricingContext';
 
@@ -27,9 +28,9 @@ export default function MountAddonsBlock({
   streamPrice?: number;
   onToggle?: () => void;
   /** Custom first row (label, price hint, checked state, toggle) */
-  extraRow?: { label: string; hint: string; checked: boolean; onClick: () => void };
+  extraRow?: { label: string; hint: ReactNode; checked: boolean; onClick: () => void };
   /** Additional custom rows after `extraRow` (e.g. offerings) */
-  extraRows?: { label: string; hint: string; checked: boolean; onClick: () => void }[];
+  extraRows?: { label: string; hint: ReactNode; checked: boolean; onClick: () => void }[];
   /** Custom node rendered above the rows (e.g. a gear dropdown) */
   gearRow?: ReactNode;
   /** Hide the Private Stream row (e.g. allied society, variant dungeons) */
@@ -48,7 +49,7 @@ export default function MountAddonsBlock({
 
   const row = (
     label: string,
-    hint: string,
+    hint: ReactNode,
     checked: boolean,
     onClick: () => void,
   ) => (
@@ -101,7 +102,7 @@ export default function MountAddonsBlock({
             {gearRow}
             {extraRow && row(extraRow.label, extraRow.hint, extraRow.checked, extraRow.onClick)}
             {extraRows?.map((r) => <div key={r.label}>{row(r.label, r.hint, r.checked, r.onClick)}</div>)}
-            {!hideStream && setStream && row('Private Stream', `+${format(streamPrice ?? 10)}`, stream ?? false, () => setStream(!(stream ?? false)))}
+            {!hideStream && setStream && row('Private Stream', <>+<Price>{format(streamPrice ?? 10)}</Price></>, stream ?? false, () => setStream(!(stream ?? false)))}
             {row('Priority', `+${Math.round((priorityMultiplier - 1) * 100)}%`, priority, () => setPriority(!priority))}
           </div>
         </div>
