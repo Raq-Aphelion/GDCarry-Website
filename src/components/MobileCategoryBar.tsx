@@ -105,7 +105,13 @@ export default function MobileCategoryBar({
         >
           {items.map((s) =>
             gameId ? (
-              <Link key={s.id} to={`/boosting/${gameId}?cat=${s.id}`} className={chip(s.id)}>
+              <Link
+                key={s.id}
+                to={`/boosting/${gameId}?cat=${s.id}`}
+                // Land at the category grid under the hero (ScrollToTop)
+                state={{ scrollToGrid: true }}
+                className={chip(s.id)}
+              >
                 {s.name}
               </Link>
             ) : (

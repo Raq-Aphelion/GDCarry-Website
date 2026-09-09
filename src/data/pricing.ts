@@ -19,12 +19,15 @@
  *
  * Service cards show the lower method price ("From …"); services without a
  * methodPrices entry fall back to their bundled price. The app loads all of
- * this at startup; the defaults below are only a fallback if the database
- * cannot be reached. To change any price, edit the JSON files — no rebuild
- * is required.
+ * this at startup (as the single build-time db/bundle.json — see
+ * src/data/dbBundle.ts); the defaults below are only a fallback if the
+ * database cannot be reached. To change any price, edit the JSON files and
+ * rebuild.
  */
 
 import { mergeCategoryFiles } from '../lib/pricing/engine/shared.ts';
+import { loadDbBundle } from './dbBundle.ts';
+import { CATEGORY_FILES, GLOBAL_PRICING_FILE } from './pricingFiles.ts';
 
 export interface PricingOption {
   label: string;
@@ -534,37 +537,28 @@ export const DEFAULT_PRICING: PricingDb = {
   servicePrices: {},
 };
 
-/** Global database file (without .json), relative to `db/`. */
-export const GLOBAL_PRICING_FILE = 'pricing/global';
-
-/** Per-category database files (without .json), relative to `db/` — loaded
-    and merged at startup. Exported: the orders worker fetches the same public
-    files for its authoritative recompute (worker/orders-proxy.js imports this
-    list). */
-export const CATEGORY_FILES = [
-  'pricing/ffxiv/UltimateRaids',
-  'pricing/ffxiv/Gil',
-  'pricing/ffxiv/SavageRaids',
-  'pricing/ffxiv/Leveling',
-  'pricing/ffxiv/PvP',
-  'pricing/ffxiv/Mounts',
-  'pricing/ffxiv/Trials',
-  'pricing/ffxiv/DeepDungeons',
-  'pricing/ffxiv/AllianceRaids',
-  'pricing/ffxiv/Criterion',
-  'pricing/ffxiv/Relics',
-  'pricing/ffxiv/Reputation',
-  'pricing/ffxiv/FieldExplorations',
-  'pricing/ffxiv/Catalog',
-  'pricing/ffxiv/Accounts',
-];
+/** Global database file (without .json), relative to `db/`, and the
+    per-category database files loaded and merged at startup. Defined in
+    ./pricingFiles.ts (dependency-free, so vite.config.ts and the worker can
+    import them without the app graph) and re-exported here: the orders
+    worker fetches the same public files for its authoritative recompute
+    (worker/orders-proxy.js imports this list). */
+export { GLOBAL_PRICING_FILE, CATEGORY_FILES };
 
 /** Fetch the pricing database (global + category files), falling back to the
-    bundled defaults. Broken or missing category files are skipped. The merge
-    itself lives in the pricing engine so the orders worker merges the same
-    files byte-for-byte identically. */
+    bundled defaults. The normal path is a single request for the build-time
+    bundle (db/bundle.json — see src/data/dbBundle.ts); the per-file loads
+    below are the fallback for older deploys without it. Broken or missing
+    category files are skipped. The merge itself lives in the pricing engine
+    so the orders worker merges the same files byte-for-byte identically. */
 export async function loadPricing(): Promise<PricingDb> {
   try {
+    const bundle = await loadDbBundle();
+    if (bundle?.pricing)
+      return mergeCategoryFiles(
+        bundle.pricing.global,
+        CATEGORY_FILES.map((file) => bundle.pricing.categories[file] ?? null),
+      );
     const base = import.meta.env.BASE_URL;
     const res = await fetch(`${base}db/${GLOBAL_PRICING_FILE}.json`, { cache: 'no-store' });
     if (!res.ok) throw new Error(String(res.status));

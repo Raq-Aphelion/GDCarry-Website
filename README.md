@@ -42,7 +42,9 @@ src/
                 of truth for prices, shared verbatim with the orders worker
   hooks/  lib/  Custom hooks and helpers (order message building, chat styling, …)
 public/
-  db/           Public pricing/catalog JSON fetched client-side
+  db/           Public pricing/catalog JSON (the editing source of truth);
+                compiled into a single db/bundle.json at build time and
+                fetched client-side as one request
   images/  payment/  videos/   Static assets
 scripts/prerender.mjs   Puppeteer prerender of every route to static HTML
 lhcstyle/               LiveHelperChat theme builder + exported theme JSON

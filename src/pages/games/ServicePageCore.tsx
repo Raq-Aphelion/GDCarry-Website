@@ -29,7 +29,7 @@ import { getGame, serviceLink } from '@/data/games';
 import { getServicePage, MOUNT_LINKS, type ServicePageReward } from '@/data/servicePages';
 import { usePricing } from '@/context/PricingContext';
 import { SERVICE_TAG_ICONS as POINT_ICONS } from '@/data/serviceIcons';
-import ffxivBg from '@/assets/images/backgrounds/ffxiv-bg.webp';
+import ffxivBg from '@/assets/images/backgrounds/ffxiv-service-bg.webp';
 import useDragScroll from '@/hooks/useDragScroll';
 import { CRAFTER_JOB_GROUPS } from '@/data/jobs';
 
@@ -480,6 +480,8 @@ export default function ServicePageCore({ gameId }: { gameId: string }) {
                   <li key={s.id}>
                     <Link
                       to={`/boosting/${game.id}?cat=${s.id}`}
+                      // Land at the category grid under the hero (ScrollToTop)
+                      state={{ scrollToGrid: true }}
                       className={`flex w-full items-center justify-between rounded-[5px] px-3 py-3 text-left text-sm transition-colors ${
                         isActive
                           ? 'bg-navy-800 font-semibold text-cyan-400'

@@ -1,4 +1,4 @@
-import { Suspense, lazy, useEffect } from 'react';
+import { Suspense, lazy, useEffect, useRef } from 'react';
 import { Navigate, Route, Routes, useLocation } from 'react-router';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -36,21 +36,59 @@ const AccountSafetyPage = lazy(() => import('@/pages/AccountSafetyPage'));
 const GuidesPage = lazy(() => import('@/pages/GuidesPage'));
 const WorkWithUsPage = lazy(() => import('@/pages/WorkWithUsPage'));
 import { ToastProvider } from '@/context/ToastContext';
-import { lenisRef } from '@/lib/lenis';
+import { lenisRef, CATEGORY_JUMP_EVENT, categoryGridLandingTop } from '@/lib/lenis';
 import { PricingProvider } from '@/context/PricingContext';
 import { CurrencyProvider } from '@/context/CurrencyContext';
 import { CartProvider } from '@/context/CartContext';
 
 function ScrollToTop() {
-  const { pathname } = useLocation();
+  const { pathname, state } = useLocation();
+  // Only path changes scroll. Same-path navigations (category ?cat= switches,
+  // ?q= searches) are owned by the page's own scroll logic — setSearchParams
+  // drops location.state, so reacting to `state` would re-fire a top-scroll
+  // on the first category switch after a scrollToGrid arrival.
+  const lastPath = useRef<string | null>(null);
   useEffect(() => {
+    if (lastPath.current === pathname) return;
+    lastPath.current = pathname;
+    // Category jump (service subpage sidebar / mobile chips): land at the
+    // exact snap point the game page's own category switching uses
+    // (categoryGridLandingTop) — desktop pins the sidebar on its sticky slot,
+    // mobile puts the grid right under the chips bar, so the switch is
+    // seamless either way. The game page is a lazy chunk, so retry briefly
+    // while it mounts.
+    if ((state as { scrollToGrid?: boolean } | null)?.scrollToGrid) {
+      let tries = 0;
+      const jump = () => {
+        const el = document.getElementById('category-grid');
+        const scroller = document.getElementById('page-scroll');
+        if (el && scroller) {
+          const top = categoryGridLandingTop(el, scroller);
+          const lenis = lenisRef.current;
+          if (lenis) lenis.scrollTo(top, { immediate: true, force: true });
+          else scroller.scrollTo({ top, behavior: 'instant' as ScrollBehavior });
+          // Tell the game page to pin the landed state — the jump may produce
+          // no usable scroll event for its direction heuristic. Fire again
+          // deferred: on the very commit the page mounts, its passive effects
+          // (the listener) can flush AFTER the grid is already in the DOM, so
+          // the immediate dispatch can arrive too early.
+          const fire = () => window.dispatchEvent(new Event(CATEGORY_JUMP_EVENT));
+          fire();
+          setTimeout(fire, 50);
+        } else if (tries++ < 20) {
+          setTimeout(jump, 50);
+        }
+      };
+      jump();
+      return;
+    }
     // Go through Lenis when it's running: a native scrollTo mid-animation is
     // overwritten by Lenis's next frame, leaving subpages at the old position.
     const lenis = lenisRef.current;
     if (lenis) lenis.scrollTo(0, { immediate: true, force: true });
     else
       document.getElementById('page-scroll')?.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
-  }, [pathname]);
+  }, [pathname, state]);
   return null;
 }
 

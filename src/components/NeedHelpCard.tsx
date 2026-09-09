@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router';
 import { MessageCircle, Send, X } from 'lucide-react';
-import { getLhcSession, openLiveChat, openLiveChatPrefill } from '@/lib/livechat';
+import { CHAT_OPENED_EVENT, getLhcSession, openLiveChat, openLiveChatPrefill } from '@/lib/livechat';
 
 /** Delay before the card pops in */
 const SHOW_DELAY_MS = 5000;
@@ -25,15 +25,8 @@ const AVATARS: { src: string; ring: string }[] = [
 
 const LHC_BASE = 'https://chat.gdcarry.com/index.php/';
 
-/** Service subpage route — /boosting/:gameId/:serviceId */
-const SERVICE_PAGE = /^\/boosting\/[^/]+\/[^/]+/;
-
-/** Where the card never appears: checkout on any screen (it would sit on the
-    order summary), and service subpages below the lg breakpoint (it covers
-    the purchase box). matchMedia is read live, so resizes are picked up. */
-const isSuppressed = (pathname: string) =>
-  pathname === '/checkout' ||
-  (SERVICE_PAGE.test(pathname) && window.matchMedia('(max-width: 1023px)').matches);
+/** The card only ever appears on the main page */
+const isSuppressed = (pathname: string) => pathname !== '/';
 
 /** Reads the LHC widget open state from the wrapper (widgetStatus is a
     BehaviorSubject — valueInternal is its current value) */
@@ -58,7 +51,10 @@ const isBadgeOffline = () => {
     proactive bubble (which stays suppressed in the theme): operator avatar
     stack, Let's chat, and a message input that starts a chat with the typed
     text as the first message. Fixed above the LHC status circle; closes
-    (animated) when the widget opens or a chat starts. */
+    (animated) when the widget opens — instantly for site-button opens
+    (CHAT_OPENED_EVENT), within one poll tick for badge opens — or when a
+    chat starts. Once any site control opened the chat, the card never
+    auto-shows again this tab session. */
 export default function NeedHelpCard() {
   const { pathname } = useLocation();
   const [visible, setVisible] = useState(false);
@@ -67,6 +63,9 @@ export default function NeedHelpCard() {
   // Live random operator photo — prepended over the fallback stack when LHC
   // has one to offer; the fallbacks below stay as-is otherwise
   const [liveAvatar, setLiveAvatar] = useState<string | null>(null);
+  // Set once any site control opened the chat — blocks the auto-show timer
+  // (the badge circle is the way back in, so the card never pops up again)
+  const chatOpened = useRef(false);
   // Badge state mirror: offline mode flips the card to grey styling (polled —
   // the status change lives in the badge's shadow root, outside React's reach)
   const [offline, setOffline] = useState(false);
@@ -92,7 +91,7 @@ export default function NeedHelpCard() {
   useEffect(() => {
     if (sessionStorage.getItem(DISMISS_KEY)) return;
     const show = window.setTimeout(() => {
-      if (!isSuppressed(pathname) && !getLhcSession()?.id && !isWidgetOpen()) setVisible(true);
+      if (!chatOpened.current && !isSuppressed(pathname) && !getLhcSession()?.id && !isWidgetOpen()) setVisible(true);
     }, SHOW_DELAY_MS);
     const poll = window.setInterval(() => {
       if (isSuppressed(pathname) || getLhcSession()?.id || isWidgetOpen()) hide(false);
@@ -104,6 +103,22 @@ export default function NeedHelpCard() {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
+
+  // A site control opening the widget hides the card instantly — the 2s poll
+  // alone left them overlapping, and its widgetStatus read is unreliable, so
+  // the card sometimes never hid at all. The flag also disarms the show
+  // timer: without it, opening the widget within 5s of a navigation left the
+  // timer armed, and it fired on widget minimize/close — the card flashed
+  // for a beat until the next poll hid it.
+  useEffect(() => {
+    const onChatOpened = () => {
+      chatOpened.current = true;
+      hide(false);
+    };
+    window.addEventListener(CHAT_OPENED_EVENT, onChatOpened);
+    return () => window.removeEventListener(CHAT_OPENED_EVENT, onChatOpened);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Live random operator photo (best effort — the fallback stack stays on any
   // failure). The vid only exists once the LHC wrapper has booted, so retry.
@@ -173,6 +188,10 @@ export default function NeedHelpCard() {
 
   const send = () => {
     const q = message.trim();
+    // Dismiss BEFORE opening: the open helpers fire CHAT_OPENED_EVENT
+    // synchronously, and our own listener's hide(false) would set `closing`
+    // first — hide(true)'s sessionStorage dismissal would then be skipped
+    dismiss();
     if (q && !getLhcSession()?.id) {
       // No chat yet — start one with the typed message as the first one
       openLiveChatPrefill({ question: q });
@@ -180,7 +199,6 @@ export default function NeedHelpCard() {
       // Chat already running (or empty input) — just open the widget
       openLiveChat();
     }
-    dismiss();
   };
 
   return (
@@ -223,8 +241,9 @@ export default function NeedHelpCard() {
 
       <button
         onClick={() => {
-          openLiveChat();
+          // dismiss first — see send()
           dismiss();
+          openLiveChat();
         }}
         className="mt-3.5 flex w-full cursor-pointer items-center justify-center gap-2 rounded-[5px] bg-gradient-to-r from-[#60a5fa] to-[#2563eb] py-2.5 font-display text-sm font-bold text-[#0f0f11] transition-all hover:brightness-110"
       >

@@ -2,7 +2,7 @@
  * Service catalog + subpage database layer.
  *
  * The catalog lives in per-service JSON files under `public/db/` (served at
- * `db/`):
+ * `db/`), which stay the editing source of truth:
  * - `services/<gameId>/index.json` — the manifest: game card meta plus
  *   subcategories mapping to service id lists (array order = display order).
  * - `services/<gameId>/shared-sections.json` — shared accordion sections that
@@ -10,6 +10,10 @@
  * - `services/<gameId>/<serviceId>.json` — one service per file:
  *   `{ game, subcategory, service, subpage? }` (subpage reward icons are
  *   kebab-case names resolved through ./iconMap.ts).
+ *
+ * The client reads them as a single build-time bundle (`db/bundle.json` —
+ * compiled by the db-bundle Vite plugin, see src/data/dbBundle.ts), so a
+ * change to any of these files needs a rebuild to go live.
  *
  * Byte-identical copies are bundled under ./bundled/ as the fallback when the
  * database cannot be reached; scripts/validate-services.mjs (part of
@@ -19,6 +23,7 @@
  */
 
 import type { Game, Service } from '@/data/games';
+import { loadDbBundle } from './dbBundle.ts';
 
 /** A services/<gameId>/index.json file — game meta plus subcategory ->
     service id lists (the Game shape with service ids in place of services,
@@ -192,11 +197,51 @@ const BUNDLED = assembleBundled();
 export const BUNDLED_GAMES: GameCatalog[] = BUNDLED.games;
 export const BUNDLED_SERVICE_PAGES: ServicePagesDb = BUNDLED.pages;
 
+/** Merge the per-game assembly results into the final ServicesDb. */
+function combineGames(
+  loaded: {
+    catalog: GameCatalog;
+    pages: Record<string, ServicePageData>;
+    shared: ServicePagesDb['shared'];
+  }[],
+): ServicesDb {
+  const games: GameCatalog[] = [];
+  const shared: ServicePagesDb['shared'] = {};
+  const pages: ServicePagesDb['pages'] = {};
+  for (const l of loaded) {
+    games.push(l.catalog);
+    Object.assign(shared, l.shared);
+    Object.assign(pages, l.pages);
+  }
+  return { games, pages: { shared, pages } };
+}
+
 /** Fetch the service database (manifests + shared sections + one file per
-    service), falling back to the bundled copy of any file that fails. A
-    service with no bundled copy is skipped, so a broken new file degrades
-    only itself. Same base-URL handling and cache policy as loadPricing. */
+    service), falling back to the bundled copy of any file that fails. The
+    normal path is a single request for the build-time bundle
+    (db/bundle.json — see src/data/dbBundle.ts); the per-file fetches below
+    are the fallback for older deploys without it. A service with no bundled
+    copy is skipped, so a broken new file degrades only itself. Same
+    base-URL handling and cache policy as loadPricing. */
 export async function loadServices(): Promise<ServicesDb> {
+  const bundle = await loadDbBundle();
+  if (bundle?.services) {
+    const loaded = GAME_IDS.map((gameId) => {
+      const b = bundle.services[gameId];
+      if (!b?.index) return assembleBundledGame(gameId);
+      const bundled = bundledByGame.get(gameId);
+      const ids = [...new Set(b.index.subcategories.flatMap((s) => s.services))];
+      const files = new Map<string, ServiceFileData>();
+      for (const id of ids) {
+        const file = b.files[id] ?? bundled?.files.get(id);
+        if (file) files.set(id, file);
+        else console.warn(`[services] ${id} is missing from db/bundle.json and has no bundled copy — skipped`);
+      }
+      const skipMissing: MissingService = () => {};
+      return { ...assembleGame(gameId, b.index, files, skipMissing), shared: b.shared ?? bundled?.shared ?? {} };
+    });
+    return combineGames(loaded);
+  }
   const base = import.meta.env.BASE_URL;
   const fetchJson = async <T>(rel: string): Promise<T | null> => {
     try {
@@ -227,13 +272,5 @@ export async function loadServices(): Promise<ServicesDb> {
       return { ...assembleGame(gameId, index, files, skipMissing), shared: shared ?? bundled?.shared ?? {} };
     }),
   );
-  const games: GameCatalog[] = [];
-  const shared: ServicePagesDb['shared'] = {};
-  const pages: ServicePagesDb['pages'] = {};
-  for (const l of loaded) {
-    games.push(l.catalog);
-    Object.assign(shared, l.shared);
-    Object.assign(pages, l.pages);
-  }
-  return { games, pages: { shared, pages } };
+  return combineGames(loaded);
 }

@@ -9,12 +9,12 @@ import { OverlayScrollbar } from '@/components/Scrollbar';
 import PageMeta from '@/components/PageMeta';
 import ServiceCard from '@/components/ServiceCard';
 import { getGame, POPULAR_ORDER, serviceCount, type Service } from '@/data/games';
-import { lenisRef } from '@/lib/lenis';
+import { lenisRef, CATEGORY_JUMP_EVENT, categoryGridLandingTop } from '@/lib/lenis';
 import { useSmoothScroller } from '@/hooks/useSmoothScroller';
 import { usePricing } from '@/context/PricingContext';
 import { rankService } from '@/data/search';
-import ffxivBg from '@/assets/images/backgrounds/ffxiv-bg-1.webp';
-import wowBg from '@/assets/images/backgrounds/wow-bg.jpg';
+import ffxivBg from '@/assets/images/backgrounds/ffxiv-bg.webp';
+import wowBg from '@/assets/images/backgrounds/wow-bg.webp';
 import lostArkBg from '@/assets/images/backgrounds/lostark-bg.webp';
 import warframeBg from '@/assets/images/backgrounds/warframe-bg.webp';
 import runescapeBg from '@/assets/images/backgrounds/osrs-bg.webp';
@@ -323,6 +323,9 @@ export default function GamePageCore({ gameId }: { gameId: string }) {
   const [chipsHidden, setChipsHidden] = useState(false);
   const [labelStuck, setLabelStuck] = useState(false);
   const labelSentinelRef = useRef<HTMLDivElement>(null);
+  // While set, the direction heuristic below leaves chipsHidden alone — see
+  // the CATEGORY_JUMP_EVENT listener
+  const jumpLockUntil = useRef(0);
   useEffect(() => {
     const scroller = document.getElementById('page-scroll');
     if (!scroller) return;
@@ -335,6 +338,10 @@ export default function GamePageCore({ gameId }: { gameId: string }) {
       // The container's box top sits one bar-height above the sentinel
       // (-mt-[58px]), so the row is stuck once the sentinel comes within 58px
       setLabelStuck(delta <= 58);
+      if (Date.now() < jumpLockUntil.current) {
+        last = y;
+        return;
+      }
       if (window.matchMedia('(max-width: 1023px)').matches && Math.abs(y - last) >= 4) {
         // Hide only when the label is about to stick (24px lookahead); any
         // scroll up brings the chips back
@@ -343,10 +350,23 @@ export default function GamePageCore({ gameId }: { gameId: string }) {
       }
       last = y;
     };
+    // Category jump (service subpage sidebar/chips via ScrollToTop): land
+    // with the chips bar shown — the same state the category-change snap
+    // lands in. The jump's own scroll events would otherwise read as a
+    // deliberate scroll for the direction heuristic (a downward jump from a
+    // near-top service page would hide the chips right after landing), so
+    // lock it briefly and re-read the label state from real geometry.
+    const onCategoryJump = () => {
+      jumpLockUntil.current = Date.now() + 500;
+      setChipsHidden(false);
+      update();
+    };
+    window.addEventListener(CATEGORY_JUMP_EVENT, onCategoryJump);
     update();
     scroller.addEventListener('scroll', update, { passive: true });
     window.addEventListener('resize', update);
     return () => {
+      window.removeEventListener(CATEGORY_JUMP_EVENT, onCategoryJump);
       scroller.removeEventListener('scroll', update);
       window.removeEventListener('resize', update);
     };
@@ -410,13 +430,15 @@ export default function GamePageCore({ gameId }: { gameId: string }) {
     setSearchParams({ cat: id });
   };
 
-  // On category change, jump so the grid's top edge (where the header
-  // background ends and the content segment starts) lands right below the
-  // navbar — on mobile, below the sticky category chips bar instead. The
-  // page length changes instantly with the category, so the scroll is an
-  // instant jump too — a smooth scroll can't survive the scroll range
-  // collapsing mid-animation, and the browser's scrollTop clamp would
-  // flash for a frame. useLayoutEffect jumps before the paint.
+  // On category change, jump to the shared snap point
+  // (categoryGridLandingTop): the sidebar lands exactly on its sticky slot —
+  // on mobile the grid's top edge sits right below the sticky chips bar.
+  // ScrollToTop uses the same target for service subpage → category jumps,
+  // so both navigation paths land pixel-identical and the sidebar never
+  // visibly moves. The page length changes instantly with the category, so
+  // the scroll is an instant jump too — a smooth scroll can't survive the
+  // scroll range collapsing mid-animation, and the browser's scrollTop clamp
+  // would flash for a frame. useLayoutEffect jumps before the paint.
   // Only scrolls when the category actually CHANGES: prevActive starts at
   // the opening category (no scroll on first open), and switching games
   // remounts this core via a different wrapper — ScrollToTop owns the
@@ -431,18 +453,7 @@ export default function GamePageCore({ gameId }: { gameId: string }) {
     // so snapping would barely move the page and just yank the scroll
     const hero = heroRef.current;
     if (hero && hero.getBoundingClientRect().bottom > scroller.getBoundingClientRect().top) return;
-    const isMobile = window.matchMedia('(max-width: 1023px)').matches;
-    const bar = document.getElementById('mobile-category-bar');
-    let top =
-      el.getBoundingClientRect().top + scroller.scrollTop - scroller.getBoundingClientRect().top;
-    if (isMobile && bar) {
-      top -= bar.getBoundingClientRect().height;
-    } else {
-      // Desktop: land exactly where the category sidebar becomes sticky
-      // (top-8 = 32px) — the aside is the section's first child, so its
-      // natural top = section top + the section's padding-top
-      top += parseFloat(getComputedStyle(el).paddingTop) - 32;
-    }
+    const top = categoryGridLandingTop(el, scroller);
     // Jump through Lenis when it's running so its internal scroll state
     // stays in sync and doesn't animate back to the stale position
     const lenis = lenisRef.current;
@@ -766,7 +777,7 @@ export default function GamePageCore({ gameId }: { gameId: string }) {
 
       {/* ============ SIDEBAR + FILTERED SERVICES ============ */}
       {/* pt-4 on mobile keeps the label close under the chips bar; desktop keeps py-12 */}
-      <div ref={gridRef} className="mx-auto grid max-w-[1440px] gap-10 px-[25px] pb-12 pt-4 sm:px-6 lg:grid-cols-[240px_minmax(0,1fr)] lg:px-8 lg:py-12">
+      <div ref={gridRef} id="category-grid" className="mx-auto grid max-w-[1440px] gap-10 px-[25px] pb-12 pt-4 sm:px-6 lg:grid-cols-[240px_minmax(0,1fr)] lg:px-8 lg:py-12">
         {/* Left: subcategory filter list */}
         <aside className="hidden lg:block">
           <div className="sticky top-8 flex max-h-[calc(100vh-4rem)] flex-col">

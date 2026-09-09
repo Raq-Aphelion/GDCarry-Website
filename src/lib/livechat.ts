@@ -1,7 +1,15 @@
+/** Dispatched synchronously whenever a site control opens the LHC widget —
+    NeedHelpCard listens: it hides instantly (the 2s widgetStatus poll would
+    leave the card overlapping the widget, and its read of LHC's internal
+    status is unreliable) and stops auto-showing for the rest of the tab
+    session — the badge circle is the way back into chat. */
+export const CHAT_OPENED_EVENT = 'gd:chat-opened';
+
 /** Opens the Live Helper Chat widget (injected by LiveChatWidget).
     The LHC script loads async, so if it isn't ready yet we retry a few times
     before giving up silently. API: https://doc.livehelperchat.com/docs/javascript-arguments */
 export function openLiveChat(attemptsLeft = 10) {
+  window.dispatchEvent(new Event(CHAT_OPENED_EVENT));
   const w = window as unknown as {
     $_LHC?: { eventListener?: { emitEvent?: (event: string) => void } };
   };
@@ -550,6 +558,7 @@ export function initOrderMessageStyler() {
     - The widget iframe stays at opacity 0 + pointer-events none until the
       order message renders, so the form paste is never visible. */
 export function openLiveChatPrefill(data: LiveChatPrefill, attemptsLeft = 10, forceRestart = false) {
+  window.dispatchEvent(new Event(CHAT_OPENED_EVENT));
   const w = window as unknown as {
     $_LHC?: {
       eventListener?: { emitEvent?: (event: string, payload?: unknown) => void };

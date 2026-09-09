@@ -14,7 +14,7 @@ import { useToast } from '@/context/ToastContext';
 import { getLhcSession, openLiveChat, openLiveChatPrefill } from '@/lib/livechat';
 import { useSmoothScroller } from '@/hooks/useSmoothScroller';
 import { serviceLink } from '@/data/games';
-import ffxivBg from '@/assets/images/backgrounds/ffxiv-bg.webp';
+import ffxivBg from '@/assets/images/backgrounds/ffxiv-service-bg.webp';
 
 /** Simulated processing time — the spinner runs until the "order" completes. */
 const PROCESSING_MS = 1200;
