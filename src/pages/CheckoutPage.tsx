@@ -308,10 +308,10 @@ export default function CheckoutPage() {
   /** Posts the order to the proxy (Cloudflare Worker) as raw fields — the
       worker validates them, rebuilds both the Discord embed and the BBCode
       chat message server-side, logs the order and (for chat orders) injects
-      it into the visitor's LHC chat: addmsguser when a chat is open
-      (chatId/chatHash), submitonline to start one otherwise (vid). The vid is
-      sent for Discord orders too — the embed prints it as the visitor
-      reference. */
+      it into the visitor's open LHC chat via addmsguser when chatId/chatHash
+      are present. Without a chat session, the local start-form flow opens a
+      new chat. The vid is sent for Discord orders too — the embed prints it
+      as the visitor reference. */
   const sendOrderToProxy = async (orderId: string): Promise<{ ok: boolean; injected?: boolean; reason?: string }> => {
     if (!TURNSTILE_SITE_KEY) return { ok: false };
     // Anti-abuse challenge first — the worker re-verifies this token with

@@ -1360,6 +1360,7 @@ document.addEventListener('click', function (e) {
    2. Operator strip: the React widget can render a bare centered avatar with
       no name — inject the operator's name (first operator nick in the
       conversation, else 'Grand Dice').
+   3. LHC's verbose pending-chat status is shortened after render.
    (The operator avatar is pinned to the last chain message purely in CSS —
    it must survive React re-renders, which wipe DOM moves.) */
 (function () {
@@ -1392,7 +1393,15 @@ document.addEventListener('click', function (e) {
     span.textContent = name;
     strip.appendChild(span);
   }
-  function fix() { fixTimestamps(); fixStrip(); }
+  function fixPendingStatus() {
+    document.querySelectorAll('.status-text').forEach(function (el) {
+      var text = (el.textContent || '').replace(/\s+/g, ' ').trim();
+      if (/^Pending a support staff member to join,.*they will get your messages\.?$/.test(text)) {
+        el.textContent = 'Staff will be with you shortly.';
+      }
+    });
+  }
+  function fix() { fixTimestamps(); fixStrip(); fixPendingStatus(); }
   new MutationObserver(fix).observe(document.documentElement, { childList: true, subtree: true });
   setInterval(fix, 1500);
   fix();

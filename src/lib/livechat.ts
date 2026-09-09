@@ -24,7 +24,7 @@ export interface LhcSession {
   /** Visitor tracking id — always present once the widget wrapper loaded */
   vid?: string;
   /** Chat id + hash — present only while a chat is active */
-  id?: number;
+  id?: number | string;
   hash?: string;
 }
 
@@ -41,6 +41,36 @@ export function getLhcSession(): LhcSession | null {
   } catch {
     return null;
   }
+}
+
+/** Sends a visitor message through LHC's public child-command API. The
+    session check confirms a chat exists; the command itself resolves the
+    active chat's id/hash/theme inside the widget app. */
+export function sendLiveChatMessage(message: string): boolean {
+  const session = getLhcSession();
+  const chatId = Number(session?.id);
+  if (!message || !session?.hash || !Number.isInteger(chatId) || chatId <= 0) return false;
+  const w = window as unknown as {
+    $_LHC?: { eventListener?: { emitEvent?: (event: string, payload?: unknown) => void } };
+  };
+  if (!w.$_LHC?.eventListener?.emitEvent) return false;
+  w.$_LHC.eventListener.emitEvent('sendChildEvent', [
+    {
+      cmd: 'dispatch_event',
+      arg: {
+        func: 'addMessage',
+        attr: {
+          id: ['chatData', 'id'],
+          hash: ['chatData', 'hash'],
+          mn: ['chat_ui', 'mn'],
+          theme: ['theme'],
+          lmgsid: ['chatLiveData', 'lmsgid'],
+        },
+        attr_params: { msg: message },
+      },
+    },
+  ]);
+  return true;
 }
 
 export interface LiveChatPrefill {
@@ -285,6 +315,8 @@ const ORDER_CSS = `
 
 /** First line of every order message — used to spot order rows in the chat. */
 const ORDER_MARKER = 'ORDER DETAILS';
+const PENDING_STATUS_RE = /^Pending a support staff member to join,.*they will get your messages\.?$/;
+const PENDING_STATUS_SHORT = 'Staff will be with you shortly.';
 
 /** Wraps each line of an item's text body in a typed div (name / meta /
     detail / price) so ORDER_CSS can style them like the site's cart drawer
@@ -505,15 +537,19 @@ const ensureOrderCss = (doc: Document) => {
   doc.head?.appendChild(style);
 };
 
-/** Order-message styler that survives page reloads. The order handoff styles
-    the message when it lands, but after a reload LHC re-renders the chat
-    history from the server and the raw BBCode layout returns. A
-    MutationObserver on the widget document styles rows the moment they
-    render — no unstyled flash. LHC swaps the iframe document on
-    reloadWidget, so the observer re-attaches on a slow tick.
-    Called once from LiveChatWidget. */
+/** Widget-document fixes that survive page reloads. The order handoff styles
+    its message when it lands, but after a reload LHC re-renders the chat
+    history from the server and the raw BBCode layout returns; LHC's verbose
+    pending-chat status also needs shortening after every render. A
+    MutationObserver applies both the moment they render — no unstyled flash.
+    LHC swaps the iframe document on reloadWidget, so the observer re-attaches
+    on a slow tick. Called once from LiveChatWidget. */
 export function initOrderMessageStyler() {
   const process = (doc: Document) => {
+    doc.querySelectorAll<HTMLElement>('.status-text').forEach((el) => {
+      const text = (el.textContent ?? '').replace(/\s+/g, ' ').trim();
+      if (PENDING_STATUS_RE.test(text)) el.textContent = PENDING_STATUS_SHORT;
+    });
     doc.querySelectorAll('.message-row').forEach((row) => {
       if (row.textContent?.includes(ORDER_MARKER)) styleOrderRow(doc, row);
     });
@@ -537,12 +573,14 @@ export function initOrderMessageStyler() {
   setInterval(ensureObserver, 500);
 }
 
-/** Starts an LHC chat with the order as the first message and reveals the
-    widget only once the message has landed — the customer never sees the
-    start form at all.
+/** Hands the order to LHC: appended to the active chat when one exists, or
+    used as the first message of a new chat. New-chat reveals wait until the
+    message has landed — the customer never sees the start form at all.
 
     Mechanics (verified against the react.app.js build served by
     chat.gdcarry.com):
+    - Active chats use LHC's `addMessage` child command directly, so the
+      start form is never rebooted or submitted a second time.
     - The start form's visible fields fill from `attr_prefill` (array of
       state objects); `api_data` additionally feeds the submitted values.
       An already-mounted form NEVER re-applies attr_prefill, so the child is
@@ -576,6 +614,15 @@ export function openLiveChatPrefill(data: LiveChatPrefill, attemptsLeft = 10, fo
   if (data.username) fields.Username = data.username;
   if (data.email) fields.Email = data.email;
   if (data.question) fields.Question = data.question;
+
+  // A live chat is already running: append the order as a normal visitor
+  // message instead of rebooting into the start form (which cannot submit a
+  // second start form and previously left the order unsent).
+  if (!forceRestart && fields.Question && sendLiveChatMessage(fields.Question)) {
+    openLiveChat();
+    return;
+  }
+
   const setOrderData = () => {
     // attr_prefill fills the visible form fields; api_data feeds the
     // submitted values. Both queue behind the reload and land before the

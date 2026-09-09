@@ -336,7 +336,8 @@ export default {
     o.items = Array.isArray(o.items) ? o.items.slice(0, 20) : [];
     o.vid = hex(o.vid, 64);
     o.chatHash = hex(o.chatHash, 64);
-    o.chatId = Number.isInteger(o.chatId) && o.chatId > 0 ? o.chatId : 0;
+    const chatId = Number(o.chatId);
+    o.chatId = Number.isInteger(chatId) && chatId > 0 ? chatId : 0;
 
     // Verify quoted prices against catalog floors — flags go into the embed
     const flags = await verifyPrices(o);
