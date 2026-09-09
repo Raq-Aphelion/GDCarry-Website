@@ -1,0 +1,62 @@
+{
+  "how-does-it-work": {
+    "title": "How does it work?",
+    "items": [
+      "Place your desired order and contact us via the Live Chat or Discord",
+      "Pay the required amount with your selected payment method",
+      "The service is scheduled based on our availability and times you'll be logged in",
+      "You'll be notified of the order's completion via Discord or E-mail"
+    ]
+  },
+  "piloted-vs-afk-carry": {
+    "title": "Piloted vs AFK Carry",
+    "groups": [
+      {
+        "heading": "Piloted Version",
+        "items": [
+          "A Professional Raider will be logged onto your account and complete the content on your behalf"
+        ]
+      },
+      {
+        "heading": "AFK Carry",
+        "items": [
+          "AFK Carry is a non-piloted version of the clear where you clear as a sandbag",
+          "You'll join the party with the rest of the team via your own PC / PS5 / XBOX",
+          "Some of the more difficult carries will require you to accept raises",
+          "No knowledge of the fight is required for an AFK Carry"
+        ]
+      }
+    ]
+  },
+  "piloted-boost": {
+    "title": "Piloted Boost",
+    "items": [
+      "A Professional Raider will be logged onto your account and complete the content on your behalf"
+    ]
+  },
+  "piloted-boost-2": {
+    "title": "Piloted Boost",
+    "items": [
+      "A Professional Booster will be logged onto your account and complete the content on your behalf"
+    ]
+  },
+  "group-play-vs-piloted-boost": {
+    "title": "Group Play vs Piloted Boost",
+    "groups": [
+      {
+        "heading": "Group Play",
+        "items": [
+          "You'll be following 3 other raiders as they guide you through the deep dungeon until you complete it.",
+          "Speedrun — you'll be ignoring all loot to maximise efficiency and clear the run as fast as possible",
+          "Farm — you'll be collecting chests throughout the run to increase aetherpool and collect rewards"
+        ]
+      },
+      {
+        "heading": "Piloted Boost",
+        "items": [
+          "A Professional Booster will be logged onto your account and complete the content on your behalf"
+        ]
+      }
+    ]
+  }
+}

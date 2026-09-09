@@ -1,0 +1,56 @@
+{
+  "game": "ffxiv",
+  "subcategory": "deep-dungeon",
+  "service": {
+    "id": "ffxiv-final-verse",
+    "name": "The Final Verse (Quantum)",
+    "tag1": "The Mourner of Light title",
+    "tag2": "Floor 100: Quantum",
+    "tag3": "Piloted Service",
+    "price": 0,
+    "image": "/images/service-cards/ffxiv/deep-dungeons/ffxiv-final-verse.webp",
+    "longDescription": "Shaped by your offerings, a deep anguish burgeons from the sleepless abyss. Only those with the fortitude to face an aberration of both Light and Darkness may navigate this waking dream and overcome the damnation trapped upon a holy road."
+  },
+  "subpage": {
+    "short": "The Final Verse",
+    "rewardsHeading": "What you get",
+    "rewards": [
+      {
+        "icon": "swords",
+        "title": "The Final Verse (Quantum) Cleared",
+        "text": "The quantum encounter defeated at a maximum of 40 sacramental offerings."
+      },
+      {
+        "icon": "gem",
+        "title": "Sacks of First Light",
+        "text": "Every reward coffer from the clear stays on your character."
+      },
+      {
+        "icon": "badge-check",
+        "title": "“The Mourner of Light” Title",
+        "text": "Exclusive title earned for clearing with the maximum amount of sacramental offerings."
+      },
+      {
+        "icon": "medal",
+        "title": "Achievement: “Unholy Devotion”",
+        "text": "Achievement unlocked upon completing The Final Verse (Quantum) with 40 offerings."
+      }
+    ],
+    "accordion": [
+      {
+        "title": "Requirements",
+        "items": [
+          "Have a level 100 Job",
+          "Own the Dawntrail Expansion",
+          "The Final Verse (Quantum) unlocked (available as an add-on)"
+        ]
+      },
+      {
+        "ref": "how-does-it-work"
+      },
+      {
+        "ref": "piloted-boost"
+      }
+    ]
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "game": "ffxiv",
+  "subcategory": "mounts",
+  "service": {
+    "id": "ffxiv-sunforged",
+    "name": "Sunforged (Mount)",
+    "tag1": "Guaranteed mount drop",
+    "tag2": "Abyssos: The Eighth Circle (Savage)",
+    "tag3": "Piloted or AFK Carry",
+    "price": 0,
+    "image": "/images/service-cards/ffxiv/mounts/savage-raid-mounts/ffxiv-sunforged.webp",
+    "longDescription": "Forged in the fires of Abyssos: The Eighth Circle — a guaranteed Savage farm until the Sunforged mount drops."
+  },
+  "subpage": {
+    "short": "Sunforged",
+    "rewardsHeading": "What you get",
+    "rewards": [
+      {
+        "icon": "trophy",
+        "title": "Guaranteed Mount Drop From",
+        "dutyButton": {
+          "label": "Abyssos: The Eighth Circle (Savage)",
+          "to": "/boosting/ffxiv/ffxiv-pandaemonium-savage"
+        }
+      },
+      {
+        "icon": "swords",
+        "title": "Piloted or AFK Carry",
+        "text": "Cleared by a veteran raider on your account, or alongside you in the party."
+      },
+      {
+        "icon": "gem",
+        "title": "Savage Loot Along the Way",
+        "text": "Gear coffers, totems and glamours from every clear."
+      },
+      {
+        "icon": "medal",
+        "title": "Achievement Unlocked",
+        "text": "The Savage achievement on completion."
+      }
+    ],
+    "accordion": [
+      {
+        "title": "Requirements",
+        "items": [
+          "Have a level 90 Job",
+          "Duty unlocked (available as an additional service)"
+        ]
+      },
+      {
+        "ref": "how-does-it-work"
+      },
+      {
+        "ref": "piloted-vs-afk-carry"
+      }
+    ]
+  }
+}

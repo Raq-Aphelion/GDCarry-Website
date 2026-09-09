@@ -1,0 +1,59 @@
+{
+  "game": "ffxiv",
+  "subcategory": "mounts",
+  "service": {
+    "id": "ffxiv-silkie-mount",
+    "name": "Silkie (Mount)",
+    "tag1": "Guaranteed mount drop",
+    "tag2": "Variant: The Sil'dihn Subterrane",
+    "tag3": "Piloted Service",
+    "price": 0,
+    "image": "/images/service-cards/ffxiv/mounts/vc-dungeons/ffxiv-silkie.webp",
+    "longDescription": "The fluffy marmot of the Sil'dihn aqueducts — earned for unlocking every route of the subterrane. Piloted by our raiders on your account."
+  },
+  "subpage": {
+    "short": "Silkie",
+    "rewardsHeading": "What you get",
+    "rewards": [
+      {
+        "icon": "trophy",
+        "title": "Guaranteed Mount Drop From",
+        "text": "— all 12 routes required.",
+        "dutyButton": {
+          "label": "Variant: The Sil'dihn Subterrane",
+          "to": "/boosting/ffxiv/ffxiv-variant-sildihn-subterrane"
+        }
+      },
+      {
+        "icon": "swords",
+        "title": "Piloted Service",
+        "text": "Cleared by a veteran raider on your account."
+      },
+      {
+        "icon": "gem",
+        "title": "Savage Loot Along the Way",
+        "text": "Gear coffers, totems and glamours from every clear."
+      },
+      {
+        "icon": "medal",
+        "title": "Achievement Unlocked",
+        "text": "The Savage achievement on completion."
+      }
+    ],
+    "accordion": [
+      {
+        "title": "Requirements",
+        "items": [
+          "Have a level 90 Job",
+          "Duty unlocked (available as an additional service)"
+        ]
+      },
+      {
+        "ref": "how-does-it-work"
+      },
+      {
+        "ref": "piloted-boost"
+      }
+    ]
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "game": "ffxiv",
+  "subcategory": "mounts",
+  "service": {
+    "id": "ffxiv-apocryphal-bahamut",
+    "name": "Apocryphal Bahamut (Mount)",
+    "tag1": "Guaranteed (any number of runs)",
+    "tag2": "Endwalker Extreme Trials",
+    "tag3": "Piloted or AFK Carry",
+    "price": 0,
+    "image": "/images/service-cards/ffxiv/mounts/extreme-trial-mounts/ffxiv-apocryphal-bahamut.webp",
+    "longDescription": "The Wings of Hope quest mount, earned only after collecting all seven Endwalker Lynxes — our raiders farm every trial from Zodiark’s Fall to the Abyssal Fracture until the set is complete."
+  },
+  "subpage": {
+    "short": "Bahamut",
+    "rewardsHeading": "What you get",
+    "rewards": [
+      {
+        "icon": "trophy",
+        "title": "Guaranteed Mount Drop From",
+        "text": "— guaranteed, no matter how many runs it takes.",
+        "dutyButton": {
+          "label": "Endwalker Extreme Trials",
+          "to": "/boosting/ffxiv/ffxiv-endwalker-trials-bundle"
+        }
+      },
+      {
+        "icon": "package",
+        "title": "All 7 Series Mounts",
+        "text": "Every required mount farmed until it drops — or only the ones you are missing."
+      },
+      {
+        "icon": "gem",
+        "title": "Totems & Trial Loot",
+        "text": "Guaranteed totems, orchestrion rolls and gear from every clear."
+      },
+      {
+        "icon": "medal",
+        "title": "Achievement Progress",
+        "text": "Extreme trial achievements unlocked along the way."
+      }
+    ],
+    "accordion": [
+      {
+        "title": "Requirements",
+        "items": [
+          "Have a level 90 Job",
+          "Extreme trials unlocked (available as additional services)"
+        ]
+      },
+      {
+        "ref": "how-does-it-work"
+      },
+      {
+        "ref": "piloted-vs-afk-carry"
+      }
+    ]
+  }
+}

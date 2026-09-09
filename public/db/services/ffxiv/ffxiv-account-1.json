@@ -1,0 +1,107 @@
+{
+  "game": "ffxiv",
+  "subcategory": "accounts",
+  "service": {
+    "id": "ffxiv-account-1",
+    "name": "EU Account (All Jobs Maxed)",
+    "tag1": "All Combat Jobs & Crafters maxed",
+    "tag2": "No housing included",
+    "tag3": "EU - Light Data Center",
+    "price": 500,
+    "image": "/images/service-cards/ffxiv/accounts/ffxiv-account-1.webp",
+    "longDescription": "A verified pre-owned FFXIV account. Everything included is listed below.",
+    "account": {
+      "region": "eu",
+      "levels": "all-max",
+      "housing": "none",
+      "addedAt": "2026-08-26",
+      "specs": [
+        "All Combat Jobs & Crafters maxed",
+        "Main Scenario Quests completed",
+        "Access to all expansions (PC only)",
+        "1M+ Gil included (more on request)",
+        "EU - Light Data Center"
+      ]
+    }
+  },
+  "subpage": {
+    "short": "EU Account",
+    "rewardsHeading": "What's on the account",
+    "gallery": [
+      "/images/accounts/ffxiv-account-1/ffxiv-account-1-gallery-1.webp",
+      "/images/accounts/ffxiv-account-1/ffxiv-account-1-gallery-2.webp"
+    ],
+    "rewards": [
+      {
+        "icon": "globe",
+        "title": "Data Center",
+        "text": "Light (EU)",
+        "group": "Character Details"
+      },
+      {
+        "icon": "monitor",
+        "title": "Platforms",
+        "text": "PC"
+      },
+      {
+        "icon": "package",
+        "title": "Expansions",
+        "text": "All (PC only)"
+      },
+      {
+        "icon": "user-round",
+        "title": "Race & Gender",
+        "text": "Male Viera"
+      },
+      {
+        "icon": "swords",
+        "title": "Combat Jobs",
+        "text": "All max level (except Blue Mage and Beastmaster)",
+        "group": "Jobs & Progression"
+      },
+      {
+        "icon": "hammer",
+        "title": "Crafters & Gatherers",
+        "text": "All max level"
+      },
+      {
+        "icon": "notebook-text",
+        "title": "Main Scenario",
+        "text": "All quests completed"
+      },
+      {
+        "icon": "medal",
+        "title": "Job Quests",
+        "text": "Mostly completed"
+      },
+      {
+        "icon": "house",
+        "title": "Housing",
+        "text": "None",
+        "group": "Housing & Economy"
+      },
+      {
+        "icon": "coins",
+        "title": "Gil",
+        "text": "1M+ included (more on request)"
+      },
+      {
+        "icon": "arrow-right-left",
+        "title": "Transfer",
+        "text": "The account can be transferred to any region and data center",
+        "group": "Delivery"
+      }
+    ],
+    "accordion": [
+      {
+        "title": "How does the transfer work?",
+        "items": [
+          "After the purchase, our manager contacts you via Live Chat or Discord",
+          "We walk you through the account handover step by step",
+          "The account can then be transferred to any region or data center",
+          "You change the e-mail and password — the account is fully yours"
+        ]
+      }
+    ]
+  }
+}

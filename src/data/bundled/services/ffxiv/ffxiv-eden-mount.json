@@ -1,0 +1,58 @@
+{
+  "game": "ffxiv",
+  "subcategory": "mounts",
+  "service": {
+    "id": "ffxiv-eden-mount",
+    "name": "Eden (Mount)",
+    "tag1": "Guaranteed mount drop",
+    "tag2": "Eden’s Promise: Eternity (Savage)",
+    "tag3": "Piloted or AFK Carry",
+    "price": 0,
+    "image": "/images/service-cards/ffxiv/mounts/savage-raid-mounts/ffxiv-eden.webp",
+    "longDescription": "Eden’s Promise: Eternity on Savage rewards the Eden mount itself — guaranteed, no matter the runs."
+  },
+  "subpage": {
+    "short": "Eden",
+    "rewardsHeading": "What you get",
+    "rewards": [
+      {
+        "icon": "trophy",
+        "title": "Guaranteed Mount Drop From",
+        "dutyButton": {
+          "label": "Eden's Promise: Eternity (Savage)",
+          "to": "/boosting/ffxiv/ffxiv-eden-savage"
+        }
+      },
+      {
+        "icon": "swords",
+        "title": "Piloted or AFK Carry",
+        "text": "Cleared by a veteran raider on your account, or alongside you in the party."
+      },
+      {
+        "icon": "gem",
+        "title": "Savage Loot Along the Way",
+        "text": "Gear coffers, totems and glamours from every clear."
+      },
+      {
+        "icon": "medal",
+        "title": "Achievement Unlocked",
+        "text": "The Savage achievement on completion."
+      }
+    ],
+    "accordion": [
+      {
+        "title": "Requirements",
+        "items": [
+          "Have a level 80 Job",
+          "Duty unlocked (available as an additional service)"
+        ]
+      },
+      {
+        "ref": "how-does-it-work"
+      },
+      {
+        "ref": "piloted-vs-afk-carry"
+      }
+    ]
+  }
+}

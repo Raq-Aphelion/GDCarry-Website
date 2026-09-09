@@ -1,0 +1,55 @@
+{
+  "game": "ffxiv",
+  "subcategory": "pvp",
+  "service": {
+    "id": "ffxiv-pvp-series-boost",
+    "name": "Series Malmstones Boost (PvP)",
+    "tag1": "Up to Series level 30",
+    "tag2": "Mounts, glamour & minions",
+    "tag3": "Piloted Service",
+    "price": 0,
+    "image": "/images/service-cards/ffxiv/pvp/ffxiv-pvp-series.webp",
+    "longDescription": "The Series Malmstones system provides unique rewards to players who participate in PvP during a given series. Leveling up lets you acquire Trophy Crystals, Minions, Mounts and Sets of Glamour!"
+  },
+  "subpage": {
+    "short": "PvP Series",
+    "rewardsHeading": "What you get",
+    "rewards": [
+      {
+        "icon": "arrow-up",
+        "title": "PvP Series Levels",
+        "text": "Multiple levels in the PvP series granting you the current series loot."
+      },
+      {
+        "icon": "gem",
+        "title": "Trophy Crystals",
+        "text": "Thousands of Trophy Crystals to exchange for glamour."
+      },
+      {
+        "icon": "badge-check",
+        "title": "PvP Experience",
+        "text": "Exclusive exp only acquired from playing in PvP game modes."
+      },
+      {
+        "icon": "trophy",
+        "title": "Mount OR Gearset",
+        "text": "Unique Mount or Gearset depending on the current PvP series at level 25."
+      }
+    ],
+    "accordion": [
+      {
+        "title": "Requirements",
+        "items": [
+          "Have a level 30 Job",
+          "Crystal Conflict unlocked"
+        ]
+      },
+      {
+        "ref": "how-does-it-work"
+      },
+      {
+        "ref": "piloted-boost-2"
+      }
+    ]
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "game": "ffxiv",
+  "subcategory": "reputation",
+  "service": {
+    "id": "ffxiv-custom-deliveries",
+    "name": "Custom Delivery Reputation Boost",
+    "tag1": "Any NPC, any level",
+    "tag2": "Scrips, mounts & glamour sets",
+    "tag3": "Piloted Service",
+    "price": 0,
+    "image": "/images/service-cards/ffxiv/reputation/ffxiv-custom-delivery.webp",
+    "longDescription": "Weekly turn-ins without the wait. Our raiders handle your Custom Deliveries — any NPC raised to full Satisfaction while you keep every Scrip, title and glamour reward along the way."
+  },
+  "subpage": {
+    "short": "Custom Deliveries",
+    "rewardsHeading": "What you get",
+    "rewards": [
+      {
+        "icon": "arrow-up",
+        "title": "Full Satisfaction Reached",
+        "text": "Any Custom Delivery NPC raised to your chosen satisfaction level — no weekly-cap grind."
+      },
+      {
+        "icon": "trophy",
+        "title": "Mounts & Glamour Sets",
+        "text": "NPC-specific mounts, outfits and glamour at max satisfaction."
+      },
+      {
+        "icon": "badge-check",
+        "title": "Titles & Stories",
+        "text": "Unique titles and questlines unlocked at every level."
+      },
+      {
+        "icon": "gem",
+        "title": "Scrips & EXP Kept",
+        "text": "Crafters’ and Gatherers’ Scrips, materia and every reward stays yours."
+      }
+    ],
+    "accordion": [
+      {
+        "title": "Requirements",
+        "items": [
+          "Own the relevant expansion",
+          "NPC unlocked (available as an additional service)"
+        ]
+      },
+      {
+        "ref": "how-does-it-work"
+      },
+      {
+        "ref": "piloted-boost-2"
+      }
+    ]
+  }
+}

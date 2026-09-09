@@ -1,0 +1,240 @@
+{
+  "game": {
+    "id": "ffxiv",
+    "name": "Final Fantasy XIV",
+    "short": "FFXIV",
+    "tagline": "Eorzea’s most trusted carry crew",
+    "description": "Content ranging from Trials to Ultimates done by verified professionals with decades of experience who are part of world race teams.",
+    "cardImage": "/images/game-cards/GameCard_FFXIV.webp",
+    "logo": "/images/game-logos/ffxiv.png",
+    "main": true
+  },
+  "subcategories": [
+    {
+      "id": "gil",
+      "name": "Currency",
+      "proxies": [
+        "ffxiv-wolf-marks"
+      ],
+      "services": [
+        "ffxiv-gil-pack"
+      ]
+    },
+    {
+      "id": "current-patch",
+      "name": "Current Patch",
+      "proxies": [
+        "ffxiv-dmu",
+        "ffxiv-arcadion-savage",
+        "ffxiv-wings-of-legacy",
+        "ffxiv-wings-of-nihility",
+        "ffxiv-lowrider-t1rant",
+        "ffxiv-dawntrail-trials-bundle",
+        "ffxiv-the-unmaking",
+        "ffxiv-leveling-boost",
+        "ffxiv-msq-skip",
+        "ffxiv-cc-rank-boost",
+        "ffxiv-pvp-series-boost",
+        "ffxiv-occult-crescent"
+      ],
+      "services": []
+    },
+    {
+      "id": "ultimate-raids",
+      "name": "Ultimate Raids",
+      "services": [
+        "ffxiv-dmu",
+        "ffxiv-fru",
+        "ffxiv-top",
+        "ffxiv-dsr",
+        "ffxiv-tea",
+        "ffxiv-ucob",
+        "ffxiv-uwu",
+        "ffxiv-ultimate-bundle"
+      ]
+    },
+    {
+      "id": "raids",
+      "name": "Savage Raids",
+      "services": [
+        "ffxiv-arcadion-savage",
+        "ffxiv-pandaemonium-savage",
+        "ffxiv-eden-savage",
+        "ffxiv-omega-savage",
+        "ffxiv-alexander-savage"
+      ]
+    },
+    {
+      "id": "alliance-raids",
+      "name": "24+ Player Raids",
+      "services": [
+        "ffxiv-forked-tower-magic",
+        "ffxiv-forked-tower-blood",
+        "ffxiv-windurst-third-walk",
+        "ffxiv-san-doria-second-walk",
+        "ffxiv-jeuno-first-walk",
+        "ffxiv-cloud-of-darkness",
+        "ffxiv-delubrum-reginae-savage",
+        "ffxiv-baldesion-arsenal"
+      ]
+    },
+    {
+      "id": "trials",
+      "name": "Extreme Trials",
+      "services": [
+        "ffxiv-dawntrail-trials-bundle",
+        "ffxiv-endwalker-trials-bundle",
+        "ffxiv-shadowbringers-trials-bundle",
+        "ffxiv-stormblood-trials-bundle",
+        "ffxiv-heavensward-trials-bundle",
+        "ffxiv-the-unmaking",
+        "ffxiv-hell-on-rails",
+        "ffxiv-windward-wilds",
+        "ffxiv-necrons-embrace",
+        "ffxiv-recollection",
+        "ffxiv-sphenes-burden",
+        "ffxiv-everkeep",
+        "ffxiv-worqor-lar-dor",
+        "ffxiv-memoria-misera",
+        "ffxiv-great-hunt"
+      ]
+    },
+    {
+      "id": "deep-dungeon",
+      "name": "Deep Dungeons",
+      "services": [
+        "ffxiv-final-verse",
+        "ffxiv-pilgrims-traverse",
+        "ffxiv-orthos",
+        "ffxiv-hoh",
+        "ffxiv-potd-solo",
+        "ffxiv-deep-dungeon-bundle"
+      ]
+    },
+    {
+      "id": "criterion-dungeons",
+      "name": "V&C Dungeons",
+      "services": [
+        "ffxiv-another-merchants-tale",
+        "ffxiv-another-aloalo-island",
+        "ffxiv-another-mount-rokkon",
+        "ffxiv-another-sildihn-subterrane",
+        "ffxiv-variant-merchants-tale",
+        "ffxiv-variant-aloalo-island",
+        "ffxiv-variant-mount-rokkon",
+        "ffxiv-variant-sildihn-subterrane"
+      ]
+    },
+    {
+      "id": "mounts",
+      "name": "Mounts",
+      "services": [
+        "ffxiv-wings-of-legacy",
+        "ffxiv-wings-of-nihility",
+        "ffxiv-wings-of-mist",
+        "ffxiv-wings-of-death",
+        "ffxiv-wings-of-knighthood",
+        "ffxiv-wings-of-eternity",
+        "ffxiv-wings-of-resolve",
+        "ffxiv-wings-of-ruin",
+        "ffxiv-apocryphal-bahamut",
+        "ffxiv-landerwaffe",
+        "ffxiv-kamuy-nine-tails",
+        "ffxiv-firebird-mount",
+        "ffxiv-kirin-mount",
+        "ffxiv-monowheel-s1",
+        "ffxiv-air-wheeler-c9",
+        "ffxiv-lowrider-t1rant",
+        "ffxiv-demi-phoinix",
+        "ffxiv-sunforged",
+        "ffxiv-megaloambystoma",
+        "ffxiv-skyslipper",
+        "ffxiv-ramuh",
+        "ffxiv-eden-mount",
+        "ffxiv-alte-roite",
+        "ffxiv-air-force",
+        "ffxiv-model-o",
+        "ffxiv-gobwalker",
+        "ffxiv-arrhidaeus",
+        "ffxiv-rathalos-mount",
+        "ffxiv-felyne-cart",
+        "ffxiv-cerberus-mount",
+        "ffxiv-duck-billed-porter-mount",
+        "ffxiv-demon-haul",
+        "ffxiv-dais-of-darkness-mount",
+        "ffxiv-shroud-of-darkness-mount",
+        "ffxiv-demi-ozma",
+        "ffxiv-aeturna-mount",
+        "ffxiv-juedi-mount",
+        "ffxiv-genie-of-the-lamp-mount",
+        "ffxiv-royal-magicked-carpet-mount",
+        "ffxiv-quaqua-mount",
+        "ffxiv-spectral-statice-mount",
+        "ffxiv-shishioji-mount",
+        "ffxiv-burabura-chochin-mount",
+        "ffxiv-sildihn-throne-mount",
+        "ffxiv-silkie-mount",
+        "ffxiv-morbol-mount",
+        "ffxiv-vacuum-suit-mount"
+      ]
+    },
+    {
+      "id": "relics",
+      "name": "Relics",
+      "services": [
+        "ffxiv-phantom-weapon",
+        "ffxiv-manderville-weapon",
+        "ffxiv-resistance-weapon",
+        "ffxiv-eureka-weapon",
+        "ffxiv-eurekan-elemental-armour",
+        "ffxiv-anima-weapon",
+        "ffxiv-zodiac-weapon"
+      ]
+    },
+    {
+      "id": "reputation",
+      "name": "Reputation",
+      "services": [
+        "ffxiv-beast-tribes",
+        "ffxiv-custom-deliveries"
+      ]
+    },
+    {
+      "id": "leveling",
+      "name": "Leveling",
+      "services": [
+        "ffxiv-leveling-boost",
+        "ffxiv-blu-leveling-boost",
+        "ffxiv-msq-skip",
+        "ffxiv-crafter-gatherer-leveling"
+      ]
+    },
+    {
+      "id": "field-explorations",
+      "name": "Field Explorations & Misc",
+      "services": [
+        "ffxiv-occult-crescent",
+        "ffxiv-cosmic-exploration",
+        "ffxiv-resistance-rank",
+        "ffxiv-eureka-leveling",
+        "ffxiv-island-sanctuary"
+      ]
+    },
+    {
+      "id": "pvp",
+      "name": "PvP",
+      "services": [
+        "ffxiv-cc-rank-boost",
+        "ffxiv-pvp-series-boost",
+        "ffxiv-wolf-marks"
+      ]
+    },
+    {
+      "id": "accounts",
+      "name": "Accounts",
+      "services": [
+        "ffxiv-account-1"
+      ]
+    }
+  ]
+}

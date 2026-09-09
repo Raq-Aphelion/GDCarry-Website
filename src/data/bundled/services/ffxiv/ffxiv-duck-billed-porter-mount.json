@@ -1,0 +1,59 @@
+{
+  "game": "ffxiv",
+  "subcategory": "mounts",
+  "service": {
+    "id": "ffxiv-duck-billed-porter-mount",
+    "name": "Duck-billed Porter (Mount)",
+    "tag1": "Guaranteed mount drop",
+    "tag2": "The Forked Tower: Magic",
+    "tag3": "Piloted Service",
+    "price": 0,
+    "image": "/images/service-cards/ffxiv/mounts/ffxiv-duck-billed-porter.webp",
+    "longDescription": "The amiable porter of the Occult Crescent — earned in The Forked Tower: Magic as a random drop or through 500 Arcane Amulets. Guaranteed with our raiders on your account."
+  },
+  "subpage": {
+    "short": "Duck-billed Porter",
+    "rewardsHeading": "What you get",
+    "rewards": [
+      {
+        "icon": "trophy",
+        "title": "Mount Drop From",
+        "text": "— random drop or 500 Arcane Amulets exchange.",
+        "dutyButton": {
+          "label": "The Forked Tower: Magic",
+          "to": "/boosting/ffxiv/ffxiv-forked-tower-magic"
+        }
+      },
+      {
+        "icon": "swords",
+        "title": "Piloted Service",
+        "text": "Cleared by a veteran raider on your account."
+      },
+      {
+        "icon": "gem",
+        "title": "Savage Loot Along the Way",
+        "text": "Gear coffers, totems and glamours from every clear."
+      },
+      {
+        "icon": "medal",
+        "title": "Achievement Unlocked",
+        "text": "The Savage achievement on completion."
+      }
+    ],
+    "accordion": [
+      {
+        "title": "Requirements",
+        "items": [
+          "Have a level 100 Job",
+          "Duty unlocked (available as an additional service)"
+        ]
+      },
+      {
+        "ref": "how-does-it-work"
+      },
+      {
+        "ref": "piloted-boost"
+      }
+    ]
+  }
+}

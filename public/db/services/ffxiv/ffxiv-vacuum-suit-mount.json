@@ -1,0 +1,60 @@
+{
+  "game": "ffxiv",
+  "subcategory": "mounts",
+  "service": {
+    "id": "ffxiv-vacuum-suit-mount",
+    "name": "High Mobility Vacuum Suit (Mount)",
+    "tag1": "Guaranteed mount acquisition",
+    "tag2": "Cosmic Exploration",
+    "tag3": "Piloted Service",
+    "price": 0,
+    "image": "/images/service-cards/ffxiv/mounts/ffxiv-high-mobility-vacuum-suit.webp",
+    "tag": "New",
+    "longDescription": "A suit built for the vacuum of space — earned through 500K Cosmic Tracker on all 11 DoH and DoL jobs in Cosmic Exploration. Guaranteed with our raiders on your account."
+  },
+  "subpage": {
+    "short": "High Mobility Vacuum Suit",
+    "rewardsHeading": "What you get",
+    "rewards": [
+      {
+        "icon": "trophy",
+        "title": "Guaranteed Mount Drop From",
+        "text": "— 500K Cosmic Tracker on all 11 DoH and DoL jobs.",
+        "dutyButton": {
+          "label": "Cosmic Exploration",
+          "to": "/boosting/ffxiv/ffxiv-cosmic-exploration"
+        }
+      },
+      {
+        "icon": "swords",
+        "title": "Piloted Service",
+        "text": "Cleared by a veteran raider on your account."
+      },
+      {
+        "icon": "gem",
+        "title": "Savage Loot Along the Way",
+        "text": "Gear coffers, totems and glamours from every clear."
+      },
+      {
+        "icon": "medal",
+        "title": "Achievement Unlocked",
+        "text": "The Savage achievement on completion."
+      }
+    ],
+    "accordion": [
+      {
+        "title": "Requirements",
+        "items": [
+          "Have a level 100 Job",
+          "Duty unlocked (available as an additional service)"
+        ]
+      },
+      {
+        "ref": "how-does-it-work"
+      },
+      {
+        "ref": "piloted-boost"
+      }
+    ]
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "game": "ffxiv",
+  "subcategory": "mounts",
+  "service": {
+    "id": "ffxiv-wings-of-knighthood",
+    "name": "Wings of the Knighthood (Mount)",
+    "tag1": "Guaranteed (any number of runs)",
+    "tag2": "Recollection (Extreme)",
+    "tag3": "Piloted or AFK Carry",
+    "price": 0,
+    "image": "/images/service-cards/ffxiv/mounts/extreme-trial-mounts/ffxiv-wings-of-the-knighthood.webp",
+    "longDescription": "Recollection on Extreme guards the Wings of the Knighthood — a guaranteed farm until they drop, with Knight Totems piling up along the way."
+  },
+  "subpage": {
+    "short": "Wings of the Knighthood",
+    "rewardsHeading": "What you get",
+    "rewards": [
+      {
+        "icon": "trophy",
+        "title": "Guaranteed Mount Drop From",
+        "text": "— guaranteed, no matter how many runs it takes.",
+        "dutyButton": {
+          "label": "Recollection (Extreme)",
+          "to": "/boosting/ffxiv/ffxiv-recollection"
+        }
+      },
+      {
+        "icon": "gem",
+        "title": "Knight Totems",
+        "text": "Trial totems from every clear, exchangeable for mounts and gear."
+      },
+      {
+        "icon": "swords",
+        "title": "Extreme Trial Clears",
+        "text": "Every run completed by a veteran raider on your behalf."
+      },
+      {
+        "icon": "medal",
+        "title": "Achievement Unlocked",
+        "text": "The Extreme trial achievement on completion."
+      }
+    ],
+    "accordion": [
+      {
+        "title": "Requirements",
+        "items": [
+          "Have a level 100 Job",
+          "Own the Dawntrail Expansion",
+          "Trial unlocked (available as an additional service)"
+        ]
+      },
+      {
+        "ref": "how-does-it-work"
+      },
+      {
+        "ref": "piloted-vs-afk-carry"
+      }
+    ]
+  }
+}

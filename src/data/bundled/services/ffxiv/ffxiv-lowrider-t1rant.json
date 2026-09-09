@@ -1,0 +1,58 @@
+{
+  "game": "ffxiv",
+  "subcategory": "mounts",
+  "service": {
+    "id": "ffxiv-lowrider-t1rant",
+    "name": "Lowrider T1RANT (Mount)",
+    "tag1": "Guaranteed mount drop",
+    "tag2": "AAC Heavyweight M4 (Savage)",
+    "tag3": "Piloted Service",
+    "price": 0,
+    "image": "/images/service-cards/ffxiv/mounts/savage-raid-mounts/ffxiv-lowrider-t1rant.webp",
+    "longDescription": "Lindwurm’s muscle-car lowrider from AAC Heavyweight M4 on Savage, complete with a feline passenger — guaranteed, no matter the runs."
+  },
+  "subpage": {
+    "short": "Lowrider T1RANT",
+    "rewardsHeading": "What you get",
+    "rewards": [
+      {
+        "icon": "trophy",
+        "title": "Guaranteed Mount Drop From",
+        "dutyButton": {
+          "label": "AAC Heavyweight M4 (Savage)",
+          "to": "/boosting/ffxiv/ffxiv-arcadion-savage"
+        }
+      },
+      {
+        "icon": "swords",
+        "title": "Piloted Service",
+        "text": "Cleared by a veteran raider on your account."
+      },
+      {
+        "icon": "gem",
+        "title": "Savage Loot Along the Way",
+        "text": "Gear coffers, totems and glamours from every clear."
+      },
+      {
+        "icon": "medal",
+        "title": "Achievement Unlocked",
+        "text": "The Savage achievement on completion."
+      }
+    ],
+    "accordion": [
+      {
+        "title": "Requirements",
+        "items": [
+          "Have a level 100 Job",
+          "Duty unlocked (available as an additional service)"
+        ]
+      },
+      {
+        "ref": "how-does-it-work"
+      },
+      {
+        "ref": "piloted-boost"
+      }
+    ]
+  }
+}

@@ -1,0 +1,109 @@
+{
+  "game": "ffxiv",
+  "subcategory": "gil",
+  "service": {
+    "id": "ffxiv-gil-pack",
+    "name": "FFXIV Gil",
+    "tag1": "5M - 900M Gil",
+    "tag2": "Any world, any amount",
+    "tag3": "Mannequin or Face to Face Trade",
+    "price": 0,
+    "image": "/images/service-cards/ffxiv/gil-currency/ffxiv-gil.webp",
+    "tag": "Popular",
+    "longDescription": "Gil is the most widely accepted form of in-game currency. The amount of gil you hold is indicated on the currency panel. The gil cap is 999,999,999 for the player and each retainer, while players on a Free Trial are capped at 300,000 gil."
+  },
+  "subpage": {
+    "short": "Gil",
+    "rewardsHeading": "What you get",
+    "rewards": [
+      {
+        "icon": "coins",
+        "title": "Any Amount, Any World",
+        "text": "From 5M to 900M gil per order — delivered to any world on any data center."
+      },
+      {
+        "icon": "shield-check",
+        "title": "Secure Trade Methods",
+        "text": "Only the safest hand-trade methods are used for every delivery."
+      },
+      {
+        "icon": "timer",
+        "title": "15 Minute Average Delivery",
+        "text": "Most orders are delivered within minutes of confirmation."
+      },
+      {
+        "icon": "undo-2",
+        "title": "Money-Back Guarantee",
+        "text": "If we can not deliver on time, the difference comes back to you."
+      }
+    ],
+    "accordion": [
+      {
+        "title": "Requirements",
+        "items": [
+          "Have an active Final Fantasy XIV account subscription (Free Trial accounts cannot trade)",
+          "Be eligible to trade or have the requirements for a mannequin transaction",
+          "Be available for the trade at the agreed place and time for face-to-face trades"
+        ]
+      },
+      {
+        "ref": "how-does-it-work"
+      },
+      {
+        "title": "How is the gil delivered?",
+        "groups": [
+          {
+            "heading": "Mannequin Trade (safest option)",
+            "items": [
+              {
+                "text": " are housing items that use your retainers to sell off items",
+                "link": {
+                  "label": "Mannequins",
+                  "href": "https://na.finalfantasyxiv.com/lodestone/playguide/db/item/ec327b876c4/"
+                }
+              },
+              {
+                "text": "Mannequins can be placed in any of the following areas:",
+                "plain": true,
+                "muted": true
+              },
+              {
+                "text": "Apartments [Requires Second Lieutenant Grand Company Rank] + Lvl 50",
+                "dash": true,
+                "muted": true
+              },
+              {
+                "text": "FC House - If you have permissions",
+                "dash": true,
+                "muted": true
+              },
+              {
+                "text": "Personal House [Requires Second Lieutenant Grand Company Rank] + Lvl 50",
+                "dash": true,
+                "muted": true
+              },
+              "Simply put an item up for the requested gil amount and open your housing estate for guest access",
+              "Let us know your mannequin location — e.g. Goblet Ward 7 Plot 44, Leviathan server"
+            ]
+          },
+          {
+            "heading": "Face to Face (manual trade)",
+            "items": [
+              "A manager schedules the trade with you right after the order is confirmed",
+              "You meet our trader in-game and the gil is handed over face to face",
+              "You confirm the received amount and the order is marked complete"
+            ]
+          },
+          {
+            "heading": "Direct Account Delivery (optional)",
+            "items": [
+              "A professional trader logs onto your account and completes the delivery for you (+10% fee)",
+              "Delivery is scheduled around times you are not playing",
+              "You are notified once the full amount is on your account"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

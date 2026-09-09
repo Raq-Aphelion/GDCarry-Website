@@ -2,7 +2,7 @@ import { readFile } from 'node:fs/promises';
 import { mergeCategoryFiles, lineTotal } from '../shared.ts';
 import { computeReputationLine } from '../reputation.ts';
 
-const files = ['pricing', 'ffxiv-UltimateRaids', 'ffxiv-Reputation'];
+const files = ['pricing/global', 'pricing/ffxiv/UltimateRaids', 'pricing/ffxiv/Reputation'];
 const [base, ...cats] = await Promise.all(
   files.map((f) => readFile(`public/db/${f}.json`, 'utf8').then(JSON.parse).catch(() => null)),
 );

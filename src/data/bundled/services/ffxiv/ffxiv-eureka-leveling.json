@@ -1,0 +1,55 @@
+{
+  "game": "ffxiv",
+  "subcategory": "field-explorations",
+  "service": {
+    "id": "ffxiv-eureka-leveling",
+    "name": "Eureka Leveling Boost",
+    "tag1": "1 - 60 Elemental Level",
+    "tag2": "Eureka Relic & Armour",
+    "tag3": "Piloted Service",
+    "price": 0,
+    "image": "/images/service-cards/ffxiv/field-ops-misc/ffxiv-eureka-leveling.webp",
+    "longDescription": "The Forbidden Land of Eureka swallows the unprepared. Our runners carry you from elemental level 1 to 60 through Anemos, Pagos, Pyros and Hydatos, with every logogram and kettle filled en route."
+  },
+  "subpage": {
+    "short": "Eureka",
+    "rewardsHeading": "What you get",
+    "rewards": [
+      {
+        "icon": "swords",
+        "title": "Increased Elemental Level",
+        "text": "Get your elemental level increased to your specific requirement!"
+      },
+      {
+        "icon": "package",
+        "title": "Completion of Eureka zone progression",
+        "text": "Eureka zone progression from lvl 1 to lvl 60"
+      },
+      {
+        "icon": "medal",
+        "title": "Baldesion Arsenal",
+        "text": "Unlock the Baldesion Arsenal"
+      },
+      {
+        "icon": "trophy",
+        "title": "Eureka Relic Weapon",
+        "text": "Progress toward Eureka relic weapons and armour"
+      }
+    ],
+    "accordion": [
+      {
+        "title": "Requirements",
+        "items": [
+          "Own the relevant expansion",
+          "Content unlocked (available as an additional service)"
+        ]
+      },
+      {
+        "ref": "how-does-it-work"
+      },
+      {
+        "ref": "piloted-boost-2"
+      }
+    ]
+  }
+}

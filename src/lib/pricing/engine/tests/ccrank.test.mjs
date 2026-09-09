@@ -3,14 +3,11 @@
    the pricing-engine extraction. The golden reference below is that original
    code, copied verbatim (git show HEAD:src/components/CCRankPurchaseBox.tsx). */
 import { readFile } from 'node:fs/promises';
+import { CATEGORY_FILES, GLOBAL_PRICING_FILE } from '../../../../data/pricing.ts';
 import { lineTotal, mergeCategoryFiles } from '../shared.ts';
 import { computeCCRankLine } from '../ccrank.ts';
 
-const files = [
-  'pricing', 'ffxiv-UltimateRaids', 'ffxiv-Gil', 'ffxiv-SavageRaids', 'ffxiv-Leveling',
-  'ffxiv-PvP', 'ffxiv-Mounts', 'ffxiv-Trials', 'ffxiv-DeepDungeons', 'ffxiv-AllianceRaids',
-  'ffxiv-Criterion', 'ffxiv-Relics', 'ffxiv-Reputation', 'ffxiv-FieldExplorations', 'ffxiv-Catalog',
-];
+const files = [GLOBAL_PRICING_FILE, ...CATEGORY_FILES];
 const parts = await Promise.all(
   files.map((f) => readFile(`public/db/${f}.json`, 'utf8').then(JSON.parse).catch(() => null)),
 );

@@ -1,0 +1,58 @@
+{
+  "game": "ffxiv",
+  "subcategory": "criterion-dungeons",
+  "service": {
+    "id": "ffxiv-variant-sildihn-subterrane",
+    "name": "Variant: The Sil'dihn Subterrane",
+    "tag1": "Exclusive Loot + Tokens",
+    "tag2": "Variant: All 12 routes",
+    "tag3": "Piloted Service",
+    "price": 0,
+    "image": "/images/service-cards/ffxiv/vc-dungeons/variant/ffxiv-variant-sildihn-subterrane.webp",
+    "longDescription": "An extensive warren of tunnels and waterways stretches beneath the barren lands of Thanalan, but none come now to marvel at this remnant of fallen Sil'dih. Its memories lie undisturbed, festering silently in the dark and the damp. Yet not for much longer. You have come at the personal behest of Nanamo Ul Namo, and together will you throw open the gate to the desert nation's troubled past."
+  },
+  "subpage": {
+    "short": "Variant: The Sil'dihn Subterrane",
+    "rewardsHeading": "What you get",
+    "rewards": [
+      {
+        "icon": "package",
+        "title": "All 12 Routes Available",
+        "text": "Branching paths, secret bosses and every lore entry can be completed on request."
+      },
+      {
+        "icon": "trophy",
+        "title": "Silkie Mount (All 12 Routes)",
+        "items": [
+          "Silkie"
+        ]
+      },
+      {
+        "icon": "badge-check",
+        "title": "V&C Dungeon Finder Entries",
+        "text": "Lore entries unlocked in your V&C Dungeon Finder record."
+      },
+      {
+        "icon": "medal",
+        "title": "Achievement Unlocked",
+        "text": "Achievement unlocked upon completing Variant: The Sil'dihn Subterrane."
+      }
+    ],
+    "accordion": [
+      {
+        "title": "Requirements",
+        "items": [
+          "Have a level 90 Job",
+          "Own the Endwalker Expansion",
+          "Dungeon unlocked (available as an additional service)"
+        ]
+      },
+      {
+        "ref": "how-does-it-work"
+      },
+      {
+        "ref": "piloted-boost"
+      }
+    ]
+  }
+}

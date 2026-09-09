@@ -1,0 +1,60 @@
+{
+  "game": "ffxiv",
+  "subcategory": "raids",
+  "service": {
+    "id": "ffxiv-arcadion-savage",
+    "name": "Arcadion Raids (Savage)",
+    "tag1": "Savage ilvl 790/795 gear",
+    "tag2": "Full loot priority",
+    "tag3": "Piloted or AFK Carry*",
+    "price": 0,
+    "image": "/images/service-cards/ffxiv/savage-raids/ffxiv-arcadion.webp",
+    "tag": "Popular",
+    "longDescription": "Fighters from across the star step into the Arcadion’s ring, where glory is won before a roaring crowd. From the Light-heavyweight ladder to the Heavyweight throne, only the unbroken earn the right to call themselves Grand Champion. Will you answer the call?"
+  },
+  "subpage": {
+    "short": "Arcadion",
+    "rewards": [
+      {
+        "icon": "swords",
+        "title": "Savage Gear",
+        "text": "Dark Horse, Babyface & Grand Champion gear ranging from ilvl 730 to 795 depending on the tier."
+      },
+      {
+        "icon": "trophy",
+        "title": "Encounter-Specific Mount Drops",
+        "items": [
+          "(M4S) Monowheel S1",
+          "(M8S) Air-wheeler C9",
+          "(M12S) Lowrider T1RANT"
+        ]
+      },
+      {
+        "icon": "gem",
+        "title": "Black Cat Card, Illustrated Tokens & Facewear",
+        "text": "Exclusive collectibles, exchange tokens and glamour from the savage fights."
+      },
+      {
+        "icon": "medal",
+        "title": "Achievement: “Cruising at the Savage Apex I” & More",
+        "text": "Achievement unlocked upon defeating Dawntrail Savage Tier."
+      }
+    ],
+    "accordion": [
+      {
+        "title": "Requirements",
+        "items": [
+          "Have a level 100 Job",
+          "Own the Dawntrail Expansion",
+          "Normal Mode Completion / Fight Unlocked (available as additional services)"
+        ]
+      },
+      {
+        "ref": "how-does-it-work"
+      },
+      {
+        "ref": "piloted-vs-afk-carry"
+      }
+    ]
+  }
+}

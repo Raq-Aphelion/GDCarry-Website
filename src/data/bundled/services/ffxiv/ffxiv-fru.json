@@ -1,0 +1,56 @@
+{
+  "game": "ffxiv",
+  "subcategory": "ultimate-raids",
+  "service": {
+    "id": "ffxiv-fru",
+    "name": "The Futures Rewritten (Ultimate)",
+    "tag1": "Ultimate Edenmorn Weapon",
+    "tag2": "Adventurer Plate + Title",
+    "tag3": "Piloted Service",
+    "price": 0,
+    "image": "/images/service-cards/ffxiv/ultimate-raids/ffxiv-fru.webp",
+    "longDescription": "Drawing upon his ever-fertile imagination, the wandering minstrel weaves his own interpretation of events surrounding the Flood of Light, the calamity that engulfed nigh the entirety of the First."
+  },
+  "subpage": {
+    "short": "FRU",
+    "rewards": [
+      {
+        "icon": "gem",
+        "title": "Oracle Totem",
+        "text": "Ultimate-specific totems that can be exchanged for a weapon of your choosing."
+      },
+      {
+        "icon": "badge-check",
+        "title": "The Futures Rewritten Adventure Plate",
+        "text": "Exclusive Adventure Plate Designs."
+      },
+      {
+        "icon": "trophy",
+        "title": "Genesis of Legends",
+        "text": "Exclusive title acquired from completing the duty."
+      },
+      {
+        "icon": "medal",
+        "title": "Achievement: “Alternative Destiny”",
+        "text": "Achievement unlocked upon completing The Futures Rewritten."
+      }
+    ],
+    "accordion": [
+      {
+        "title": "Requirements",
+        "items": [
+          "Have a level 100 Job",
+          "Own the Dawntrail Expansion",
+          "AAC Light-heavyweight M4 (Savage) Completed (available as an add-on)",
+          "ilvl 740 or higher gear"
+        ]
+      },
+      {
+        "ref": "how-does-it-work"
+      },
+      {
+        "ref": "piloted-boost"
+      }
+    ]
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "game": "ffxiv",
+  "subcategory": "trials",
+  "service": {
+    "id": "ffxiv-everkeep",
+    "name": "Everkeep (Extreme)",
+    "tag1": "Totems & all loot included",
+    "tag2": "Dawntrail Extreme trial clear",
+    "tag3": "Piloted or AFK Carry",
+    "price": 0,
+    "image": "/images/service-cards/ffxiv/extreme-trials/dawntrail-extreme-trials/ffxiv-everkeep.webp",
+    "longDescription": "The Resilient King defends his throne to the last spark. Zoraal Ja falls on Extreme with our raiders — Wings of Resolve and Resilient Totems kept."
+  },
+  "subpage": {
+    "short": "Everkeep",
+    "rewardsHeading": "What you get",
+    "rewards": [
+      {
+        "icon": "trophy",
+        "title": "Mount Drop (Not Guaranteed)",
+        "text": "— Rare drop, can drop from this trial.",
+        "dutyButton": {
+          "label": "Wings of Resolve",
+          "to": "/boosting/ffxiv/ffxiv-wings-of-resolve"
+        }
+      },
+      {
+        "icon": "gem",
+        "title": "Trial Totems",
+        "text": "Exchangeable for mounts, weapons and glamour."
+      },
+      {
+        "icon": "swords",
+        "title": "Piloted or AFK Carry",
+        "text": "Cleared by a veteran raider on your account, or alongside you in the party."
+      },
+      {
+        "icon": "medal",
+        "title": "Achievement Unlocked",
+        "text": "The Extreme trial achievement on completion."
+      }
+    ],
+    "accordion": [
+      {
+        "title": "Requirements",
+        "items": [
+          "Have a level 100 Job",
+          "Trial unlocked (available as an additional service)"
+        ]
+      },
+      {
+        "ref": "how-does-it-work"
+      },
+      {
+        "ref": "piloted-vs-afk-carry"
+      }
+    ]
+  }
+}

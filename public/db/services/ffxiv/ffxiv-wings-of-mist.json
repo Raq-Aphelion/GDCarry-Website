@@ -1,0 +1,61 @@
+{
+  "game": "ffxiv",
+  "subcategory": "mounts",
+  "service": {
+    "id": "ffxiv-wings-of-mist",
+    "name": "Wings of Mist (Mount)",
+    "tag1": "Guaranteed (any number of runs)",
+    "tag2": "Hell on Rails (Extreme)",
+    "tag3": "Piloted or AFK Carry",
+    "price": 0,
+    "image": "/images/service-cards/ffxiv/mounts/extreme-trial-mounts/ffxiv-wings-of-mist.webp",
+    "tag": "Hot",
+    "longDescription": "All aboard the Doomtrain: Hell on Rails on Extreme drops the Wings of Mist — we run it until the mount is guaranteed, with Runaway Totems to spare."
+  },
+  "subpage": {
+    "short": "Wings of Mist",
+    "rewardsHeading": "What you get",
+    "rewards": [
+      {
+        "icon": "trophy",
+        "title": "Guaranteed Mount Drop From",
+        "text": "— guaranteed, no matter how many runs it takes.",
+        "dutyButton": {
+          "label": "Hell on Rails (Extreme)",
+          "to": "/boosting/ffxiv/ffxiv-hell-on-rails"
+        }
+      },
+      {
+        "icon": "gem",
+        "title": "Runaway Totems",
+        "text": "Trial totems from every clear, exchangeable for mounts and gear."
+      },
+      {
+        "icon": "swords",
+        "title": "Extreme Trial Clears",
+        "text": "Every run completed by a veteran raider on your behalf."
+      },
+      {
+        "icon": "medal",
+        "title": "Achievement Unlocked",
+        "text": "The Extreme trial achievement on completion."
+      }
+    ],
+    "accordion": [
+      {
+        "title": "Requirements",
+        "items": [
+          "Have a level 100 Job",
+          "Own the Dawntrail Expansion",
+          "Trial unlocked (available as an additional service)"
+        ]
+      },
+      {
+        "ref": "how-does-it-work"
+      },
+      {
+        "ref": "piloted-vs-afk-carry"
+      }
+    ]
+  }
+}

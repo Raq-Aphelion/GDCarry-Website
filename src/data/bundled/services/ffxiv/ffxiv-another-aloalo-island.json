@@ -1,0 +1,59 @@
+{
+  "game": "ffxiv",
+  "subcategory": "criterion-dungeons",
+  "service": {
+    "id": "ffxiv-another-aloalo-island",
+    "name": "Another Aloalo Island",
+    "tag1": "Exclusive Loot + Tokens",
+    "tag2": "Criterion: Normal & Savage",
+    "tag3": "Piloted Service",
+    "price": 0,
+    "image": "/images/service-cards/ffxiv/vc-dungeons/criterion/ffxiv-another-aloalo-island.webp",
+    "longDescription": "Inspired by your tale, Osmon rejoices as his imagination soars to heights untold. Visions of the glorious civilizations the peoples of Aloalo built take shape in his mind, populating the island with beasts imbued by esoteric magicks. Drawn into this tide of fantasy and swept to its remotest edge, you must now do battle with the mundane made legendary."
+  },
+  "subpage": {
+    "short": "Another Aloalo Island",
+    "rewardsHeading": "What you get",
+    "rewards": [
+      {
+        "icon": "swords",
+        "title": "Criterion Clear",
+        "text": "Difficult 4-player content cleared with a veteran group."
+      },
+      {
+        "icon": "trophy",
+        "title": "Quaqua Mount",
+        "text": "— random drop or 100 Aloalo Coins exchange.",
+        "items": [
+          "Quaqua"
+        ]
+      },
+      {
+        "icon": "badge-check",
+        "title": "Exclusive Title \"Force of Nature\"",
+        "text": "Title achieved from clearing the hardest difficulty version."
+      },
+      {
+        "icon": "medal",
+        "title": "Achievement Unlocked: \"Charting the Savage Unknown\"",
+        "text": "Achievement unlocked upon completing Another Aloalo Island."
+      }
+    ],
+    "accordion": [
+      {
+        "title": "Requirements",
+        "items": [
+          "Have a level 90 Job",
+          "Own the Endwalker Expansion",
+          "Criterion unlocked (variant completion available as an additional service)"
+        ]
+      },
+      {
+        "ref": "how-does-it-work"
+      },
+      {
+        "ref": "piloted-boost"
+      }
+    ]
+  }
+}

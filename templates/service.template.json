@@ -1,0 +1,70 @@
+{
+  "_guide": {
+    "HOW TO USE": "Copy this file, replace every EXAMPLE/<...> placeholder, then run: npm run add:service -- path/to/your-copy.json (add --dry-run to preview). Delete the _guide block or leave it — it is ignored.",
+    "game": "Game id — one of: ffxiv, wow, lost-ark, warframe, runescape. Must have a public/db/services/<game>/ directory.",
+    "subcategory": "Id of an existing subcategory in that game's JSON (e.g. 'mounts', 'leveling'). The service is appended to it.",
+    "service.id": "kebab-case, unique across all games, prefixed with the game id (e.g. 'ffxiv-my-service').",
+    "service.name": "Card title shown in the grid.",
+    "service.tag1 / tag2 / tag3": "Short bullet lines on the card. tag3 is optional — delete the line to omit it.",
+    "service.price": "Fallback price in EUR (number >= 0). Use 0 when pricing comes from the engine / public/db/pricing/<game>/<Category>.json files.",
+    "service.image": "Card image under public/images/ — convention: images/service-cards/<service.id>.webp. A missing file only warns (add it in the same PR); a path outside images/ fails.",
+    "service.tag": "Optional card badge — one of: Popular | Hot | New | Best Value. Delete the line to omit.",
+    "service.longDescription": "Optional long-form text shown on the dedicated subpage.",
+    "service.account": "Optional — Accounts-category listings only: { region: us|eu|oc|jp, levels: combat-max|all-max, housing: none|small|medium|large, addedAt?: ISO date, specs?: string[] }.",
+    "subpage": "Optional dedicated /boosting/<game>/<service.id> page. Delete the whole block for a category-only card.",
+    "subpage.short": "Short breadcrumb label (e.g. 'DSR').",
+    "subpage.rewardsHeading": "Optional heading above the rewards (defaults to \"Duty's Rewards\").",
+    "subpage.gallery": "Optional image gallery (account listings) — paths under images/ like service.image.",
+    "subpage.rewards[].icon": "kebab-case icon name — see src/data/bundled/icon-names.json for the allowed list.",
+    "subpage.rewards[].dutyButton": "Optional linked button under the title: { label, to: /boosting/<game>/<existing service id> }.",
+    "subpage.accordion": "Mix of inline sections ({ title, items } or { title, groups: [{ heading, items }] }) and { \"ref\": \"<slug>\" } markers for shared sections — available slugs: see public/db/services/ffxiv/shared-sections.json (e.g. how-does-it-work, piloted-vs-afk-carry, piloted-boost).",
+    "PRICING": "Flat-price services need nothing else. Services with methods/add-ons (piloted vs AFK, runs, …) also need a methodPrices (or engine config) entry in the matching public/db/pricing/ffxiv/<Category>.json."
+  },
+  "game": "ffxiv",
+  "subcategory": "<subcategory id>",
+  "service": {
+    "id": "ffxiv-example-service",
+    "name": "EXAMPLE — My New Service",
+    "tag1": "EXAMPLE first card bullet",
+    "tag2": "EXAMPLE second card bullet",
+    "tag3": "EXAMPLE optional third bullet (delete to omit)",
+    "price": 149,
+    "image": "images/service-cards/ffxiv-example-service.webp",
+    "tag": "New",
+    "longDescription": "EXAMPLE long description shown on the dedicated subpage."
+  },
+  "subpage": {
+    "short": "EXAMPLE",
+    "rewardsHeading": "What you get",
+    "rewards": [
+      {
+        "icon": "trophy",
+        "title": "EXAMPLE Main Reward",
+        "text": "What the customer gets."
+      },
+      {
+        "icon": "gem",
+        "title": "EXAMPLE Loot Kept",
+        "text": "Everything earned along the way stays on the account."
+      },
+      {
+        "icon": "swords",
+        "title": "EXAMPLE Clear",
+        "text": "Completed by a veteran player.",
+        "dutyButton": { "label": "EXAMPLE Duty", "to": "/boosting/ffxiv/ffxiv-example-service" }
+      },
+      {
+        "icon": "medal",
+        "title": "EXAMPLE Achievement",
+        "text": "Achievement unlocked on completion."
+      }
+    ],
+    "accordion": [
+      {
+        "title": "Requirements",
+        "items": ["EXAMPLE requirement"]
+      },
+      { "ref": "how-does-it-work" }
+    ]
+  }
+}

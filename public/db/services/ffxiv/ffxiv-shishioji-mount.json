@@ -1,0 +1,59 @@
+{
+  "game": "ffxiv",
+  "subcategory": "mounts",
+  "service": {
+    "id": "ffxiv-shishioji-mount",
+    "name": "Shishioji (Mount)",
+    "tag1": "Guaranteed (any number of runs)",
+    "tag2": "Another Mount Rokkon",
+    "tag3": "Piloted Service",
+    "price": 0,
+    "image": "/images/service-cards/ffxiv/mounts/vc-dungeons/ffxiv-shishioji.webp",
+    "longDescription": "The lion-dog guardian of Mount Rokkon — guaranteed from the criterion clear with our raiders on your account."
+  },
+  "subpage": {
+    "short": "Shishioji",
+    "rewardsHeading": "What you get",
+    "rewards": [
+      {
+        "icon": "trophy",
+        "title": "Mount Drop From",
+        "text": "— random drop or 100 Shishu Coin exchange.",
+        "dutyButton": {
+          "label": "Another Mount Rokkon",
+          "to": "/boosting/ffxiv/ffxiv-another-mount-rokkon"
+        }
+      },
+      {
+        "icon": "swords",
+        "title": "Piloted Service",
+        "text": "Cleared by a veteran raider on your account."
+      },
+      {
+        "icon": "gem",
+        "title": "Savage Loot Along the Way",
+        "text": "Gear coffers, totems and glamours from every clear."
+      },
+      {
+        "icon": "medal",
+        "title": "Achievement Unlocked",
+        "text": "The Savage achievement on completion."
+      }
+    ],
+    "accordion": [
+      {
+        "title": "Requirements",
+        "items": [
+          "Have a level 90 Job",
+          "Duty unlocked (available as an additional service)"
+        ]
+      },
+      {
+        "ref": "how-does-it-work"
+      },
+      {
+        "ref": "piloted-boost"
+      }
+    ]
+  }
+}

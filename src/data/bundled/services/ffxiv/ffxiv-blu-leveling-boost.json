@@ -1,0 +1,55 @@
+{
+  "game": "ffxiv",
+  "subcategory": "leveling",
+  "service": {
+    "id": "ffxiv-blu-leveling-boost",
+    "name": "Blue Mage Leveling Boost",
+    "tag1": "Any level up to 80",
+    "tag2": "All spells unlock (optional)",
+    "tag3": "Piloted Service",
+    "price": 0,
+    "image": "/images/service-cards/ffxiv/leveling/ffxiv-blue-mage.webp",
+    "longDescription": "Blue Mage learns by watching — a limited job that copies the spells of friends and foes alike. Our Blue Mage Leveling boost powers your Blue Mage all the way to 80, with the option to fill your spellbook with every spell the job can learn."
+  },
+  "subpage": {
+    "short": "Blue Mage",
+    "rewardsHeading": "What you get",
+    "rewards": [
+      {
+        "icon": "arrow-up",
+        "title": "Level Up!",
+        "text": "Blue Mage leveled to your chosen level, up to the level 80 cap."
+      },
+      {
+        "icon": "gem",
+        "title": "Every Spell in the Book",
+        "text": "All Blue Mage spells learned (available as an add-on)."
+      },
+      {
+        "icon": "badge-check",
+        "title": "Masked Carnivale Access",
+        "text": "Job quests and the Masked Carnivale unlocked along the way (available as an add-on)."
+      },
+      {
+        "icon": "timer",
+        "title": "Time Saver",
+        "text": "Skip the spell hunting and the level grind entirely."
+      }
+    ],
+    "accordion": [
+      {
+        "title": "Requirements",
+        "items": [
+          "Have a level 50 or higher Disciple of War or Magic",
+          "Blue Mage unlocked on your account"
+        ]
+      },
+      {
+        "ref": "how-does-it-work"
+      },
+      {
+        "ref": "piloted-boost-2"
+      }
+    ]
+  }
+}

@@ -5,15 +5,11 @@
    the priceOf context method, which is exactly today's shared fromPrice).
    Every config in the matrix must reproduce it exactly. */
 import { readFile } from 'node:fs/promises';
+import { CATEGORY_FILES, GLOBAL_PRICING_FILE } from '../../../../data/pricing.ts';
 import { fromPrice, lineTotal, mergeCategoryFiles } from '../shared.ts';
 import { computeRunLine } from '../run.ts';
 
-const files = [
-  'pricing', 'ffxiv-UltimateRaids', 'ffxiv-Gil', 'ffxiv-SavageRaids', 'ffxiv-Leveling',
-  'ffxiv-PvP', 'ffxiv-Mounts', 'ffxiv-Trials', 'ffxiv-DeepDungeons', 'ffxiv-AllianceRaids',
-  'ffxiv-Criterion', 'ffxiv-Relics', 'ffxiv-Reputation', 'ffxiv-FieldExplorations', 'ffxiv-Catalog',
-  'ffxiv-Accounts',
-];
+const files = [GLOBAL_PRICING_FILE, ...CATEGORY_FILES];
 const parts = await Promise.all(
   files.map((f) => readFile(`public/db/${f}.json`, 'utf8').then(JSON.parse).catch(() => null)),
 );

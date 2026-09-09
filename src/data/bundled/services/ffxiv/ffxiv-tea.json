@@ -1,0 +1,66 @@
+{
+  "game": "ffxiv",
+  "subcategory": "ultimate-raids",
+  "service": {
+    "id": "ffxiv-tea",
+    "name": "The Epic of Alexander (Ultimate)",
+    "tag1": "Ultimate Alexander Weapon",
+    "tag2": "Adventurer Plate + Title",
+    "tag3": "Piloted or AFK Carry",
+    "price": 0,
+    "image": "/images/service-cards/ffxiv/ultimate-raids/ffxiv-tea.webp",
+    "longDescription": "The clockwork fortress that manifested itself in the far reaches of snow-swept Dravania did bear an uncanny resemblance to the great steel giant sung of in the legends of the Hotgo, an Auri tribe hailing from far across the sea."
+  },
+  "subpage": {
+    "short": "TEA",
+    "rewards": [
+      {
+        "icon": "gem",
+        "title": "Colossus Totem",
+        "text": "Ultimate-specific totems that can be exchanged for a weapon of your choosing."
+      },
+      {
+        "icon": "badge-check",
+        "title": "The Epic of Alexander Adventure Plate",
+        "text": "Exclusive Adventure Plate Designs."
+      },
+      {
+        "icon": "trophy",
+        "title": "The Perfect Legend",
+        "text": "Exclusive title acquired from completing the duty."
+      },
+      {
+        "icon": "medal",
+        "title": "Achievement: “When I Ruled the World”",
+        "text": "Achievement unlocked upon defeating Perfect Alexander in The Epic of Alexander."
+      }
+    ],
+    "accordion": [
+      {
+        "title": "Requirements",
+        "items": [
+          "Have a lvl 80 Job",
+          "Own the Shadowbringers Expansion",
+          "Eden's Gate: Sepulture (Savage) Completed (available as an add-on)",
+          "ilvl 470 or higher gear"
+        ],
+        "groups": [
+          {
+            "heading": "AFK Carry only (TEA Specific)",
+            "items": [
+              "You'll need to be on any melee job (except Samurai) that's level 80 or above (ilvl 475 or higher)",
+              "Be attentive and accept raises — alternatively you can install the Yes Already plugin, which auto-accepts raises for you (PC only)",
+              "You'll be required to use the Limit Break at the end of the fight, make sure to have it on your hotbar"
+            ]
+          }
+        ]
+      },
+      {
+        "ref": "how-does-it-work"
+      },
+      {
+        "ref": "piloted-vs-afk-carry"
+      }
+    ]
+  }
+}

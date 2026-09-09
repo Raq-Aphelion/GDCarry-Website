@@ -1,8 +1,8 @@
 import { readdir, readFile } from 'node:fs/promises';
 import { fromPrice, mergeCategoryFiles } from '../index.ts';
-import { CATEGORY_FILES } from '../../../../data/pricing.ts';
+import { CATEGORY_FILES, GLOBAL_PRICING_FILE } from '../../../../data/pricing.ts';
 
-const files = ['pricing', ...CATEGORY_FILES];
+const files = [GLOBAL_PRICING_FILE, ...CATEGORY_FILES];
 const parts = await Promise.all(
   files.map((f) => readFile(`public/db/${f}.json`, 'utf8').then(JSON.parse).catch(() => null)),
 );
@@ -16,16 +16,16 @@ const check = (label, actual, expected) => {
 };
 
 // Gil pack: methodPrices { piloted: 3.75 } — no afk → floor is piloted
-const gilPack = JSON.parse(await readFile('public/db/ffxiv-Gil.json', 'utf8'));
+const gilPack = JSON.parse(await readFile('public/db/pricing/ffxiv/Gil.json', 'utf8'));
 check('ffxiv-gil-pack', fromPrice(db, 'ffxiv-gil-pack'), gilPack.methodPrices['ffxiv-gil-pack'].piloted);
 
 // Leveling: fromPrice from the leveling block
-const leveling = JSON.parse(await readFile('public/db/ffxiv-Leveling.json', 'utf8'));
+const leveling = JSON.parse(await readFile('public/db/pricing/ffxiv/Leveling.json', 'utf8'));
 if (leveling.leveling?.serviceId)
   check(leveling.leveling.serviceId, fromPrice(db, leveling.leveling.serviceId), leveling.leveling.fromPrice);
 
 // Trials: floor equals the JSON price for each trial service
-const trials = JSON.parse(await readFile('public/db/ffxiv-Trials.json', 'utf8'));
+const trials = JSON.parse(await readFile('public/db/pricing/ffxiv/Trials.json', 'utf8'));
 for (const [id, t] of Object.entries(trials.trials ?? {}).slice(0, 3))
   check(id, fromPrice(db, id), t.price);
 
@@ -35,20 +35,25 @@ check('unknown-service', fromPrice(db, 'does-not-exist'), null);
 // EVERY catalog service must be verifiable worker-side: account-style lines
 // and any config-less payload fall back to the fromPrice floor in
 // verifyPrices, so a catalog service with no db price would pass any quote.
-// Pair each service id with its bundled fallback price from the games source;
-// gaps crossing a services:/subcategories:/tagline: boundary belong to
-// subcategory/game objects, not services.
-const gamesFiles = (await readdir('src/data/games')).filter((f) => f.endsWith('.ts'));
-const gamesSrc = (
-  await Promise.all(gamesFiles.map((f) => readFile(`src/data/games/${f}`, 'utf8')))
-).join('\n');
-const serviceRe = /id: '([a-z0-9]+-[a-z0-9-]+)',((?:(?!services:|subcategories:|tagline:)[\s\S]){0,500}?)\bprice: (\d+(?:\.\d+)?),/g;
-const catalogServices = [...gamesSrc.matchAll(serviceRe)].map(([, id, , price]) => [id, Number(price)]);
-if (catalogServices.length < 50) {
-  console.log(`FAIL only ${catalogServices.length} catalog services found (regex stale?)`);
+// Pair each service id with its bundled fallback price from the service
+// catalog (public/db/services/<gameId>/<service-id>.json — the synthetic
+// 'all' bucket is app-side only, never serialized).
+const gamesDir = 'public/db/services';
+const catalogServices = new Map(); // service id -> bundled fallback price
+const accountListings = []; // [id, bundledPrice]
+for (const gameId of (await readdir(gamesDir, { withFileTypes: true })).filter((e) => e.isDirectory()).map((e) => e.name)) {
+  const dir = `${gamesDir}/${gameId}`;
+  for (const f of (await readdir(dir)).filter((f) => f.endsWith('.json') && f !== 'index.json' && f !== 'shared-sections.json')) {
+    const { service: sv } = JSON.parse(await readFile(`${dir}/${f}`, 'utf8'));
+    catalogServices.set(sv.id, sv.price);
+    if (sv.account) accountListings.push([sv.id, sv.price]);
+  }
+}
+if (catalogServices.size < 50) {
+  console.log(`FAIL only ${catalogServices.size} catalog services found`);
   fail++;
 } else {
-  console.log(`catalog services found: ${catalogServices.length}`);
+  console.log(`catalog services found: ${catalogServices.size}`);
   for (const [id, bundled] of catalogServices) {
     const floor = fromPrice(db, id);
     if (floor == null) {
@@ -66,15 +71,12 @@ if (catalogServices.length < 50) {
 // Account listings (subset of the catalog check above, explicit message):
 // account lines carry no pricing config, so the worker's verifyPrices can
 // only check them via the accounts map in ffxiv-Accounts.json.
-const accountListings = [
-  ...gamesSrc.matchAll(/id: '([a-z0-9]+-[a-z0-9-]+)',[\s\S]{0,800}?\bprice: (\d+),[\s\S]{0,800}?account: \{/g),
-];
 if (accountListings.length === 0) {
-  console.log('FAIL no account listings found in src/data/games/*.ts (regex stale?)');
+  console.log('FAIL no account listings found in public/db/services/');
   fail++;
 } else {
-  for (const [, id, price] of accountListings)
-    check(`${id} (account) floor matches bundled price`, fromPrice(db, id), Number(price));
+  for (const [id, price] of accountListings)
+    check(`${id} (account) floor matches bundled price`, fromPrice(db, id), price);
 }
 
 // Coverage report: how many ids across all maps get a floor

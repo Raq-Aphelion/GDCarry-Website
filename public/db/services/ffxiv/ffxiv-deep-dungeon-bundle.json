@@ -1,0 +1,57 @@
+{
+  "game": "ffxiv",
+  "subcategory": "deep-dungeon",
+  "service": {
+    "id": "ffxiv-deep-dungeon-bundle",
+    "name": "Deep Dungeons Bundle",
+    "tag1": "Every solo title & all loot",
+    "tag2": "500 Floors — all four dungeons",
+    "tag3": "Group Play or Solo Piloted",
+    "price": 0,
+    "image": "/images/service-cards/ffxiv/deep-dungeons/ffxiv-dd-bundle.webp",
+    "tag": "Best Value",
+    "longDescription": "Palace of the Dead to Pilgrim’s Traverse, this bundle contains all of FFXIV’s current deep dungeons — every floor, every title and every achievement in one package."
+  },
+  "subpage": {
+    "short": "DD Bundle",
+    "rewardsHeading": "What you get",
+    "rewards": [
+      {
+        "icon": "swords",
+        "title": "POTD, HOH, EO and Pilgrim's Traverse Completion",
+        "text": "Completion of 4 Deep Dungeons Solo."
+      },
+      {
+        "icon": "gem",
+        "title": "Exclusive Loot",
+        "text": "Exclusive loot from all 4 Deep Dungeons."
+      },
+      {
+        "icon": "badge-check",
+        "title": "Deep Dungeon Solo Titles",
+        "text": "Necromancer, Lone Hero, Once and Future King/Queen and The Enlightened titles."
+      },
+      {
+        "icon": "medal",
+        "title": "Deep Dungeon Specific Achievements",
+        "text": "All solo achievements from clearing 4 Deep Dungeons."
+      }
+    ],
+    "accordion": [
+      {
+        "title": "Requirements",
+        "items": [
+          "Have a level 100 Job",
+          "90+ Aetherpool & Armour (available as an add-on)",
+          "ilvl 740 or higher gear"
+        ]
+      },
+      {
+        "ref": "how-does-it-work"
+      },
+      {
+        "ref": "group-play-vs-piloted-boost"
+      }
+    ]
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "game": "ffxiv",
+  "subcategory": "criterion-dungeons",
+  "service": {
+    "id": "ffxiv-variant-aloalo-island",
+    "name": "Variant: Aloalo Island",
+    "tag1": "Exclusive Loot + Tokens",
+    "tag2": "Variant: All 12 routes",
+    "tag3": "Piloted Service",
+    "price": 0,
+    "image": "/images/service-cards/ffxiv/vc-dungeons/variant/ffxiv-variant-aloalo-island.webp",
+    "longDescription": "In a seldom-traveled corner of the south sea isles lies Aloalo, an island filled with lush vegetation and teeming with vibrant wildlife. Yet the survival of this paradise hinges on a delicate natural balance which has only grown more precarious since the island's stewards departed a century ago. Answering the plea of a messenger most peculiar, you must join Matsya on a journey to restore order to Aloalo, and in the process uncover secrets long forgotten."
+  },
+  "subpage": {
+    "short": "Variant: Aloalo Island",
+    "rewardsHeading": "What you get",
+    "rewards": [
+      {
+        "icon": "package",
+        "title": "All 12 Routes Available",
+        "text": "Branching paths, secret bosses and every lore entry can be completed on request."
+      },
+      {
+        "icon": "trophy",
+        "title": "Spectral Statice Mount (All 12 Routes)",
+        "items": [
+          "Spectral Statice"
+        ]
+      },
+      {
+        "icon": "badge-check",
+        "title": "V&C Dungeon Finder Entries",
+        "text": "Lore entries unlocked in your V&C Dungeon Finder record."
+      },
+      {
+        "icon": "medal",
+        "title": "Achievement Unlocked",
+        "text": "Achievement unlocked upon completing Variant: Aloalo Island."
+      }
+    ],
+    "accordion": [
+      {
+        "title": "Requirements",
+        "items": [
+          "Have a level 90 Job",
+          "Own the Endwalker Expansion",
+          "Dungeon unlocked (available as an additional service)"
+        ]
+      },
+      {
+        "ref": "how-does-it-work"
+      },
+      {
+        "ref": "piloted-boost"
+      }
+    ]
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "game": "ffxiv",
+  "subcategory": "raids",
+  "service": {
+    "id": "ffxiv-omega-savage",
+    "name": "Omega Raids (Savage)",
+    "tag1": "Savage Stormblood glamour",
+    "tag2": "Full loot priority",
+    "tag3": "Piloted or AFK Carry",
+    "price": 0,
+    "image": "/images/service-cards/ffxiv/savage-raids/ffxiv-omega.webp",
+    "longDescription": "Deep within the rift between worlds, the ancient machine Omega conducts its merciless experiments, pitting warriors against recreated foes from across the realms. Endure its trials and prove yourself the strongest subject of all."
+  },
+  "subpage": {
+    "short": "Omega",
+    "rewards": [
+      {
+        "icon": "swords",
+        "title": "Savage Gear",
+        "text": "Savage gear ranging from ilvl 340 to 405 depending on the tier (various weapon types)."
+      },
+      {
+        "icon": "trophy",
+        "title": "Encounter-Specific Mount Drops",
+        "items": [
+          "(O4S) Alte Roite",
+          "(O8S) Air Force",
+          "(O12S) Model O"
+        ]
+      },
+      {
+        "icon": "gem",
+        "title": "Wind-up Exdeath & Glamour Drops",
+        "text": "Exclusive minions and glamour from the savage fights."
+      },
+      {
+        "icon": "medal",
+        "title": "Achievement: “I Am the Savage Alpha, I Am the Savage Omega I” & More",
+        "text": "Achievement unlocked upon defeating Stormblood Savage Tier."
+      }
+    ],
+    "accordion": [
+      {
+        "title": "Requirements",
+        "items": [
+          "Have a level 70 Job",
+          "Normal Mode Completion / Fight Unlocked (available as additional services)"
+        ]
+      },
+      {
+        "ref": "how-does-it-work"
+      },
+      {
+        "ref": "piloted-vs-afk-carry"
+      }
+    ]
+  }
+}

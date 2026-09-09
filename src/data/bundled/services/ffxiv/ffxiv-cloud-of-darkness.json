@@ -1,0 +1,61 @@
+{
+  "game": "ffxiv",
+  "subcategory": "alliance-raids",
+  "service": {
+    "id": "ffxiv-cloud-of-darkness",
+    "name": "The Cloud of Darkness (Chaotic)",
+    "tag1": "Darkness mounts and gear",
+    "tag2": "12 - 24 Player Chaotic Raid Clear",
+    "tag3": "Piloted Service",
+    "price": 0,
+    "image": "/images/service-cards/ffxiv/24-player-raids/ffxiv-cloud-of-darkness.webp",
+    "tag": "New",
+    "longDescription": "The dread cloud looms over the AAC — a chaotic alliance raid where one mistake cascades into wipe after wipe. Our raiders clear it piloted, with demimateria and the rare mount chance on top."
+  },
+  "subpage": {
+    "short": "The Cloud of Darkness",
+    "rewardsHeading": "Rewards",
+    "rewards": [
+      {
+        "icon": "trophy",
+        "title": "Mount Drops (Guaranteed at minimum ilvl)",
+        "items": [
+          "Dais of Darkness",
+          "Shroud of Darkness"
+        ]
+      },
+      {
+        "icon": "package",
+        "title": "Clouddark Armours & Wisp of Darkness Minion",
+        "text": "Exclusive Clouddark demimateria earned for completing the encounter."
+      },
+      {
+        "icon": "swords",
+        "title": "Chaotic Alliance Raid Completion",
+        "text": "The Cloud of Darkness (Chaotic) completed."
+      },
+      {
+        "icon": "medal",
+        "title": "Achievement: \"Cloud Strife\"",
+        "text": "Achievement unlocked upon defeating The Cloud of Darkness (Chaotic)."
+      }
+    ],
+    "accordion": [
+      {
+        "title": "Requirements",
+        "items": [
+          "Have a level 100 Job",
+          "Own the Dawntrail Expansion",
+          "Normal Mode Completion / Fight Unlocked",
+          "ilvl 740 or higher gear"
+        ]
+      },
+      {
+        "ref": "how-does-it-work"
+      },
+      {
+        "ref": "piloted-boost"
+      }
+    ]
+  }
+}

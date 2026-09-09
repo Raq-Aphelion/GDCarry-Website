@@ -1,0 +1,59 @@
+{
+  "game": "ffxiv",
+  "subcategory": "raids",
+  "service": {
+    "id": "ffxiv-pandaemonium-savage",
+    "name": "Pandaemonium Raids (Savage)",
+    "tag1": "Savage Endwalker glamour",
+    "tag2": "Full loot priority",
+    "tag3": "Piloted or AFK Carry",
+    "price": 0,
+    "image": "/images/service-cards/ffxiv/savage-raids/ffxiv-pandaemonium.webp",
+    "longDescription": "Far beneath the ground upon which mortals tread, steeped in darkness deep as starless night, ancient power lies dormant. Too hungry, too brutal, too monstrous─what cannot be controlled must be contained, here, in Pandæmonium. Dare you make the descent?"
+  },
+  "subpage": {
+    "short": "Pandaemonium",
+    "rewards": [
+      {
+        "icon": "swords",
+        "title": "Savage Gear",
+        "text": "Savage gear ranging from ilvl 600 to 660 depending on the tier (various weapon types)."
+      },
+      {
+        "icon": "trophy",
+        "title": "Encounter-Specific Mount Drops",
+        "items": [
+          "(P4S) Demi-Phoinix",
+          "(P8S) Sunforged",
+          "(P12S) Megaloambystoma"
+        ]
+      },
+      {
+        "icon": "gem",
+        "title": "Wind-up Athena (P12S)",
+        "text": "Exclusive glamour and pet drops from the savage fights."
+      },
+      {
+        "icon": "medal",
+        "title": "Achievement: “Apotheosis Agria I” & More",
+        "text": "Achievement unlocked upon defeating Endwalker Savage Tier."
+      }
+    ],
+    "accordion": [
+      {
+        "title": "Requirements",
+        "items": [
+          "Have a level 100 Job",
+          "Own the Dawntrail Expansion",
+          "Normal Mode Completion / Fight Unlocked (available as additional services)"
+        ]
+      },
+      {
+        "ref": "how-does-it-work"
+      },
+      {
+        "ref": "piloted-vs-afk-carry"
+      }
+    ]
+  }
+}

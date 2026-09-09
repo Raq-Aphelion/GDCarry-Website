@@ -45,6 +45,10 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-account-1</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-pandaemonium-savage</loc>
     <priority>0.8</priority>
   </url>
@@ -53,7 +57,55 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-eden-savage</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-omega-savage</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-alexander-savage</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-leveling-boost</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-cosmic-exploration</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-phantom-weapon</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-manderville-weapon</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-resistance-weapon</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-eureka-weapon</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-eurekan-elemental-armour</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-anima-weapon</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-zodiac-weapon</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-crafter-gatherer-leveling</loc>
     <priority>0.8</priority>
   </url>
   <url>
@@ -189,6 +241,62 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-aeturna-mount</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-genie-of-the-lamp-mount</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-royal-magicked-carpet-mount</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-quaqua-mount</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-spectral-statice-mount</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-shishioji-mount</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-burabura-chochin-mount</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-sildihn-throne-mount</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-silkie-mount</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-forked-tower-blood</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-forked-tower-magic</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-baldesion-arsenal</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-delubrum-reginae-savage</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-morbol-mount</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-cerberus-mount</loc>
     <priority>0.8</priority>
   </url>
@@ -201,15 +309,19 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-great-hunt</loc>
+    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-duck-billed-porter-mount</loc>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-memoria-misera</loc>
+    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-vacuum-suit-mount</loc>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-worqor-lar-dor</loc>
+    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-dais-of-darkness-mount</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-shroud-of-darkness-mount</loc>
     <priority>0.8</priority>
   </url>
   <url>
@@ -230,6 +342,18 @@
   </url>
   <url>
     <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-heavensward-trials-bundle</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-great-hunt</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-memoria-misera</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-worqor-lar-dor</loc>
     <priority>0.8</priority>
   </url>
   <url>
@@ -269,11 +393,59 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-custom-deliveries</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-beast-tribes</loc>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-custom-deliveries</loc>
+    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-cloud-of-darkness</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-jeuno-first-walk</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-san-doria-second-walk</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-windurst-third-walk</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-variant-merchants-tale</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-variant-aloalo-island</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-variant-mount-rokkon</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-variant-sildihn-subterrane</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-another-merchants-tale</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-another-aloalo-island</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-another-mount-rokkon</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-another-sildihn-subterrane</loc>
     <priority>0.8</priority>
   </url>
   <url>
@@ -290,6 +462,10 @@
   </url>
   <url>
     <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-pilgrims-traverse</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-final-verse</loc>
     <priority>0.8</priority>
   </url>
   <url>
@@ -313,18 +489,6 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-eden-savage</loc>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-omega-savage</loc>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://gdcarry.com/boosting/ffxiv/ffxiv-alexander-savage</loc>
-    <priority>0.8</priority>
-  </url>
-  <url>
     <loc>https://gdcarry.com/boosting/wow</loc>
     <priority>0.7</priority>
   </url>
@@ -342,7 +506,7 @@
   </url>
   <url>
     <loc>https://gdcarry.com/guides</loc>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://gdcarry.com/guides/what-are-boosting-services</loc>
@@ -374,15 +538,15 @@
   </url>
   <url>
     <loc>https://gdcarry.com/faq</loc>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://gdcarry.com/account-safety</loc>
-    <priority>0.6</priority>
+    <priority>0.3</priority>
   </url>
   <url>
     <loc>https://gdcarry.com/work-with-us</loc>
-    <priority>0.5</priority>
+    <priority>0.3</priority>
   </url>
   <url>
     <loc>https://gdcarry.com/legal/terms</loc>

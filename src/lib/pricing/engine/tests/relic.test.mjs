@@ -7,9 +7,9 @@ import { readFile } from 'node:fs/promises';
 import { mergeCategoryFiles, lineTotal } from '../shared.ts';
 import { computeRelicLine } from '../relic.ts';
 
-const base = JSON.parse(await readFile('public/db/pricing.json', 'utf8'));
+const base = JSON.parse(await readFile('public/db/pricing/global.json', 'utf8'));
 const cats = await Promise.all(
-  ['ffxiv-UltimateRaids', 'ffxiv-Relics'].map((f) =>
+  ['pricing/ffxiv/UltimateRaids', 'pricing/ffxiv/Relics'].map((f) =>
     readFile(`public/db/${f}.json`, 'utf8').then(JSON.parse).catch(() => null),
   ),
 );

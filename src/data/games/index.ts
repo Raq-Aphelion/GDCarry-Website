@@ -52,21 +52,9 @@ export interface Game {
 
 import { SERVICE_PAGES } from '@/data/servicePages';
 import type { CatalogConfig } from '@/data/pricing';
-import { ffxivGame } from './ffxiv';
-import { wowGame } from './wow';
-import { lostArkGame } from './lost-ark';
-import { warframeGame } from './warframe';
-import { runescapeGame } from './runescape';
+import { BUNDLED_GAMES, type GameCatalog } from '@/data/services';
 
-export const games: Game[] = [ffxivGame, wowGame, lostArkGame, warframeGame, runescapeGame];
-
-// 'All services' aggregates every game's services without duplicating data entries
-for (const game of games) {
-  const uniqueServices = [
-    ...new Map(game.subcategories.flatMap((s) => s.services).map((sv) => [sv.id, sv])).values(),
-  ];
-  game.subcategories.unshift({ id: 'all', name: 'All services', services: uniqueServices });
-}
+export const games: Game[] = [];
 
 /** Flat index of every service, used by the navbar search. */
 export const allServices: ServiceSearchResult[] = [];
@@ -83,10 +71,39 @@ function rebuildSearchIndex() {
     ),
   );
 }
-rebuildSearchIndex();
 
 /**
- * Apply the database `catalog` block (ffxiv-Catalog.json) to the static
+ * (Re)build the catalog from service JSON: fresh game objects (never the
+ * imported/fetched JSON itself, which must stay immutable) plus each game's
+ * synthetic 'All services' bucket and the flat search index. Runs at module
+ * init with the bundled copies and again from PricingProvider with the
+ * fetched database, before applyCatalog.
+ */
+export function applyServices(data: GameCatalog[]): void {
+  games.length = 0;
+  games.push(
+    ...data.map((g) => ({
+      ...g,
+      subcategories: g.subcategories.map((sub) => ({
+        ...sub,
+        proxies: sub.proxies ? [...sub.proxies] : undefined,
+        services: sub.services.map((sv) => ({ ...sv })),
+      })),
+    })),
+  );
+  // 'All services' aggregates every game's services without duplicating data entries
+  for (const game of games) {
+    const uniqueServices = [
+      ...new Map(game.subcategories.flatMap((s) => s.services).map((sv) => [sv.id, sv])).values(),
+    ];
+    game.subcategories.unshift({ id: 'all', name: 'All services', services: uniqueServices });
+  }
+  rebuildSearchIndex();
+}
+applyServices(BUNDLED_GAMES);
+
+/**
+ * Apply the database `catalog` block (ffxiv-Catalog.json) to the service
  * catalog before first render (called from PricingProvider once the DB loads
  * — rendering is held until then, so every consumer sees the DB-driven
  * state):

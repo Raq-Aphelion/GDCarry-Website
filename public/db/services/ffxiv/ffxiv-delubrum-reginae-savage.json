@@ -1,0 +1,59 @@
+{
+  "game": "ffxiv",
+  "subcategory": "alliance-raids",
+  "service": {
+    "id": "ffxiv-delubrum-reginae-savage",
+    "name": "Delubrum Reginae (Savage)",
+    "tag1": "Cerberus mount & title",
+    "tag2": "24 - 48 Player Savage Raid Clear",
+    "tag3": "Piloted Service",
+    "price": 0,
+    "image": "/images/service-cards/ffxiv/24-player-raids/ffxiv-delubrum-reginae.webp",
+    "longDescription": "Bozja’s grandest stage: a 48-player savage gauntlet through the Queen’s halls. Our raiders clear Delubrum Reginae (Savage) — Cerberus and the Savage Queen of Swords title guaranteed."
+  },
+  "subpage": {
+    "short": "Delubrum Reginae",
+    "rewardsHeading": "What you get",
+    "rewards": [
+      {
+        "icon": "trophy",
+        "title": "Cerberus Mount",
+        "text": "— guaranteed via the Savage Queen of Swords achievement.",
+        "items": [
+          "Cerberus"
+        ]
+      },
+      {
+        "icon": "badge-check",
+        "title": "Title: Savage Queen of Swords",
+        "text": "Exclusive title earned from the savage clear."
+      },
+      {
+        "icon": "swords",
+        "title": "48-Player Savage Raid Clear",
+        "text": "Delubrum Reginae (Savage) completed with a veteran group."
+      },
+      {
+        "icon": "medal",
+        "title": "Achievement: \"Savage Queen of Swords\"",
+        "text": "Achievement unlocked upon clearing Delubrum Reginae (Savage)."
+      }
+    ],
+    "accordion": [
+      {
+        "title": "Requirements",
+        "items": [
+          "Have a level 80 Job",
+          "Own the Shadowbringers Expansion",
+          "Delubrum Reginae (Normal) completed"
+        ]
+      },
+      {
+        "ref": "how-does-it-work"
+      },
+      {
+        "ref": "piloted-boost"
+      }
+    ]
+  }
+}

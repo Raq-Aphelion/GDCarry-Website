@@ -1,0 +1,59 @@
+{
+  "game": "ffxiv",
+  "subcategory": "mounts",
+  "service": {
+    "id": "ffxiv-landerwaffe",
+    "name": "Landerwaffe (Mount)",
+    "tag1": "Guaranteed (any number of runs)",
+    "tag2": "Shadowbringers Extreme Trials",
+    "tag3": "Piloted or AFK Carry",
+    "price": 0,
+    "image": "/images/service-cards/ffxiv/mounts/extreme-trial-mounts/ffxiv-landerwaffe.webp",
+    "longDescription": "Shadowbringers’ ultimate collector’s prize: Landerwaffe unlocks once all seven Gwibers are yours — we clear every Extreme from the Dancing Plague to the Cloud Deck until they are."
+  },
+  "subpage": {
+    "short": "Landerwaffe",
+    "rewardsHeading": "What you get",
+    "rewards": [
+      {
+        "icon": "trophy",
+        "title": "Guaranteed Mount Drop From",
+        "text": "— guaranteed, no matter how many runs it takes.",
+        "dutyButton": {
+          "label": "Shadowbringers Extreme Trials",
+          "to": "/boosting/ffxiv/ffxiv-shadowbringers-trials-bundle"
+        }
+      },
+      {
+        "icon": "package",
+        "title": "All 7 Series Mounts",
+        "text": "Every required mount farmed until it drops — or only the ones you are missing."
+      },
+      {
+        "icon": "gem",
+        "title": "Totems & Trial Loot",
+        "text": "Guaranteed totems, orchestrion rolls and gear from every clear."
+      },
+      {
+        "icon": "medal",
+        "title": "Achievement Progress",
+        "text": "Extreme trial achievements unlocked along the way."
+      }
+    ],
+    "accordion": [
+      {
+        "title": "Requirements",
+        "items": [
+          "Have a level 80 Job",
+          "Extreme trials unlocked (available as additional services)"
+        ]
+      },
+      {
+        "ref": "how-does-it-work"
+      },
+      {
+        "ref": "piloted-vs-afk-carry"
+      }
+    ]
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "game": "ffxiv",
+  "subcategory": "relics",
+  "service": {
+    "id": "ffxiv-resistance-weapon",
+    "name": "Resistance Relic Weapon",
+    "tag1": "Any Job, Any Step",
+    "tag2": "Shadowbringers Relic Weapon",
+    "tag3": "Piloted Service",
+    "price": 0,
+    "image": "/images/service-cards/ffxiv/relics/ffxiv-resistance-weapon.webp",
+    "longDescription": "The Bozjan resistance forges weapons fit for a queen’s guard. We take your Resistance relic from its humble base to its final Augmented Law’s Order form."
+  },
+  "subpage": {
+    "short": "Resistance Weapon",
+    "rewardsHeading": "What you get",
+    "rewards": [
+      {
+        "icon": "arrow-up",
+        "title": "Any Step of the Relic Chain",
+        "text": "From the base stage to the final glow — pick exactly the steps you need, priced per step."
+      },
+      {
+        "icon": "swords",
+        "title": "Relic Weapon for Your Job",
+        "text": "The Shadowbringers Resistance Weapon for your chosen job, at any stage."
+      },
+      {
+        "icon": "gem",
+        "title": "All Materials Kept",
+        "text": "Tomestones, crystals and every material farmed along the way stays on your character."
+      },
+      {
+        "icon": "medal",
+        "title": "Achievement Unlocked",
+        "text": "Achievement unlocked upon completing the relic chain."
+      }
+    ],
+    "accordion": [
+      {
+        "title": "Requirements",
+        "items": [
+          "Own the Shadowbringers Expansion",
+          "Bozjan Southern Front unlocked (available as an additional service)"
+        ]
+      },
+      {
+        "ref": "how-does-it-work"
+      },
+      {
+        "ref": "piloted-boost-2"
+      }
+    ]
+  }
+}

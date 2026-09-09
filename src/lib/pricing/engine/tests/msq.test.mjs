@@ -8,9 +8,9 @@ import { readFile } from 'node:fs/promises';
 import { mergeCategoryFiles, lineTotal } from '../shared.ts';
 import { computeMsqLine } from '../msq.ts';
 
-const base = JSON.parse(await readFile('public/db/pricing.json', 'utf8'));
+const base = JSON.parse(await readFile('public/db/pricing/global.json', 'utf8'));
 const cats = await Promise.all(
-  ['ffxiv-UltimateRaids', 'ffxiv-Leveling'].map((f) =>
+  ['pricing/ffxiv/UltimateRaids', 'pricing/ffxiv/Leveling'].map((f) =>
     readFile(`public/db/${f}.json`, 'utf8').then(JSON.parse).catch(() => null),
   ),
 );

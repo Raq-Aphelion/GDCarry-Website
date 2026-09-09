@@ -1,0 +1,56 @@
+{
+  "game": "ffxiv",
+  "subcategory": "alliance-raids",
+  "service": {
+    "id": "ffxiv-windurst-third-walk",
+    "name": "Windurst: The Third Walk",
+    "tag1": "Guaranteed gear",
+    "tag2": "Echoes of Vana'diel (Alliance Raid)",
+    "tag3": "Piloted Service",
+    "price": 0,
+    "image": "/images/service-cards/ffxiv/24-player-raids/ffxiv-windurst-the-third-walk.webp",
+    "longDescription": "The third walk of the Echoes of Vana'diel series in Windurst — a full 24-player alliance clear with a guaranteed gear upgrade token and all loot kept. Cleared piloted by our veteran raiders."
+  },
+  "subpage": {
+    "short": "Windurst: The Third Walk",
+    "rewardsHeading": "Rewards",
+    "rewards": [
+      {
+        "icon": "package",
+        "title": "High ilvl Gear - 780 ilvl",
+        "text": "Chance of High item level gear from every clear, straight to your armoury."
+      },
+      {
+        "icon": "gem",
+        "title": "Chance of items below:",
+        "text": "Minions, orchestrion rolls, triple triad cards have a chance of being obtained."
+      },
+      {
+        "icon": "single-coin",
+        "title": "Ranperre Coin",
+        "text": "Currency that can be exchanged for tomestone gear upgrades"
+      },
+      {
+        "icon": "medal",
+        "title": "Achievement Unlocked: \"The Pursuit of Emptiness\"",
+        "text": "Achievement unlocked upon completing Windurst: The Third Walk."
+      }
+    ],
+    "accordion": [
+      {
+        "title": "Requirements",
+        "items": [
+          "Have a level 100 Job",
+          "Own the Dawntrail Expansion",
+          "Duty unlocked"
+        ]
+      },
+      {
+        "ref": "how-does-it-work"
+      },
+      {
+        "ref": "piloted-boost"
+      }
+    ]
+  }
+}

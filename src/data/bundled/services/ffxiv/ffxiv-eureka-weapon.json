@@ -1,0 +1,55 @@
+{
+  "game": "ffxiv",
+  "subcategory": "relics",
+  "service": {
+    "id": "ffxiv-eureka-weapon",
+    "name": "Eurekan Relic Weapon",
+    "tag1": "Any Job, Any Step",
+    "tag2": "Stormblood Relic Weapon",
+    "tag3": "Piloted Service",
+    "price": 0,
+    "image": "/images/service-cards/ffxiv/relics/ffxiv-eurekan-weapon.webp",
+    "longDescription": "Elemental magic seeps through every inch of Eureka — Antiquated to Physeos, our runners carry your Stormblood relic through every stage of the isles."
+  },
+  "subpage": {
+    "short": "Eurekan Weapon",
+    "rewardsHeading": "What you get",
+    "rewards": [
+      {
+        "icon": "arrow-up",
+        "title": "Any Step of the Relic Chain",
+        "text": "From the base stage to the final glow — pick exactly the steps you need, priced per step."
+      },
+      {
+        "icon": "swords",
+        "title": "Relic Weapon for Your Job",
+        "text": "The Stormblood Eurekan Weapon for your chosen job, at any stage."
+      },
+      {
+        "icon": "gem",
+        "title": "All Materials Kept",
+        "text": "Tomestones, crystals and every material farmed along the way stays on your character."
+      },
+      {
+        "icon": "medal",
+        "title": "Achievement Unlocked",
+        "text": "Achievement unlocked upon completing the relic chain."
+      }
+    ],
+    "accordion": [
+      {
+        "title": "Requirements",
+        "items": [
+          "Own the Stormblood Expansion",
+          "Eureka Anemos unlocked (available as an additional service)"
+        ]
+      },
+      {
+        "ref": "how-does-it-work"
+      },
+      {
+        "ref": "piloted-boost-2"
+      }
+    ]
+  }
+}

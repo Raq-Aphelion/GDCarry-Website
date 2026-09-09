@@ -1,0 +1,56 @@
+{
+  "game": "ffxiv",
+  "subcategory": "alliance-raids",
+  "service": {
+    "id": "ffxiv-jeuno-first-walk",
+    "name": "Jeuno: The First Walk",
+    "tag1": "Guaranteed gear",
+    "tag2": "Echoes of Vana'diel (Alliance Raid)",
+    "tag3": "Piloted Service",
+    "price": 0,
+    "image": "/images/service-cards/ffxiv/24-player-raids/ffxiv-jueno-the-first-walk.webp",
+    "longDescription": "The first walk through the ruined streets of Jeuno — a 24-player trip back to Vana'diel with 720+ ilvl gear, the Nano Lord minion and every drop along the way. Cleared piloted by our veteran raiders."
+  },
+  "subpage": {
+    "short": "Jeuno: The First Walk",
+    "rewardsHeading": "Rewards",
+    "rewards": [
+      {
+        "icon": "package",
+        "title": "High ilvl Gear - 720 ilvl",
+        "text": "Chance of High item level gear from every clear, straight to your armoury."
+      },
+      {
+        "icon": "gem",
+        "title": "Chance of items below:",
+        "text": "Minions, orchestrion rolls, triple triad cards have a chance of being obtained."
+      },
+      {
+        "icon": "single-coin",
+        "title": "Ordelle Coin",
+        "text": "Currency that can be exchanged for tomestone gear upgrades"
+      },
+      {
+        "icon": "medal",
+        "title": "Achievement Unlocked: \"Home Away from Home\"",
+        "text": "Achievement unlocked upon completing Jeuno: The First Walk."
+      }
+    ],
+    "accordion": [
+      {
+        "title": "Requirements",
+        "items": [
+          "Have a level 100 Job",
+          "Own the Dawntrail Expansion",
+          "Duty unlocked"
+        ]
+      },
+      {
+        "ref": "how-does-it-work"
+      },
+      {
+        "ref": "piloted-boost"
+      }
+    ]
+  }
+}

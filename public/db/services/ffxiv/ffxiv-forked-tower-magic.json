@@ -1,0 +1,59 @@
+{
+  "game": "ffxiv",
+  "subcategory": "alliance-raids",
+  "service": {
+    "id": "ffxiv-forked-tower-magic",
+    "name": "The Forked Tower: Magic",
+    "tag1": "Arcane Amulets & mount chance",
+    "tag2": "12 - 48 Player Field Operation Clear",
+    "tag3": "Piloted Service",
+    "price": 0,
+    "image": "/images/service-cards/ffxiv/24-player-raids/ffxiv-the-forked-tower-magic.webp",
+    "longDescription": "Where the isle’s ley lines converge, a tower of pure arcanima hums with incantations no living mage has uttered in centuries. Every floor wrestles with another school of magic — and the answers sealed at its peak are worth every spell spent reaching it."
+  },
+  "subpage": {
+    "short": "The Forked Tower: Magic",
+    "rewardsHeading": "What you get",
+    "rewards": [
+      {
+        "icon": "trophy",
+        "title": "Duck-billed Porter Mount",
+        "text": "— random drop or 500 Arcane Amulets exchange.",
+        "items": [
+          "Duck-billed Porter"
+        ]
+      },
+      {
+        "icon": "gem",
+        "title": "Arcane Amulets & Loot",
+        "text": "Arcane Amulets, gear and every drop from the clear stays yours."
+      },
+      {
+        "icon": "swords",
+        "title": "48-Player Field Operation Clear",
+        "text": "The Forked Tower: Magic completed — Normal or Extreme."
+      },
+      {
+        "icon": "medal",
+        "title": "Achievement Unlocked: \"Tour de Fork I\" & Title \"Of the Two Towers\"",
+        "text": "Achievement unlocked upon clearing The Forked Tower: Magic."
+      }
+    ],
+    "accordion": [
+      {
+        "title": "Requirements",
+        "items": [
+          "Have a level 100 Job",
+          "Own the Dawntrail Expansion",
+          "The Forked Tower: Magic unlocked (available as an additional service)"
+        ]
+      },
+      {
+        "ref": "how-does-it-work"
+      },
+      {
+        "ref": "piloted-boost"
+      }
+    ]
+  }
+}

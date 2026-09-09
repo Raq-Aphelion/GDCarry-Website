@@ -1,0 +1,58 @@
+{
+  "game": "ffxiv",
+  "subcategory": "mounts",
+  "service": {
+    "id": "ffxiv-demi-phoinix",
+    "name": "Demi-Phoinix (Mount)",
+    "tag1": "Guaranteed mount drop",
+    "tag2": "Asphodelos: The Fourth Circle (Savage)",
+    "tag3": "Piloted or AFK Carry",
+    "price": 0,
+    "image": "/images/service-cards/ffxiv/mounts/savage-raid-mounts/ffxiv-demi-phoinix.webp",
+    "longDescription": "A miniature phoenix born of Asphodelos: The Fourth Circle on Savage — we run P4S until the Demi-Phoinix is yours."
+  },
+  "subpage": {
+    "short": "Demi-Phoinix",
+    "rewardsHeading": "What you get",
+    "rewards": [
+      {
+        "icon": "trophy",
+        "title": "Guaranteed Mount Drop From",
+        "dutyButton": {
+          "label": "Asphodelos: The Fourth Circle (Savage)",
+          "to": "/boosting/ffxiv/ffxiv-pandaemonium-savage"
+        }
+      },
+      {
+        "icon": "swords",
+        "title": "Piloted or AFK Carry",
+        "text": "Cleared by a veteran raider on your account, or alongside you in the party."
+      },
+      {
+        "icon": "gem",
+        "title": "Savage Loot Along the Way",
+        "text": "Gear coffers, totems and glamours from every clear."
+      },
+      {
+        "icon": "medal",
+        "title": "Achievement Unlocked",
+        "text": "The Savage achievement on completion."
+      }
+    ],
+    "accordion": [
+      {
+        "title": "Requirements",
+        "items": [
+          "Have a level 90 Job",
+          "Duty unlocked (available as an additional service)"
+        ]
+      },
+      {
+        "ref": "how-does-it-work"
+      },
+      {
+        "ref": "piloted-vs-afk-carry"
+      }
+    ]
+  }
+}

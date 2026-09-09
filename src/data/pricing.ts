@@ -1,14 +1,21 @@
 /**
  * Pricing database layer.
  *
- * The database is split into files under `public/db/` (served at `db/`):
- * - `pricing.json` — global currency only (EUR -> USD rate).
- * - `<game>-<Category>.json` (e.g. `ffxiv-UltimateRaids.json`) — per-category
+ * The database is split into files under `public/db/pricing/` (served at
+ * `db/pricing/`):
+ * - `global.json` — global currency only (EUR -> USD rate).
+ * - `<game>/<Category>.json` (e.g. `ffxiv/UltimateRaids.json`) — per-category
  *   `methodPrices` (per-service piloted/afk prices; omit `afk` for
  *   piloted-only) and `addonPrices` (per-service addon price overrides).
- *   `ffxiv-UltimateRaids.json` also holds the shared `purchaseBox` options.
- * - `ffxiv-Catalog.json` — the card catalog: category order/names/proxies,
+ *   `ffxiv/UltimateRaids.json` also holds the shared `purchaseBox` options.
+ * - `ffxiv/Catalog.json` — the card catalog: category order/names/proxies,
  *   per-service 1/0 visibility, mount duty-type groups, popular picks.
+ * - `services/<gameId>/index.json` — generated manifest: game card meta plus
+ *   subcategory -> ordered service ids; `services/<gameId>/<id>.json` — one
+ *   file per service (catalog entry + optional subpage content: rewards with
+ *   kebab-case icon names, accordions with shared-section refs);
+ *   `services/<gameId>/shared-sections.json` — the shared accordion sections.
+ *   Loaded by src/data/services.ts.
  *
  * Service cards show the lower method price ("From …"); services without a
  * methodPrices entry fall back to their bundled price. The app loads all of
@@ -26,7 +33,7 @@ export interface PricingOption {
   percent?: number;
 }
 
-/** Card-catalog config (from ffxiv-Catalog.json): category order/names/
+/** Card-catalog config (from pricing/ffxiv/Catalog.json): category order/names/
     proxies, per-service 1/0 visibility, mount duty-type groups, popular picks. */
 export interface CatalogCategory {
   id: string;
@@ -110,7 +117,7 @@ export interface PricingDb {
     usdPerEur: number;
   };
   /** Homepage Popular Picks: service ids in display order (1st = 1st spot).
-      Sourced from ffxiv-Catalog.json (`catalog.popularPicks`). */
+      Sourced from pricing/ffxiv/Catalog.json (`catalog.popularPicks`). */
   popularPicks?: string[];
   /** Card-catalog config: visibility, category order, mount duty-type groups */
   catalog?: CatalogConfig;
@@ -527,25 +534,29 @@ export const DEFAULT_PRICING: PricingDb = {
   servicePrices: {},
 };
 
-/** Per-category database files (without .json) loaded and merged at startup.
-    Exported: the orders worker fetches the same public files for its
-    authoritative recompute (worker/orders-proxy.js imports this list). */
+/** Global database file (without .json), relative to `db/`. */
+export const GLOBAL_PRICING_FILE = 'pricing/global';
+
+/** Per-category database files (without .json), relative to `db/` — loaded
+    and merged at startup. Exported: the orders worker fetches the same public
+    files for its authoritative recompute (worker/orders-proxy.js imports this
+    list). */
 export const CATEGORY_FILES = [
-  'ffxiv-UltimateRaids',
-  'ffxiv-Gil',
-  'ffxiv-SavageRaids',
-  'ffxiv-Leveling',
-  'ffxiv-PvP',
-  'ffxiv-Mounts',
-  'ffxiv-Trials',
-  'ffxiv-DeepDungeons',
-  'ffxiv-AllianceRaids',
-  'ffxiv-Criterion',
-  'ffxiv-Relics',
-  'ffxiv-Reputation',
-  'ffxiv-FieldExplorations',
-  'ffxiv-Catalog',
-  'ffxiv-Accounts',
+  'pricing/ffxiv/UltimateRaids',
+  'pricing/ffxiv/Gil',
+  'pricing/ffxiv/SavageRaids',
+  'pricing/ffxiv/Leveling',
+  'pricing/ffxiv/PvP',
+  'pricing/ffxiv/Mounts',
+  'pricing/ffxiv/Trials',
+  'pricing/ffxiv/DeepDungeons',
+  'pricing/ffxiv/AllianceRaids',
+  'pricing/ffxiv/Criterion',
+  'pricing/ffxiv/Relics',
+  'pricing/ffxiv/Reputation',
+  'pricing/ffxiv/FieldExplorations',
+  'pricing/ffxiv/Catalog',
+  'pricing/ffxiv/Accounts',
 ];
 
 /** Fetch the pricing database (global + category files), falling back to the
@@ -555,7 +566,7 @@ export const CATEGORY_FILES = [
 export async function loadPricing(): Promise<PricingDb> {
   try {
     const base = import.meta.env.BASE_URL;
-    const res = await fetch(`${base}db/pricing.json`, { cache: 'no-store' });
+    const res = await fetch(`${base}db/${GLOBAL_PRICING_FILE}.json`, { cache: 'no-store' });
     if (!res.ok) throw new Error(String(res.status));
     const db = (await res.json()) as PricingDb;
     const cats = await Promise.all(

@@ -1,0 +1,56 @@
+{
+  "game": "ffxiv",
+  "subcategory": "field-explorations",
+  "service": {
+    "id": "ffxiv-occult-crescent",
+    "name": "Occult Crescent Leveling Boost",
+    "tag1": "Any Job, any level",
+    "tag2": "Phantom Relic & Jobs",
+    "tag3": "Piloted Service",
+    "price": 0,
+    "image": "/images/service-cards/ffxiv/field-ops-misc/ffxiv-occult-crescent-leveling.webp",
+    "longDescription": "Unlock any Occult Crescent phantom job — Freeloader, Time Mage, Cannoneer, Berserker, Astrologian and more — without the questline grind. Pick exactly the jobs you need."
+  },
+  "subpage": {
+    "short": "Occult Crescent",
+    "rewardsHeading": "What you get",
+    "rewards": [
+      {
+        "icon": "swords",
+        "title": "Occult Crescent Glamour",
+        "text": "Exclusive glamour only accessible via the Occult Crescent"
+      },
+      {
+        "icon": "package",
+        "title": "Phantom Jobs",
+        "text": "Level up your Phantom Jobs to your desired level"
+      },
+      {
+        "icon": "medal",
+        "title": "Relic Steps",
+        "text": "Gain access to the Dawntrail Relic steps and weapons"
+      },
+      {
+        "icon": "trophy",
+        "title": "Occult Crescent Bunnies",
+        "text": "Gain access to the fortune carrot events that can make you lots of gil!"
+      }
+    ],
+    "accordion": [
+      {
+        "title": "Requirements",
+        "items": [
+          "Have a level 100 Job",
+          "Own the Dawntrail Expansion",
+          "Occult Crescent Unlocked"
+        ]
+      },
+      {
+        "ref": "how-does-it-work"
+      },
+      {
+        "ref": "piloted-boost-2"
+      }
+    ]
+  }
+}

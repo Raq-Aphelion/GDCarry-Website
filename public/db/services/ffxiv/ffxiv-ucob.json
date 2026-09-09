@@ -1,0 +1,56 @@
+{
+  "game": "ffxiv",
+  "subcategory": "ultimate-raids",
+  "service": {
+    "id": "ffxiv-ucob",
+    "name": "The Unending Coil of Bahamut (Ultimate)",
+    "tag1": "Ultimate Dreadwyrm Weapon",
+    "tag2": "Adventurer Plate + Title",
+    "tag3": "Piloted or AFK Carry",
+    "price": 0,
+    "image": "/images/service-cards/ffxiv/ultimate-raids/ffxiv-ucob.webp",
+    "longDescription": "There once were brave souls who uncovered the truth of the Seventh Umbral Calamity. Such trials as they overcame were not to be recorded in history, but far from fading with the passage of time, they have been imagined in vivid detail by the wandering minstrel."
+  },
+  "subpage": {
+    "short": "UCOB",
+    "rewards": [
+      {
+        "icon": "gem",
+        "title": "Dreadwyrm Totem",
+        "text": "Ultimate-specific totems that can be exchanged for a weapon of your choosing."
+      },
+      {
+        "icon": "badge-check",
+        "title": "The Unending Coil of Bahamut Adventure Plate",
+        "text": "Exclusive Adventure Plate Designs."
+      },
+      {
+        "icon": "trophy",
+        "title": "The Legend",
+        "text": "Exclusive title acquired from completing the duty."
+      },
+      {
+        "icon": "medal",
+        "title": "Achievement: “Resistance is Futile”",
+        "text": "Achievement unlocked upon defeating Bahamut Prime in The Unending Coil of Bahamut."
+      }
+    ],
+    "accordion": [
+      {
+        "title": "Requirements",
+        "items": [
+          "Have a lvl 70 Job",
+          "Own the Stormblood Expansion",
+          "Deltascape V4.0 (Savage) Completed (available as an add-on)",
+          "ilvl 345 or higher gear"
+        ]
+      },
+      {
+        "ref": "how-does-it-work"
+      },
+      {
+        "ref": "piloted-vs-afk-carry"
+      }
+    ]
+  }
+}

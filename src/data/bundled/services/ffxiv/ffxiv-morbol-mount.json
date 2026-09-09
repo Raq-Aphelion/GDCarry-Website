@@ -1,0 +1,72 @@
+{
+  "game": "ffxiv",
+  "subcategory": "mounts",
+  "service": {
+    "id": "ffxiv-morbol-mount",
+    "name": "Morbol (Mount)",
+    "tag1": "Guaranteed mount drop",
+    "tag2": "Alexander & Bahamut (Blue Mage)",
+    "tag3": "Piloted Service",
+    "price": 0,
+    "image": "/images/service-cards/ffxiv/mounts/ffxiv-morbol.webp",
+    "tag": "New",
+    "longDescription": "Though all it has ever wanted is to help, this morbol was found to be “too sweet” to present a challenge at the Celestium, and was transferred to the Blue Mages’ Guild before it had even seen its first match─only for it to be deemed “insufficiently vile” there as well."
+  },
+  "subpage": {
+    "short": "Morbol",
+    "rewardsHeading": "What you get",
+    "rewards": [
+      {
+        "icon": "trophy",
+        "title": "Guaranteed Mount Drop From",
+        "text": "Completing the \"Blue Unchained\" and \"Masked Conqueror\" Achievements (Blue Mage)."
+      },
+      {
+        "icon": "swords",
+        "title": "Savage Loot",
+        "text": "Savage specific loot from completing the Alexander and Bahamut fights as Blue Mage."
+      },
+      {
+        "icon": "badge-check",
+        "title": "Blue Justice & Unbound Blue",
+        "text": "Exclusive titles acquired from completing the Blue Mage fights."
+      },
+      {
+        "icon": "medal",
+        "title": "Achievement: \"True Blue\"",
+        "text": "Achievement unlocked upon obtaining the \"Blue Unchained\" and \"Masked Conqueror\" achievements."
+      }
+    ],
+    "accordion": [
+      {
+        "title": "Requirements",
+        "items": [
+          "Have Blue Mage at lvl 70 or higher",
+          "Own the Dawntrail Expansion",
+          "Alexander & Bahamut fights unlocked",
+          "ilvl 270 or higher on Blue Mage",
+          "Specific Spells"
+        ]
+      },
+      {
+        "title": "Specific Spells",
+        "items": [
+          "Mimicry",
+          "Shock Strike",
+          "Whistle",
+          "Moon Flute",
+          "Nightbloom",
+          "Surpanakha",
+          "Phantom Flurry",
+          "The Rose of Destruction"
+        ]
+      },
+      {
+        "ref": "how-does-it-work"
+      },
+      {
+        "ref": "piloted-boost"
+      }
+    ]
+  }
+}

@@ -5,8 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build && node scripts/prerender.mjs",
+    "build": "tsc -b && vite build && node scripts/validate-services.mjs && node scripts/prerender.mjs",
     "prerender": "node scripts/prerender.mjs",
+    "add:service": "node scripts/add-service.mjs",
+    "remove:service": "node scripts/remove-service.mjs",
+    "validate:services": "node scripts/validate-services.mjs",
     "lint": "eslint .",
     "test": "node src/lib/pricing/engine/tests/run-all.mjs",
     "preview": "vite preview"

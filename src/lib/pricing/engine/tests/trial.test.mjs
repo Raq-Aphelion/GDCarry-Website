@@ -3,14 +3,11 @@
    copied verbatim from `git show HEAD:src/components/TrialPurchaseBox.tsx`.
    Every config in the matrix must reproduce it exactly. */
 import { readFile } from 'node:fs/promises';
+import { CATEGORY_FILES, GLOBAL_PRICING_FILE } from '../../../../data/pricing.ts';
 import { lineTotal, mergeCategoryFiles } from '../shared.ts';
 import { computeTrialLine } from '../trial.ts';
 
-const files = [
-  'pricing', 'ffxiv-UltimateRaids', 'ffxiv-Gil', 'ffxiv-SavageRaids', 'ffxiv-Leveling',
-  'ffxiv-PvP', 'ffxiv-Mounts', 'ffxiv-Trials', 'ffxiv-DeepDungeons', 'ffxiv-AllianceRaids',
-  'ffxiv-Criterion', 'ffxiv-Relics', 'ffxiv-Reputation', 'ffxiv-FieldExplorations', 'ffxiv-Catalog',
-];
+const files = [GLOBAL_PRICING_FILE, ...CATEGORY_FILES];
 const parts = await Promise.all(
   files.map((f) => readFile(`public/db/${f}.json`, 'utf8').then(JSON.parse).catch(() => null)),
 );

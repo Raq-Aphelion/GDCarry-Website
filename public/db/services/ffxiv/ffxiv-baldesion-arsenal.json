@@ -1,0 +1,60 @@
+{
+  "game": "ffxiv",
+  "subcategory": "alliance-raids",
+  "service": {
+    "id": "ffxiv-baldesion-arsenal",
+    "name": "The Baldesion Arsenal",
+    "tag1": "Demi-Ozma mount & minion chance",
+    "tag2": "24 - 56 Player Field Operation Clear",
+    "tag3": "Piloted Service",
+    "price": 0,
+    "image": "/images/service-cards/ffxiv/24-player-raids/ffxiv-the-baldesion-arsenal.webp",
+    "longDescription": "Eureka’s deepest challenge: 56 players, one fragile timeline, Ozma waiting at the end. Our veterans clear the full Arsenal — Demi-Ozma, minion and fragments along the way."
+  },
+  "subpage": {
+    "short": "The Baldesion Arsenal",
+    "rewardsHeading": "What you get",
+    "rewards": [
+      {
+        "icon": "trophy",
+        "title": "Demi-Ozma Mount",
+        "text": "— guaranteed completion with a veteran group.",
+        "items": [
+          "Demi-Ozma"
+        ]
+      },
+      {
+        "icon": "gem",
+        "title": "Conditional Virtue (Minion)",
+        "text": "Minion drop chance, cryptic seals and Eureka fragments from every clear."
+      },
+      {
+        "icon": "swords",
+        "title": "56-Player Field Operation Clear",
+        "text": "The Baldesion Arsenal completed."
+      },
+      {
+        "icon": "medal",
+        "title": "Achievement: \"We're on Your Side I\"",
+        "text": "Achievement unlocked upon clearing the Baldesion Arsenal."
+      }
+    ],
+    "accordion": [
+      {
+        "title": "Requirements",
+        "items": [
+          "Have a level 70 Job",
+          "Own the Stormblood Expansion",
+          "Eureka Hydatos story completed",
+          "Elemental level 50+"
+        ]
+      },
+      {
+        "ref": "how-does-it-work"
+      },
+      {
+        "ref": "piloted-boost"
+      }
+    ]
+  }
+}

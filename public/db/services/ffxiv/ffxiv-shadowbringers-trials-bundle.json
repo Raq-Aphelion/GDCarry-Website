@@ -1,0 +1,55 @@
+{
+  "game": "ffxiv",
+  "subcategory": "trials",
+  "service": {
+    "id": "ffxiv-shadowbringers-trials-bundle",
+    "name": "Shadowbringers Extreme Trials Bundle",
+    "tag1": "Mount guaranteed option",
+    "tag2": "All 7 Shadowbringers Extreme trials",
+    "tag3": "Piloted or AFK Carry",
+    "price": 0,
+    "image": "/images/service-cards/ffxiv/extreme-trials/ffxiv-shadowbringers-extreme-bundle.webp",
+    "longDescription": "Crown the Shadowbringers Extremes — every trial from the dancing Hades to the Diamond Weapon, one package, every mount chance kept."
+  },
+  "subpage": {
+    "short": "Shadowbringers Trials",
+    "rewardsHeading": "What you get",
+    "rewards": [
+      {
+        "icon": "package",
+        "title": "All 7 Extreme Trials",
+        "text": "Every trial cleared in one package — pick the ones you need or take them all."
+      },
+      {
+        "icon": "gem",
+        "title": "Trial Totems",
+        "text": "Totems from every clear, exchangeable for mounts and gear."
+      },
+      {
+        "icon": "trophy",
+        "title": "Mount Guaranteed Option",
+        "text": "One run with every trial checked guarantees the Landerwaffe at its own price."
+      },
+      {
+        "icon": "medal",
+        "title": "Achievements Unlocked",
+        "text": "Every Extreme trial achievement on completion."
+      }
+    ],
+    "accordion": [
+      {
+        "title": "Requirements",
+        "items": [
+          "Have a level 80 Job",
+          "Trials unlocked (available as an additional service)"
+        ]
+      },
+      {
+        "ref": "how-does-it-work"
+      },
+      {
+        "ref": "piloted-vs-afk-carry"
+      }
+    ]
+  }
+}

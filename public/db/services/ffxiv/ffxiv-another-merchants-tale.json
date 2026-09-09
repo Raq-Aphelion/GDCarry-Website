@@ -1,0 +1,60 @@
+{
+  "game": "ffxiv",
+  "subcategory": "criterion-dungeons",
+  "service": {
+    "id": "ffxiv-another-merchants-tale",
+    "name": "Another Merchant's Tale",
+    "tag1": "Exclusive Loot + Tokens",
+    "tag2": "Criterion: Normal mode",
+    "tag3": "Piloted Service",
+    "price": 0,
+    "image": "/images/service-cards/ffxiv/vc-dungeons/criterion/ffxiv-another-merchants-tale.webp",
+    "tag": "New",
+    "longDescription": "The Merchant's Tale depicts a Corvos from before the Garlean occupation, made even more wondrous by the flourishes of countless storytellers throughout the ages. As you relate the details of your time within its pages to Osmon, he continues the timeless storytelling tradition by adding his own embellishments to an already fantastic fable, and you feel yourself drawn back in to the beautiful but increasingly dangerous world of folklore..."
+  },
+  "subpage": {
+    "short": "Another Merchant's Tale",
+    "rewardsHeading": "What you get",
+    "rewards": [
+      {
+        "icon": "swords",
+        "title": "Criterion Clear",
+        "text": "Difficult 4-player content cleared with a veteran group."
+      },
+      {
+        "icon": "trophy",
+        "title": "Genie of the Lamp Mount",
+        "text": "— random drop or 100 Corvosi Manuscripts exchange.",
+        "items": [
+          "Genie of the Lamp"
+        ]
+      },
+      {
+        "icon": "badge-check",
+        "title": "Exclusive \"Literary Cannon\" Title & Rewards",
+        "text": "Title and dungeon-specific rewards from the criterion clear."
+      },
+      {
+        "icon": "medal",
+        "title": "Achievement Unlocked: \"One Thousand and One Fights\"",
+        "text": "Achievement unlocked upon completing Another Merchant's Tale."
+      }
+    ],
+    "accordion": [
+      {
+        "title": "Requirements",
+        "items": [
+          "Have a level 100 Job",
+          "Own the Dawntrail Expansion",
+          "Criterion unlocked (variant completion available as an additional service)"
+        ]
+      },
+      {
+        "ref": "how-does-it-work"
+      },
+      {
+        "ref": "piloted-boost"
+      }
+    ]
+  }
+}

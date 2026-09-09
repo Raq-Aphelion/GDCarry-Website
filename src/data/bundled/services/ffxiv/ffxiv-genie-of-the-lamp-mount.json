@@ -1,0 +1,59 @@
+{
+  "game": "ffxiv",
+  "subcategory": "mounts",
+  "service": {
+    "id": "ffxiv-genie-of-the-lamp-mount",
+    "name": "Genie of the Lamp (Mount)",
+    "tag1": "Guaranteed (any number of runs)",
+    "tag2": "Another Merchant's Tale",
+    "tag3": "Piloted Service",
+    "price": 0,
+    "image": "/images/service-cards/ffxiv/mounts/vc-dungeons/ffxiv-genie-of-the-lamp.webp",
+    "longDescription": "The lamp-dwelling spirit of Corvos — an imitation of legend that still carries you wherever you wish to go. Guaranteed from Another Merchant's Tale with our raiders on your account."
+  },
+  "subpage": {
+    "short": "Genie of the Lamp",
+    "rewardsHeading": "What you get",
+    "rewards": [
+      {
+        "icon": "trophy",
+        "title": "Mount Drop From",
+        "text": "— random drop or 100 Corvosi Manuscripts exchange.",
+        "dutyButton": {
+          "label": "Another Merchant's Tale",
+          "to": "/boosting/ffxiv/ffxiv-another-merchants-tale"
+        }
+      },
+      {
+        "icon": "swords",
+        "title": "Piloted Service",
+        "text": "Cleared by a veteran raider on your account."
+      },
+      {
+        "icon": "gem",
+        "title": "Savage Loot Along the Way",
+        "text": "Gear coffers, totems and glamours from every clear."
+      },
+      {
+        "icon": "medal",
+        "title": "Achievement Unlocked",
+        "text": "The Savage achievement on completion."
+      }
+    ],
+    "accordion": [
+      {
+        "title": "Requirements",
+        "items": [
+          "Have a level 100 Job",
+          "Duty unlocked (available as an additional service)"
+        ]
+      },
+      {
+        "ref": "how-does-it-work"
+      },
+      {
+        "ref": "piloted-boost"
+      }
+    ]
+  }
+}

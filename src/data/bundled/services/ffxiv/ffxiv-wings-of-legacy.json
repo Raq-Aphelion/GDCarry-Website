@@ -1,0 +1,60 @@
+{
+  "game": "ffxiv",
+  "subcategory": "mounts",
+  "service": {
+    "id": "ffxiv-wings-of-legacy",
+    "name": "Wings of Legacy (Mount)",
+    "tag1": "Guaranteed (any number of runs)",
+    "tag2": "Dawntrail Extreme Trials",
+    "tag3": "Piloted or AFK Carry",
+    "price": 0,
+    "image": "/images/service-cards/ffxiv/mounts/extreme-trial-mounts/ffxiv-wings-of-legacy.webp",
+    "tag": "Best Value",
+    "longDescription": "Collect every Dawntrail wing in one package — from Worqor Lar Dor to The Unmaking — and unlock the Wings of Legacy quest mount on top of all seven Extreme Trial wings."
+  },
+  "subpage": {
+    "short": "Legacy",
+    "rewardsHeading": "What you get",
+    "rewards": [
+      {
+        "icon": "trophy",
+        "title": "Guaranteed Mount Drop From",
+        "text": "— guaranteed, no matter how many runs it takes.",
+        "dutyButton": {
+          "label": "Dawntrail Extreme Trials",
+          "to": "/boosting/ffxiv/ffxiv-dawntrail-trials-bundle"
+        }
+      },
+      {
+        "icon": "package",
+        "title": "All 7 Series Mounts",
+        "text": "Every required mount farmed until it drops — or only the ones you are missing."
+      },
+      {
+        "icon": "gem",
+        "title": "Totems & Trial Loot",
+        "text": "Guaranteed totems, orchestrion rolls and gear from every clear."
+      },
+      {
+        "icon": "medal",
+        "title": "Achievement Progress",
+        "text": "Extreme trial achievements unlocked along the way."
+      }
+    ],
+    "accordion": [
+      {
+        "title": "Requirements",
+        "items": [
+          "Have a level 100 Job",
+          "Extreme trials unlocked (available as additional services)"
+        ]
+      },
+      {
+        "ref": "how-does-it-work"
+      },
+      {
+        "ref": "piloted-vs-afk-carry"
+      }
+    ]
+  }
+}

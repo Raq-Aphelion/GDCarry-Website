@@ -1,0 +1,56 @@
+{
+  "game": "ffxiv",
+  "subcategory": "field-explorations",
+  "service": {
+    "id": "ffxiv-resistance-rank",
+    "name": "Resistance Rank Boost",
+    "tag1": "1 - 25 Rank",
+    "tag2": "Resistance Relic",
+    "tag3": "Piloted Service",
+    "price": 0,
+    "image": "/images/service-cards/ffxiv/field-ops-misc/ffxiv-resistance-rank.webp",
+    "longDescription": "The Bozjan southern front and the fields of Zadnor await. We grind your Resistance Rank from 1 to 25 through skirmishes, critical engagements and duels, unlocking every story beat and field note along the way."
+  },
+  "subpage": {
+    "short": "Resistance Rank",
+    "rewardsHeading": "What you get",
+    "rewards": [
+      {
+        "icon": "arrow-up",
+        "title": "Increased Resistance Rank",
+        "text": "Your Bozja Rank increased to your desired level"
+      },
+      {
+        "icon": "badge-check",
+        "title": "Completion of Bozjan and Zadnor content",
+        "text": "Bozja Story mode completed up to your desired level"
+      },
+      {
+        "icon": "undo-2",
+        "title": "Access to Main Raids",
+        "text": "Gain access to the 48 Man Raids inside of Bozja"
+      },
+      {
+        "icon": "package",
+        "title": "Access to Bozja exclusive mounts, minions, and cosmetics",
+        "text": "Acquire mounts, minions and cosmetics from Bozja or Zadnor"
+      }
+    ],
+    "accordion": [
+      {
+        "title": "Requirements",
+        "items": [
+          "Have a level 90 Job",
+          "Own the Shadowbringers Expansion",
+          "Bozja Unlocked"
+        ]
+      },
+      {
+        "ref": "how-does-it-work"
+      },
+      {
+        "ref": "piloted-boost"
+      }
+    ]
+  }
+}

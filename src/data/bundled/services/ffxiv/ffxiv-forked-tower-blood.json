@@ -1,0 +1,59 @@
+{
+  "game": "ffxiv",
+  "subcategory": "alliance-raids",
+  "service": {
+    "id": "ffxiv-forked-tower-blood",
+    "name": "The Forked Tower: Blood",
+    "tag1": "Demon Haul mount & loot",
+    "tag2": "24 - 48 Player Field Operation Clear",
+    "tag3": "Piloted Service",
+    "price": 0,
+    "image": "/images/service-cards/ffxiv/24-player-raids/ffxiv-the-forked-tower-blood.webp",
+    "longDescription": "An ominous tower looms on the horizon of the isle’s south horn, twisted spires shimmering in the haze. What revelations await within its uppermost chambers?"
+  },
+  "subpage": {
+    "short": "The Forked Tower: Blood",
+    "rewardsHeading": "What you get",
+    "rewards": [
+      {
+        "icon": "trophy",
+        "title": "Demon Haul Mount",
+        "text": "— guaranteed for your collection.",
+        "items": [
+          "Demon Haul"
+        ]
+      },
+      {
+        "icon": "gem",
+        "title": "All Loot Included",
+        "text": "Gear, sanguinites and every drop from the clear stays yours."
+      },
+      {
+        "icon": "notebook-text",
+        "title": "Notes & Records",
+        "text": "Multiple Notes & Records for the Occult Crescent record collection"
+      },
+      {
+        "icon": "medal",
+        "title": "Achievement Unlocked: \"A Fork to Be Reckoned With I\"",
+        "text": "Achievement unlocked upon clearing The Forked Tower: Blood."
+      }
+    ],
+    "accordion": [
+      {
+        "title": "Requirements",
+        "items": [
+          "Have a level 100 Job",
+          "Own the Dawntrail Expansion",
+          "The Forked Tower: Blood unlocked (available as an additional service)"
+        ]
+      },
+      {
+        "ref": "how-does-it-work"
+      },
+      {
+        "ref": "piloted-boost"
+      }
+    ]
+  }
+}

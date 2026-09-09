@@ -28,7 +28,7 @@
    requires the Cloudflare-only secret — treat every other field as
    attacker-controlled regardless. */
 
-import { CATEGORY_FILES } from '../src/data/pricing.ts';
+import { CATEGORY_FILES, GLOBAL_PRICING_FILE } from '../src/data/pricing.ts';
 import {
   computeLine,
   fromPrice,
@@ -108,7 +108,7 @@ let catalogCache = { at: 0, db: null };
 const loadCatalog = async () => {
   if (catalogCache.db && Date.now() - catalogCache.at < CATALOG_TTL_MS) return catalogCache.db;
   const parts = await Promise.all(
-    ['pricing', ...CATEGORY_FILES].map(async (f) => {
+    [GLOBAL_PRICING_FILE, ...CATEGORY_FILES].map(async (f) => {
       try {
         const r = await fetch(DB_BASE + f + '.json');
         return r.ok ? await r.json() : null;

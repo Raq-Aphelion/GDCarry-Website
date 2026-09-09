@@ -1,0 +1,57 @@
+{
+  "game": "ffxiv",
+  "subcategory": "ultimate-raids",
+  "service": {
+    "id": "ffxiv-ultimate-bundle",
+    "name": "The Ultimate Bundle",
+    "tag1": "Ultimate Weapons",
+    "tag2": "Adventurer Plates + Titles",
+    "tag3": "Piloted or AFK Carry*",
+    "price": 0,
+    "image": "/images/service-cards/ffxiv/ultimate-raids/ffxiv-ult-bundle.webp",
+    "tag": "Best Value",
+    "longDescription": "All of Final Fantasy XIV's hardest ultimates combined into one bundle whether it's 6 Piloted ones or 4 AFK ones done at your convenience."
+  },
+  "subpage": {
+    "short": "Bundle",
+    "rewards": [
+      {
+        "icon": "gem",
+        "title": "6 Piloted Totems OR 4 AFK ones",
+        "text": "Every Ultimate weapon from UWU, UCOB, TEA, DSR, TOP and FRU in one bundle."
+      },
+      {
+        "icon": "badge-check",
+        "title": "All Adventure Plates",
+        "text": "Exclusive Adventure Plate Designs from every included Ultimate."
+      },
+      {
+        "icon": "trophy",
+        "title": "All Ultimate Titles",
+        "text": "Every Legend title acquired from completing the duties."
+      },
+      {
+        "icon": "medal",
+        "title": "All Ultimate Achievements",
+        "text": "Achievements unlocked upon completing every included Ultimate."
+      }
+    ],
+    "accordion": [
+      {
+        "title": "Requirements",
+        "items": [
+          "Have a level 100 Job",
+          "Own the Dawntrail Expansion",
+          "All relevant savage fights Completed (M4S, P4S, P8S, E4S, O4S and O8S)",
+          "ilvl 740 or higher gear"
+        ]
+      },
+      {
+        "ref": "how-does-it-work"
+      },
+      {
+        "ref": "piloted-vs-afk-carry"
+      }
+    ]
+  }
+}

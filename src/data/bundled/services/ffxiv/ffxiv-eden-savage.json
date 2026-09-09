@@ -1,0 +1,58 @@
+{
+  "game": "ffxiv",
+  "subcategory": "raids",
+  "service": {
+    "id": "ffxiv-eden-savage",
+    "name": "Eden Raids (Savage)",
+    "tag1": "Savage Shadowbringers glamour",
+    "tag2": "Full loot priority",
+    "tag3": "Piloted or AFK Carry",
+    "price": 0,
+    "image": "/images/service-cards/ffxiv/savage-raids/ffxiv-eden.webp",
+    "longDescription": "In the light-swallowed emptiness of the First, the memories of primals past take shape once more. To restore the flow of the elements, you must face Eden’s recreations one by one — and the promise that waits at the journey’s end."
+  },
+  "subpage": {
+    "short": "(E12S) Eden",
+    "rewards": [
+      {
+        "icon": "swords",
+        "title": "Savage Gear",
+        "text": "Savage gear ranging from ilvl 470 to 535 depending on the tier (various weapon types)."
+      },
+      {
+        "icon": "trophy",
+        "title": "Encounter-Specific Mount Drops",
+        "items": [
+          "(E4S) Skyslipper",
+          "(E8S) Ramuh",
+          "(E12S) Eden"
+        ]
+      },
+      {
+        "icon": "gem",
+        "title": "Exclusive Glamour & Minion Drops",
+        "text": "Exclusive glamour and collectibles from the savage fights."
+      },
+      {
+        "icon": "medal",
+        "title": "Achievement: “Savage Paradise Within Thee I” & More",
+        "text": "Achievement unlocked upon defeating Shadowbringers Savage Tier."
+      }
+    ],
+    "accordion": [
+      {
+        "title": "Requirements",
+        "items": [
+          "Have a level 80 Job",
+          "Normal Mode Completion / Fight Unlocked (available as additional services)"
+        ]
+      },
+      {
+        "ref": "how-does-it-work"
+      },
+      {
+        "ref": "piloted-vs-afk-carry"
+      }
+    ]
+  }
+}

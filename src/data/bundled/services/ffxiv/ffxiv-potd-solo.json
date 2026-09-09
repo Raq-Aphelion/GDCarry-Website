@@ -1,0 +1,57 @@
+{
+  "game": "ffxiv",
+  "subcategory": "deep-dungeon",
+  "service": {
+    "id": "ffxiv-potd-solo",
+    "name": "Palace of the Dead (Deep Dungeon)",
+    "tag1": "Necromancer title & achievements",
+    "tag2": "1 - 200 Floors",
+    "tag3": "Group Play or Solo Piloted",
+    "price": 0,
+    "image": "/images/service-cards/ffxiv/deep-dungeons/ffxiv-palace-of-the-dead.webp",
+    "tag": "Hot",
+    "longDescription": "In the subterranean city of Gelmorra, deep within a forgotten corner of Issom-Har, stout-hearted explorers have uncovered the entrance to a labyrinthine dungeon. Those who set foot inside its maddening halls find their vigor drained by an irresistible fog of innervation, and repeated excursions have failed to map its seemingly inconstant architecture."
+  },
+  "subpage": {
+    "short": "Palace of the Dead",
+    "rewardsHeading": "What you get",
+    "rewards": [
+      {
+        "icon": "swords",
+        "title": "Aetherpool Levels & Armour",
+        "text": "Upgrades on your Aetherpool Level & Armour."
+      },
+      {
+        "icon": "gem",
+        "title": "Tomestones & Loot",
+        "text": "Various loot from acquiring and clearing the floors of the deep dungeon."
+      },
+      {
+        "icon": "badge-check",
+        "title": "Necromancer Title (Solo Piloted Boost Method)",
+        "text": "Exclusive title achieved by completing the deep dungeon solo."
+      },
+      {
+        "icon": "medal",
+        "title": "Achievement: “Pal-less Palace III”",
+        "text": "Achievement unlocked upon clearing Palace of the Dead Floor 200 Solo."
+      }
+    ],
+    "accordion": [
+      {
+        "title": "Requirements",
+        "items": [
+          "Have a level 100 Job",
+          "95+ Aetherpool Weapon & Armour (available as an add-on)",
+          "ilvl 740 or higher gear"
+        ]
+      },
+      {
+        "ref": "how-does-it-work"
+      },
+      {
+        "ref": "group-play-vs-piloted-boost"
+      }
+    ]
+  }
+}

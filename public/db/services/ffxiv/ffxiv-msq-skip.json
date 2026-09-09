@@ -1,0 +1,55 @@
+{
+  "game": "ffxiv",
+  "subcategory": "leveling",
+  "service": {
+    "id": "ffxiv-msq-skip",
+    "name": "MSQ Completion Boost",
+    "tag1": "Any Expansion or Patch",
+    "tag2": "Job quests included",
+    "tag3": "Piloted Service",
+    "price": 0,
+    "image": "/images/service-cards/ffxiv/leveling/ffxiv-msq.webp",
+    "longDescription": "The main scenario is the heart of Eorzea’s story — but not everyone has the time to live through every chapter. Our MSQ Completion boost carries your character through the Main Scenario up to your chosen expansion, unlocking duties, trials and endgame content along the way."
+  },
+  "subpage": {
+    "short": "MSQ Boost",
+    "rewardsHeading": "What you get",
+    "rewards": [
+      {
+        "icon": "badge-check",
+        "title": "MSQ Completed",
+        "text": "Main Scenario completed up to your chosen expansion."
+      },
+      {
+        "icon": "swords",
+        "title": "Main Story Rewards",
+        "text": "Acquire MSQ specific Mounts, Minions and Glamour."
+      },
+      {
+        "icon": "timer",
+        "title": "Time Saver",
+        "text": "Skip hundreds of hours of story content and cutscenes."
+      },
+      {
+        "icon": "trophy",
+        "title": "Ready for Endgame",
+        "text": "Jump straight into endgame content on your job of choice."
+      }
+    ],
+    "accordion": [
+      {
+        "title": "Requirements",
+        "items": [
+          "Own the expansions being completed",
+          "Have a main Job at the level required for the furthest expansion selected"
+        ]
+      },
+      {
+        "ref": "how-does-it-work"
+      },
+      {
+        "ref": "piloted-boost-2"
+      }
+    ]
+  }
+}

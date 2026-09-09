@@ -1,0 +1,58 @@
+{
+  "game": "ffxiv",
+  "subcategory": "mounts",
+  "service": {
+    "id": "ffxiv-dais-of-darkness-mount",
+    "name": "Dais of Darkness (Mount)",
+    "tag1": "Guaranteed mount drop",
+    "tag2": "The Cloud of Darkness (Chaotic)",
+    "tag3": "Piloted Service",
+    "price": 0,
+    "image": "/images/service-cards/ffxiv/mounts/ffxiv-dais-of-darkness.webp",
+    "longDescription": "A swirling throne of umbral energy from The Cloud of Darkness (Chaotic) — guaranteed even at minimum item level with our raiders on your account."
+  },
+  "subpage": {
+    "short": "Dais of Darkness",
+    "rewardsHeading": "What you get",
+    "rewards": [
+      {
+        "icon": "trophy",
+        "title": "Guaranteed Mount Drop From",
+        "dutyButton": {
+          "label": "The Cloud of Darkness (Chaotic)",
+          "to": "/boosting/ffxiv/ffxiv-cloud-of-darkness"
+        }
+      },
+      {
+        "icon": "swords",
+        "title": "Piloted Service",
+        "text": "Cleared by a veteran raider on your account."
+      },
+      {
+        "icon": "gem",
+        "title": "Savage Loot Along the Way",
+        "text": "Gear coffers, totems and glamours from every clear."
+      },
+      {
+        "icon": "medal",
+        "title": "Achievement Unlocked",
+        "text": "The Savage achievement on completion."
+      }
+    ],
+    "accordion": [
+      {
+        "title": "Requirements",
+        "items": [
+          "Have a level 100 Job",
+          "Duty unlocked (available as an additional service)"
+        ]
+      },
+      {
+        "ref": "how-does-it-work"
+      },
+      {
+        "ref": "piloted-boost"
+      }
+    ]
+  }
+}

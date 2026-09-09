@@ -1,0 +1,55 @@
+{
+  "game": "ffxiv",
+  "subcategory": "relics",
+  "service": {
+    "id": "ffxiv-eurekan-elemental-armour",
+    "name": "Eurekan Elemental Armour",
+    "tag1": "Any Job, Any Step",
+    "tag2": "Stormblood Relic Armour",
+    "tag3": "Piloted Service",
+    "price": 0,
+    "image": "/images/service-cards/ffxiv/relics/ffxiv-eurekan-elemental-armour.webp",
+    "longDescription": "The elemental armour of Eureka Pyros — a full set for your role, from the base set to the glowing final stages, farmed while you keep every drop."
+  },
+  "subpage": {
+    "short": "Eurekan Armour",
+    "rewardsHeading": "What you get",
+    "rewards": [
+      {
+        "icon": "arrow-up",
+        "title": "Any Step of the Relic Chain",
+        "text": "From the base stage to the final glow — pick exactly the steps you need, priced per step."
+      },
+      {
+        "icon": "shield",
+        "title": "Elemental Armour Set",
+        "text": "The full Elemental Armour set for your chosen role type."
+      },
+      {
+        "icon": "gem",
+        "title": "All Materials Kept",
+        "text": "Tomestones, crystals and every material farmed along the way stays on your character."
+      },
+      {
+        "icon": "medal",
+        "title": "Achievement Unlocked",
+        "text": "Achievement unlocked upon completing the relic chain."
+      }
+    ],
+    "accordion": [
+      {
+        "title": "Requirements",
+        "items": [
+          "Own the Stormblood Expansion",
+          "Eureka Pyros unlocked (available as an additional service)"
+        ]
+      },
+      {
+        "ref": "how-does-it-work"
+      },
+      {
+        "ref": "piloted-boost-2"
+      }
+    ]
+  }
+}

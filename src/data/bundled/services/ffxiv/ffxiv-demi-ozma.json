@@ -1,0 +1,58 @@
+{
+  "game": "ffxiv",
+  "subcategory": "mounts",
+  "service": {
+    "id": "ffxiv-demi-ozma",
+    "name": "Demi-Ozma (Mount)",
+    "tag1": "Guaranteed mount drop",
+    "tag2": "The Baldesion Arsenal",
+    "tag3": "Piloted Service",
+    "price": 0,
+    "image": "/images/service-cards/ffxiv/mounts/ffxiv-demi-ozma.webp",
+    "longDescription": "A fragment of Ozma itself from the depths of The Baldesion Arsenal — guaranteed completion with a veteran group."
+  },
+  "subpage": {
+    "short": "Demi-Ozma",
+    "rewardsHeading": "What you get",
+    "rewards": [
+      {
+        "icon": "trophy",
+        "title": "Guaranteed Mount Drop From",
+        "dutyButton": {
+          "label": "The Baldesion Arsenal",
+          "to": "/boosting/ffxiv/ffxiv-baldesion-arsenal"
+        }
+      },
+      {
+        "icon": "swords",
+        "title": "Piloted Service",
+        "text": "Cleared by a veteran raider on your account."
+      },
+      {
+        "icon": "medal",
+        "title": "Cryptic Seals & Eureka Fragments",
+        "text": "Exclusive drops earned for completing the encounters"
+      },
+      {
+        "icon": "trophy",
+        "title": "Achievement: \"We're on Your Side I\"",
+        "text": "Achievement unlocked upon clearing the Baldesion Arsenal"
+      }
+    ],
+    "accordion": [
+      {
+        "title": "Requirements",
+        "items": [
+          "Have a level 70 Job",
+          "Duty unlocked (available as an additional service)"
+        ]
+      },
+      {
+        "ref": "how-does-it-work"
+      },
+      {
+        "ref": "piloted-boost"
+      }
+    ]
+  }
+}

@@ -8,7 +8,7 @@ import { readFile } from 'node:fs/promises';
 import { mergeCategoryFiles, lineTotal } from '../shared.ts';
 import { computeLevelingLine } from '../leveling.ts';
 
-const files = ['pricing', 'ffxiv-UltimateRaids', 'ffxiv-Leveling', 'ffxiv-PvP', 'ffxiv-FieldExplorations'];
+const files = ['pricing/global', 'pricing/ffxiv/UltimateRaids', 'pricing/ffxiv/Leveling', 'pricing/ffxiv/PvP', 'pricing/ffxiv/FieldExplorations'];
 const [base, ...cats] = await Promise.all(
   files.map((f) => readFile(`public/db/${f}.json`, 'utf8').then(JSON.parse).catch(() => null)),
 );

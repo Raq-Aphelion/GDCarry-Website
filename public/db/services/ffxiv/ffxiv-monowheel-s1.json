@@ -1,0 +1,58 @@
+{
+  "game": "ffxiv",
+  "subcategory": "mounts",
+  "service": {
+    "id": "ffxiv-monowheel-s1",
+    "name": "Monowheel S1 (Mount)",
+    "tag1": "Guaranteed mount drop",
+    "tag2": "AAC Light-heavyweight M4 (Savage)",
+    "tag3": "Piloted or AFK Carry",
+    "price": 0,
+    "image": "/images/service-cards/ffxiv/mounts/savage-raid-mounts/ffxiv-monowheel-s1.webp",
+    "longDescription": "Wicked Thunder’s single-wheeled speed machine from AAC Light-heavyweight M4 on Savage — farmed until the Monowheel S1 is guaranteed yours."
+  },
+  "subpage": {
+    "short": "Monowheel S1",
+    "rewardsHeading": "What you get",
+    "rewards": [
+      {
+        "icon": "trophy",
+        "title": "Guaranteed Mount Drop From",
+        "dutyButton": {
+          "label": "AAC Light-heavyweight M4 (Savage)",
+          "to": "/boosting/ffxiv/ffxiv-arcadion-savage"
+        }
+      },
+      {
+        "icon": "swords",
+        "title": "Piloted or AFK Carry",
+        "text": "Cleared by a veteran raider on your account, or alongside you in the party."
+      },
+      {
+        "icon": "gem",
+        "title": "Savage Loot Along the Way",
+        "text": "Gear coffers, totems and glamours from every clear."
+      },
+      {
+        "icon": "medal",
+        "title": "Achievement Unlocked",
+        "text": "The Savage achievement on completion."
+      }
+    ],
+    "accordion": [
+      {
+        "title": "Requirements",
+        "items": [
+          "Have a level 100 Job",
+          "Duty unlocked (available as an additional service)"
+        ]
+      },
+      {
+        "ref": "how-does-it-work"
+      },
+      {
+        "ref": "piloted-vs-afk-carry"
+      }
+    ]
+  }
+}

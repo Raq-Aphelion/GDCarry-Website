@@ -1,0 +1,56 @@
+{
+  "game": "ffxiv",
+  "subcategory": "deep-dungeon",
+  "service": {
+    "id": "ffxiv-pilgrims-traverse",
+    "name": "Pilgrim's Traverse (Deep Dungeon)",
+    "tag1": "The Enlightened title & loot",
+    "tag2": "1 - 100 Floors",
+    "tag3": "Group Play or Solo Piloted",
+    "price": 0,
+    "image": "/images/service-cards/ffxiv/deep-dungeons/ffxiv-pilgrims-traverse.webp",
+    "longDescription": "Beneath the verdant hills of Il Mheg, a holy road winds down into the dark. Pilgrim’s Traverse calls the faithful and the foolhardy alike to walk its ninety-nine floors, gathering offerings for the verse that waits at journey’s end."
+  },
+  "subpage": {
+    "short": "Pilgrim's Traverse",
+    "rewardsHeading": "What you get",
+    "rewards": [
+      {
+        "icon": "swords",
+        "title": "Aetherpool Levels & Armour",
+        "text": "Upgrades on your Aetherpool Level & Armour."
+      },
+      {
+        "icon": "gem",
+        "title": "Tomestones & Loot",
+        "text": "Various loot from acquiring and clearing the floors of the deep dungeon."
+      },
+      {
+        "icon": "badge-check",
+        "title": "The Enlightened Title",
+        "text": "Exclusive title achieved by completing the deep dungeon solo."
+      },
+      {
+        "icon": "medal",
+        "title": "Achievement: “Solo Traveler II”",
+        "text": "Achievement unlocked upon clearing Pilgrim's Traverse Floor 99 Solo."
+      }
+    ],
+    "accordion": [
+      {
+        "title": "Requirements",
+        "items": [
+          "Have a level 100 Job",
+          "95+ Aetherpool Weapon & Armour (available as an add-on)",
+          "ilvl 740 or higher gear"
+        ]
+      },
+      {
+        "ref": "how-does-it-work"
+      },
+      {
+        "ref": "group-play-vs-piloted-boost"
+      }
+    ]
+  }
+}

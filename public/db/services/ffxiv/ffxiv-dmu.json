@@ -1,0 +1,57 @@
+{
+  "game": "ffxiv",
+  "subcategory": "ultimate-raids",
+  "service": {
+    "id": "ffxiv-dmu",
+    "name": "Dancing Mad (Ultimate)",
+    "tag1": "Palazzo Diamond Weapon",
+    "tag2": "Adventurer Plate + Title",
+    "tag3": "Piloted Service",
+    "price": 0,
+    "image": "/images/service-cards/ffxiv/ultimate-raids/ffxiv-dmu.webp",
+    "tag": "Hot",
+    "longDescription": "You find the wandering minstrel ruminating on the curious tale of a phantasmal harlequin. A vile and terrible fiend by any measure, yet the entertainer believes the two of them share at least one artistic quality─a flair for creative flourishes. With every telling of their stories, every rendition of their songs, there is new meaning to be found. Thus are no two performances ever the same. The minstrel's melody soon transports you to a battlefield in your mind's eye, but what creative liberties will you contribute to his masterpiece?"
+  },
+  "subpage": {
+    "short": "DMU",
+    "rewards": [
+      {
+        "icon": "gem",
+        "title": "Mad Harlequin's Totem",
+        "text": "Ultimate-specific totems that can be exchanged for a weapon of your choosing."
+      },
+      {
+        "icon": "badge-check",
+        "title": "The Dancing Mad Adventure Plate (in a later patch)",
+        "text": "Exclusive Adventure Plate Designs."
+      },
+      {
+        "icon": "trophy",
+        "title": "Cruel Legend Title",
+        "text": "Exclusive title acquired from completing the duty."
+      },
+      {
+        "icon": "medal",
+        "title": "Achievement: “Son of a…”",
+        "text": "Achievement unlocked upon defeating Ultimate Kefka."
+      }
+    ],
+    "accordion": [
+      {
+        "title": "Requirements",
+        "items": [
+          "Have a level 100 Job",
+          "Own the Dawntrail Expansion",
+          "AAC Heavyweight M4 (Savage) Completed (available as an add-on)",
+          "ilvl 790 or higher gear"
+        ]
+      },
+      {
+        "ref": "how-does-it-work"
+      },
+      {
+        "ref": "piloted-boost"
+      }
+    ]
+  }
+}

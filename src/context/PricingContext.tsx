@@ -1,6 +1,8 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 import { loadPricing, type PricingDb } from '@/data/pricing';
-import { applyCatalog } from '@/data/games';
+import { loadServices } from '@/data/services';
+import { applyCatalog, applyServices } from '@/data/games';
+import { applyServicePages } from '@/data/servicePages';
 import { fromPrice } from '@/lib/pricing/engine/shared';
 
 interface PricingContextValue {
@@ -22,10 +24,13 @@ export function PricingProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     let alive = true;
-    loadPricing().then((d) => {
-      // Apply the database-driven catalog (category names/order/proxies,
-      // per-service visibility) before first render — consumers read it
-      // straight from the games data.
+    Promise.all([loadPricing(), loadServices()]).then(([d, services]) => {
+      // Swap in the database-driven service catalog and subpage content, then
+      // apply the catalog overlay (category names/order/proxies, per-service
+      // visibility) — all before first render, so every consumer sees the
+      // DB-driven state straight from the games data.
+      applyServices(services.games);
+      applyServicePages(services.pages);
       applyCatalog(d.catalog);
       if (alive) setDb(d);
     });

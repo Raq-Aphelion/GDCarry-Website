@@ -1,0 +1,59 @@
+{
+  "game": "ffxiv",
+  "subcategory": "mounts",
+  "service": {
+    "id": "ffxiv-juedi-mount",
+    "name": "Juedi (Mount)",
+    "tag1": "Guaranteed mount drop",
+    "tag2": "Heaven-on-High (Deep Dungeon)",
+    "tag3": "Group Play or Piloted",
+    "price": 0,
+    "image": "/images/service-cards/ffxiv/mounts/ffxiv-juedi.webp",
+    "longDescription": "The qirin steed of the Empyrean stair — Juedi descends only for those who conquer Heaven-on-High. Guaranteed with four full clears, piloted or alongside our raiders in group play."
+  },
+  "subpage": {
+    "short": "Juedi",
+    "rewardsHeading": "What you get",
+    "rewards": [
+      {
+        "icon": "trophy",
+        "title": "Guaranteed Mount Drop From",
+        "text": "— 4 full clears required.",
+        "dutyButton": {
+          "label": "Heaven-on-High (Deep Dungeon)",
+          "to": "/boosting/ffxiv/ffxiv-hoh"
+        }
+      },
+      {
+        "icon": "swords",
+        "title": "Group Play or Piloted",
+        "text": "Cleared by a veteran raider on your account, or alongside our team on your own character."
+      },
+      {
+        "icon": "gem",
+        "title": "Savage Loot Along the Way",
+        "text": "Gear coffers, totems and glamours from every clear."
+      },
+      {
+        "icon": "medal",
+        "title": "Achievement Unlocked",
+        "text": "The Savage achievement on completion."
+      }
+    ],
+    "accordion": [
+      {
+        "title": "Requirements",
+        "items": [
+          "Have a level 100 Job",
+          "Duty unlocked (available as an additional service)"
+        ]
+      },
+      {
+        "ref": "how-does-it-work"
+      },
+      {
+        "ref": "group-play-vs-piloted-boost"
+      }
+    ]
+  }
+}

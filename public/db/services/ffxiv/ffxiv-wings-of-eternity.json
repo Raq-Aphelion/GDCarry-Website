@@ -1,0 +1,60 @@
+{
+  "game": "ffxiv",
+  "subcategory": "mounts",
+  "service": {
+    "id": "ffxiv-wings-of-eternity",
+    "name": "Wings of Eternity (Mount)",
+    "tag1": "Guaranteed (any number of runs)",
+    "tag2": "Sphene's Burden mount",
+    "tag3": "Piloted or AFK Carry",
+    "price": 0,
+    "image": "/images/service-cards/ffxiv/mounts/extreme-trial-mounts/ffxiv-wings-of-eternity.webp",
+    "longDescription": "The Minstrel’s Ballad: Sphene’s Burden holds the Wings of Eternity — our raiders run it on Extreme until the mount is guaranteed on your account."
+  },
+  "subpage": {
+    "short": "Wings of Eternity",
+    "rewardsHeading": "What you get",
+    "rewards": [
+      {
+        "icon": "trophy",
+        "title": "Guaranteed Mount Drop From",
+        "text": "— guaranteed, no matter how many runs it takes.",
+        "dutyButton": {
+          "label": "The Minstrel's Ballad: Sphene's Burden",
+          "to": "/boosting/ffxiv/ffxiv-sphenes-burden"
+        }
+      },
+      {
+        "icon": "gem",
+        "title": "Totems Eternal",
+        "text": "Trial totems from every clear, exchangeable for mounts and gear."
+      },
+      {
+        "icon": "swords",
+        "title": "Extreme Trial Clears",
+        "text": "Every run completed by a veteran raider on your behalf."
+      },
+      {
+        "icon": "medal",
+        "title": "Achievement Unlocked",
+        "text": "The Extreme trial achievement on completion."
+      }
+    ],
+    "accordion": [
+      {
+        "title": "Requirements",
+        "items": [
+          "Have a level 100 Job",
+          "Own the Dawntrail Expansion",
+          "Trial unlocked (available as an additional service)"
+        ]
+      },
+      {
+        "ref": "how-does-it-work"
+      },
+      {
+        "ref": "piloted-vs-afk-carry"
+      }
+    ]
+  }
+}

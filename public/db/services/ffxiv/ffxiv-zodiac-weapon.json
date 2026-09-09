@@ -1,0 +1,55 @@
+{
+  "game": "ffxiv",
+  "subcategory": "relics",
+  "service": {
+    "id": "ffxiv-zodiac-weapon",
+    "name": "Zodiac Relic Weapon",
+    "tag1": "Any Job, Any Step",
+    "tag2": "A Realm Reborn Relic Weapon",
+    "tag3": "Piloted Service",
+    "price": 0,
+    "image": "/images/service-cards/ffxiv/relics/ffxiv-zodiac-weapon.webp",
+    "longDescription": "The relic that started it all — atma, books, light and more books. Our veterans carry your Zodiac weapon from the Starter Relic to Zeta, no Atma farm required of you."
+  },
+  "subpage": {
+    "short": "Zodiac Weapon",
+    "rewardsHeading": "What you get",
+    "rewards": [
+      {
+        "icon": "arrow-up",
+        "title": "Any Step of the Relic Chain",
+        "text": "From the base stage to the final glow — pick exactly the steps you need, priced per step."
+      },
+      {
+        "icon": "swords",
+        "title": "Relic Weapon for Your Job",
+        "text": "The A Realm Reborn Zodiac Weapon for your chosen job, at any stage."
+      },
+      {
+        "icon": "gem",
+        "title": "All Materials Kept",
+        "text": "Tomestones, crystals and every material farmed along the way stays on your character."
+      },
+      {
+        "icon": "medal",
+        "title": "Achievements & Titles based on the weapon chosen",
+        "text": "Achievement & Titles unlocked upon completing the relic chain depending on the job chosen."
+      }
+    ],
+    "accordion": [
+      {
+        "title": "Requirements",
+        "items": [
+          "Own the A Realm Reborn Expansion",
+          "Zodiac weapon questline unlocked (available as an additional service)"
+        ]
+      },
+      {
+        "ref": "how-does-it-work"
+      },
+      {
+        "ref": "piloted-boost-2"
+      }
+    ]
+  }
+}

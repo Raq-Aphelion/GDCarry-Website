@@ -1,0 +1,55 @@
+{
+  "game": "ffxiv",
+  "subcategory": "pvp",
+  "service": {
+    "id": "ffxiv-wolf-marks",
+    "name": "Wolf Marks (PvP)",
+    "tag1": "Crystalline Conflict farm",
+    "tag2": "Emotes, hairstyles & PvP gear",
+    "tag3": "Piloted Service",
+    "price": 0,
+    "image": "/images/service-cards/ffxiv/pvp/ffxiv-wolf-marks.webp",
+    "longDescription": "Wolf Marks are the PvP currency earned in Crystalline Conflict, Frontline, and Rival Wings. Players earn Wolf Marks by participating in matches, with additional marks for winning. They can be exchanged for PvP gear and other exclusive items such as emotes and hairstyles at the Mark Quartermaster in the Wolves' Den Pier."
+  },
+  "subpage": {
+    "short": "Wolf Marks",
+    "rewardsHeading": "What you get",
+    "rewards": [
+      {
+        "icon": "coins",
+        "title": "Wolf Marks",
+        "text": "Exclusive currency used to trade in for glamour and weapons."
+      },
+      {
+        "icon": "arrow-up",
+        "title": "PvP Series EXP",
+        "text": "Gain series experience as you purchase more Wolf Marks."
+      },
+      {
+        "icon": "gem",
+        "title": "Allagan Tomestones",
+        "text": "Tomes acquired from participating in Wolf Mark farm."
+      },
+      {
+        "icon": "medal",
+        "title": "Achievement Progress",
+        "text": "Progress toward PvP achievements along the way."
+      }
+    ],
+    "accordion": [
+      {
+        "title": "Requirements",
+        "items": [
+          "Have a level 30 Job",
+          "Crystalline Conflict unlocked"
+        ]
+      },
+      {
+        "ref": "how-does-it-work"
+      },
+      {
+        "ref": "piloted-boost-2"
+      }
+    ]
+  }
+}

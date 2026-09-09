@@ -1,0 +1,58 @@
+{
+  "game": "ffxiv",
+  "subcategory": "mounts",
+  "service": {
+    "id": "ffxiv-felyne-cart",
+    "name": "Felyne Support Team Cart (Mount)",
+    "tag1": "Guaranteed mount drop",
+    "tag2": "The Windward Wilds (Extreme)",
+    "tag3": "Piloted or AFK Carry",
+    "price": 0,
+    "image": "/images/service-cards/ffxiv/mounts/extreme-trial-mounts/ffxiv-felyne-support-team-cart.webp",
+    "longDescription": "The Felyne Support Team rolls in from the forbidden lands — the Monster Hunter Wilds crossover cart, dropped by Arkveld in The Windward Wilds on Extreme. Guaranteed, no matter the runs."
+  },
+  "subpage": {
+    "short": "Felyne Cart",
+    "rewardsHeading": "What you get",
+    "rewards": [
+      {
+        "icon": "trophy",
+        "title": "Guaranteed Mount Drop From",
+        "dutyButton": {
+          "label": "The Windward Wilds (Extreme)",
+          "to": "/boosting/ffxiv/ffxiv-windward-wilds"
+        }
+      },
+      {
+        "icon": "swords",
+        "title": "Piloted or AFK Carry",
+        "text": "Cleared by a veteran raider on your account, or alongside you in the party."
+      },
+      {
+        "icon": "gem",
+        "title": "Savage Loot Along the Way",
+        "text": "Gear coffers, totems and glamours from every clear."
+      },
+      {
+        "icon": "medal",
+        "title": "Achievement Unlocked",
+        "text": "The Savage achievement on completion."
+      }
+    ],
+    "accordion": [
+      {
+        "title": "Requirements",
+        "items": [
+          "Have a level 100 Job",
+          "Duty unlocked (available as an additional service)"
+        ]
+      },
+      {
+        "ref": "how-does-it-work"
+      },
+      {
+        "ref": "piloted-vs-afk-carry"
+      }
+    ]
+  }
+}

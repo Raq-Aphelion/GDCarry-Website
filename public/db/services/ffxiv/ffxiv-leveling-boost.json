@@ -1,0 +1,58 @@
+{
+  "game": "ffxiv",
+  "subcategory": "leveling",
+  "service": {
+    "id": "ffxiv-leveling-boost",
+    "name": "Combat Job Leveling Boost",
+    "tag1": "Any job, any level",
+    "tag2": "Job quests included",
+    "tag3": "Piloted Service",
+    "price": 0,
+    "image": "/images/service-cards/ffxiv/leveling/ffxiv-leveling.webp",
+    "tag": "Popular",
+    "longDescription": "Skip the grind and level your chosen job quickly and efficiently. Our Combat Job Leveling boost helps you reach your target level while saving time, letting you focus on endgame content, raiding, or gearing without the repetitive leveling process."
+  },
+  "subpage": {
+    "short": "Job Leveling",
+    "rewardsHeading": "What you get",
+    "rewards": [
+      {
+        "icon": "arrow-up",
+        "title": "Level Up!",
+        "text": "Target job leveled to your chosen level."
+      },
+      {
+        "icon": "badge-check",
+        "title": "Become Powerful!",
+        "text": "Access to higher level job actions and traits."
+      },
+      {
+        "icon": "timer",
+        "title": "Time Saver",
+        "text": "Saved time compared to manual leveling."
+      },
+      {
+        "icon": "swords",
+        "title": "Start Raiding Quickly",
+        "text": "Get your job to Max Level and start doing trials & raids instantly!"
+      }
+    ],
+    "accordion": [
+      {
+        "title": "Requirements",
+        "items": [
+          "Have a main Job at your desired level",
+          "Own the Dawntrail Expansion",
+          "Completion of Dawntrail MSQ (available as an add-on)",
+          "Gear for all levels"
+        ]
+      },
+      {
+        "ref": "how-does-it-work"
+      },
+      {
+        "ref": "piloted-boost-2"
+      }
+    ]
+  }
+}

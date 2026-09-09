@@ -1,0 +1,57 @@
+{
+  "game": "ffxiv",
+  "subcategory": "raids",
+  "service": {
+    "id": "ffxiv-alexander-savage",
+    "name": "Alexander Raids (Savage)",
+    "tag1": "Savage Heavensward glamour",
+    "tag2": "Full loot priority",
+    "tag3": "Piloted or AFK Carry",
+    "price": 0,
+    "image": "/images/service-cards/ffxiv/savage-raids/ffxiv-alexander.webp",
+    "longDescription": "In the Dravanian hinterlands rises Alexander, a colossal primal of steel and steam summoned by the Illuminati. Within its iron frame, the goblins’ mad designs churn on — dare you shut the machine god down from the inside?"
+  },
+  "subpage": {
+    "short": "Alexander",
+    "rewards": [
+      {
+        "icon": "swords",
+        "title": "Savage Gear",
+        "text": "Gordian, Midan & Alexandrian gear ranging from ilvl 210 to 275 depending on the tier."
+      },
+      {
+        "icon": "trophy",
+        "title": "Encounter-Specific Mount Drops",
+        "items": [
+          "(A4S) Gobwalker",
+          "(A12S) Arrhidaeus"
+        ]
+      },
+      {
+        "icon": "gem",
+        "title": "Exclusive Glamour & Minion Drops",
+        "text": "Exclusive glamour and collectibles from the savage fights."
+      },
+      {
+        "icon": "medal",
+        "title": "Achievement: “Sins of the Savage Creator I” & More",
+        "text": "Achievement unlocked upon defeating Heavensward Savage Tier."
+      }
+    ],
+    "accordion": [
+      {
+        "title": "Requirements",
+        "items": [
+          "Have a level 60 Job",
+          "Normal Mode Completion / Fight Unlocked (available as additional services)"
+        ]
+      },
+      {
+        "ref": "how-does-it-work"
+      },
+      {
+        "ref": "piloted-vs-afk-carry"
+      }
+    ]
+  }
+}

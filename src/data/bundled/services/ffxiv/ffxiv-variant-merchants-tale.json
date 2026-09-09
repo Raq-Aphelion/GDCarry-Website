@@ -1,0 +1,60 @@
+{
+  "game": "ffxiv",
+  "subcategory": "criterion-dungeons",
+  "service": {
+    "id": "ffxiv-variant-merchants-tale",
+    "name": "Variant: Merchant's Tale",
+    "tag1": "Exclusive Loot + Tokens",
+    "tag2": "Variant: All 13 routes & Advanced",
+    "tag3": "Piloted Service",
+    "price": 0,
+    "image": "/images/service-cards/ffxiv/vc-dungeons/variant/ffxiv-variant-merchants-tale.webp",
+    "tag": "New",
+    "longDescription": "Your latest odd job commission brings you together with one Y'nazqha, a gleaner who finds herself in possession of an unusual book inherited from her father and mentor. It contains a rendition of The Merchant's Tale, a fable passed down through generations in Corvos. While the beautifully illuminated pages of the manuscript set it apart from common storybooks, its most singular feature is the enchantment which can pull the very mind of its readers into the story."
+  },
+  "subpage": {
+    "short": "Variant: Merchant's Tale",
+    "rewardsHeading": "What you get",
+    "rewards": [
+      {
+        "icon": "package",
+        "title": "All 13 Routes Available",
+        "text": "Branching paths, secret bosses and every lore entry can be completed on request."
+      },
+      {
+        "icon": "trophy",
+        "title": "Royal Magicked Carpet Mount (Advanced only)",
+        "text": "— random drop or 100 Corvosi Brass exchange.",
+        "items": [
+          "Royal Magicked Carpet"
+        ]
+      },
+      {
+        "icon": "badge-check",
+        "title": "V&C Dungeon Finder Entries",
+        "text": "Lore entries unlocked in your V&C Dungeon Finder record."
+      },
+      {
+        "icon": "medal",
+        "title": "Achievement Unlocked",
+        "text": "Achievement unlocked upon completing Variant: Merchant's Tale."
+      }
+    ],
+    "accordion": [
+      {
+        "title": "Requirements",
+        "items": [
+          "Have a level 90 Job",
+          "Own the Dawntrail Expansion",
+          "Dungeon unlocked (available as an additional service)"
+        ]
+      },
+      {
+        "ref": "how-does-it-work"
+      },
+      {
+        "ref": "piloted-boost"
+      }
+    ]
+  }
+}

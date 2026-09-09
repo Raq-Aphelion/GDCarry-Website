@@ -1,0 +1,55 @@
+{
+  "game": "ffxiv",
+  "subcategory": "trials",
+  "service": {
+    "id": "ffxiv-memoria-misera",
+    "name": "Memoria Misera (Extreme)",
+    "tag1": "Totems & all loot included",
+    "tag2": "Shadowbringers Extreme trial clear",
+    "tag3": "Piloted or AFK Carry",
+    "price": 0,
+    "image": "/images/service-cards/ffxiv/extreme-trials/ffxiv-memoria-misera.webp",
+    "longDescription": "A misera memory of Bozja’s fall, replayed in crystal. Clear Memoria Misera on Extreme with our raiders — the mount chance is yours to keep."
+  },
+  "subpage": {
+    "short": "Memoria Misera",
+    "rewardsHeading": "What you get",
+    "rewards": [
+      {
+        "icon": "trophy",
+        "title": "Totems & Loot",
+        "text": "Trial totems, orchestrion rolls and materials from every clear."
+      },
+      {
+        "icon": "gem",
+        "title": "Trial Totems",
+        "text": "Exchangeable for mounts, weapons and glamour."
+      },
+      {
+        "icon": "swords",
+        "title": "Piloted or AFK Carry",
+        "text": "Cleared by a veteran raider on your account, or alongside you in the party."
+      },
+      {
+        "icon": "medal",
+        "title": "Achievement Unlocked",
+        "text": "The Extreme trial achievement on completion."
+      }
+    ],
+    "accordion": [
+      {
+        "title": "Requirements",
+        "items": [
+          "Have a level 80 Job",
+          "Trial unlocked (available as an additional service)"
+        ]
+      },
+      {
+        "ref": "how-does-it-work"
+      },
+      {
+        "ref": "piloted-vs-afk-carry"
+      }
+    ]
+  }
+}

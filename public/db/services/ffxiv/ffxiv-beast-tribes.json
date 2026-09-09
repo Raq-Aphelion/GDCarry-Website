@@ -1,0 +1,55 @@
+{
+  "game": "ffxiv",
+  "subcategory": "reputation",
+  "service": {
+    "id": "ffxiv-beast-tribes",
+    "name": "Allied Society Reputation Boost",
+    "tag1": "Any society, any rank",
+    "tag2": "Mounts, minions & questlines unlocked",
+    "tag3": "Piloted Service",
+    "price": 0,
+    "image": "/images/service-cards/ffxiv/reputation/ffxiv-allied-society.webp",
+    "longDescription": "From Neutral to Allied, every tribe has a story — and a mount. Our raiders run the daily quests for you, capping any Allied Society in any expansion, or all of them at once."
+  },
+  "subpage": {
+    "short": "Allied Society",
+    "rewardsHeading": "What you get",
+    "rewards": [
+      {
+        "icon": "arrow-up",
+        "title": "Target Rank Reached",
+        "text": "Any Allied Society raised to your chosen rank — no daily-reset grind."
+      },
+      {
+        "icon": "trophy",
+        "title": "Exclusive Society Mounts",
+        "text": "Each faction offers an exclusive mount at max rank."
+      },
+      {
+        "icon": "badge-check",
+        "title": "Titles & Questlines",
+        "text": "Unique titles and NPC stories unlocked across every rank tier."
+      },
+      {
+        "icon": "gem",
+        "title": "Currencies & Rewards Kept",
+        "text": "Tribe currencies, minions and every reward from each session stays yours."
+      }
+    ],
+    "accordion": [
+      {
+        "title": "Requirements",
+        "items": [
+          "Own the relevant expansion",
+          "Society unlocked (available as an additional service)"
+        ]
+      },
+      {
+        "ref": "how-does-it-work"
+      },
+      {
+        "ref": "piloted-boost-2"
+      }
+    ]
+  }
+}

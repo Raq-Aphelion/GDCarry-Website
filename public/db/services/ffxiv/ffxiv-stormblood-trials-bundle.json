@@ -1,0 +1,55 @@
+{
+  "game": "ffxiv",
+  "subcategory": "trials",
+  "service": {
+    "id": "ffxiv-stormblood-trials-bundle",
+    "name": "Stormblood Extreme Trials Bundle",
+    "tag1": "Mount guaranteed option",
+    "tag2": "All 7 Stormblood Extreme trials",
+    "tag3": "Piloted or AFK Carry",
+    "price": 0,
+    "image": "/images/service-cards/ffxiv/extreme-trials/ffxiv-stormblood-extreme-bundle.webp",
+    "longDescription": "The Stormblood Extremes in one package — Lakshmi’s dance to Tsukuyomi’s moonlight, with Kamuy mounts and totems along the way."
+  },
+  "subpage": {
+    "short": "Stormblood Trials",
+    "rewardsHeading": "What you get",
+    "rewards": [
+      {
+        "icon": "package",
+        "title": "All 7 Extreme Trials",
+        "text": "Every trial cleared in one package — pick the ones you need or take them all."
+      },
+      {
+        "icon": "gem",
+        "title": "Trial Totems",
+        "text": "Totems from every clear, exchangeable for mounts and gear."
+      },
+      {
+        "icon": "trophy",
+        "title": "Mount Guaranteed Option",
+        "text": "One run with every trial checked guarantees the Kamuy of the Nine Tails at its own price."
+      },
+      {
+        "icon": "medal",
+        "title": "Achievements Unlocked",
+        "text": "Every Extreme trial achievement on completion."
+      }
+    ],
+    "accordion": [
+      {
+        "title": "Requirements",
+        "items": [
+          "Have a level 70 Job",
+          "Trials unlocked (available as an additional service)"
+        ]
+      },
+      {
+        "ref": "how-does-it-work"
+      },
+      {
+        "ref": "piloted-vs-afk-carry"
+      }
+    ]
+  }
+}

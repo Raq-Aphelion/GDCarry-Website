@@ -1,0 +1,59 @@
+{
+  "game": "ffxiv",
+  "subcategory": "trials",
+  "service": {
+    "id": "ffxiv-great-hunt",
+    "name": "The Great Hunt (Extreme)",
+    "tag1": "Totems & all loot included",
+    "tag2": "Stormblood Extreme trial clear",
+    "tag3": "Piloted or AFK Carry",
+    "price": 0,
+    "image": "/images/service-cards/ffxiv/extreme-trials/ffxiv-the-great-hunt.webp",
+    "longDescription": "Rathalos, King of the Skies, descends on Eorzea in the Monster Hunter crossover. Guaranteed clears on Extreme — Rathalos mount and scales included."
+  },
+  "subpage": {
+    "short": "The Great Hunt",
+    "rewardsHeading": "What you get",
+    "rewards": [
+      {
+        "icon": "trophy",
+        "title": "Mount Drop (Not Guaranteed)",
+        "text": "— Rare drop, can drop from this trial.",
+        "dutyButton": {
+          "label": "Rathalos",
+          "to": "/boosting/ffxiv/ffxiv-rathalos-mount"
+        }
+      },
+      {
+        "icon": "gem",
+        "title": "Trial Totems",
+        "text": "Exchangeable for mounts, weapons and glamour."
+      },
+      {
+        "icon": "swords",
+        "title": "Piloted or AFK Carry",
+        "text": "Cleared by a veteran raider on your account, or alongside you in the party."
+      },
+      {
+        "icon": "medal",
+        "title": "Achievement Unlocked",
+        "text": "The Extreme trial achievement on completion."
+      }
+    ],
+    "accordion": [
+      {
+        "title": "Requirements",
+        "items": [
+          "Have a level 70 Job",
+          "Trial unlocked (available as an additional service)"
+        ]
+      },
+      {
+        "ref": "how-does-it-work"
+      },
+      {
+        "ref": "piloted-vs-afk-carry"
+      }
+    ]
+  }
+}

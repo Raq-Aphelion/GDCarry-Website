@@ -1,0 +1,60 @@
+{
+  "game": "ffxiv",
+  "subcategory": "field-explorations",
+  "service": {
+    "id": "ffxiv-cosmic-exploration",
+    "name": "Cosmic Exploration Boost",
+    "tag1": "All Cosmic Tool steps",
+    "tag2": "Zone-specific credits & more",
+    "tag3": "Piloted Service",
+    "price": 0,
+    "image": "/images/service-cards/ffxiv/field-ops-misc/ffxiv-cosmic-exploration.webp",
+    "tag": "New",
+    "longDescription": "Among the stars, every tool tells a story — from Cosmic to Stars, plus the 500K-tracker Vacuum Suit for those who master all eleven jobs. Piloted through every stellar mission."
+  },
+  "subpage": {
+    "short": "Cosmic Exploration",
+    "rewardsHeading": "What you get",
+    "rewards": [
+      {
+        "icon": "arrow-up",
+        "title": "Cosmic Tools at Any Stage",
+        "text": "Cosmic, Stellar, Hypertool or Stars tools for any DoH or DoL job — pick exactly the stages you need."
+      },
+      {
+        "icon": "trophy",
+        "title": "High Mobility Vacuum Suit Mount",
+        "text": "— 500K Cosmic Tracker on all 11 DoH and DoL jobs.",
+        "items": [
+          "High Mobility Vacuum Suit"
+        ]
+      },
+      {
+        "icon": "gem",
+        "title": "Cosmic Credits & Materials Kept",
+        "text": "Credits, scrips and every material earned along the way stays on your character."
+      },
+      {
+        "icon": "medal",
+        "title": "Achievement Unlocked",
+        "text": "Achievements unlocked upon completing the Cosmic Tool stages."
+      }
+    ],
+    "accordion": [
+      {
+        "title": "Requirements",
+        "items": [
+          "Have any DoH or DoL job at level 100",
+          "Own the Dawntrail Expansion",
+          "Cosmic Exploration unlocked (available as an additional service)"
+        ]
+      },
+      {
+        "ref": "how-does-it-work"
+      },
+      {
+        "ref": "piloted-boost-2"
+      }
+    ]
+  }
+}

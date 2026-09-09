@@ -1,0 +1,58 @@
+{
+  "game": "ffxiv",
+  "subcategory": "deep-dungeon",
+  "service": {
+    "id": "ffxiv-hoh",
+    "name": "Heaven-on-High (Deep Dungeon)",
+    "tag1": "Lone Hero title & achievements",
+    "tag2": "1 - 100 Floors",
+    "tag3": "Group Play or Solo Piloted",
+    "price": 0,
+    "image": "/images/service-cards/ffxiv/deep-dungeons/ffxiv-heaven-on-high.webp",
+    "longDescription": "Rising high above the Ruby Sea from the island of Onokoro, Heaven-on-High is said to be the stairway traversed by kami descending from their empyrean home. Following the discovery of a secret entrance, the Confederate leader Rasho asks you to investigate the tower and brave the hordes of vile fiends that lurk within."
+  },
+  "subpage": {
+    "short": "Heaven-on-High",
+    "rewardsHeading": "What you get",
+    "rewards": [
+      {
+        "icon": "swords",
+        "title": "Aetherpool Levels & Armour",
+        "text": "Upgrades on your Aetherpool Level & Armour."
+      },
+      {
+        "icon": "trophy",
+        "title": "Juedi Mount (4 Full Clears)",
+        "items": [
+          "Juedi"
+        ]
+      },
+      {
+        "icon": "badge-check",
+        "title": "Lone Hero Title",
+        "text": "Exclusive title achieved by completing the deep dungeon solo."
+      },
+      {
+        "icon": "medal",
+        "title": "Achievement: “Heaven Is a Lonely Place II”",
+        "text": "Achievement unlocked upon clearing Heaven-on-High Floor 100 Solo."
+      }
+    ],
+    "accordion": [
+      {
+        "title": "Requirements",
+        "items": [
+          "Have a level 100 Job",
+          "95+ Aetherpool Weapon & Armour (available as an add-on)",
+          "ilvl 740 or higher gear"
+        ]
+      },
+      {
+        "ref": "how-does-it-work"
+      },
+      {
+        "ref": "group-play-vs-piloted-boost"
+      }
+    ]
+  }
+}

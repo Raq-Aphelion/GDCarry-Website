@@ -1,0 +1,55 @@
+{
+  "game": "ffxiv",
+  "subcategory": "relics",
+  "service": {
+    "id": "ffxiv-phantom-weapon",
+    "name": "Phantom Relic Weapon",
+    "tag1": "Any Job, Any Step",
+    "tag2": "Dawntrail Relic Weapon (ilvl 795)",
+    "tag3": "Piloted Service",
+    "price": 0,
+    "image": "/images/service-cards/ffxiv/relics/ffxiv-phantom-weapon.webp",
+    "longDescription": "Gerolt’s latest commission hums with demiatma from the Occult Crescent — the Phantom line is Dawntrail’s relic, and every stage from Penumbrae to Occultum is ours to grind for you."
+  },
+  "subpage": {
+    "short": "Phantom Weapon",
+    "rewardsHeading": "What you get",
+    "rewards": [
+      {
+        "icon": "arrow-up",
+        "title": "Any Step of the Relic Chain",
+        "text": "From the base stage to the final glow — pick exactly the steps you need, priced per step."
+      },
+      {
+        "icon": "swords",
+        "title": "BiS Relic Weapon for Your Job (ilvl 795)",
+        "text": "The Dawntrail Phantom Weapon for your chosen job — Penumbrae to Occultum."
+      },
+      {
+        "icon": "gem",
+        "title": "All Materials Kept",
+        "text": "Tomestones, crystals and every material farmed along the way stays on your character."
+      },
+      {
+        "icon": "medal",
+        "title": "Achievement Unlocked",
+        "text": "Achievement unlocked upon completing the relic chain."
+      }
+    ],
+    "accordion": [
+      {
+        "title": "Requirements",
+        "items": [
+          "Own the Dawntrail Expansion",
+          "Occult Crescent unlocked (available as an additional service)"
+        ]
+      },
+      {
+        "ref": "how-does-it-work"
+      },
+      {
+        "ref": "piloted-boost-2"
+      }
+    ]
+  }
+}

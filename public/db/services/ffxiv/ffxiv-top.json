@@ -1,0 +1,56 @@
+{
+  "game": "ffxiv",
+  "subcategory": "ultimate-raids",
+  "service": {
+    "id": "ffxiv-top",
+    "name": "The Omega Protocol (Ultimate)",
+    "tag1": "Ultimate Omega Weapon",
+    "tag2": "Adventurer Plate + Title",
+    "tag3": "Piloted Service",
+    "price": 0,
+    "image": "/images/service-cards/ffxiv/ultimate-raids/ffxiv-top.webp",
+    "longDescription": "What if Omega's relentless testing had continued, and provided the elusive answer it sought? The minstrel's words invite you to imagine this scenario─to entertain the possibility of that which may have been─and follow the experiment to its ultimate conclusion."
+  },
+  "subpage": {
+    "short": "TOP",
+    "rewards": [
+      {
+        "icon": "gem",
+        "title": "Omega Totem",
+        "text": "Ultimate-specific totems that can be exchanged for a weapon of your choosing."
+      },
+      {
+        "icon": "badge-check",
+        "title": "The Omega Protocol Adventure Plate",
+        "text": "Exclusive Adventure Plate Designs."
+      },
+      {
+        "icon": "trophy",
+        "title": "The Alpha Legend",
+        "text": "Exclusive title acquired from completing the duty."
+      },
+      {
+        "icon": "medal",
+        "title": "Ultimate Achievement",
+        "text": "Achievement unlocked upon defeating Alpha Omega in The Omega Protocol."
+      }
+    ],
+    "accordion": [
+      {
+        "title": "Requirements",
+        "items": [
+          "Have a lvl 90 Job",
+          "Own the Endwalker Expansion",
+          "Abyssos: The Eighth Circle (Savage) Completed (available as an add-on)",
+          "ilvl 630 or higher gear"
+        ]
+      },
+      {
+        "ref": "how-does-it-work"
+      },
+      {
+        "ref": "piloted-boost"
+      }
+    ]
+  }
+}

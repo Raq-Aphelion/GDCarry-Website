@@ -1,0 +1,58 @@
+{
+  "game": "ffxiv",
+  "subcategory": "criterion-dungeons",
+  "service": {
+    "id": "ffxiv-variant-mount-rokkon",
+    "name": "Variant: Mount Rokkon",
+    "tag1": "Exclusive Loot + Tokens",
+    "tag2": "Variant: All 12 routes",
+    "tag3": "Piloted Service",
+    "price": 0,
+    "image": "/images/service-cards/ffxiv/vc-dungeons/variant/ffxiv-variant-mount-rokkon.webp",
+    "longDescription": "On Hingashi's westernmost isle of Shishu lies the long-venerated Mount Rokkon. Once refuge for humble monks and weary pilgrims, the holy site lately fell to a host of malevolent mononoke, spurring the local liege lord to take the unprecedented step of inviting ijin to assist in reclaiming its slopes. As is his wont, Hancock has secured the promise of valuable rewards in exchange for his—and your—assistance, but each of these treasures has a life of its own..."
+  },
+  "subpage": {
+    "short": "Variant: Mount Rokkon",
+    "rewardsHeading": "What you get",
+    "rewards": [
+      {
+        "icon": "package",
+        "title": "All 12 Routes Available",
+        "text": "Branching paths, secret bosses and every lore entry can be completed on request."
+      },
+      {
+        "icon": "trophy",
+        "title": "Burabura Chochin Mount (All 12 Routes)",
+        "items": [
+          "Burabura Chochin"
+        ]
+      },
+      {
+        "icon": "badge-check",
+        "title": "V&C Dungeon Finder Entries",
+        "text": "Lore entries unlocked in your V&C Dungeon Finder record."
+      },
+      {
+        "icon": "medal",
+        "title": "Achievement Unlocked",
+        "text": "Achievement unlocked upon completing Variant: Mount Rokkon."
+      }
+    ],
+    "accordion": [
+      {
+        "title": "Requirements",
+        "items": [
+          "Have a level 90 Job",
+          "Own the Endwalker Expansion",
+          "Dungeon unlocked (available as an additional service)"
+        ]
+      },
+      {
+        "ref": "how-does-it-work"
+      },
+      {
+        "ref": "piloted-boost"
+      }
+    ]
+  }
+}

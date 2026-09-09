@@ -1,0 +1,12 @@
+{
+  "game": {
+    "id": "wow",
+    "name": "World of Warcraft",
+    "short": "WoW",
+    "tagline": "Azeroth, handled",
+    "description": "Content ranging from Mythic+ keys to Mythic raid clears done by verified professionals with decades of experience who are part of world race teams.",
+    "cardImage": "/images/game-cards/GameCard_WoW.webp",
+    "logo": "/images/game-logos/wow.png"
+  },
+  "subcategories": []
+}

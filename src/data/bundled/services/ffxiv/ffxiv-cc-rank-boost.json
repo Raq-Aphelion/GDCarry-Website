@@ -1,0 +1,55 @@
+{
+  "game": "ffxiv",
+  "subcategory": "pvp",
+  "service": {
+    "id": "ffxiv-cc-rank-boost",
+    "name": "Crystalline Conflict Rank Boost",
+    "tag1": "Bronze to Ultima (or Rank 1)",
+    "tag2": "Adventurer Plate & PvP Currency",
+    "tag3": "Piloted Service",
+    "price": 0,
+    "image": "/images/service-cards/ffxiv/pvp/ffxiv-cc-rank.webp",
+    "longDescription": "PvP Ranked Boost ranging from Bronze to Crystal — grab a boost to your desired rank and acquire Adventurer Plate designs and more. Each PvP season resets with a major patch, and your end-of-season rank determines the loot you get."
+  },
+  "subpage": {
+    "short": "CC Rank",
+    "rewardsHeading": "What you get",
+    "rewards": [
+      {
+        "icon": "arrow-up",
+        "title": "PvP Rank Boost",
+        "text": "Acquire a rank boost to your desired rank and get exclusive loot based on it."
+      },
+      {
+        "icon": "badge-check",
+        "title": "Adventurer Plate Designs",
+        "text": "Exclusive Adventurer Plate Designs from PvP ranks."
+      },
+      {
+        "icon": "gem",
+        "title": "PvP Currency",
+        "text": "Wolf Marks and Trophy Crystals to exchange for your favourite weapons and glamour."
+      },
+      {
+        "icon": "trophy",
+        "title": "Be on the leaderboard!",
+        "text": "High ranks put you on the official FFXIV leaderboard, up to Top 300."
+      }
+    ],
+    "accordion": [
+      {
+        "title": "Requirements",
+        "items": [
+          "Have a level 30 Job",
+          "Crystalline Conflict unlocked"
+        ]
+      },
+      {
+        "ref": "how-does-it-work"
+      },
+      {
+        "ref": "piloted-boost-2"
+      }
+    ]
+  }
+}

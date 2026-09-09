@@ -10,13 +10,17 @@ import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';
 
-/* Service subpage routes come straight from src/data/servicePages.ts
-   (SERVICE_PAGES['…'] keys), so they never drift out of sync; only static
-   routes are listed here. The same list also feeds dist/sitemap.xml. */
-const servicePagesSrc = fs.readFileSync('src/data/servicePages.ts', 'utf8');
-const SERVICE_ROUTES = [...servicePagesSrc.matchAll(/SERVICE_PAGES\['([^']+)'\]/g)].map(
-  (m) => `/boosting/ffxiv/${m[1]}`,
-);
+/* Service subpage routes come straight from the per-service database files
+   (public/db/services/ffxiv/<id>.json entries with a `subpage` block), so
+   they never drift out of sync; only static routes are listed here. The same
+   list also feeds dist/sitemap.xml. */
+const servicesDir = 'public/db/services/ffxiv';
+const SERVICE_ROUTES = fs
+  .readdirSync(servicesDir)
+  .filter((f) => f.endsWith('.json') && f !== 'index.json' && f !== 'shared-sections.json')
+  .map((f) => JSON.parse(fs.readFileSync(`${servicesDir}/${f}`, 'utf8')))
+  .filter((file) => file.subpage)
+  .map((file) => `/boosting/ffxiv/${file.service.id}`);
 
 const STATIC_ROUTES = [
   '/',
@@ -123,7 +127,7 @@ for (const route of ROUTES) {
       waitUntil: 'domcontentloaded',
       timeout: 30000,
     });
-    // Give React time to mount, fetch pricing.json and set per-route meta.
+    // Give React time to mount, fetch the pricing database and set per-route meta.
     await new Promise((r) => setTimeout(r, 4000));
 
     const html = await page.evaluate(() => {

@@ -1,0 +1,59 @@
+{
+  "game": "ffxiv",
+  "subcategory": "mounts",
+  "service": {
+    "id": "ffxiv-aeturna-mount",
+    "name": "Aeturna (Mount)",
+    "tag1": "Guaranteed mount drop",
+    "tag2": "Eureka Orthos (Deep Dungeon)",
+    "tag3": "Group Play or Piloted",
+    "price": 0,
+    "image": "/images/service-cards/ffxiv/mounts/ffxiv-aeturna.webp",
+    "longDescription": "The eternal sentinel of Eureka Orthos — Aeturna answers only to those who master its hundred floors. Guaranteed with four full clears, piloted or alongside our raiders in group play."
+  },
+  "subpage": {
+    "short": "Aeturna",
+    "rewardsHeading": "What you get",
+    "rewards": [
+      {
+        "icon": "trophy",
+        "title": "Guaranteed Mount Drop From",
+        "text": "— 4 full clears required.",
+        "dutyButton": {
+          "label": "Eureka Orthos (Deep Dungeon)",
+          "to": "/boosting/ffxiv/ffxiv-orthos"
+        }
+      },
+      {
+        "icon": "swords",
+        "title": "Group Play or Piloted",
+        "text": "Cleared by a veteran raider on your account, or alongside our team on your own character."
+      },
+      {
+        "icon": "gem",
+        "title": "Savage Loot Along the Way",
+        "text": "Gear coffers, totems and glamours from every clear."
+      },
+      {
+        "icon": "medal",
+        "title": "Achievement Unlocked",
+        "text": "The Savage achievement on completion."
+      }
+    ],
+    "accordion": [
+      {
+        "title": "Requirements",
+        "items": [
+          "Have a level 100 Job",
+          "Duty unlocked (available as an additional service)"
+        ]
+      },
+      {
+        "ref": "how-does-it-work"
+      },
+      {
+        "ref": "group-play-vs-piloted-boost"
+      }
+    ]
+  }
+}

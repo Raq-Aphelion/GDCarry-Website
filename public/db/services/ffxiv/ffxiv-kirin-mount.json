@@ -1,0 +1,55 @@
+{
+  "game": "ffxiv",
+  "subcategory": "mounts",
+  "service": {
+    "id": "ffxiv-kirin-mount",
+    "name": "Kirin (Mount)",
+    "tag1": "Guaranteed (any number of runs)",
+    "tag2": "A Realm Reborn Extreme Trials",
+    "tag3": "Piloted or AFK Carry",
+    "price": 0,
+    "image": "/images/service-cards/ffxiv/mounts/extreme-trial-mounts/ffxiv-kirin.webp",
+    "longDescription": "The original collector’s mount: gather Aithon, Xanthos, Gullfaxi, Markab, Boreas and Enbarr from the A Realm Reborn Extremes and answer the call of A Legend for a Legend."
+  },
+  "subpage": {
+    "short": "Kirin",
+    "rewardsHeading": "What you get",
+    "rewards": [
+      {
+        "icon": "trophy",
+        "title": "Guaranteed Mount Drop From",
+        "text": "A Realm Reborn Extreme Trials — guaranteed, no matter how many runs it takes."
+      },
+      {
+        "icon": "package",
+        "title": "All 6 Series Mounts",
+        "text": "Every required mount farmed until it drops — or only the ones you are missing."
+      },
+      {
+        "icon": "gem",
+        "title": "Totems & Trial Loot",
+        "text": "Guaranteed totems, orchestrion rolls and gear from every clear."
+      },
+      {
+        "icon": "medal",
+        "title": "Achievement Progress",
+        "text": "Extreme trial achievements unlocked along the way."
+      }
+    ],
+    "accordion": [
+      {
+        "title": "Requirements",
+        "items": [
+          "Have a level 50 Job",
+          "Extreme trials unlocked (available as additional services)"
+        ]
+      },
+      {
+        "ref": "how-does-it-work"
+      },
+      {
+        "ref": "piloted-vs-afk-carry"
+      }
+    ]
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "game": "ffxiv",
+  "subcategory": "criterion-dungeons",
+  "service": {
+    "id": "ffxiv-another-mount-rokkon",
+    "name": "Another Mount Rokkon",
+    "tag1": "Exclusive Loot + Tokens",
+    "tag2": "Criterion: Normal & Savage",
+    "tag3": "Piloted Service",
+    "price": 0,
+    "image": "/images/service-cards/ffxiv/vc-dungeons/criterion/ffxiv-another-mount-rokkon.webp",
+    "longDescription": "Delighted beyond measure to hear tell of the mononoke haunting Mount Rokkon, Osmon cannot help but speculate upon the nature of spirits—and what should result were they to grow more powerful than nature is wont to allow..."
+  },
+  "subpage": {
+    "short": "Another Mount Rokkon",
+    "rewardsHeading": "What you get",
+    "rewards": [
+      {
+        "icon": "swords",
+        "title": "Criterion Clear",
+        "text": "Difficult 4-player content cleared with a veteran group."
+      },
+      {
+        "icon": "trophy",
+        "title": "Shishioji Mount",
+        "text": "— random drop or 100 Shishu Coin exchange.",
+        "items": [
+          "Shishioji"
+        ]
+      },
+      {
+        "icon": "badge-check",
+        "title": "Exclusive Title \"Ascendant Ascetic\"",
+        "text": "Title achieved from clearing the hardest difficulty version."
+      },
+      {
+        "icon": "medal",
+        "title": "Achievement Unlocked: \"Moving a Savage Mountain\"",
+        "text": "Achievement unlocked upon completing Another Mount Rokkon."
+      }
+    ],
+    "accordion": [
+      {
+        "title": "Requirements",
+        "items": [
+          "Have a level 90 Job",
+          "Own the Endwalker Expansion",
+          "Criterion unlocked (variant completion available as an additional service)"
+        ]
+      },
+      {
+        "ref": "how-does-it-work"
+      },
+      {
+        "ref": "piloted-boost"
+      }
+    ]
+  }
+}

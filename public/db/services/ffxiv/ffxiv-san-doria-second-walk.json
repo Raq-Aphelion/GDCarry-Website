@@ -1,0 +1,56 @@
+{
+  "game": "ffxiv",
+  "subcategory": "alliance-raids",
+  "service": {
+    "id": "ffxiv-san-doria-second-walk",
+    "name": "San d'Oria: The Second Walk",
+    "tag1": "Guaranteed gear",
+    "tag2": "Echoes of Vana'diel (Alliance Raid)",
+    "tag3": "Piloted Service",
+    "price": 0,
+    "image": "/images/service-cards/ffxiv/24-player-raids/ffxiv-san-doria-the-second-walk.webp",
+    "longDescription": "The Echoes of Vana'diel continue in San d'Oria — a full 24-player alliance clear with a guaranteed gear upgrade token and all loot kept. Cleared piloted by our veteran raiders."
+  },
+  "subpage": {
+    "short": "San d'Oria: The Second Walk",
+    "rewardsHeading": "Rewards",
+    "rewards": [
+      {
+        "icon": "package",
+        "title": "High ilvl Gear - 750 ilvl",
+        "text": "Chance of High item level gear from every clear, straight to your armoury."
+      },
+      {
+        "icon": "gem",
+        "title": "Chance of items below:",
+        "text": "Minions, orchestrion rolls, triple triad cards have a chance of being obtained."
+      },
+      {
+        "icon": "single-coin",
+        "title": "Montiont Coin",
+        "text": "Currency that can be exchanged for tomestone gear upgrades"
+      },
+      {
+        "icon": "medal",
+        "title": "Achievement Unlocked: \"O Brother, Where Zilart Thou\"",
+        "text": "Achievement unlocked upon completing San d'Oria: The Second Walk."
+      }
+    ],
+    "accordion": [
+      {
+        "title": "Requirements",
+        "items": [
+          "Have a level 100 Job",
+          "Own the Dawntrail Expansion",
+          "Duty unlocked"
+        ]
+      },
+      {
+        "ref": "how-does-it-work"
+      },
+      {
+        "ref": "piloted-boost"
+      }
+    ]
+  }
+}

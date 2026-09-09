@@ -1,0 +1,12 @@
+{
+  "game": {
+    "id": "runescape",
+    "name": "RuneScape",
+    "short": "RuneScape",
+    "tagline": "Gielinor’s finest mercenaries",
+    "description": "Content ranging from Skilling to the Inferno done by verified professionals with decades of experience & maxed accounts across OSRS and RS3.",
+    "cardImage": "/images/game-cards/GameCard_OSRS.webp",
+    "logo": "/images/game-logos/runescape.webp"
+  },
+  "subcategories": []
+}

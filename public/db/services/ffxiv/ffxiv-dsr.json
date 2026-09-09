@@ -1,0 +1,65 @@
+{
+  "game": "ffxiv",
+  "subcategory": "ultimate-raids",
+  "service": {
+    "id": "ffxiv-dsr",
+    "name": "Dragonsong’s Reprise (Ultimate)",
+    "tag1": "Ultimate Heaven Weapon",
+    "tag2": "Adventurer Plate + Title",
+    "tag3": "Piloted or AFK Carry",
+    "price": 0,
+    "image": "/images/service-cards/ffxiv/ultimate-raids/ffxiv-dsr.webp",
+    "longDescription": "“There are no ifs in history, yet man is wont to cast his mind towards the path not walked.” Thus spoke the wandering minstrel, and at his urging, you reflect upon bygone trials with newfound perspective. Your imagination stirred by the man's masterfully woven verse, you dream of an alternate conclusion to the Dragonsong War─one in which a dear comrade is spared his tragic fate..."
+  },
+  "subpage": {
+    "short": "DSR",
+    "rewards": [
+      {
+        "icon": "gem",
+        "title": "Dragonsong Totem",
+        "text": "Ultimate-specific totems that can be exchanged for a weapon of your choosing."
+      },
+      {
+        "icon": "badge-check",
+        "title": "Dragonsong's Reprise Adventure Plate",
+        "text": "Exclusive Adventure Plate Designs."
+      },
+      {
+        "icon": "trophy",
+        "title": "The Heavens' Legend",
+        "text": "Exclusive title acquired from completing the duty."
+      },
+      {
+        "icon": "medal",
+        "title": "Achievement: “As Suits a Hero”",
+        "text": "Achievement unlocked upon defeating King Thordan in Dragonsong's Reprise."
+      }
+    ],
+    "accordion": [
+      {
+        "title": "Requirements",
+        "items": [
+          "Have a lvl 90 Job",
+          "Own the Endwalker Expansion",
+          "Asphodelos: The Fourth Circle (Savage) Completed",
+          "ilvl 600 or higher gear"
+        ],
+        "groups": [
+          {
+            "heading": "AFK Carry only (DSR Specific)",
+            "items": [
+              "You'll need to be on a Physical DPS Job (ilvl 605 or higher)",
+              "Be attentive and accept raises — there are more than 10 per run; alternatively you can install the Yes Already plugin, which auto-accepts raises for you (PC only)"
+            ]
+          }
+        ]
+      },
+      {
+        "ref": "how-does-it-work"
+      },
+      {
+        "ref": "piloted-vs-afk-carry"
+      }
+    ]
+  }
+}

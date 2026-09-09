@@ -1,0 +1,56 @@
+{
+  "game": "ffxiv",
+  "subcategory": "ultimate-raids",
+  "service": {
+    "id": "ffxiv-uwu",
+    "name": "The Weapon’s Refrain (Ultimate)",
+    "tag1": "Ultima Weapon",
+    "tag2": "Adventurer Plate + Title",
+    "tag3": "Piloted or AFK Carry",
+    "price": 0,
+    "image": "/images/service-cards/ffxiv/ultimate-raids/ffxiv-uwu.webp",
+    "longDescription": "Just as warriors temper their spirits in battle, so too does the wandering minstrel hone his craft through colorful retellings of heroic deeds. His rendition of your triumph over the Ultima Weapon takes the threads of history and weaves them into an epic tapestry."
+  },
+  "subpage": {
+    "short": "UWU",
+    "rewards": [
+      {
+        "icon": "gem",
+        "title": "Ultima Totem",
+        "text": "Ultimate-specific totems that can be exchanged for a weapon of your choosing."
+      },
+      {
+        "icon": "badge-check",
+        "title": "The Weapon's Refrain Adventure Plate",
+        "text": "Exclusive Adventure Plate Designs."
+      },
+      {
+        "icon": "trophy",
+        "title": "The Ultimate Legend",
+        "text": "Exclusive title acquired from completing the duty."
+      },
+      {
+        "icon": "medal",
+        "title": "Ultimate Achievement",
+        "text": "Achievement unlocked upon defeating The Ultima Weapon in The Weapon's Refrain."
+      }
+    ],
+    "accordion": [
+      {
+        "title": "Requirements",
+        "items": [
+          "Have a lvl 70 Job",
+          "Own the Stormblood Expansion",
+          "Sigmascape V4.0 (Savage) Completed (available as an add-on)",
+          "ilvl 375 or higher gear"
+        ]
+      },
+      {
+        "ref": "how-does-it-work"
+      },
+      {
+        "ref": "piloted-vs-afk-carry"
+      }
+    ]
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "game": "ffxiv",
+  "subcategory": "leveling",
+  "service": {
+    "id": "ffxiv-crafter-gatherer-leveling",
+    "name": "Crafter & Gatherer Leveling Boost",
+    "tag1": "Any job, any level",
+    "tag2": "Any DoH / DoL job",
+    "tag3": "Piloted Service",
+    "price": 0,
+    "image": "/images/service-cards/ffxiv/leveling/ffxiv-crafter-gatherer-leveling.webp",
+    "longDescription": "Crafters and gatherers level on their own track — leves, collectables and cosmic missions included. Our Crafter & Gatherer Leveling boost takes any Disciple of the Hand or Land to your target level while you keep every scrip, material and reward."
+  },
+  "subpage": {
+    "short": "Crafter & Gatherer Leveling",
+    "rewardsHeading": "What you get",
+    "rewards": [
+      {
+        "icon": "arrow-up",
+        "title": "Level Up!",
+        "text": "Any Disciple of the Hand or Land leveled to your chosen level."
+      },
+      {
+        "icon": "badge-check",
+        "title": "Crafting & Gathering Unlocked",
+        "text": "Higher-tier recipes, gathering nodes and job actions at your target level."
+      },
+      {
+        "icon": "gem",
+        "title": "Scrips & Materials Kept",
+        "text": "Every scrip, collectable and material earned along the way stays on your character."
+      },
+      {
+        "icon": "timer",
+        "title": "Time Saver",
+        "text": "Skip the leve and collectable grind — straight to endgame crafting and gathering."
+      }
+    ],
+    "accordion": [
+      {
+        "title": "Requirements",
+        "items": [
+          "Have the chosen job unlocked"
+        ]
+      },
+      {
+        "ref": "how-does-it-work"
+      },
+      {
+        "ref": "piloted-boost-2"
+      }
+    ]
+  }
+}

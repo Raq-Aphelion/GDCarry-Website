@@ -1,0 +1,55 @@
+{
+  "game": "ffxiv",
+  "subcategory": "relics",
+  "service": {
+    "id": "ffxiv-manderville-weapon",
+    "name": "Manderville Relic Weapon",
+    "tag1": "Any Job, Any Step",
+    "tag2": "Endwalker Relic Weapon",
+    "tag3": "Piloted Service",
+    "price": 0,
+    "image": "/images/service-cards/ffxiv/relics/ffxiv-manderville-weapon.webp",
+    "longDescription": "A Manderville weapon is never simply forged — it is dramatically unveiled. Every stage of the Endwalker relic chain, from the base blade to Mandervillous, completed on your account."
+  },
+  "subpage": {
+    "short": "Manderville Weapon",
+    "rewardsHeading": "What you get",
+    "rewards": [
+      {
+        "icon": "arrow-up",
+        "title": "Any Step of the Relic Chain",
+        "text": "From the base stage to the final glow — pick exactly the steps you need, priced per step."
+      },
+      {
+        "icon": "swords",
+        "title": "Relic Weapon for Your Job",
+        "text": "The Endwalker Manderville Weapon for your chosen job, at any stage."
+      },
+      {
+        "icon": "gem",
+        "title": "All Materials Kept",
+        "text": "Tomestones, crystals and every material farmed along the way stays on your character."
+      },
+      {
+        "icon": "medal",
+        "title": "Achievement Unlocked",
+        "text": "Achievement unlocked upon completing the relic chain."
+      }
+    ],
+    "accordion": [
+      {
+        "title": "Requirements",
+        "items": [
+          "Own the Endwalker Expansion",
+          "Manderville weapon questline unlocked (available as an additional service)"
+        ]
+      },
+      {
+        "ref": "how-does-it-work"
+      },
+      {
+        "ref": "piloted-boost-2"
+      }
+    ]
+  }
+}
