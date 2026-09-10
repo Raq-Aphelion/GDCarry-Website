@@ -395,6 +395,37 @@ const wrapItemLines = (html: string) =>
     })
     .join('');
 
+/** Plain-text image marker both order builders (worker + CheckoutPage) emit
+    instead of [img] BBCode: the operator chat renders it as an ordinary text
+    line, and only this visitor-side styler turns it back into a thumbnail.
+    Tolerates LHC auto-linking the URL (href capture) and restricts the URL
+    to https. */
+const IMAGE_LINE_RE =
+  /^Image:\s*(?:<a\b[^>]*?href="(https:\/\/[^"&]+)"[^>]*>[\s\S]*?<\/a>|(https:\/\/[^\s<]+))\s*$/i;
+
+const imageLineUrl = (line: string): string => {
+  const m = line.match(IMAGE_LINE_RE);
+  return m ? (m[1] ?? m[2]) : '';
+};
+
+/** Builds the thumbnail box for an `Image:` marker line — the same shape
+    LHC's own media bodies have (.msg-body-media > .img_embed > img) so
+    ORDER_CSS sizes it identically. Built with DOM APIs (never innerHTML);
+    the marker regex already restricted the URL to https. */
+const makeMediaThumb = (doc: Document, url: string) => {
+  const media = doc.createElement('div');
+  media.className = 'msg-body-media';
+  const embed = doc.createElement('span');
+  embed.className = 'img_embed';
+  const img = doc.createElement('img');
+  img.src = url;
+  img.alt = '';
+  embed.appendChild(img);
+  media.appendChild(embed);
+  resetCloneBubble(media);
+  return media;
+};
+
 /** Inline !important reset for our CLONES (never applied to React-owned
     originals) — beats the theme's visitor-bubble styles regardless of
     selector specificity. Paddings/margins stay in ORDER_CSS. */
@@ -416,6 +447,14 @@ const resetCloneBubble = (el: HTMLElement) => {
     rebuilt from deep CLONES inside an appended .gd-order-content container.
     A foreign extra child is safe: React only ever removes/updates nodes it
     created itself.
+
+    Two message formats are handled:
+    - Current: plain text with `Image: <url>` marker lines (no [img] media —
+      the operator chat renders text only). The whole message is parsed
+      line-by-line into contact block / thumbnail-left item rows / Total.
+    - Legacy (stored history): [img] BBCode split the message into per-item
+      text bodies each followed by a msg-body-media; those are paired and
+      rebuilt the same way.
 
     Rebuilds are guarded by a signature of the originals' content: our own
     clone insertions trigger the MutationObserver too, and the guard stops
@@ -442,8 +481,69 @@ const styleOrderRow = (doc: Document, row: Element) => {
   const content = doc.createElement('div');
   content.className = 'gd-order-content';
 
-  // Pair each image with the text body directly above it (LHC renders the
-  // item's text body first, then its [img] media)
+  if (!originals.some((el) => el.classList.contains('msg-body-media'))) {
+    // Current format: no [img] media, so the message is one plain-text body
+    // and each item's thumbnail travels as an `Image: <url>` marker line.
+    // Parse the whole message: contact block up to Items:, an item per bold
+    // name line (its Image: line carries the thumbnail), then the Total line.
+    const lines = originals
+      .filter(isTextBody)
+      .flatMap((b) => sanitizeOrderHtml(b.innerHTML).split(/<br\s*\/?>/i))
+      .map((l) => l.trim())
+      .filter(Boolean);
+    const itemsAt = lines.findIndex((l) => /<strong>\s*Items:\s*<\/strong>/i.test(l));
+    const totalAt = lines.findIndex(
+      (l, i) =>
+        i > itemsAt &&
+        l.replace(/<[^>]+>/g, '').trim().replace(/^[\W_]+/, '').startsWith('Total:'),
+    );
+    if (itemsAt !== -1) {
+      const contact = doc.createElement('div');
+      contact.className = 'msg-body gd-contact';
+      contact.innerHTML = lines.slice(0, itemsAt + 1).join('<br>');
+      resetCloneBubble(contact);
+      content.appendChild(contact);
+
+      const items: { lines: string[]; image: string }[] = [];
+      for (const line of lines.slice(itemsAt + 1, totalAt === -1 ? undefined : totalAt)) {
+        const url = imageLineUrl(line);
+        if (url) {
+          // Marker lines attach to the item above them; a stray marker with
+          // no item is dropped (never shown as text either)
+          if (items.length) items[items.length - 1].image = url;
+        } else if (/^<strong>[\s\S]*<\/strong>$/.test(line)) {
+          items.push({ lines: [line], image: '' });
+        } else if (items.length) {
+          items[items.length - 1].lines.push(line);
+        }
+      }
+      for (const item of items) {
+        const wrap = doc.createElement('div');
+        wrap.className = 'gd-item';
+        if (item.image) wrap.appendChild(makeMediaThumb(doc, item.image));
+        const textCol = doc.createElement('div');
+        textCol.className = 'gd-item-text msg-body';
+        textCol.innerHTML = wrapItemLines(item.lines.join('<br>'));
+        resetCloneBubble(textCol);
+        wrap.appendChild(textCol);
+        content.appendChild(wrap);
+      }
+      if (totalAt !== -1) {
+        const total = doc.createElement('div');
+        total.className = 'msg-body gd-total';
+        total.innerHTML = lines[totalAt];
+        resetCloneBubble(total);
+        content.appendChild(total);
+      }
+      row.appendChild(content);
+      ensureOrderCss(doc);
+      return;
+    }
+    // Unexpected shape — fall through to the clone-through loop below
+  }
+
+  // Legacy format: pair each image with the text body directly above it (LHC
+  // renders the item's text body first, then its [img] media)
   const paired = new Map<HTMLElement, HTMLElement>(); // media -> textBody
   for (const el of originals) {
     if (!el.classList.contains('msg-body-media')) continue;

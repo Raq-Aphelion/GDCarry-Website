@@ -85,7 +85,7 @@ const bb = (v, max) => str(v, max).replace(/[[\]]/g, '');
 const md = (v, max) => str(v, max).replace(/[[\]]/g, '');
 
 /** Item thumbnails: same-origin images only, and a character allowlist so the
-    URL can't smuggle BBCode past the prefix check (e.g.
+    URL can't smuggle markup past the prefix check (e.g.
     "https://gdcarry.com/x.png[/img][img]https://evil/…"). */
 const safeImage = (v) => {
   const url = str(v, 200);
@@ -180,11 +180,14 @@ const verifyPrices = async (o) => {
   return flags;
 };
 
-/** BBCode order message — the chat print layout. Matches the site's cart
-    drawer / service card styling once the visitor-side styler processes it:
-    bold name, game · qty meta line, ◆ detail bullets, "From" unit price,
-    then the thumbnail. */
-const buildMessage = (o, withImages = true) => {
+/** Order chat message — the print layout. Item thumbnails go in as plain-text
+    `Image: <url>` lines, NOT [img] BBCode: the operator chat then renders
+    ordinary text only, while the visitor-side styler (src/lib/livechat.ts)
+    turns those marker lines back into thumbnails when it rebuilds the
+    message. Matches the site's cart drawer / service card styling once
+    styled: bold name, game · qty meta line, ◆ detail bullets, "From" unit
+    price. */
+const buildMessage = (o) => {
   const itemBlocks = o.items
     .slice(0, 5)
     .map((it) => {
@@ -194,7 +197,7 @@ const buildMessage = (o, withImages = true) => {
         bb(it.meta, 80),
         (Array.isArray(it.details) ? it.details : []).map((d) => `◆ ${bb(d, 120)}`).join('\n'),
         bb(it.unitPrice, 30) ? `From [b]${bb(it.unitPrice, 30)}[/b]` : '',
-        withImages && img ? `[img]${img}[/img]` : '',
+        img ? `Image: ${img}` : '',
       ]
         .filter(Boolean)
         .join('\n');
@@ -243,14 +246,11 @@ const postLhc = async (path, payload) => {
 /** Injects the order into the visitor's open chat. Returns a reason on failure. */
 const injectIntoChat = async (o) => {
   if (!o.chatId || !o.chatHash) return { injected: false, reason: 'no_session' };
-  const attempt = (msg) =>
-    postLhc('widgetrestapi/addmsguser', { id: o.chatId, hash: o.chatHash, msg });
-
-  let { res, data } = await attempt(buildMessage(o, true));
-  // LHC rejects [img] when visitor uploads are disabled — retry without images
-  if (data.error && /upload disabled/i.test(String(data.r))) {
-    ({ res, data } = await attempt(buildMessage(o, false)));
-  }
+  const { res, data } = await postLhc('widgetrestapi/addmsguser', {
+    id: o.chatId,
+    hash: o.chatHash,
+    msg: buildMessage(o),
+  });
   if (res.ok && data.error !== true) return { injected: true };
   // Reason is an internal enum, never LHC's raw error string — don't echo
   // upstream error text back to the client.

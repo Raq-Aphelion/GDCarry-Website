@@ -51,10 +51,11 @@ const isBadgeOffline = () => {
     proactive bubble (which stays suppressed in the theme): operator avatar
     stack, Let's chat, and a message input that starts a chat with the typed
     text as the first message. Fixed above the LHC status circle; closes
-    (animated) when the widget opens — instantly for site-button opens
-    (CHAT_OPENED_EVENT), within one poll tick for badge opens — or when a
-    chat starts. Once any site control opened the chat, the card never
-    auto-shows again this tab session. */
+    INSTANTLY (no exit animation) the moment the widget opens by any means —
+    site buttons (CHAT_OPENED_EVENT), badge clicks (capture-phase listener —
+    LHC handles them inside its shadow DOM and fires nothing), anything else
+    within one poll tick — or when a chat starts. Once any site control
+    opened the chat, the card never auto-shows again this tab session. */
 export default function NeedHelpCard() {
   const { pathname } = useLocation();
   const [visible, setVisible] = useState(false);
@@ -74,11 +75,19 @@ export default function NeedHelpCard() {
   const [badgeRight, setBadgeRight] = useState<number | null>(null);
   const closeTimer = useRef<number | null>(null);
 
-  /** Plays the exit animation, then unmounts. `dismissed` also remembers the
-      close for the rest of the tab session (explicit closes only). */
-  const hide = (dismissed: boolean) => {
-    if (closing) return;
+  /** `dismissed` also remembers the close for the rest of the tab session
+      (explicit closes only). Chat-open hides are INSTANT (no exit
+      animation) and override an in-progress animated exit — a dismissal
+      already written to sessionStorage stays written. */
+  const hide = (dismissed: boolean, instant = false) => {
     if (dismissed) sessionStorage.setItem(DISMISS_KEY, '1');
+    if (instant) {
+      if (closeTimer.current) window.clearTimeout(closeTimer.current);
+      setClosing(false);
+      setVisible(false);
+      return;
+    }
+    if (closing) return;
     setClosing(true);
     closeTimer.current = window.setTimeout(() => setVisible(false), CLOSE_MS);
   };
@@ -94,7 +103,7 @@ export default function NeedHelpCard() {
       if (!chatOpened.current && !isSuppressed(pathname) && !getLhcSession()?.id && !isWidgetOpen()) setVisible(true);
     }, SHOW_DELAY_MS);
     const poll = window.setInterval(() => {
-      if (isSuppressed(pathname) || getLhcSession()?.id || isWidgetOpen()) hide(false);
+      if (isSuppressed(pathname) || getLhcSession()?.id || isWidgetOpen()) hide(false, true);
     }, CHAT_POLL_MS);
     return () => {
       window.clearTimeout(show);
@@ -113,10 +122,29 @@ export default function NeedHelpCard() {
   useEffect(() => {
     const onChatOpened = () => {
       chatOpened.current = true;
-      hide(false);
+      hide(false, true);
     };
     window.addEventListener(CHAT_OPENED_EVENT, onChatOpened);
     return () => window.removeEventListener(CHAT_OPENED_EVENT, onChatOpened);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Badge clicks open the widget entirely inside LHC's shadow DOM — no
+  // CHAT_OPENED_EVENT fires, so the card otherwise waited up to 2s for the
+  // poll and overlapped the widget. A capture-phase listener on the document
+  // sees the click BEFORE LHC handles it (the path includes the badge host
+  // element even across the open shadow root). Same for any LHC-managed
+  // open trigger that lives in the main document.
+  useEffect(() => {
+    const onBadgeClick = (e: MouseEvent) => {
+      const badge = document.getElementById('lhc_status_widget_v2');
+      if (badge && e.composedPath().includes(badge)) {
+        chatOpened.current = true; // same engagement as a site control — no auto-show afterwards
+        hide(false, true);
+      }
+    };
+    document.addEventListener('click', onBadgeClick, true);
+    return () => document.removeEventListener('click', onBadgeClick, true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -189,8 +217,8 @@ export default function NeedHelpCard() {
   const send = () => {
     const q = message.trim();
     // Dismiss BEFORE opening: the open helpers fire CHAT_OPENED_EVENT
-    // synchronously, and our own listener's hide(false) would set `closing`
-    // first — hide(true)'s sessionStorage dismissal would then be skipped
+    // synchronously, and the listener's instant hide unmounts the card on
+    // the spot — the dismissal must be in sessionStorage by then
     dismiss();
     if (q && !getLhcSession()?.id) {
       // No chat yet — start one with the typed message as the first one

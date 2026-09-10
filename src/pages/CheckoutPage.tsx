@@ -270,11 +270,13 @@ export default function CheckoutPage() {
   // eslint-disable-next-line no-control-regex -- stripping control chars is the point
   const bbSafe = (s: string) => s.replace(/[[\]\x00-\x1f]/g, '').trim();
 
-  /** Full order as BBCode (LHC renders [b]/[img]/[url] in chat) — used for
-      the live chat message field. Per item: bold title, game · qty · price
-      meta line (like the Discord embed), diamond config bullets, then the
-      thumbnail (re-arranged into a thumbnail-left row by styleOrderRow once
-      the message lands). The bottom Total line carries the big-price style. */
+  /** Full order as chat text ([b] BBCode for bold) — used for the live chat
+      message field. Per item: bold title, game · qty · price meta line (like
+      the Discord embed), diamond config bullets, then a plain-text
+      `Image: <url>` marker — NOT [img], so the operator chat renders text
+      only while styleOrderRow rebuilds the marker into a thumbnail-left row
+      on the visitor side once the message lands. The bottom Total line
+      carries the big-price style. */
   const buildOrderMessage = (orderId: string) => {
     const itemBlocks = orderItems
       .slice(0, 5)
@@ -284,7 +286,7 @@ export default function CheckoutPage() {
           `[b]${item.name}[/b]`,
           `${cartMeta(item)} — ${format(lineTotal(item))}`,
           details,
-          `[img]${new URL(item.image, SITE_URL).href}[/img]`,
+          `Image: ${new URL(item.image, SITE_URL).href}`,
         ]
           .filter(Boolean)
           .join('\n');
