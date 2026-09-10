@@ -188,11 +188,14 @@ const ORDER_CSS = `
   letter-spacing: .06em;
   font-family: 'Sora', sans-serif !important;
 }
-/* Total clone (styled like the old direct-child .gd-total) */
+/* Total clone (styled like the old direct-child .gd-total). The margin-bottom
+   keeps the NEXT chat message from crowding the big price — order prints read
+   as separate receipts when several land in a row */
 #messagesBlock .message-row.gd-order .gd-order-content .msg-body.gd-total {
   color: #94a3b8 !important;
   font-size: 12px !important;
   margin-top: 16px !important;
+  margin-bottom: 16px !important;
   padding: 2px 0 2px 14px !important;
 }
 #messagesBlock .message-row.gd-order .gd-order-content .msg-body.gd-total strong {
@@ -428,11 +431,11 @@ const wrapItemLines = (html: string) =>
     })
     .join('');
 
-/** Plain-text image marker the shared order builder (src/lib/order-format.ts)
-    emits instead of [img] BBCode: the operator chat renders it as an ordinary
-    text line, and only this visitor-side styler turns it back into a
-    thumbnail. Tolerates LHC auto-linking the URL (href capture) and restricts
-    the URL to https. */
+/** Image marker the shared order builder (src/lib/order-format.ts) emits as
+    an `Image: [url=…]view[/url]` BBCode link: the operator chat shows a short
+    "view" link instead of a raw URL, and only this visitor-side styler turns
+    it back into a thumbnail. The href is captured regardless of anchor text
+    and restricted to https. */
 const IMAGE_LINE_RE = new RegExp(
   `^${escapeRe(IMAGE_LABEL)}\\s*(?:<a\\b[^>]*?href="(https:\\/\\/[^"&]+)"[^>]*>[\\s\\S]*?<\\/a>|(https:\\/\\/[^\\s<]+))\\s*$`,
   'i',

@@ -34,9 +34,10 @@ export interface OrderMessageItem {
   unitPrice?: string;
   /** Thumbnail URL — same-origin https only (the worker enforces this via
       safeImage before calling; the client builds it from SITE_URL). Emitted
-      as a plain-text `Image: <url>` marker line, NOT [img] BBCode: the
-      operator chat renders text only, while the visitor-side styler in
-      livechat.ts turns the marker back into a thumbnail. */
+      as an `Image: [url=…]view[/url]` BBCode-link marker line, NOT [img]: the
+      operator chat renders a short "view" link (a raw URL dumps a whole long
+      link into the operator's message), while the visitor-side styler in
+      livechat.ts reads the marker's href and turns it back into a thumbnail. */
   image?: string;
 }
 
@@ -61,9 +62,11 @@ const bb = (v: unknown, max: number) =>
   (typeof v === 'string' ? v.slice(0, max) : '').replace(/[[\]\x00-\x1f]/g, '').trim();
 
 /** The one order-message builder. Layout: bold ORDER DETAILS header, order
-    id, emoji contact block (👤 ✉️ 💳), Items: list (bold name / meta /
-    ◆ details / Price: line / Image: marker), then the Total: line — exactly
-    what styleOrderRow in livechat.ts parses. */
+    id, emoji contact block (👤 ✉️ 💳), then the Items: list — a blank line
+    after the header and BETWEEN items (staff readability; the visitor-side
+    styler skips blank lines when parsing), each item as bold name / meta /
+    ◆ details / Price: line / Image: link marker — then the Total: line.
+    Exactly what styleOrderRow in livechat.ts parses. */
 export function buildOrderMessage(o: OrderMessageInput): string {
   const itemBlocks = o.items
     .slice(0, MAX_ORDER_ITEMS)
@@ -75,12 +78,14 @@ export function buildOrderMessage(o: OrderMessageInput): string {
         bb(it.meta, 80),
         (it.details ?? []).map((d) => `${DETAIL_PREFIX} ${bb(d, 120)}`).join('\n'),
         unit ? `${PRICE_LABEL} [b]${unit}[/b]` : '',
-        image ? `${IMAGE_LABEL} ${image}` : '',
+        // BBCode link, not a raw URL: staff see a short "view" link instead
+        // of a long URL; the visitor styler reads the href either way
+        image ? `${IMAGE_LABEL} [url=${image}]view[/url]` : '',
       ]
         .filter(Boolean)
         .join('\n');
     })
-    .join('\n');
+    .join('\n\n');
   return [
     `[b]${ORDER_MARKER}[/b]`,
     `[b]${ORDER_ID_LABEL}[/b] ${bb(o.orderId, 30)}`,
@@ -90,6 +95,7 @@ export function buildOrderMessage(o: OrderMessageInput): string {
     `💳 [b]Payment:[/b] ${bb(o.payment, 40)}`,
     '',
     `[b]${ITEMS_LABEL}[/b]`,
+    '',
     itemBlocks,
     '',
     `${TOTAL_LABEL} [b]${bb(o.total, 30)}[/b]`,

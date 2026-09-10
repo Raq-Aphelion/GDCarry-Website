@@ -1148,14 +1148,16 @@ const customPageCss = `#lhc_container_v2 #lhc_status_widget_v2 {
    desktop from the USER AGENT once at load — a page loaded with a mobile UA
    keeps its inline 100%x100% fullscreen styles after a resize to desktop
    (isMobile is never re-evaluated). Those inline styles carry no !important,
-   so these rules win. Width/height mirror wwidth/wheight in
-   src/components/LiveChatWidget.tsx. */
+   so these rules win. Width/height mirror the theme's bot_configuration
+   wwidth/wheight (370x520) — the height is 560 here, deliberately a bit
+   taller than the original; max-height:100dvh in the base rule still caps it
+   on short viewports. */
 @media (min-width: 521px) {
   #lhc_container_v2 #lhc_widget_v2 {
     left: auto !important;
-    width: 350px !important;
+    width: 370px !important;
     min-width: 0 !important;
-    height: 450px !important;
+    height: 560px !important;
     min-height: 0 !important;
   }
 }`;
