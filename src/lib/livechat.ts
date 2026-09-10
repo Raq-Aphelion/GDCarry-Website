@@ -90,9 +90,9 @@ export interface LiveChatPrefill {
    background (no chat bubble). The theme styles visitor bubbles with
    !important + high-specificity selectors and right-aligns visitor rows, so
    these must out-specify and override it. The whole message shares the item
-   palette: light-blue (#93c5fd) labels and header, slate (#94a3b8) contact
-   values and detail text. Sora/Inter are imported so the widget uses the
-   same fonts as the site.
+   palette: a white Sora header, light-blue (#93c5fd) labels, slate (#94a3b8)
+   contact values and detail text. Sora/Inter are imported so the widget uses
+   the same fonts as the site.
    The body rules are scoped to DIRECT children — a width:100% media box
    inside the flex .gd-item crushes the text column to zero width.
    Images are made non-interactive (pointer-events none + anchors unwrapped in
@@ -172,8 +172,8 @@ const ORDER_CSS = `
   font-size: 12px !important;
 }
 #messagesBlock .message-row.gd-order .gd-order-content .msg-body.gd-contact a { color: #94a3b8 !important; }
-#messagesBlock .message-row.gd-order .gd-order-content .msg-body.gd-contact > strong:first-child {
-  color: #93c5fd !important;
+#messagesBlock .message-row.gd-order .gd-order-content .msg-body.gd-contact > strong:first-of-type {
+  color: #ffffff !important;
   font-size: 14px !important;
   letter-spacing: .06em;
   font-family: 'Sora', sans-serif !important;
@@ -192,10 +192,12 @@ const ORDER_CSS = `
   letter-spacing: 0 !important;
   font-family: 'Sora', sans-serif !important;
 }
-/* Header — same light-blue family as the labels at item-title size, so the
-   whole message reads as one print instead of a banner above a list */
+/* Header — white like the item names, at item-title size, so the whole
+   message reads as one print instead of a banner above a list (this rule
+   targets the hidden originals; the visible clone is the gd-contact one
+   above) */
 .gd-order > .msg-body:first-of-type > strong:first-child {
-  color: #93c5fd !important;
+  color: #ffffff !important;
   font-size: 14px !important;
   letter-spacing: .06em !important;
   font-family: 'Sora', sans-serif !important;
@@ -389,7 +391,8 @@ const wrapItemLines = (html: string) =>
     .filter(Boolean)
     .map((l) => {
       if (/^(?:◆|🔹)/.test(l)) return `<div class="gd-detail">${l.replace(/^(?:◆|🔹)\s*/, '')}</div>`;
-      if (/^From[:\s]/i.test(l)) return `<div class="gd-price">${l}</div>`;
+      // "Price:" is the current label; "From" lives on in stored chat history
+      if (/^(?:Price|From)[:\s]/i.test(l)) return `<div class="gd-price">${l}</div>`;
       if (/^<strong>[\s\S]*<\/strong>$/.test(l)) return `<div class="gd-name">${l}</div>`;
       return `<div class="gd-meta">${l}</div>`;
     })
@@ -486,11 +489,12 @@ const styleOrderRow = (doc: Document, row: Element) => {
     // and each item's thumbnail travels as an `Image: <url>` marker line.
     // Parse the whole message: contact block up to Items:, an item per bold
     // name line (its Image: line carries the thumbnail), then the Total line.
+    // Empty lines are KEPT — the contact block renders them as the blank-line
+    // gaps between its groups (Order ID / contact fields / Items:)
     const lines = originals
       .filter(isTextBody)
       .flatMap((b) => sanitizeOrderHtml(b.innerHTML).split(/<br\s*\/?>/i))
-      .map((l) => l.trim())
-      .filter(Boolean);
+      .map((l) => l.trim());
     const itemsAt = lines.findIndex((l) => /<strong>\s*Items:\s*<\/strong>/i.test(l));
     const totalAt = lines.findIndex(
       (l, i) =>
@@ -506,6 +510,8 @@ const styleOrderRow = (doc: Document, row: Element) => {
 
       const items: { lines: string[]; image: string }[] = [];
       for (const line of lines.slice(itemsAt + 1, totalAt === -1 ? undefined : totalAt)) {
+        // Blank lines just separate items — item spacing comes from .gd-item
+        if (!line) continue;
         const url = imageLineUrl(line);
         if (url) {
           // Marker lines attach to the item above them; a stray marker with

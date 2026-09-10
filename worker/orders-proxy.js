@@ -185,7 +185,7 @@ const verifyPrices = async (o) => {
     ordinary text only, while the visitor-side styler (src/lib/livechat.ts)
     turns those marker lines back into thumbnails when it rebuilds the
     message. Matches the site's cart drawer / service card styling once
-    styled: bold name, game · qty meta line, ◆ detail bullets, "From" unit
+    styled: bold name, game · qty meta line, ◆ detail bullets, "Price:" unit
     price. */
 const buildMessage = (o) => {
   const itemBlocks = o.items
@@ -196,7 +196,7 @@ const buildMessage = (o) => {
         `[b]${bb(it.name, 120)}[/b]`,
         bb(it.meta, 80),
         (Array.isArray(it.details) ? it.details : []).map((d) => `◆ ${bb(d, 120)}`).join('\n'),
-        bb(it.unitPrice, 30) ? `From [b]${bb(it.unitPrice, 30)}[/b]` : '',
+        bb(it.unitPrice, 30) ? `Price: [b]${bb(it.unitPrice, 30)}[/b]` : '',
         img ? `Image: ${img}` : '',
       ]
         .filter(Boolean)
