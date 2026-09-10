@@ -93,10 +93,13 @@ const customStatusCss = `#lhc_status_container {
   border-radius: 999px !important;
 }`;
 
-// Raw declarations — applied directly to the chat iframe element.
+// Raw declarations — applied INLINE to the chat iframe element with
+// !important, so no stylesheet (or media query) can ever override them: keep
+// only resolution-independent chrome here. The box-shadow (blue frame
+// ring/glow) deliberately lives in customPageCss instead — the mobile
+// fullscreen media query drops it there.
 const customContainerCss =
-  'border: none !important; border-radius: 12px !important; overflow: hidden !important; ' +
-  'box-shadow: 0 0 0 1px rgba(59,130,246,.22), 0 24px 60px -24px rgba(59,130,246,.30), 0 25px 50px -12px rgba(0,0,0,.55) !important;';
+  'border: none !important; border-radius: 12px !important; overflow: hidden !important;';
 
 const customWidgetCss = `/* ===== GD Carry dark theme — widget interior v21 ===== */
 
@@ -912,10 +915,15 @@ body { background-color: #0f0f11 !important; }
 
 /* Start-chat / offline form fields */
 .form-group { margin-bottom: 14px !important; }
+/* "form .control-label" outranks LHC's mobile anti-zoom rule
+   (input, select, .control-label, textarea { font-size: 16px !important } in
+   the compiled mobile CSS): both would be !important, so plain .control-label
+   loses on sheet order — the form ancestor lifts specificity above it. */
+form .control-label,
 .control-label,
 .form-check-label {
   color: #94a3b8 !important;
-  font-size: 12px;
+  font-size: 12px !important;
   margin-bottom: 6px !important;
 }
 /* Required-field asterisk (wrapped by the header_html observer) — theme blue */
@@ -1114,7 +1122,9 @@ const customPageCss = `#lhc_container_v2 #lhc_status_widget_v2 {
   display: none !important;
 }
 
-/* Mobile: widget goes full-screen so it can never overflow the viewport */
+/* Mobile: widget goes full-screen so it can never overflow the viewport.
+   No frame ring/glow (box-shadow) — it reads as a stray blue border around a
+   full-viewport window. */
 @media (max-width: 520px) {
   #lhc_container_v2 #lhc_widget_v2 {
     left: 0 !important;
@@ -1125,11 +1135,28 @@ const customPageCss = `#lhc_container_v2 #lhc_status_widget_v2 {
     height: 100dvh !important;
     max-height: 100dvh !important;
     border-radius: 0 !important;
+    box-shadow: none !important;
   }
 
   #lhc_container_v2 #lhc_status_widget_v2 {
     bottom: 16px !important;
     right: 16px !important;
+  }
+}
+
+/* Desktop: pin the widget back to its floating box. LHC picks mobile vs
+   desktop from the USER AGENT once at load — a page loaded with a mobile UA
+   keeps its inline 100%x100% fullscreen styles after a resize to desktop
+   (isMobile is never re-evaluated). Those inline styles carry no !important,
+   so these rules win. Width/height mirror wwidth/wheight in
+   src/components/LiveChatWidget.tsx. */
+@media (min-width: 521px) {
+  #lhc_container_v2 #lhc_widget_v2 {
+    left: auto !important;
+    width: 350px !important;
+    min-width: 0 !important;
+    height: 450px !important;
+    min-height: 0 !important;
   }
 }`;
 

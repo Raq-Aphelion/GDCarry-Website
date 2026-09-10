@@ -139,12 +139,16 @@ function ensureWatchers() {
 }
 
 /** Mobile only: square corners on the chat window (LHC inlines a 12px radius,
-    so re-apply every tick as it can reset it on (re)load). */
+    so re-apply every tick as it can reset it on (re)load). The override must
+    be REMOVED when crossing back to desktop — an inline !important survives
+    the resize and would keep the desktop window's corners square. */
 function ensureSquareCorners() {
   const widget = getWidget();
   if (!widget) return;
   if (window.matchMedia('(max-width: 1023px)').matches) {
     widget.style.setProperty('border-radius', '0', 'important');
+  } else {
+    widget.style.removeProperty('border-radius');
   }
 }
 

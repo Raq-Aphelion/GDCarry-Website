@@ -10,8 +10,9 @@ export const SITE_URL = siteConfig.siteUrl;
 export const SITE_DOMAIN = new URL(siteConfig.siteUrl).host;
 /** Live Helper Chat REST base, trailing slash — 'https://chat.gdcarry.com/index.php/' */
 export const CHAT_URL = siteConfig.chatUrl;
-/** Live Helper Chat widget loader script (host root, outside chatUrl's /index.php/ base) */
-export const CHAT_WIDGET_SCRIPT_URL = new URL('design/defaulttheme/js/widgetv2/index.js', siteConfig.chatUrl).href;
+/** Live Helper Chat widget loader script (host root, outside chatUrl's /index.php/
+    base — the leading slash makes the URL host-relative) */
+export const CHAT_WIDGET_SCRIPT_URL = new URL('/design/defaulttheme/js/widgetv2/index.js', siteConfig.chatUrl).href;
 /** Static catalog base the client/worker fetch service JSONs from */
 export const DB_URL = siteConfig.dbUrl;
 /** Order log proxy (Cloudflare Worker) */
