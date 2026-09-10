@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { initLhcWidgetFx } from '@/lib/lhcWidgetFx';
 import { initOrderMessageStyler } from '@/lib/livechat';
 import { initLhcPollThrottle } from '@/lib/lhcPollThrottle';
+import { CHAT_URL, CHAT_WIDGET_SCRIPT_URL, SITE_DOMAIN, SITE_URL } from '@/lib/site-config';
 
 /** Live Helper Chat widget — injects the LHC embed script once on app mount.
     Snippet generated in LHC admin → Embed code → Widget embed code (new). */
@@ -17,12 +18,12 @@ export default function LiveChatWidget() {
       // Explicit https:// (not protocol-relative): on an http:// page (local
       // dev) "//" resolves to http, and the server's http→https redirect
       // doesn't carry CORS headers, so the widget's XHR would be blocked.
-      lhc_base_url: 'https://chat.gdcarry.com/index.php/',
+      lhc_base_url: CHAT_URL,
       wheight: 450,
       wwidth: 350,
       pheight: 520,
       pwidth: 500,
-      domain: 'gdcarry.com',
+      domain: SITE_DOMAIN,
       leaveamessage: true,
       check_messages: false,
       // Chat input placeholder (the widget's own default is "Type your
@@ -30,7 +31,7 @@ export default function LiveChatWidget() {
       react_attr: [{ k: ['chat_ui', 'placeholder_message'], v: 'Write a message...' }],
       // Default operator avatar beside operator messages (the theme's
       // operator_image covers the classic server-rendered paths)
-      profile_pic: 'https://gdcarry.com/images/gd_favicon.png',
+      profile_pic: `${SITE_URL}/images/gd_favicon.png`,
       // No proactive invitations — the widget only opens on explicit user action
       proactive: false,
       // Flags when a chat has actually started — the order handoff uses this
@@ -50,7 +51,7 @@ export default function LiveChatWidget() {
     po.async = true;
     const date = new Date();
     po.src =
-      'https://chat.gdcarry.com/design/defaulttheme/js/widgetv2/index.js?' +
+      CHAT_WIDGET_SCRIPT_URL + '?' +
       ('' + date.getFullYear() + date.getMonth() + date.getDate());
     const s = document.getElementsByTagName('script')[0];
     s.parentNode?.insertBefore(po, s);

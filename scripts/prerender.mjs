@@ -10,6 +10,10 @@ import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';
 
+// Site URLs come from the repo-root config — the single source of truth
+// (worker/wrangler.toml [vars] duplicates them for the worker; keep in sync).
+const siteConfig = JSON.parse(fs.readFileSync('site.config.json', 'utf8'));
+
 /* Service subpage routes come straight from the per-service database files
    (public/db/services/ffxiv/<id>.json entries with a `subpage` block), so
    they never drift out of sync; only static routes are listed here. The same
@@ -120,7 +124,7 @@ for (const route of ROUTES) {
     // bails — leaving a visible but dead chat badge.
     await page.setRequestInterception(true);
     page.on('request', (req) => {
-      if (req.url().includes('chat.gdcarry.com')) req.abort();
+      if (req.url().includes(new URL(siteConfig.chatUrl).host)) req.abort();
       else req.continue();
     });
     await page.goto(`http://127.0.0.1:${port}${route}`, {
@@ -176,7 +180,7 @@ const priority = (route) =>
     : '0.3';
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${SITEMAP_ROUTES.map((r) => `  <url>\n    <loc>https://gdcarry.com${r}</loc>\n    <priority>${priority(r)}</priority>\n  </url>`).join('\n')}
+${SITEMAP_ROUTES.map((r) => `  <url>\n    <loc>${siteConfig.siteUrl}${r}</loc>\n    <priority>${priority(r)}</priority>\n  </url>`).join('\n')}
 </urlset>
 `;
 fs.writeFileSync(path.join(DIST, 'sitemap.xml'), sitemap);

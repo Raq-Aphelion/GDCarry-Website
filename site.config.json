@@ -1,0 +1,12 @@
+{
+  "_comment": "Single source of truth for site URLs and public API endpoints. The worker cannot import this file — worker/wrangler.toml [vars] duplicates the domain-dependent values (SITE_URL, CHAT_URL, DB_URL, ALLOWED_ORIGINS) and MUST be kept in sync.",
+  "siteUrl": "https://gdcarry.com",
+  "chatUrl": "https://chat.gdcarry.com/index.php/",
+  "dbUrl": "https://gdcarry.com/db/",
+  "orderApiUrl": "https://gdcarry.com/api/order",
+  "applyApiUrl": "https://gdcarry.com/api/apply",
+  "discordInvite": "https://discord.gg/granddice",
+  "ipGeolocationUrl": "https://ipapi.co/json/",
+  "turnstileSiteKey": "0x4AAAAAAEqwlV_lM0EL7NU5",
+  "googleFontsUrl": "https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap"
+}

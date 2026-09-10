@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 import { usePricing } from './PricingContext';
+import { IP_GEOLOCATION_URL } from '@/lib/site-config';
 
 export type Currency = 'USD' | 'EUR';
 
@@ -37,7 +38,7 @@ export function CurrencyProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (window.localStorage.getItem('gd-currency')) return;
     let alive = true;
-    fetch('https://ipapi.co/json/')
+    fetch(IP_GEOLOCATION_URL)
       .then((res) => res.json())
       .then((data) => {
         if (!alive || !data) return;

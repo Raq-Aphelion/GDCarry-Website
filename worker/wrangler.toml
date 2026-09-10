@@ -10,7 +10,7 @@
 #     → paste the returned id into [[kv_namespaces]] below
 #   Create a Turnstile widget: Cloudflare dashboard → Turnstile → Add site
 #     (hostname gdcarry.com; add localhost for dev) → copy the SITE key into
-#     TURNSTILE_SITE_KEY in src/pages/CheckoutPage.tsx, then:
+#     turnstileSiteKey in site.config.json (repo root), then:
 #   npx wrangler secret put TURNSTILE_SECRET_KEY --config worker/wrangler.toml
 #     (paste the widget's SECRET key — it lives only in Cloudflare; rotation is
 #     a dashboard/wrangler action, no client deploy needed)
@@ -28,10 +28,23 @@ name = "orders-proxy"
 main = "orders-proxy.js"
 compatibility_date = "2025-01-01"
 
-# Serve only via the zone route: the site-wide flood rate-limit rule covers
-# it, and the unprotected *.workers.dev hostname goes away.
+# Serve only via the zone routes: the site-wide flood rate-limit rule covers
+# them, and the unprotected *.workers.dev hostname goes away.
 workers_dev = false
-routes = [{ pattern = "gdcarry.com/api/order", zone_name = "gdcarry.com" }]
+routes = [
+  { pattern = "gdcarry.com/api/order", zone_name = "gdcarry.com" },
+  { pattern = "gdcarry.com/api/apply", zone_name = "gdcarry.com" },
+]
+
+# Domain-dependent config, read from env in orders-proxy.js. Duplicated from
+# site.config.json (the worker can't import that JSON at the toml level) —
+# KEEP THE TWO FILES IN SYNC. The http://localhost:3000 origin is the vite
+# dev server (see vite.config.ts server.port).
+[vars]
+SITE_URL = "https://gdcarry.com"
+CHAT_URL = "https://chat.gdcarry.com/index.php/"
+DB_URL = "https://gdcarry.com/db/"
+ALLOWED_ORIGINS = "https://gdcarry.com,https://www.gdcarry.com,http://localhost:3000"
 
 [[kv_namespaces]]
 binding = "RATE_LIMIT"

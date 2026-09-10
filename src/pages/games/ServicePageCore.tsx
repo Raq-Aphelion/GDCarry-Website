@@ -452,10 +452,14 @@ export default function ServicePageCore({ gameId }: { gameId: string }) {
       {/* ============ MOBILE CATEGORY CAROUSEL — seamless with the navbar ============ */}
       <MobileCategoryBar items={game.subcategories} activeId={sub.id} gameId={game.id} />
 
-      {/* ============ SIDEBAR + CONTENT + PURCHASE ============ */}
-      <div className="relative mx-auto flex max-w-[1440px] flex-col gap-10 px-[25px] py-10 sm:px-6 lg:grid lg:grid-cols-[240px_minmax(0,1fr)_340px] lg:gap-8 lg:py-12 lg:px-8">
-        {/* Faded game art behind the top of the page — same background as the game subpage */}
-        <div className="pointer-events-none absolute left-1/2 top-0 -z-10 h-[460px] w-screen -translate-x-1/2" aria-hidden>
+      {/* ============ SIDEBAR + CONTENT + PURCHASE — pt-4 on mobile keeps the
+          breadcrumb close under the chips bar ============ */}
+      <div className="relative mx-auto flex max-w-[1440px] flex-col gap-10 px-[25px] pb-10 pt-4 sm:px-6 lg:grid lg:grid-cols-[240px_minmax(0,1fr)_340px] lg:gap-8 lg:py-12 lg:px-8">
+        {/* Faded game art behind the top of the page — same background as the
+            game subpage. On mobile it starts 58px higher (the chips bar's
+            height), so the bar sits ON the art instead of the plain page
+            navy; the taller box keeps the art's bottom edge where it was */}
+        <div className="pointer-events-none absolute left-1/2 -top-[58px] -z-10 h-[518px] w-screen -translate-x-1/2 lg:top-0 lg:h-[460px]" aria-hidden>
           <div className="absolute inset-0">
             <FadeImage
               src={game.id === 'ffxiv' ? ffxivBg : game.cardImage}

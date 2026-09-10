@@ -3,6 +3,7 @@ import { Link } from 'react-router';
 import { ArrowRight, Badge, ChevronDown, ChevronLeft, ChevronRight, HandCoins, ShieldCheck, Star, Users, Zap } from 'lucide-react';
 import CustomOrderCta from '@/components/CustomOrderCta';
 import PageMeta, { JsonLd, SITE_URL } from '@/components/PageMeta';
+import { DISCORD_INVITE } from '@/lib/site-config';
 import FadeImage from '@/components/FadeImage';
 import Reveal from '@/components/Reveal';
 import ServiceCard from '@/components/ServiceCard';
@@ -277,7 +278,7 @@ export default function Home() {
               description:
                 'Professional boosting services and carries for FFXIV, World of Warcraft, Lost Ark, Warframe and RuneScape.',
               sameAs: [
-                'https://discord.gg/granddice',
+                DISCORD_INVITE,
                 'https://www.trustpilot.com/review/gdcarry.com',
                 'https://granddice.carrd.co',
                 'https://www.patreon.com/GrandDice/membership',

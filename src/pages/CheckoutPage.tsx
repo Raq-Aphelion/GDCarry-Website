@@ -11,7 +11,9 @@ import { useCart, type CartItem } from '@/context/CartContext';
 import { cartMeta, displayDetails, lineTotal } from '@/lib/cart';
 import { useCurrency } from '@/context/CurrencyContext';
 import { useToast } from '@/context/ToastContext';
+import { ORDER_API_URL as ORDER_LOG_URL, TURNSTILE_SITE_KEY } from '@/lib/site-config';
 import { getLhcSession, openLiveChat, openLiveChatPrefill } from '@/lib/livechat';
+import { buildOrderMessage, MAX_ORDER_ITEMS } from '@/lib/order-format';
 import { useSmoothScroller } from '@/hooks/useSmoothScroller';
 import { serviceLink } from '@/data/games';
 import ffxivBg from '@/assets/images/backgrounds/ffxiv-service-bg.webp';
@@ -22,15 +24,14 @@ const RETURN_COUNTDOWN_S = 10;
 /** Right column's order box matches the left column's height only side-by-side. */
 const TWO_COL_QUERY = '(min-width: 1024px)';
 
-/** Order log proxy (Cloudflare Worker) — rebuilds the Discord embed
-    server-side, so the webhook URL never ships in this bundle. Orders are
-    gated by a Cloudflare Turnstile challenge: this site key is PUBLIC by
-    design (it identifies the widget, it grants no ability to forge tokens —
-    verification uses a Cloudflare-only secret). While empty, order logging
-    is skipped (the live chat flow still works). Local dev: use Cloudflare's
-    always-pass test key 1x00000000000000000000AA. */
-const ORDER_LOG_URL = 'https://gdcarry.com/api/order';
-const TURNSTILE_SITE_KEY = '0x4AAAAAAEqwlV_lM0EL7NU5';
+/** ORDER_LOG_URL + TURNSTILE_SITE_KEY come from site.config.json (via
+    src/lib/site-config.ts). The worker rebuilds the Discord embed server-side,
+    so the webhook URL never ships in this bundle. Orders are gated by a
+    Cloudflare Turnstile challenge: the site key is PUBLIC by design (it
+    identifies the widget, it grants no ability to forge tokens — verification
+    uses a Cloudflare-only secret). While empty, order logging is skipped (the
+    live chat flow still works). Local dev: use Cloudflare's always-pass test
+    key 1x00000000000000000000AA. */
 
 /** Minimal type for the Turnstile API (no @types package). */
 type TurnstileWidget = {
@@ -264,49 +265,6 @@ export default function CheckoutPage() {
 
   const methodLabel = PAYMENT_METHODS.find((m) => m.id === method)?.label ?? method;
 
-  /** Strips BBCode brackets/control chars from free-text fields before they
-      are interpolated into the order message — otherwise a "name" like
-      [img]https://evil/x.png[/img] would render in the operator's chat. */
-  // eslint-disable-next-line no-control-regex -- stripping control chars is the point
-  const bbSafe = (s: string) => s.replace(/[[\]\x00-\x1f]/g, '').trim();
-
-  /** Full order as chat text ([b] BBCode for bold) — used for the live chat
-      message field. Per item: bold title, game · qty · price meta line (like
-      the Discord embed), diamond config bullets, then a plain-text
-      `Image: <url>` marker — NOT [img], so the operator chat renders text
-      only while styleOrderRow rebuilds the marker into a thumbnail-left row
-      on the visitor side once the message lands. The bottom Total line
-      carries the big-price style. */
-  const buildOrderMessage = (orderId: string) => {
-    const itemBlocks = orderItems
-      .slice(0, 5)
-      .map((item) => {
-        const details = displayDetails(item).map((d) => `◆ ${d}`).join('\n');
-        return [
-          `[b]${item.name}[/b]`,
-          `${cartMeta(item)} — ${format(lineTotal(item))}`,
-          details,
-          `Image: ${new URL(item.image, SITE_URL).href}`,
-        ]
-          .filter(Boolean)
-          .join('\n');
-      })
-      .join('\n');
-    return [
-      '[b]ORDER DETAILS[/b]',
-      `[b]Order ID:[/b] ${orderId}`,
-      '',
-      `👤 [b]${contactVia === 'chat' ? 'Name' : 'Discord'}:[/b] ${bbSafe(contact)}`,
-      `✉️ [b]E-mail:[/b] ${bbSafe(email) || '—'}`,
-      `💳 [b]Payment:[/b] ${methodLabel}`,
-      '',
-      '[b]Items:[/b]',
-      itemBlocks,
-      '',
-      `Total: [b]${format(orderTotal)}[/b]`,
-    ].join('\n');
-  };
-
   /** Posts the order to the proxy (Cloudflare Worker) as raw fields — the
       worker validates them, rebuilds both the Discord embed and the BBCode
       chat message server-side, logs the order and (for chat orders) injects
@@ -338,7 +296,7 @@ export default function CheckoutPage() {
         vid: session?.vid,
         chatId: session?.id,
         chatHash: session?.hash,
-        items: orderItems.slice(0, 5).map((item) => ({
+        items: orderItems.slice(0, MAX_ORDER_ITEMS).map((item) => ({
           id: item.id.split('::')[0],
           name: item.name,
           meta: cartMeta(item),
@@ -371,7 +329,24 @@ export default function CheckoutPage() {
     // Links the chat message and the Discord log — the operator can verify
     // the order in chat against the bot-logged record by ID.
     const orderId = generateOrderId();
-    const message = buildOrderMessage(orderId);
+    // The shared builder (src/lib/order-format.ts) is the same one the worker
+    // uses for server-side injection — this fallback prefill message is
+    // byte-identical to an injected one, so the styler sees one format.
+    const message = buildOrderMessage({
+      orderId,
+      contactLabel: contactVia === 'chat' ? 'Name' : 'Discord',
+      contact,
+      email,
+      payment: methodLabel,
+      total: format(orderTotal),
+      items: orderItems.map((item) => ({
+        name: item.name,
+        meta: cartMeta(item),
+        details: displayDetails(item),
+        unitPrice: format(item.price),
+        image: new URL(item.image, SITE_URL).href,
+      })),
+    });
     const prefill =
       contactVia === 'chat'
         ? { username: contact.trim(), email: email.trim(), question: message }

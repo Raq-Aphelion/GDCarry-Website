@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router';
 import { MessageCircle, Send, X } from 'lucide-react';
 import { CHAT_OPENED_EVENT, getLhcSession, openLiveChat, openLiveChatPrefill } from '@/lib/livechat';
+import { CHAT_URL } from '@/lib/site-config';
 
 /** Delay before the card pops in */
 const SHOW_DELAY_MS = 5000;
@@ -23,7 +24,7 @@ const AVATARS: { src: string; ring: string }[] = [
   { src: '/images/support/operator-3.png', ring: 'border-green-500' },
 ];
 
-const LHC_BASE = 'https://chat.gdcarry.com/index.php/';
+const LHC_BASE = CHAT_URL;
 
 /** The card only ever appears on the main page */
 const isSuppressed = (pathname: string) => pathname !== '/';

@@ -1,14 +1,19 @@
-import { useState, type FormEvent } from 'react';
+import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { Link } from 'react-router';
 import { CheckCircle2, ChevronRight, Loader2, Mail, MessageCircle, Coins, CalendarClock, Trophy } from 'lucide-react';
 import PageMeta from '@/components/PageMeta';
 import Reveal from '@/components/Reveal';
 import { useToast } from '@/context/ToastContext';
+import { APPLY_API_URL, TURNSTILE_SITE_KEY } from '@/lib/site-config';
 
-/** Google Apps Script endpoint that receives booster applications
-    (fields are read by the script by name — keep them in sync). */
-const SCRIPT_URL =
-  'https://script.google.com/macros/s/AKfycbyO-6iZZeasHImMtYFgPSOBX15uiV6kSx2yWEXO1EwPcYzqwEpuaoD3DWXj-1kvlTzO/exec';
+/** Minimal type for the Turnstile API (no @types package) — same pattern as
+    CheckoutPage. */
+type TurnstileApi = {
+  render: (el: HTMLElement, opts: Record<string, unknown>) => string;
+  execute: (id: string, opts: Record<string, unknown>) => void;
+  reset: (id: string) => void;
+};
+const turnstile = () => (window as unknown as { turnstile?: TurnstileApi }).turnstile;
 
 const GAMES = ['Final Fantasy XIV', 'World of Warcraft', 'Lost Ark', 'Warframe', 'RuneScape'];
 
@@ -51,6 +56,52 @@ export default function WorkWithUsPage() {
 
   const [submitAttempted, setSubmitAttempted] = useState(false);
   const [stage, setStage] = useState<'form' | 'submitting' | 'done'>('form');
+  // Turnstile widget container — rendered invisible (interaction-only), the
+  // challenge only surfaces when Cloudflare decides it needs a human
+  const turnstileRef = useRef<HTMLDivElement>(null);
+
+  // Render the Turnstile widget once the API script has loaded (it's async —
+  // poll briefly rather than wiring the api.js onload callback through index.html)
+  useEffect(() => {
+    if (!TURNSTILE_SITE_KEY) return;
+    const render = () => {
+      const el = turnstileRef.current;
+      const t = turnstile();
+      if (!t || !el || el.dataset.widgetId) return true;
+      el.dataset.widgetId = String(
+        t.render(el, {
+          sitekey: TURNSTILE_SITE_KEY,
+          // No widget until Cloudflare actually challenges the submitter;
+          // the container anchors where a challenge would appear.
+          appearance: 'interaction-only',
+          execution: 'execute',
+        }),
+      );
+      return true;
+    };
+    if (render()) return;
+    const iv = window.setInterval(() => {
+      if (render()) window.clearInterval(iv);
+    }, 200);
+    return () => window.clearInterval(iv);
+  }, []);
+
+  /** Fresh Turnstile token for one application POST. Tokens are single-use
+      and expire in 300s, so this runs at submit time, not earlier. */
+  const getTurnstileToken = (): Promise<string | null> => {
+    const t = turnstile();
+    const el = turnstileRef.current;
+    const id = el?.dataset.widgetId;
+    if (!t || !el || !id) return Promise.resolve(null);
+    return new Promise((resolve) => {
+      t.reset(id); // allow a retry after a previous failure/expiry
+      t.execute(id, {
+        callback: (token: string) => resolve(token),
+        'error-callback': () => resolve(null),
+        'expired-callback': () => resolve(null),
+      });
+    });
+  };
 
   const discordInvalid = submitAttempted && discord.trim().length < 2;
   const emailInvalid = submitAttempted && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
@@ -72,19 +123,27 @@ export default function WorkWithUsPage() {
 
     setStage('submitting');
     try {
-      const formData = new FormData();
-      formData.set('Discord Username', discord.trim());
-      formData.set('E-Mail', email.trim());
-      formData.set('Games You Boost', games.join(', '));
-      formData.set('Main Specialization', specialization.trim());
-      formData.set('Experience & Achievements', experience.trim());
-      formData.set('Proof Links', proof.trim());
-      formData.set('Availability', availability.trim());
-      formData.set('Why Should We Pick You?', motivation.trim());
+      // Anti-abuse challenge first — the worker re-verifies this token with
+      // Cloudflare before forwarding the application to the roster script
+      const token = await getTurnstileToken();
+      if (!token) throw new Error('challenge_failed');
 
-      const res = await fetch(SCRIPT_URL, { method: 'POST', body: formData });
-      const result = await res.json();
-      if (result.result !== 'success') throw new Error(result.message || 'rejected');
+      const res = await fetch(APPLY_API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Turnstile-Token': token },
+        body: JSON.stringify({
+          discord: discord.trim(),
+          email: email.trim(),
+          games,
+          specialization: specialization.trim(),
+          experience: experience.trim(),
+          proof: proof.trim(),
+          availability: availability.trim(),
+          motivation: motivation.trim(),
+        }),
+      });
+      const result = (await res.json().catch(() => null)) as { ok?: boolean } | null;
+      if (!res.ok || result?.ok !== true) throw new Error(result ? 'rejected' : 'unreachable');
       setStage('done');
     } catch {
       setStage('form');
@@ -103,6 +162,12 @@ export default function WorkWithUsPage() {
         description="Join the Grand Dice roster. Apply to be a Grand Dice booster and get paid to clear FFXIV, WoW, Lost Ark, Warframe and RuneScape content on your own schedule."
         path="/work-with-us"
       />
+
+      {/* Turnstile mount point — interaction-only: invisible unless Cloudflare
+          challenges the submitter, so it never disturbs the layout */}
+      {TURNSTILE_SITE_KEY && (
+        <div ref={turnstileRef} className="fixed bottom-4 right-4 z-50" aria-hidden />
+      )}
 
       {/* ============ HEADER ============ */}
       <section className="relative overflow-hidden border-b border-navy-700/50">

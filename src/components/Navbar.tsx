@@ -716,6 +716,18 @@ export default function Navbar() {
         </div>
       </nav>
 
+      {/* Mobile-only gradient underlay on pages WITHOUT the category chip bar
+          (chip-bar pages get the same look from the bar's own stuck backdrop):
+          a navy fade below the navbar once scrolled, so the top of the page
+          reads the same everywhere. Always rendered and faded via opacity —
+          a conditional mount would pop in/out instantly. */}
+      <div
+        aria-hidden
+        className={`pointer-events-none absolute inset-x-0 top-full h-[58px] bg-gradient-to-b from-navy-900/90 via-navy-900/60 to-navy-900/0 transition-opacity duration-300 lg:hidden ${
+          scrolled && !mobileOpen && !location.pathname.startsWith('/boosting/') ? 'opacity-100' : 'opacity-0'
+        }`}
+      />
+
       {/* Mobile menu — capped at the smaller of 760px / viewport height; if the
           content overflows on very small screens it scrolls (no visible scrollbar) */}
       <div

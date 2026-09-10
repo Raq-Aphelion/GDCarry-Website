@@ -12,6 +12,9 @@
     <!-- Full referrer on same-origin, origin-only cross-origin (default modern
          behavior, pinned for older browsers). -->
     <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <!-- Canonical/OG/Twitter URLs below duplicate siteUrl from site.config.json —
+         static pre-render fallbacks (crawlers see these before JS runs); keep
+         them in sync with that file. The Trustpilot meta above must stay. -->
     <link rel="canonical" href="https://gdcarry.com/" />
     <meta property="og:title" content="GD Carry — Grand Dice Gaming Boosting" />
     <meta property="og:description" content="GD Carry — Grand Dice. Professional boosting services for FFXIV, World of Warcraft, Lost Ark, Warframe and RuneScape." />

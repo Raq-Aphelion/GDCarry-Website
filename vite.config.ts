@@ -67,6 +67,8 @@ export default defineConfig(({ command }) => ({
   // element, which would leak the internal source layout into dist/.
   plugins: [...(command === 'serve' ? [inspectAttr()] : []), react(), dbBundlePlugin()],
   server: {
+    // The worker allows this dev origin via the ALLOWED_ORIGINS var in
+    // worker/wrangler.toml — change the port there too.
     port: 3000,
   },
   resolve: {

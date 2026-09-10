@@ -1,3 +1,13 @@
+import { GOOGLE_FONTS_BASE } from '@/lib/site-config';
+import {
+  DETAIL_PREFIX,
+  IMAGE_LABEL,
+  ITEMS_LABEL,
+  ORDER_MARKER,
+  PRICE_LABEL,
+  TOTAL_LABEL,
+} from '@/lib/order-format';
+
 /** Dispatched synchronously whenever a site control opens the LHC widget —
     NeedHelpCard listens: it hides instantly (the 2s widgetStatus poll would
     leave the card overlapping the widget, and its read of LHC's internal
@@ -98,7 +108,7 @@ export interface LiveChatPrefill {
    Images are made non-interactive (pointer-events none + anchors unwrapped in
    styleOrderRow) so visitors can't click them open in full view. */
 const ORDER_CSS = `
-@import url('https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600&display=swap');
+@import url('${GOOGLE_FONTS_BASE}family=Sora:wght@600;700;800&family=Inter:wght@400;500;600&display=swap');
 #messagesBlock .message-row.gd-order {
   max-width: 100% !important;
   width: 100% !important;
@@ -315,17 +325,32 @@ const ORDER_CSS = `
 }
 `;
 
-/** First line of every order message — used to spot order rows in the chat. */
-const ORDER_MARKER = 'ORDER DETAILS';
+/* The order-message format constants (ORDER_MARKER, labels, detail prefix)
+   come from src/lib/order-format.ts — the shared module whose
+   buildOrderMessage produces exactly what this parser consumes (both the
+   worker's server-side injection and the checkout fallback use it).
+   ORDER_MARKER is the first line of every order message — it spots order
+   rows in the chat. */
 const PENDING_STATUS_RE = /^Pending a support staff member to join,.*they will get your messages\.?$/;
 const PENDING_STATUS_SHORT = 'Staff will be with you shortly.';
 
+const escapeRe = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+/** `<strong>Items:</strong>` header — anchors the item list inside a message. */
+const STRONG_ITEMS_RE = new RegExp(`<strong>\\s*${escapeRe(ITEMS_LABEL)}\\s*<\\/strong>`, 'i');
+/** Same header with capture groups — splits a body into (everything up to
+    and incl. the Items: header, the rest); legacy per-item bodies carry the
+    contact block ahead of the first item. */
+const ITEMS_SPLIT_RE = new RegExp(
+  `^([\\s\\S]*?<strong>\\s*${escapeRe(ITEMS_LABEL)}\\s*<\\/strong><br>\\s*)([\\s\\S]*)$`,
+  'i',
+);
+
 /** Wraps each line of an item's text body in a typed div (name / meta /
     detail / price) so ORDER_CSS can style them like the site's cart drawer
-    and service card. Detail markers (◆/🔹) are stripped — the CSS ::before
-    diamond replaces them. Tolerates the older message format (numbered
-    names, "meta — price" line, 🔹 markers) that the server-side worker or
-    stored chat history may still render. */
+    and service card. Detail markers are stripped — the CSS ::before diamond
+    replaces them. Tolerates the older formats (numbered names, "meta —
+    price" line, 🔹 markers, emoji-less contact block) that stored chat
+    history may still render. */
 /** Allowlist sanitizer for LHC-rendered message HTML before it is re-injected
     via innerHTML. LHC escapes/BBCode-renders server-side, but if that ever
     lets raw markup through we must not amplify it: only the formatting tags
@@ -384,27 +409,34 @@ const sanitizeOrderHtml = (html: string): string => {
   return [...tpl.content.childNodes].map(clean).join('');
 };
 
+/** Detail-line marker: DETAIL_PREFIX is the current marker, 🔹 lives on in
+    stored history from a previous format. */
+const DETAIL_LINE_RE = new RegExp(`^(?:${escapeRe(DETAIL_PREFIX)}|🔹)\\s*`);
+/** "Price:" is the current label; "From" lives on in stored chat history. */
+const PRICE_LINE_RE = new RegExp(`^(?:${escapeRe(PRICE_LABEL.replace(/:$/, ''))}|From)[:\\s]`, 'i');
+
 const wrapItemLines = (html: string) =>
   html
     .split(/<br\s*\/?>/i)
     .map((l) => l.trim())
     .filter(Boolean)
     .map((l) => {
-      if (/^(?:◆|🔹)/.test(l)) return `<div class="gd-detail">${l.replace(/^(?:◆|🔹)\s*/, '')}</div>`;
-      // "Price:" is the current label; "From" lives on in stored chat history
-      if (/^(?:Price|From)[:\s]/i.test(l)) return `<div class="gd-price">${l}</div>`;
+      if (DETAIL_LINE_RE.test(l)) return `<div class="gd-detail">${l.replace(DETAIL_LINE_RE, '')}</div>`;
+      if (PRICE_LINE_RE.test(l)) return `<div class="gd-price">${l}</div>`;
       if (/^<strong>[\s\S]*<\/strong>$/.test(l)) return `<div class="gd-name">${l}</div>`;
       return `<div class="gd-meta">${l}</div>`;
     })
     .join('');
 
-/** Plain-text image marker both order builders (worker + CheckoutPage) emit
-    instead of [img] BBCode: the operator chat renders it as an ordinary text
-    line, and only this visitor-side styler turns it back into a thumbnail.
-    Tolerates LHC auto-linking the URL (href capture) and restricts the URL
-    to https. */
-const IMAGE_LINE_RE =
-  /^Image:\s*(?:<a\b[^>]*?href="(https:\/\/[^"&]+)"[^>]*>[\s\S]*?<\/a>|(https:\/\/[^\s<]+))\s*$/i;
+/** Plain-text image marker the shared order builder (src/lib/order-format.ts)
+    emits instead of [img] BBCode: the operator chat renders it as an ordinary
+    text line, and only this visitor-side styler turns it back into a
+    thumbnail. Tolerates LHC auto-linking the URL (href capture) and restricts
+    the URL to https. */
+const IMAGE_LINE_RE = new RegExp(
+  `^${escapeRe(IMAGE_LABEL)}\\s*(?:<a\\b[^>]*?href="(https:\\/\\/[^"&]+)"[^>]*>[\\s\\S]*?<\\/a>|(https:\\/\\/[^\\s<]+))\\s*$`,
+  'i',
+);
 
 const imageLineUrl = (line: string): string => {
   const m = line.match(IMAGE_LINE_RE);
@@ -495,11 +527,11 @@ const styleOrderRow = (doc: Document, row: Element) => {
       .filter(isTextBody)
       .flatMap((b) => sanitizeOrderHtml(b.innerHTML).split(/<br\s*\/?>/i))
       .map((l) => l.trim());
-    const itemsAt = lines.findIndex((l) => /<strong>\s*Items:\s*<\/strong>/i.test(l));
+    const itemsAt = lines.findIndex((l) => STRONG_ITEMS_RE.test(l));
     const totalAt = lines.findIndex(
       (l, i) =>
         i > itemsAt &&
-        l.replace(/<[^>]+>/g, '').trim().replace(/^[\W_]+/, '').startsWith('Total:'),
+        l.replace(/<[^>]+>/g, '').trim().replace(/^[\W_]+/, '').startsWith(TOTAL_LABEL),
     );
     if (itemsAt !== -1) {
       const contact = doc.createElement('div');
@@ -571,7 +603,7 @@ const styleOrderRow = (doc: Document, row: Element) => {
         // at the Items: marker and emit it here, ahead of the item rows
         if (!contactEmitted) {
           contactEmitted = true;
-          const m = html.match(/^([\s\S]*?<strong>\s*Items:\s*<\/strong><br>\s*)([\s\S]*)$/i);
+          const m = html.match(ITEMS_SPLIT_RE);
           if (m) {
             const contact = doc.createElement('div');
             contact.className = 'msg-body gd-contact';
@@ -588,7 +620,7 @@ const styleOrderRow = (doc: Document, row: Element) => {
       const clone = doc.createElement('div');
       clone.className = 'msg-body';
       clone.innerHTML = html;
-      if ((clone.textContent ?? '').trim().replace(/^[\W_]+/, '').startsWith('Total:'))
+      if ((clone.textContent ?? '').trim().replace(/^[\W_]+/, '').startsWith(TOTAL_LABEL))
         clone.classList.add('gd-total');
       resetCloneBubble(clone);
       content.appendChild(clone);
@@ -599,7 +631,7 @@ const styleOrderRow = (doc: Document, row: Element) => {
     if (!textBody) continue;
     let itemHtml = sanitizeOrderHtml(textBody.innerHTML);
     // The contact part (if any) was already emitted at the body's position
-    const m = itemHtml.match(/^([\s\S]*?<strong>\s*Items:\s*<\/strong><br>\s*)([\s\S]*)$/i);
+    const m = itemHtml.match(ITEMS_SPLIT_RE);
     if (m) itemHtml = m[2];
 
     const wrap = doc.createElement('div');

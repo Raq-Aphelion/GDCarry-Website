@@ -14,6 +14,11 @@ import { dirname, join } from 'node:path';
 
 const here = dirname(fileURLToPath(import.meta.url));
 
+// Site URLs come from the repo-root config — the single source of truth
+// (worker/wrangler.toml [vars] duplicates them for the worker; keep in sync).
+const siteConfig = JSON.parse(readFileSync(join(here, '..', 'site.config.json'), 'utf8'));
+const siteHost = new URL(siteConfig.siteUrl).host;
+
 // Default operator image (GD dice) — imported as the theme's operator_image,
 // shown in the profile strip and beside operator messages when the chatting
 // operator has no photo of their own
@@ -1153,7 +1158,7 @@ const introCardOffline = `<div style="margin:16px 0 0;padding:8px 16px;text-alig
 </div>`;
 
 const headerIdentity = `<div style="display:flex;align-items:center;gap:10px;">
-  <img src="https://gdcarry.com/images/gd_favicon.png" alt="" style="width:32px;height:32px;border-radius:8px;">
+  <img src="${siteConfig.siteUrl}/images/gd_favicon.png" alt="" style="width:32px;height:32px;border-radius:8px;">
   <div style="line-height:1.3;">
     <div style="font-family:Sora,Inter,sans-serif;font-weight:700;font-size:14px;color:#f1f5f9;">Grand Dice</div>
     <div class="gdc-status gdc-status-online" style="display:flex;align-items:center;gap:5px;font-size:11px;color:#94a3b8;"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#22c55e;"></span>Live support online</div>
@@ -1162,7 +1167,7 @@ const headerIdentity = `<div style="display:flex;align-items:center;gap:10px;">
 </div>`;
 
 const footerHtml = `<div style="padding:8px 12px;text-align:center;font-size:11px;color:#64748b;">
-  Professional boosting &bull; <a href="https://gdcarry.com" target="_blank" rel="noopener" style="color:#60a5fa;text-decoration:none;">gdcarry.com</a>
+  Professional boosting &bull; <a href="${siteConfig.siteUrl}" target="_blank" rel="noopener" style="color:#60a5fa;text-decoration:none;">${siteHost}</a>
 </div>`;
 
 const introMessageHtml = `<div style="padding:12px 14px;border-radius:10px;background:#1b1b20;border:1px solid #26262e;"><div style="font-family:Sora,Inter,sans-serif;font-weight:700;color:#93c5fd;font-size:13px;margin-bottom:4px;">Welcome to Grand Dice</div><div style="color:#f1f5f9;font-size:13px;line-height:1.5;">Hey! Tell me what you're playing and what you need — I'll get you a quote and an ETA right away.</div></div>`;
@@ -1175,7 +1180,7 @@ const introMessageHtml = `<div style="padding:12px 14px;border-radius:10px;backg
 //    the label correct across React re-renders.
 const headerHtml = `<link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="${siteConfig.googleFontsUrl.replaceAll('&', '&amp;')}" rel="stylesheet">
 <script>
 document.addEventListener('keydown', function (e) {
   if (e.key === 'Enter' && !e.shiftKey && e.target && e.target.id === 'CSChatMessage') {

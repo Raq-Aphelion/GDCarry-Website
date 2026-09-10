@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
+import { SITE_URL } from '@/lib/site-config';
 
-export const SITE_URL = 'https://gdcarry.com';
+export { SITE_URL };
 const SITE_NAME = 'GD Carry — Grand Dice';
 const DEFAULT_OG_IMAGE = `${SITE_URL}/images/og-image.png`;
 
