@@ -124,4 +124,8 @@ never processes payments itself.
 - There is no CSP meta tag on purpose — the Content-Security-Policy lives in
   Cloudflare (it needs `https://challenges.cloudflare.com` for Turnstile in
   script-src/frame-src/connect-src); only the referrer policy meta is in
-  `index.html`.
+  `index.html`. connect-src must also list `wss://chat.gdcarry.com` —
+  `https://chat.gdcarry.com` does not cover the LiveChat WebSocket. Cloudflare
+  Bot Fight Mode is incompatible with this CSP: it injects a per-request inline
+  script (`/cdn-cgi/challenge-platform/scripts/jsd/main.js`) whose hash changes
+  every request, so keep Bot Fight Mode off (Turnstile covers checkout abuse).

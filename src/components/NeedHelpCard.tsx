@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router';
-import { MessageCircle, Send, X } from 'lucide-react';
-import { CHAT_OPENED_EVENT, getLhcSession, openLiveChat, openLiveChatPrefill } from '@/lib/livechat';
+import { MessageCircle, X } from 'lucide-react';
+import { CHAT_OPENED_EVENT, getLhcSession, openLiveChat } from '@/lib/livechat';
 import { CHAT_URL } from '@/lib/site-config';
 
 /** Delay before the card pops in */
@@ -50,8 +50,7 @@ const isBadgeOffline = () => {
 
 /** "Need help" card — a fully site-styled replacement for LHC's native
     proactive bubble (which stays suppressed in the theme): operator avatar
-    stack, Let's chat, and a message input that starts a chat with the typed
-    text as the first message. Fixed above the LHC status circle; closes
+    stack and a Let's chat button. Fixed above the LHC status circle; closes
     INSTANTLY (no exit animation) the moment the widget opens by any means —
     site buttons (CHAT_OPENED_EVENT), badge clicks (capture-phase listener —
     LHC handles them inside its shadow DOM and fires nothing), anything else
@@ -61,7 +60,6 @@ export default function NeedHelpCard() {
   const { pathname } = useLocation();
   const [visible, setVisible] = useState(false);
   const [closing, setClosing] = useState(false);
-  const [message, setMessage] = useState('');
   // Live random operator photo — prepended over the fallback stack when LHC
   // has one to offer; the fallbacks below stay as-is otherwise
   const [liveAvatar, setLiveAvatar] = useState<string | null>(null);
@@ -215,21 +213,6 @@ export default function NeedHelpCard() {
     ? [AVATARS[0], AVATARS[1], { src: liveAvatar, ring: AVATARS[2].ring }]
     : AVATARS;
 
-  const send = () => {
-    const q = message.trim();
-    // Dismiss BEFORE opening: the open helpers fire CHAT_OPENED_EVENT
-    // synchronously, and the listener's instant hide unmounts the card on
-    // the spot — the dismissal must be in sessionStorage by then
-    dismiss();
-    if (q && !getLhcSession()?.id) {
-      // No chat yet — start one with the typed message as the first one
-      openLiveChatPrefill({ question: q });
-    } else {
-      // Chat already running (or empty input) — just open the widget
-      openLiveChat();
-    }
-  };
-
   return (
     <div
       className={`fixed z-[80] w-[300px] max-w-[calc(100vw-24px)] rounded-xl border bg-[#151519] p-4 pt-6 ${
@@ -270,7 +253,9 @@ export default function NeedHelpCard() {
 
       <button
         onClick={() => {
-          // dismiss first — see send()
+          // Dismiss BEFORE opening: openLiveChat fires CHAT_OPENED_EVENT
+          // synchronously, and the listener's instant hide unmounts the card
+          // on the spot — the dismissal must be in sessionStorage by then
           dismiss();
           openLiveChat();
         }}
@@ -279,27 +264,6 @@ export default function NeedHelpCard() {
         <MessageCircle className="h-4 w-4" />
         Let’s chat
       </button>
-
-      {/* Type a message — sending starts the chat with it as the first message */}
-      <div className="mt-2.5 flex items-center gap-2 rounded-[5px] border border-[#34343e] bg-[#1b1b20] py-1.5 pl-4 pr-1.5">
-        <input
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') send();
-          }}
-          placeholder="WRITE A MESSAGE..."
-          aria-label="Write a message"
-          className="min-w-0 flex-1 bg-transparent text-xs text-[#f1f5f9] placeholder:text-[11px] placeholder:font-semibold placeholder:tracking-wider placeholder:text-[#64748b] outline-none"
-        />
-        <button
-          onClick={send}
-          className="flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-full border border-[rgba(59,130,246,0.35)] bg-[#1b1b20] text-[#60a5fa] transition-all hover:border-[rgba(59,130,246,0.6)] hover:text-[#93c5fd]"
-          aria-label="Send message and start chat"
-        >
-          <Send className="h-3.5 w-3.5" />
-        </button>
-      </div>
     </div>
   );
 }

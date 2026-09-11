@@ -101,7 +101,7 @@ const customStatusCss = `#lhc_status_container {
 const customContainerCss =
   'border: none !important; border-radius: 12px !important; overflow: hidden !important;';
 
-const customWidgetCss = `/* ===== GD Carry dark theme — widget interior v21 ===== */
+const customWidgetCss = `/* ===== GD Carry dark theme — widget interior v22 ===== */
 
 :root { --lhc-message-padding: 7px 10px; }
 
@@ -939,16 +939,19 @@ form .control-label,
   padding-left: 14px !important;
   padding-right: 14px !important;
 }
-/* Composer textareas (online + offline start forms) — 12px vertical padding
-   centers the single line exactly in the 42px box (12 + 18px line + 12); as
-   lines are added field-sizing grows the box and the uniform padding reads as
-   a normal inset, so multiline text never keeps a static top offset. 3 lines
-   (54px) + padding = 78px max, then it scrolls internally */
+/* Composer textareas (online + offline start forms) — the 18px line-height
+   is PINNED so 12px vertical padding centers the single line exactly in the
+   42px box (12 + 18 + 12); without it the box is taller than the line and
+   the placeholder/text parks at the top. As lines are added field-sizing
+   grows the box and the uniform padding reads as a normal inset, so
+   multiline text never keeps a static top offset. 3 lines (54px) + padding
+   = 78px max, then it scrolls internally */
 textarea.form-control {
   min-height: 42px !important;
   height: auto !important;
   max-height: 78px !important;
   padding: 12px 14px !important;
+  line-height: 18px !important;
   overflow-y: auto !important;
   resize: none !important;
   field-sizing: content;
@@ -983,10 +986,23 @@ form .btn-secondary[type="submit"] {
   box-shadow:
     0 10px 30px -10px rgba(37, 99, 235, 0.45),
     inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  transition: filter 0.25s ease, box-shadow 0.25s ease;
 }
 .start-chat [type="submit"]:hover,
 .offline-chat [type="submit"]:hover,
 form .btn-secondary[type="submit"]:hover { filter: brightness(1.1); }
+/* Empty question field — the button lights down to grey and back up as soon
+   as a character is typed. The gradient is greyscaled via filter (a
+   background swap can't transition; filter can), and the higher-specificity
+   :has() selector also outranks the hover rule, so the button stays greyed
+   on hover while empty. Clicking still triggers LHC's required-field
+   validation — the look is disabled, the button isn't. */
+.start-chat form:has(textarea:placeholder-shown) [type="submit"],
+.offline-chat form:has(textarea:placeholder-shown) [type="submit"] {
+  filter: grayscale(1) brightness(0.6) !important;
+  box-shadow: none !important;
+  cursor: not-allowed !important;
+}
 .start-chat form .row:last-child .col-12,
 .offline-chat form .row:last-child .col-12 {
   padding-bottom: 0 !important;
@@ -1252,6 +1268,14 @@ new MutationObserver(function () {
     var p = el.getAttribute('placeholder');
     var fixed = p && p.replace(/\byour your\b/i, 'your');
     if (fixed && fixed !== p) el.setAttribute('placeholder', fixed);
+  });
+  /* One-row composers: LHC renders the question textarea with several rows.
+     field-sizing: content sizes the box to its content where supported, but
+     browsers without it fall back to the rows attribute — a multi-line box
+     with the single line of text stuck to the top. rows=1 makes the fallback
+     match (extra lines scroll inside the one-row box instead of growing it) */
+  document.querySelectorAll('.start-chat textarea.form-control, .offline-chat textarea.form-control').forEach(function (ta) {
+    if (ta.rows !== 1) ta.rows = 1;
   });
 }).observe(document.documentElement, { childList: true, subtree: true });
 
