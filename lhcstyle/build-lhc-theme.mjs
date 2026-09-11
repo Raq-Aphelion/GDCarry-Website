@@ -101,7 +101,7 @@ const customStatusCss = `#lhc_status_container {
 const customContainerCss =
   'border: none !important; border-radius: 12px !important; overflow: hidden !important;';
 
-const customWidgetCss = `/* ===== GD Carry dark theme — widget interior v22 ===== */
+const customWidgetCss = `/* ===== GD Carry dark theme — widget interior v23 ===== */
 
 :root { --lhc-message-padding: 7px 10px; }
 
@@ -967,14 +967,58 @@ textarea.form-control {
 .form-control.is-invalid { border-color: #dc2626 !important; }
 .offline-intro { color: #f1f5f9 !important; }
 
+/* Custom validation tip (engine in header_html) — replaces the browser's
+   native required-field bubble: dark navy box, thin red edge, arrow pointing
+   down at the offending field */
+.gdc-tip {
+  position: fixed;
+  z-index: 100;
+  max-width: calc(100% - 24px);
+  background: #1b1b20;
+  border: 1px solid rgba(220, 38, 38, 0.45);
+  border-radius: 6px;
+  padding: 6px 10px;
+  color: #fca5a5;
+  font-size: 12px;
+  line-height: 1.4;
+  box-shadow: 0 10px 25px -8px rgba(0, 0, 0, 0.6);
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(3px);
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+.gdc-tip.gdc-tip-in {
+  opacity: 1;
+  transform: none;
+}
+.gdc-tip::before {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 18px;
+  width: 8px;
+  height: 8px;
+  background: #1b1b20;
+  border-right: 1px solid rgba(220, 38, 38, 0.45);
+  border-bottom: 1px solid rgba(220, 38, 38, 0.45);
+  transform: rotate(45deg);
+}
+
 /* Submit buttons — the site's purchase-cta look, full width. The offline
    form's button isn't .btn-secondary (LHC renders it .btn-primary), so the
    start/offline selectors match any submit in those views */
 .start-chat [type="submit"],
 .offline-chat [type="submit"],
 form .btn-secondary[type="submit"] {
-  background: linear-gradient(90deg, #60a5fa, #2563eb) !important;
-  border: none !important;
+  /* The button's own background is the DISABLED look (solid dark navy); the
+     active blue gradient lives on a ::before layer that cross-fades in and
+     out — background-image can't transition, opacity can. isolation makes
+     the button a stacking context so the negative-z ::before paints above
+     the navy background but below the label text */
+  position: relative !important;
+  isolation: isolate !important;
+  background: #151519 !important;
+  border: 1px solid transparent !important;
   border-radius: 5px !important;
   color: #0f0f11 !important;
   font-family: 'Sora', 'Inter', ui-sans-serif, sans-serif;
@@ -986,22 +1030,39 @@ form .btn-secondary[type="submit"] {
   box-shadow:
     0 10px 30px -10px rgba(37, 99, 235, 0.45),
     inset 0 1px 0 rgba(255, 255, 255, 0.18);
-  transition: filter 0.25s ease, box-shadow 0.25s ease;
+  transition: filter 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+}
+.start-chat [type="submit"]::before,
+.offline-chat [type="submit"]::before,
+form .btn-secondary[type="submit"]::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  z-index: -1;
+  border-radius: 6px;
+  background: linear-gradient(90deg, #60a5fa, #2563eb);
+  opacity: 1;
+  transition: opacity 0.25s ease;
 }
 .start-chat [type="submit"]:hover,
 .offline-chat [type="submit"]:hover,
 form .btn-secondary[type="submit"]:hover { filter: brightness(1.1); }
-/* Empty question field — the button lights down to grey and back up as soon
-   as a character is typed. The gradient is greyscaled via filter (a
-   background swap can't transition; filter can), and the higher-specificity
-   :has() selector also outranks the hover rule, so the button stays greyed
-   on hover while empty. Clicking still triggers LHC's required-field
-   validation — the look is disabled, the button isn't. */
+/* Empty question field — the gradient layer fades out to the solid navy
+   button with the widget's blue outline (same rgba as the badge circle's
+   border) and a light-blue label. The higher-specificity :has() selector
+   also outranks the hover rule, so the button stays muted on hover while
+   empty. Clicking still triggers validation — the look is disabled, the
+   button isn't. */
 .start-chat form:has(textarea:placeholder-shown) [type="submit"],
 .offline-chat form:has(textarea:placeholder-shown) [type="submit"] {
-  filter: grayscale(1) brightness(0.6) !important;
+  color: #93c5fd !important;
+  border-color: rgba(59, 130, 246, 0.35) !important;
   box-shadow: none !important;
   cursor: not-allowed !important;
+}
+.start-chat form:has(textarea:placeholder-shown) [type="submit"]::before,
+.offline-chat form:has(textarea:placeholder-shown) [type="submit"]::before {
+  opacity: 0;
 }
 .start-chat form .row:last-child .col-12,
 .offline-chat form .row:last-child .col-12 {
@@ -1463,6 +1524,59 @@ document.addEventListener('click', function (e) {
   new MutationObserver(fix).observe(document.documentElement, { childList: true, subtree: true });
   setInterval(fix, 1500);
   fix();
+})();
+
+/* Custom validation popups — replaces the browser's native required-field
+   bubble with a theme-matching tip pinned above the offending field. The
+   invalid event fires per field (capture + preventDefault suppresses the
+   native bubble); only the FIRST bad field gets the tip, and LHC's own
+   validationMessage text is reused. The tip hides on the first keystroke,
+   on a click elsewhere, or when the field leaves the DOM (chat started /
+   view switched); the field keeps the red is-invalid border until then.
+
+   NOTE: this copy only ever runs in the CLASSIC widget — in the React (v2)
+   widget this whole script is inert (innerHTML injection). The live v2 copy
+   is initValidationTips in src/lib/livechat.ts (the parent page reaches the
+   iframe document via LHC's document.domain setup). The .gdc-tip existence
+   check keeps the two from double-showing if both ever run. */
+(function () {
+  var tip = null, tipField = null, tipPoll = null;
+  function hideTip() {
+    if (tip) tip.remove();
+    tip = tipField = null;
+    if (tipPoll) { clearInterval(tipPoll); tipPoll = null; }
+  }
+  function showTip(field) {
+    hideTip();
+    tipField = field;
+    field.classList.add('is-invalid');
+    tip = document.createElement('div');
+    tip.className = 'gdc-tip';
+    tip.textContent = field.validationMessage || 'This field is required';
+    document.body.appendChild(tip);
+    var r = field.getBoundingClientRect();
+    tip.style.left = Math.max(8, Math.min(r.left, window.innerWidth - tip.offsetWidth - 8)) + 'px';
+    tip.style.top = Math.max(8, r.top - tip.offsetHeight - 8) + 'px';
+    requestAnimationFrame(function () { if (tip) tip.classList.add('gdc-tip-in'); });
+    tipPoll = setInterval(function () {
+      if (!tipField || !tipField.isConnected) hideTip();
+    }, 800);
+  }
+  document.addEventListener('invalid', function (e) {
+    var f = e.target;
+    if (!f || !f.closest || !f.closest('.start-chat, .offline-chat')) return;
+    e.preventDefault();
+    if (!tip && !document.querySelector('.gdc-tip')) showTip(f);
+  }, true);
+  document.addEventListener('input', function (e) {
+    if (e.target && e.target.classList && e.target.classList.contains('is-invalid')) {
+      e.target.classList.remove('is-invalid');
+      hideTip();
+    }
+  }, true);
+  document.addEventListener('mousedown', function (e) {
+    if (tip && e.target !== tipField) hideTip();
+  }, true);
 })();
 </script>`;
 

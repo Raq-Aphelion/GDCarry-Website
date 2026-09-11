@@ -695,13 +695,77 @@ const ensureOrderCss = (doc: Document) => {
   doc.head?.appendChild(style);
 };
 
+/* Start/offline form validation tips — replaces the browser's native
+   required-field bubble with the theme's .gdc-tip popup (styles ship in the
+   LHC theme's custom_widget_css). The theme carries a copy of this engine in
+   its header_html, but the React (v2) widget injects that HTML via innerHTML,
+   so the script never executes there — the live copy for v2 is THIS one,
+   driven by the parent page, which reaches the iframe document through LHC's
+   document.domain setup. Capture phase: invalid events don't bubble. */
+const initValidationTips = (doc: Document) => {
+  const w = doc.defaultView as (Window & { __gdcValTip?: boolean }) | null;
+  if (!w || w.__gdcValTip) return;
+  w.__gdcValTip = true;
+
+  let tip: HTMLElement | null = null;
+  let tipField: Element | null = null;
+  const hideTip = () => {
+    tip?.remove();
+    tip = tipField = null;
+  };
+  const showTip = (field: Element) => {
+    // A tip is already up (the theme's own copy wins in the classic widget)
+    if (doc.querySelector('.gdc-tip')) return;
+    hideTip();
+    tipField = field;
+    field.classList.add('is-invalid');
+    tip = doc.createElement('div');
+    tip.className = 'gdc-tip';
+    tip.textContent = (field as HTMLInputElement).validationMessage || 'This field is required';
+    doc.body.appendChild(tip);
+    const r = field.getBoundingClientRect();
+    tip.style.left = `${Math.max(8, Math.min(r.left, w.innerWidth - tip.offsetWidth - 8))}px`;
+    tip.style.top = `${Math.max(8, r.top - tip.offsetHeight - 8)}px`;
+    w.requestAnimationFrame(() => tip?.classList.add('gdc-tip-in'));
+  };
+  doc.addEventListener(
+    'invalid',
+    (e) => {
+      const f = e.target as Element | null;
+      if (!f?.closest?.('.start-chat, .offline-chat')) return;
+      e.preventDefault();
+      if (!tip) showTip(f);
+    },
+    true,
+  );
+  doc.addEventListener(
+    'input',
+    (e) => {
+      const t = e.target as HTMLElement | null;
+      if (t?.classList?.contains('is-invalid')) {
+        t.classList.remove('is-invalid');
+        hideTip();
+      }
+    },
+    true,
+  );
+  doc.addEventListener(
+    'mousedown',
+    (e) => {
+      if (tip && e.target !== tipField) hideTip();
+    },
+    true,
+  );
+};
+
 /** Widget-document fixes that survive page reloads. The order handoff styles
     its message when it lands, but after a reload LHC re-renders the chat
     history from the server and the raw BBCode layout returns; LHC's verbose
     pending-chat status also needs shortening after every render. A
     MutationObserver applies both the moment they render — no unstyled flash.
     LHC swaps the iframe document on reloadWidget, so the observer re-attaches
-    on a slow tick. Called once from LiveChatWidget. */
+    on a slow tick. Per-document inits (order CSS, start-form validation tips)
+    ride the same re-attach. Called once from LiveChatWidget. */
 export function initOrderMessageStyler() {
   const process = (doc: Document) => {
     doc.querySelectorAll<HTMLElement>('.status-text').forEach((el) => {
@@ -724,6 +788,7 @@ export function initOrderMessageStyler() {
     if (!doc || doc === observedDoc) return;
     observedDoc = doc;
     ensureOrderCss(doc); // styles in place before any row can render
+    initValidationTips(doc);
     process(doc);
     new MutationObserver(() => process(doc)).observe(doc, { childList: true, subtree: true });
   };
