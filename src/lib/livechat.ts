@@ -431,13 +431,23 @@ const wrapItemLines = (html: string) =>
     })
     .join('');
 
-/** Image marker the shared order builder (src/lib/order-format.ts) emits as
-    an `Image: [url=…]view[/url]` BBCode link: the operator chat shows a short
-    "view" link instead of a raw URL, and only this visitor-side styler turns
-    it back into a thumbnail. The href is captured regardless of anchor text
-    and restricted to https. */
+/** Legacy `Image: …` marker line — no longer emitted by the shared builder
+    (the image link rides on the item name line now, see NAME_CARD_RE), but
+    stored chat history is full of them: plain-text URL, BBCode link, or LHC
+    auto-linked. The href is captured regardless of anchor text and
+    restricted to https. */
 const IMAGE_LINE_RE = new RegExp(
   `^${escapeRe(IMAGE_LABEL)}\\s*(?:<a\\b[^>]*?href="(https:\\/\\/[^"&]+)"[^>]*>[\\s\\S]*?<\\/a>|(https:\\/\\/[^\\s<]+))\\s*$`,
+  'i',
+);
+
+/** Item-name line: bold name, optionally followed by the [Card] image link
+    the shared builder (src/lib/order-format.ts) appends — staff click it,
+    while this styler drops the link text and shows the href as a thumbnail.
+    Group 1 = the <strong> markup (what the print shows as the name),
+    group 2 = the optional image URL. */
+const NAME_CARD_RE = new RegExp(
+  '^(<strong>[\\s\\S]*?<\\/strong>)(?:\\s*<a\\b[^>]*?href="(https:\\/\\/[^"&]+)"[^>]*>[\\s\\S]*?<\\/a>)?$',
   'i',
 );
 
@@ -487,8 +497,9 @@ const resetCloneBubble = (el: HTMLElement) => {
     created itself.
 
     Two message formats are handled:
-    - Current: plain text with `Image: <url>` marker lines (no [img] media —
-      the operator chat renders text only). The whole message is parsed
+    - Current: one plain-text body per message; each item's thumbnail rides
+      on its bold name line as a `[Card]` link (older prints used `Image: …`
+      marker lines below the item — still parsed). The message is parsed
       line-by-line into contact block / thumbnail-left item rows / Total.
     - Legacy (stored history): [img] BBCode split the message into per-item
       text bodies each followed by a msg-body-media; those are paired and
@@ -521,9 +532,10 @@ const styleOrderRow = (doc: Document, row: Element) => {
 
   if (!originals.some((el) => el.classList.contains('msg-body-media'))) {
     // Current format: no [img] media, so the message is one plain-text body
-    // and each item's thumbnail travels as an `Image: <url>` marker line.
+    // and each item's thumbnail rides on its bold name line as a [Card] link
+    // (older prints: an `Image: …` marker line below the item).
     // Parse the whole message: contact block up to Items:, an item per bold
-    // name line (its Image: line carries the thumbnail), then the Total line.
+    // name line, then the Total line.
     // Empty lines are KEPT — the contact block renders them as the blank-line
     // gaps between its groups (Order ID / contact fields / Items:)
     const lines = originals
@@ -549,11 +561,16 @@ const styleOrderRow = (doc: Document, row: Element) => {
         if (!line) continue;
         const url = imageLineUrl(line);
         if (url) {
-          // Marker lines attach to the item above them; a stray marker with
-          // no item is dropped (never shown as text either)
+          // Legacy Image: marker lines attach to the item above them; a
+          // stray marker with no item is dropped (never shown as text either)
           if (items.length) items[items.length - 1].image = url;
-        } else if (/^<strong>[\s\S]*<\/strong>$/.test(line)) {
-          items.push({ lines: [line], image: '' });
+          continue;
+        }
+        const nameCard = line.match(NAME_CARD_RE);
+        if (nameCard) {
+          // The [Card] link text is dropped from the print — group 1 is the
+          // bare <strong> name, the href becomes the item's thumbnail
+          items.push({ lines: [nameCard[1]], image: nameCard[2] ?? '' });
         } else if (items.length) {
           items[items.length - 1].lines.push(line);
         }

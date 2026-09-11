@@ -20,6 +20,9 @@ export const ORDER_ID_LABEL = 'Order ID:';
 export const ITEMS_LABEL = 'Items:';
 export const TOTAL_LABEL = 'Total:';
 export const PRICE_LABEL = 'Price:';
+/** Legacy `Image: …` marker label — no longer emitted (the image link rides
+    on the item name line as a [Card] link), but livechat.ts still parses it
+    for stored chat history. */
 export const IMAGE_LABEL = 'Image:';
 export const DETAIL_PREFIX = '◆';
 /** Item cap per order print — keeps the chat message readable. (The proxy
@@ -34,10 +37,10 @@ export interface OrderMessageItem {
   unitPrice?: string;
   /** Thumbnail URL — same-origin https only (the worker enforces this via
       safeImage before calling; the client builds it from SITE_URL). Emitted
-      as an `Image: [url=…]view[/url]` BBCode-link marker line, NOT [img]: the
-      operator chat renders a short "view" link (a raw URL dumps a whole long
-      link into the operator's message), while the visitor-side styler in
-      livechat.ts reads the marker's href and turns it back into a thumbnail. */
+      as a `[url=…][Card][/url]` BBCode link appended to the item's bold name
+      line: the operator chat shows a compact "[Card]" link, while the
+      visitor-side styler in livechat.ts reads the href off the name line and
+      renders it as a thumbnail (dropping the link text). */
   image?: string;
 }
 
@@ -64,9 +67,9 @@ const bb = (v: unknown, max: number) =>
 /** The one order-message builder. Layout: bold ORDER DETAILS header, order
     id, emoji contact block (👤 ✉️ 💳), then the Items: list — a blank line
     after the header and BETWEEN items (staff readability; the visitor-side
-    styler skips blank lines when parsing), each item as bold name / meta /
-    ◆ details / Price: line / Image: link marker — then the Total: line.
-    Exactly what styleOrderRow in livechat.ts parses. */
+    styler skips blank lines when parsing), each item as a bold name with the
+    [Card] image link appended / meta / ◆ details / Price: line — then the
+    Total: line. Exactly what styleOrderRow in livechat.ts parses. */
 export function buildOrderMessage(o: OrderMessageInput): string {
   const itemBlocks = o.items
     .slice(0, MAX_ORDER_ITEMS)
@@ -74,13 +77,13 @@ export function buildOrderMessage(o: OrderMessageInput): string {
       const unit = bb(it.unitPrice, 30);
       const image = bb(it.image, 200);
       return [
-        `[b]${bb(it.name, 120)}[/b]`,
+        // The card image rides on the name line as a compact [Card] link —
+        // no raw URL cluttering the operator's print; the visitor styler
+        // reads the href off the name line and renders it as a thumbnail
+        `[b]${bb(it.name, 120)}[/b]${image ? ` [url=${image}][Card][/url]` : ''}`,
         bb(it.meta, 80),
         (it.details ?? []).map((d) => `${DETAIL_PREFIX} ${bb(d, 120)}`).join('\n'),
         unit ? `${PRICE_LABEL} [b]${unit}[/b]` : '',
-        // BBCode link, not a raw URL: staff see a short "view" link instead
-        // of a long URL; the visitor styler reads the href either way
-        image ? `${IMAGE_LABEL} [url=${image}]view[/url]` : '',
       ]
         .filter(Boolean)
         .join('\n');

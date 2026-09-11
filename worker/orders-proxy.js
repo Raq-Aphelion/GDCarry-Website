@@ -283,7 +283,9 @@ const buildEmbed = (o, flags = []) => ({
               ? `\n· ${it.details.map((d) => md(d, 120)).join('\n· ')}` : '';
             return `**${md(it.name, 120)}** (${md(it.gameShort, 20)}) ×${Math.min(+it.qty || 1, 9999)} — ${md(it.price, 30)}${details}`;
           })
-          .join('\n')
+          // Blank line between items (Discord renders \n\n in field values);
+          // the slice below still guards the 1024-char field limit
+          .join('\n\n')
           .slice(0, 1024) || '—',
       inline: false,
     },
