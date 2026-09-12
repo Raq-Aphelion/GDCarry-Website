@@ -5,7 +5,7 @@ import { CHAT_OPENED_EVENT, getLhcSession, openLiveChat } from '@/lib/livechat';
 import { CHAT_URL } from '@/lib/site-config';
 
 /** Delay before the card pops in */
-const SHOW_DELAY_MS = 5000;
+const SHOW_DELAY_MS = 2000;
 /** sessionStorage key — closed once, hidden for the rest of the tab session */
 const DISMISS_KEY = 'gd-needhelp-dismissed';
 /** How often the card re-checks chat/widget state (either hides it) */
@@ -19,9 +19,9 @@ const CLOSE_MS = 220;
     only public source of operator photos), it replaces the THIRD slot.
     Rings stay positional (red / yellow / green). */
 const AVATARS: { src: string; ring: string }[] = [
-  { src: '/images/support/operator-1.png', ring: 'border-red-500' },
-  { src: '/images/support/operator-2.jpg', ring: 'border-yellow-500' },
-  { src: '/images/support/operator-3.png', ring: 'border-green-500' },
+  { src: '/images/support/operator-1.webp', ring: 'border-red-500' },
+  { src: '/images/support/operator-2.webp', ring: 'border-yellow-500' },
+  { src: '/images/support/operator-3.webp', ring: 'border-green-500' },
 ];
 
 const LHC_BASE = CHAT_URL;
@@ -115,7 +115,7 @@ export default function NeedHelpCard() {
   // A site control opening the widget hides the card instantly — the 2s poll
   // alone left them overlapping, and its widgetStatus read is unreliable, so
   // the card sometimes never hid at all. The flag also disarms the show
-  // timer: without it, opening the widget within 5s of a navigation left the
+  // timer: without it, opening the widget within 2s of a navigation left the
   // timer armed, and it fired on widget minimize/close — the card flashed
   // for a beat until the next poll hid it.
   useEffect(() => {
@@ -248,8 +248,8 @@ export default function NeedHelpCard() {
         <X className="h-4 w-4" />
       </button>
 
-      <p className="font-display text-[17px] font-bold text-white">24/7 Human Support</p>
-      <p className="mt-0.5 text-xs text-[#94a3b8]">Real Gamers at your disposal</p>
+      <p className="font-display text-[17px] font-bold text-white">We’re here to help</p>
+      <p className="mt-0.5 text-xs text-[#94a3b8]">Chat with a real member of our team, anytime.</p>
 
       <button
         onClick={() => {
