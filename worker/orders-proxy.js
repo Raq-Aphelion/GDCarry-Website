@@ -158,7 +158,11 @@ const verifyPrices = async (o, env) => {
     const qty = num(it.qty) ?? 1;
     const label = str(it.name, 60) || str(it.id, 60) || 'item';
     if (total != null) sum += total;
-    if (unit != null && total != null && total < unit * qty - 0.02)
+    // Tolerance covers the client's 2-dp unit rounding: the quote can
+    // legitimately sit up to half a cent per unit below unit × qty (e.g.
+    // 0.825/unit with the +10% option rounds to 0.83, so ×10 totals 8.25
+    // while unit × qty reads 8.30)
+    if (unit != null && total != null && total < unit * qty - (0.005 * qty + 0.01))
       flags.push(`${label}: total ${eur(total)} < unit ${eur(unit)} ×${qty}`);
     if (it.config && typeof it.config === 'object' && typeof it.config.family === 'string') {
       // Structured config → authoritative recompute. NOTE: qty comes from the
@@ -281,10 +285,10 @@ const buildEmbed = (o, flags = []) => ({
           .map((it) => {
             const details = Array.isArray(it.details) && it.details.length
               ? `\n· ${it.details.map((d) => md(d, 120)).join('\n· ')}` : '';
-            // Meta line (game · boost method · qty) — the chat message shows
-            // it; the embed dropped it, hiding the boosting method
+            // Meta line (game · boost method · qty) carries the game and
+            // quantity, so the title is just the name and line total
             const meta = md(it.meta, 80);
-            return `**${md(it.name, 120)}** (${md(it.gameShort, 20)}) ×${Math.min(+it.qty || 1, 9999)} — ${md(it.price, 30)}${meta ? `\n${meta}` : ''}${details}`;
+            return `**${md(it.name, 120)}** — ${md(it.price, 30)}${meta ? `\n${meta}` : ''}${details}`;
           })
           // Blank line between items (Discord renders \n\n in field values);
           // the slice below still guards the 1024-char field limit
