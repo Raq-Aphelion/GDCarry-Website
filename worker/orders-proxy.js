@@ -200,7 +200,7 @@ const verifyPrices = async (o, env) => {
     [img] BBCode: the operator chat renders text only, while the visitor-side
     styler turns the markers back into thumbnails. Matches the site's cart
     drawer / service card styling once styled: bold name, game · qty meta
-    line, ◆ detail bullets, "Price:" unit price. */
+    line, ◆ detail bullets, "Price:" line total (unit × qty). */
 const buildMessage = (o, siteUrl) =>
   buildOrderMessage({
     orderId: o.orderId,
@@ -212,7 +212,7 @@ const buildMessage = (o, siteUrl) =>
       name: it.name,
       meta: it.meta,
       details: Array.isArray(it.details) ? it.details : [],
-      unitPrice: it.unitPrice,
+      price: it.price,
       image: safeImage(it.image, siteUrl),
     })),
   });
@@ -281,7 +281,10 @@ const buildEmbed = (o, flags = []) => ({
           .map((it) => {
             const details = Array.isArray(it.details) && it.details.length
               ? `\n· ${it.details.map((d) => md(d, 120)).join('\n· ')}` : '';
-            return `**${md(it.name, 120)}** (${md(it.gameShort, 20)}) ×${Math.min(+it.qty || 1, 9999)} — ${md(it.price, 30)}${details}`;
+            // Meta line (game · boost method · qty) — the chat message shows
+            // it; the embed dropped it, hiding the boosting method
+            const meta = md(it.meta, 80);
+            return `**${md(it.name, 120)}** (${md(it.gameShort, 20)}) ×${Math.min(+it.qty || 1, 9999)} — ${md(it.price, 30)}${meta ? `\n${meta}` : ''}${details}`;
           })
           // Blank line between items (Discord renders \n\n in field values);
           // the slice below still guards the 1024-char field limit

@@ -343,7 +343,7 @@ export default function CheckoutPage() {
         name: item.name,
         meta: cartMeta(item),
         details: displayDetails(item),
-        unitPrice: format(item.price),
+        price: format(lineTotal(item)),
         image: new URL(item.image, SITE_URL).href,
       })),
     });

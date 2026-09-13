@@ -34,7 +34,9 @@ export interface OrderMessageItem {
   /** Game · method · qty meta line (the price travels on its own Price: line) */
   meta?: string;
   details?: string[];
-  unitPrice?: string;
+  /** Line total for the quantity bought (unit × qty) — the same value the
+      Discord embed shows on the item's name line */
+  price?: string;
   /** Thumbnail URL — same-origin https only (the worker enforces this via
       safeImage before calling; the client builds it from SITE_URL). Emitted
       as a `[url=…][Card][/url]` BBCode link appended to the item's bold name
@@ -74,7 +76,7 @@ export function buildOrderMessage(o: OrderMessageInput): string {
   const itemBlocks = o.items
     .slice(0, MAX_ORDER_ITEMS)
     .map((it) => {
-      const unit = bb(it.unitPrice, 30);
+      const total = bb(it.price, 30);
       const image = bb(it.image, 200);
       return [
         // The card image rides on the name line as a compact [Card] link —
@@ -83,7 +85,7 @@ export function buildOrderMessage(o: OrderMessageInput): string {
         `[b]${bb(it.name, 120)}[/b]${image ? ` [url=${image}][Card][/url]` : ''}`,
         bb(it.meta, 80),
         (it.details ?? []).map((d) => `${DETAIL_PREFIX} ${bb(d, 120)}`).join('\n'),
-        unit ? `${PRICE_LABEL} [b]${unit}[/b]` : '',
+        total ? `${PRICE_LABEL} [b]${total}[/b]` : '',
       ]
         .filter(Boolean)
         .join('\n');
